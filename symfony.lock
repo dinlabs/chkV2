@@ -1,4 +1,7 @@
 {
+    "aeon-php/calendar": {
+        "version": "1.0.1"
+    },
     "akeneo/phpspec-skip-example-extension": {
         "version": "v3.0.0"
     },
@@ -330,6 +333,9 @@
             "version": "1.8",
             "ref": "7f6676627c1ceeeee204553d24a0545d5f918b7b"
         }
+    },
+    "loevgaard/sylius-brand-plugin": {
+        "version": "v2.1.5"
     },
     "marcj/topsort": {
         "version": "1.1.0"
