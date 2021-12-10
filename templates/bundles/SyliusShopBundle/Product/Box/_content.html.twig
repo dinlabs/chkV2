@@ -1,0 +1,31 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+{% set variant = product|sylius_resolve_variant %}
+
+<div class="prodInList">
+    <svg class="svg-bg" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#bg-prodinlist"/></svg>
+    <svg class="svg-picto" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#notation"/></svg>
+    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="picture">
+        {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
+        
+        {#
+        <ul class="labels">
+            <li class="promo">-20%</li>
+            <li class="eco">eco</li>
+        </ul>
+        #}
+    </a>
+    <div class="infos">
+        {% include '@SyliusShop/Product/_price.html.twig' %}
+        <div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>
+        <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</div>
+        {% if product.averageRating %}
+        <div class="clientRating">
+            <ul class="rating">
+                {% for n in 1..5  %}
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-star"/></svg></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>

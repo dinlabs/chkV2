@@ -5,7 +5,8 @@ imports:
     - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusApiBundle/Resources/config/app/config.yaml" }
 
-    - { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
+    # ci-dessous, utilisation de 'config/packages/sylius_shop_config.yml' à la place
+    #- { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusPayPalPlugin/Resources/config/config.yaml" }
 
 parameters:

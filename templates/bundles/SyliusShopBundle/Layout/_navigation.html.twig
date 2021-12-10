@@ -1,0 +1,96 @@
+{% macro item(taxon) %}
+    {% import _self as macros %}
+    <li>
+        <div class="wrapper">
+            <a href="#" class="openSubnav{% if taxon.level == 1 %} withBgImg" style="background-image:url(/chullanka/assets/img/landscape4.jpg);{% endif %}">
+                <span>{{ taxon.name }}</span>
+                <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg>
+            </a>
+        </div>
+        <div class="subNav" data-level="{{ taxon.level }}">
+            <div class="subNavHeader" style="background-image:url(/chullanka/assets/img/landscape4.jpg);">
+                <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche"/></svg></button>
+                <strong class="name">{{ taxon.name }}</strong>
+            </div>
+            <div class="catLink">
+                <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
+                    <span>Voir tous les produits</span>
+                </a> 
+                <br>{{ taxon.name }}
+            </div>
+            {% if taxon.enabledChildren|length > 0 %}
+            <ul>
+                {% for childTaxon in taxon.enabledChildren %}
+                {{ macros.item(childTaxon) }}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <img src="//picsum.photos/200/200" alt="">
+            {% endif %}
+        </div>
+    </li>
+{% endmacro %}
+{% macro itemsimple(nom, _url) %}
+    <li>
+        <div class="wrapper">
+        {% if _url == '#' %}
+            <a href="#" class="openSubnav">
+                <span>{{ nom }}</span>
+                <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg>
+            </a>
+        </div>
+        <div class="subNav" data-level="1">
+            <div class="subNavHeader">
+                <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche"/></svg></button>
+                <a href="{{ _url }}"><strong class="name">{{ nom }}</strong></a>
+            </div>
+            <img src="//picsum.photos/200/200" alt="">
+        </div>
+        {% else %}
+            <a href="{{ _url }}"><span>{{ nom }}</span></a>
+        </div>
+        {% endif %}
+    </li>
+{% endmacro %}
+<nav>
+    <button id="closeMainMenu" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-close-alt"/></svg></button>
+    {% if taxons|length > 0 %}
+    <div id="navBlock">
+        <ul>
+        {% import _self as macros %}
+        {% for taxon in taxons %}
+            {{ macros.item(taxon) }}
+        {% endfor %}
+
+        {% set others = [] %}
+        {% set others = others|merge(['Gamme PRO']) %}
+        {% set others = others|merge(['Pièces détachées et réparations']) %}
+        {% set others = others|merge(['Nos marques']) %}
+        {% set others = others|merge(['Nos magasins']) %}
+        {% set others = others|merge(['Nos Services']) %}
+        {% set others = others|merge(['Guides d\'achat']) %}
+        {% set others = others|merge(['Carte cadeau']) %}
+        {% set others = others|merge(['Nous contacter']) %}
+        {% set others = others|merge(['Qui sommes-nous ?']) %}
+        {% for other in others %}
+            {{ macros.itemsimple(other, '#') }}
+        {% endfor %}
+
+        {% if is_granted('ROLE_USER') %}
+            {{ macros.itemsimple('sylius.ui.logout'|trans, path('sylius_shop_logout')) }}
+        {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+    <div id="navBottom">
+        <a href="{{ is_granted('ROLE_USER') ? path('sylius_shop_account_dashboard') : path('sylius_shop_login') }}" class="forNotice">
+            <svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-moncompte"/></svg>
+            <!--span>1</span-->
+            Mon compte
+        </a>
+        <a href="#">
+            <svg class="svg-icon" role="img" style="width:22.792px; height:31.38px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-geoloc"/></svg>
+            Trouver un magasin
+        </a>
+    </div>
+</nav>

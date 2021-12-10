@@ -1,0 +1,16 @@
+{% include '@SyliusShop/Product/_starRating.html.twig' %}
+
+<div class="brand">
+    <a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a>
+</div>
+
+<div class="titleAndPrice">
+    <h1 id="sylius-product-name" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</h1>
+    
+    {% if not product.enabledVariants.empty() %}
+    {% include '@SyliusShop/Product/_price.html.twig' with { 'productPage': true } %}
+    {% endif %}
+</div>
+
+
+

@@ -1,0 +1,7 @@
+<div id="average-rating" class="clientRating{# ui star large rating#}" data-rating="{{ product.averageRating|round }}" data-max-rating="5" data-average-rating="{{ product.averageRating|round(2) }}" style="pointer-events: none;" {{ sylius_test_html_attribute('average-rating', product.averageRating|round(2)) }}>
+    <ul class="rating">
+        {% for n in 1..5  %}
+        <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-star"/></svg></li>
+        {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,79 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ product.name }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+{% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
+
+<div id="productTop" class="autoMargin">
+    <div id="illustration">
+        <div class="stickIt">
+            {{ sylius_template_event('sylius.shop.product.show.left_sidebar', _context) }}
+        </div>
+    </div>
+    <div id="productInfos">
+        {{ sylius_template_event('sylius.shop.product.show.right_sidebar', _context) }}
+    </div>
+</div>
+
+{#<div id="otherProducts" class="prodList"></div>#}
+
+<div id="productContent" class="autoMargin">
+    <div id="fullDescription" class="frame">
+        <h2>Description détaillée</h2>
+        <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
+        <div class="foldable">
+            {{ sylius_template_event('sylius.shop.product.show.tab_details', _context) }}
+        </div>
+    </div>
+
+    <div class="frame">
+        <h2>Caractéristiques techniques</h2>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
+        <div class="foldable">
+            {{ sylius_template_event('sylius.shop.product.show.tab_attributes', _context) }}
+        </div>
+    </div>
+
+    <div id="guideDesTailles" class="frame">
+        <h2>Guide des tailles</h2>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
+        <div class="foldable">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+        </div>
+    </div>
+
+    <div id="askAnswers" class="frame">
+        <h2>Vos questions - Nos réponses</h2>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
+        <div class="foldable">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+        </div>
+    </div>
+
+    <div class="frame">
+        <h2>Avis</h2>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
+        <div class="foldable">
+            {{ sylius_template_event('sylius.shop.product.show.tab_reviews', _context) }}
+        </div>
+    </div>
+
+    {{ sylius_template_event('sylius.shop.product.show.content', _context) }}
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+    lightbox.option({
+        'albumLabel': '{{ 'sylius.lightbox.image_album_label'|trans|escape('js') }}'
+    });
+</script>
+{% endblock %}
