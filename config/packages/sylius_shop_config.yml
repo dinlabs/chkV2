@@ -568,7 +568,7 @@ sylius_ui:
                     context:
                         event: sylius.shop.product.show.tab_attributes
                 list:
-                    template: "@SyliusShop/Product/Show/Tabs/Attributes/_list.html.twig"
+                    template: "@SyliusShop/Product/Show/_attributes_list.html.twig"
                     priority: 10
                     
         sylius.shop.product.show.before_thumbnails:

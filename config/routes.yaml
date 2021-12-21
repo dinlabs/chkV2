@@ -1,2 +1,44 @@
 sylius_paypal_webhook:
     resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
+
+# Controllers perso pour Chullanka -------- définis dans services.yaml
+app_admin_store:
+    resource: |
+        alias: app.store
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_store
+        vars:
+            all:
+                subheader: 'Gestion des magasins'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
+app_admin_chulli:
+    resource: |
+        alias: app.chulli
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_chulli
+        vars:
+            all:
+                subheader: 'Gestion des Chullis'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
+chk_store_action_index:
+    path: /{_locale}/store
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.store::indexAction
+chk_store_action_view:
+    path: /{_locale}/store/{slug}
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.store::viewAction

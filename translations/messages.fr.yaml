@@ -1,0 +1,37 @@
+chullanka_stores:
+  menu_item: 'Les Magasins'
+chullanka_chullis:
+  menu_item: 'Les Chullis'
+app:
+  ui:
+    name: 'Nom'
+    store: 'Magasin'
+    stores: 'Magasins'
+    edit_store: 'Modifier le magasin'
+    new_store: 'Nouveau magasin'
+    chulli: 'Chulli'
+    chullis: 'Chullis'
+    edit_chulli: 'Modifier ce chulli'
+    new_chulli: 'Nouveau chulli'
+    product:
+      admin:
+        test:
+          titre: 'Test du produit'
+  chull_test:
+    date: 'Date du test'
+    description: 'Description longue des tests'
+    pros: 'Les points positifs'
+    cons: 'Les points négatifs'
+    note: 'Note Rapport Qualité/Prix (de 1 à 5)'
+  store:
+    name: 'Nom'
+    description: 'Description'
+    joinus: 'Rejoignez-nous'
+    surface: 'Surface (en m²)'
+    latitude: 'Latitude'
+    longitude: 'Longitude'
+  chulli:
+    firstname: 'Prénom'
+    lastname: 'Nom'
+    expertise: 'Expertise'
+    avatar: 'Image du Chulli'

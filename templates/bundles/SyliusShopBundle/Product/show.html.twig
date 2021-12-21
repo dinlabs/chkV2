@@ -19,6 +19,75 @@
 {#<div id="otherProducts" class="prodList"></div>#}
 
 <div id="productContent" class="autoMargin">
+    {#% set chulli_test_date = product.getAttributeByCodeAndLocale('chulli_test_date', configuration.request.locale) %#}
+    {% if product.chulltest and product.chulltest.date and product.chulltest.description %}
+    <div id="productTest" class="frame">
+        <div class="pichulli">
+            <img src="/chullanka/assets/img/chulli.jpg" width="70" height="70" alt="Chulli">
+            <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+        </div>
+        <h2>Découvrez le test complet</h2>
+        <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
+        <div class="foldable">
+            <article>
+                <div class="header">
+                    <date>Le {{ product.chulltest.date|date('m/d/Y') }}</date>
+                    {% if product.chulltest.chulli %}
+                    <strong>PAR</strong>
+                    <div class="inline">
+                        <span>{{ product.chulltest.chulli }}</span>
+                        <img src="//picsum.photos/150/150" alt="">
+                        <span>{{ product.chulltest.chulli.expertise }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div>{{ product.chulltest.description|raw }}</div>
+
+                {#<div class="sumup">
+                    <div class="title">Pour résumer :</div>
+                    <p>Cette Corde Apsus 7.9Mm De Chez Edelride A Plus D'un Tour Dans Son Sac. </p>
+                </div>#}
+
+                <div class="insert">
+                    <div class="proCon">
+                        <div class="plus">
+                            <span>Les plus</span>
+                            {% if product.chulltest.pros %}
+                            <ul class="list">
+                                {% for _val in product.chulltest.pros|split('\n') %}
+                                <li>{{ _val }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        <div class="moins">
+                            <span>Les moins</span>
+                            {% if product.chulltest.cons %}
+                            <ul class="list">
+                                {% for _val in product.chulltest.cons|split('\n') %}
+                                <li>{{ _val }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if product.chulltest.note %}
+                    <div class="notation">
+                        <span>Rapport qualité prix</span>
+                        <ul>
+                            {% for n in 1..5  %}
+                            <li class="{{ (n <= product.chulltest.note) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#notation"/></svg></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+        </div>
+    </div>
+    {% endif %}
+
     <div id="fullDescription" class="frame">
         <h2>Description détaillée</h2>
         <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
@@ -55,9 +124,15 @@
         </div>
     </div>
 
-    <div class="frame">
-        <h2>Avis</h2>
-        <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
+    <div id="reviews" class="frame">
+        <h2 class="clientRating">
+            <ul class="rating">
+                {% for n in 1..5  %}
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-star"/></svg></li>
+                {% endfor %}
+            </ul>
+        </h2>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="45 avis">45 avis</a>
         <div class="foldable">
             {{ sylius_template_event('sylius.shop.product.show.tab_reviews', _context) }}
         </div>

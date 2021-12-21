@@ -33,3 +33,50 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    #ndY: pour ajouter des liens dans les menus
+    #cf. https://docs.sylius.com/en/latest/customization/menu.html
+    app.listener.admin.menu_builder:
+        class: App\Menu\AdminMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
+
+    #ndY: pour définir de nouveaux Type traduisibles
+    app.store.form.type:
+        class: App\Form\Type\StoreType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.store.class%', ['sylius']]
+    app.store_translation.form.type:
+        class: App\Form\Type\StoreTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.store_translation.class%', ['sylius']]
+    app.chull_test.form.type:
+        class: App\Form\Type\ChulltestType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.chulltest.class%', ['sylius']]
+    app.chull_test_translation.form.type:
+        class: App\Form\Type\ChulltestTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.chulltest_translation.class%', ['sylius']]
+
+    #ndY: pour ajouter des tabs dans edition de Product
+    app.listener.admin.product_form_menu_builder:
+        class: App\Menu\AdminProductFormMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.product.form, method: addItems }
+    app.form.extension.type.product:
+        class: App\Form\Extension\ProductTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Product\ProductType }
+
+    #ndY: pour définir de nouveaux constrolleurs utilisables dans routes.yml
+    chk.controller.store:
+        class: App\Controller\Chullanka\StoreController
+        autowire: true
+        tags: ['controller.service_arguments']
+    
+        

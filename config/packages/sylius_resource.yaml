@@ -1,0 +1,28 @@
+sylius_resource:
+    resources:
+        app.store:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\Chullanka\Store
+                form: App\Form\Type\StoreType
+                repository: App\Repository\Chullanka\StoreRepository
+            translation:
+                classes:
+                    model: App\Entity\Chullanka\StoreTranslation
+                    form: App\Form\Type\StoreTranslationType
+        app.chulli:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\Chullanka\Chulli
+                form: App\Form\Type\ChulliType
+                repository: App\Repository\Chullanka\ChulliRepository
+        
+        app.chulltest:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Chulltest
+                form: App\Form\Type\ChulltestType
+            translation:
+                classes:
+                    model: App\Entity\Chullanka\ChulltestTranslation
+                    form: App\Form\Type\ChulltestTranslationType

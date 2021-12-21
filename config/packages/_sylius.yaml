@@ -256,3 +256,63 @@ sylius_theme:
             scan_depth: 1
             directories:
                 - "%kernel.project_dir%/themes"
+
+sylius_grid:
+    grids:
+        app_admin_store:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Store
+            fields:
+                name:
+                    type: string
+                    label: 'Magasin'
+                surface:
+                    type: string
+                    label: 'Surface'
+                latitude:
+                    type: string
+                    label: 'Latitude'
+                longitude:
+                    type: string
+                    label: 'Longitude'
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
+                    #delete:
+                    #    type: delete
+        app_admin_chulli:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Chulli
+            fields:
+                firstname:
+                    type: string
+                    label: 'Prénom'
+                lastname:
+                    type: string
+                    label: 'Nom'
+                expertise:
+                    type: string
+                    label: 'Expertise'
+                avatar:
+                    type: string
+                    label: 'Avatar'
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
+                    #delete:
+                    #    type: delete
+            filters:
+                firstname:
+                    type: string
