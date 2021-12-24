@@ -1,0 +1,77 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% form_theme form '@BitBagSyliusElasticsearchPlugin/Shop/Product/filter_theme.html.twig' %}
+
+{% import '@SyliusUi/Macro/messages.html.twig' as messages %}
+{% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'bundles/bitbagsyliuselasticsearchplugin/css/bitbag-autocomplete-search.css'} %}
+{% endblock %}
+
+{% block content %}
+{{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+            'slug': app.request.attributes.get('slug'),
+            'template': '@SyliusShop/Taxon/_header.html.twig'
+})) }}
+
+<div class="autoMargin">
+
+    {{ form_start(form, {'method': 'GET', 'attr': {'class': 'loadable form'}}) }}
+    <div id="searchWrapper">
+        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
+            {% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %}
+            {% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/Index/_pagination.html.twig' %}
+        </div>
+        <div id="productList" class="prodList">
+            
+            <div class="ui search" id="products-search" style="display:none;">
+                <div class="ui fluid large left icon input">
+                    {{ form_widget(form.name, {'attr': {'placeholder': 'sylius.ui.search', 'class': 'prompt'}}) }}
+                    <i class="search icon"></i>
+                </div>
+            </div>
+
+            {% if products|length > 0 %}
+                <div class="list" id="products" {{ sylius_test_html_attribute('products') }}>
+                    {% set _count = 0 %}
+                    {% for product in products %}
+                        {% include '@SyliusShop/Product/_box.html.twig' %}
+                        
+                        {#% if _count == 1 %}
+                        {% include 'prodlist/encartPromo.html.twig' %}
+                        {% endif %#}
+                        
+                        {% set _count = _count + 1 %}
+                    {% endfor %}
+                    {# Fake pour alignement Flex ! #}
+                    {% for r in 1..(4 - (_count % 4)) %}<span style="width:155px;"></span>{% endfor %}
+                </div>
+
+                {{ pagination.simple(products) }}
+            {% else %}
+                {{ messages.info('sylius.ui.no_results_to_display') }}
+            {% endif %}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+
+    {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+            'slug': app.request.attributes.get('slug'),
+            'template': '@SyliusShop/Taxon/_footer.html.twig'
+    })) }}
+    
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliuselasticsearchplugin/js/bitbag-autocomplete-search.js'} %}
+
+    <script type="application/javascript">
+        $(document).autocompleteSearch('#products-search', '{{ url('bitbag_sylius_elasticsearch_plugin_shop_auto_complete_product_name') }}?query={query}')
+    </script>
+{% endblock %}

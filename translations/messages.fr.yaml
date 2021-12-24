@@ -35,3 +35,40 @@ app:
     lastname: 'Nom'
     expertise: 'Expertise'
     avatar: 'Image du Chulli'
+  
+  front:
+    readmore: 'Lire la suite'
+    gototop: 'Remonter en haut de la page'
+    category:
+      filter:
+        affiner: 'Affiner'
+        affiner_recherche: 'Affiner votre recherche'
+        affiner_recherche_suite: "avec les filtres d'experts que je vous ai configuré"
+        filtrer_par: "Filtrer par"
+  
+bitbag_sylius_elasticsearch_plugin:
+  ui:
+      min_price: Prix min
+      max_price: Prix max
+      filter_results: Filtrer les résultats
+      filter: Filtrer
+      sort: Trier par
+      bestsellers: Meilleures ventes
+      newest: Plus récent en premier
+      oldest: Plus ancien en premier
+      most_expensive: Plus cher en premier
+      cheapest: Moins cher en premier
+      per_page: Nombre de résultats
+      search_header: Recherche
+
+      search_box:
+          query:
+              placeholder: Rechercher des produits...
+          search_button:
+              label: Rechercher
+
+      facet:
+          price:
+              label: Prix
+          taxon:
+              label: Catégorie

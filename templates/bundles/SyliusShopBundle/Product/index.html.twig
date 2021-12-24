@@ -1,0 +1,191 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+{{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+            'slug': app.request.attributes.get('slug'),
+            'template': '@SyliusShop/Taxon/_header.html.twig'
+})) }}
+
+<div class="autoMargin">
+    <div id="searchWrapper">
+        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
+            {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+                'slug': app.request.attributes.get('slug'),
+                'template': '@SyliusShop/Taxon/_sidebar.html.twig'
+            })) }}
+        </div>
+        <div id="productList" class="prodList">
+            {% include '@SyliusShop/Taxon/_main.html.twig' %}
+        </div>
+    </div>
+
+    {#
+    <div id="catBrands">
+        <h2>Nos top marques Chaussure Randonnée</h2>
+        <div class="glider-contain">
+            <div class="glider">
+                <div>
+                    <div class="brandBox withImg" style="background-image:url(//picsum.photos/150/233?random=11);">
+                        <strong>Chullanka</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=1" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox">
+                        <strong>Salomon</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=2" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox withImg" style="background-image:url(//picsum.photos/150/233?random=31);">
+                        <strong>Petzl</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=3" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox withImg" style="background-image:url(//picsum.photos/150/233?random=41);">
+                        <strong>Osprey</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=4" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox">
+                        <strong>Peak Performance</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=5" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox">
+                        <strong>La Sportiva</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=6" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandBox withImg" style="background-image:url(//picsum.photos/150/233?random=71);">
+                        <strong>Millet</strong>
+                        <div class="logo">
+                            <img src="//picsum.photos/60/60?random=7" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tablist" class="dots"></div>
+        </div>
+        <script>
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#catBrands .glider'), { 
+                    slidesToShow: 2.25,
+                    slidesToScroll: 1,
+                    draggable: true,
+                    scrollLock: true,
+                    dots: '#catBrands .dots',
+                    responsive: [
+                        {
+                            // screens greater than >= 1024px
+                            breakpoint: 1024,
+                            settings: {
+                                itemWidth:180,
+                                slidesToShow: 'auto',
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+    </div>
+    #}
+
+    {#
+    <div id="alsoSee">
+        <h2>D'autres vont aussi voir</h2>
+        <div class="glider-contain">
+            <div class="glider">
+                <?php for($i=1; $i<=8; $i++): ?>
+                <?php $big = (rand(0,2) == 0); ?>
+                <a href="#"><img src="//picsum.photos/<?=$big ? '330' : '150'?>/330?random=<?=$i?>" alt="" class="round5 <?=$big ? 'big' : ''?>"></a>
+                <?php endfor; ?>
+            </div>
+            <div role="tablist" class="dots"></div>
+        </div>
+        <script>
+            // https://nickpiscitelli.github.io/Glider.js/
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#alsoSee .glider'), { 
+                    slidesToScroll : 1,
+                    duration: 2,
+                    draggable: true,
+                    scrollLock: true,
+                    specialGlider: true,
+                    dots: '#alsoSee .dots',
+                    responsive: [
+                        {
+                            // screens greater than >= 1024px
+                            breakpoint: 1024,
+                            settings: {
+                                slidesToShow: 'auto',
+                                itemWidth: 360,
+                                exactWidth: 330
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+    </div>
+    #}
+
+    {#
+    <div id="checkThat">
+        <h2>Et si vous regardiez aussi</h2>
+        <ul>
+            <li>
+                <h3>Librairie</h3>
+                <ul>
+                    <li><a href="#">Topo</a></li>
+                    <li><a href="#">Cartographie</a></li>
+                    <li><a href="#">Récits de montagne et livres</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>Vêtement de randonnée</h3>
+                <ul>
+                    <li><a href="#">Veste imperméable Gore-Tex</a></li>
+                    <li><a href="#">Doudoune</a></li>
+                    <li><a href="#">Polaire</a></li>
+                    <li><a href="#">T-shirt et polo</a></li>
+                    <li><a href="#">Pantalon</a></li>
+                    <li><a href="#">Short</a></li>
+                </ul>
+            </li>
+            <li>
+                <h3>Autre catégorie</h3>
+                <ul>
+                    <li><a href="#">Veste imperméable</a></li>
+                    <li><a href="#">Polaire</a></li>
+                    <li><a href="#">Doudoune</a></li>
+                    <li><a href="#">Short</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    #}
+
+    {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+            'slug': app.request.attributes.get('slug'),
+            'template': '@SyliusShop/Taxon/_footer.html.twig'
+    })) }}
+    
+</div>
+{% endblock %}

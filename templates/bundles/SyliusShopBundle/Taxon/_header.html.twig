@@ -1,0 +1,19 @@
+{# cf. https://symfony.com/bundles/LiipImagineBundle/current/basic-usage.html#create-thumbnails #}
+{% set _bgCat = '/chullanka/assets/img/bg-category.jpg' %}
+{% if taxon.images %}
+    {% if taxon.imagesByType('bg') is not empty %}
+    {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+    {% else %}
+    {% for image in taxon.images %}
+        {% if image.type == 'bg' %}
+        {% set _bgCat = image.path|imagine_filter(filter|default('sylius_shop_product_original')) %}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+{% endif %}
+
+<div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
+    <div class="autoMargin">
+        {{ sylius_template_event('sylius.shop.taxon.header', {'taxon': taxon}) }}
+    </div>
+</div>

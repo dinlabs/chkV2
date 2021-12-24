@@ -1,0 +1,63 @@
+<div class="openFilters">
+    <div class="pichulli">
+        <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
+        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+    </div>
+    <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
+    <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-affiner"/></svg>
+</div>
+
+<div class="mobileFilters hidden">
+    <h2>
+        <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-affiner"/></svg>
+        {{ 'app.front.category.filter.affiner'|trans }}
+        <svg class="svg-icon-close" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-close-alt"/></svg>
+    </h2>
+    <div class="scroller">
+        {% if taxon.enabledChildren %}
+        <ul class="subCats">
+            {% for child in taxon.enabledChildren %}
+            <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg> {{ child.name }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="filterWrapper">
+            <div class="filterInfo">
+                <div class="pichulli">
+                    <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                </div>
+                <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
+            </div>
+            
+            <h3>{{ 'app.front.category.filter.filtrer_par'|trans }}</h3>
+            <ul class="filterList">
+                {{ form_row(form.options) }}
+                {{ form_row(form.attributes) }}
+                {{ form_row(form.price) }}
+            </ul>
+            
+            <button type="submit" class="ui primary icon labeled button" style="width: 100%;"><i class="search icon"></i> {{ 'bitbag_sylius_elasticsearch_plugin.ui.filter'|trans }}</button>
+
+            <br><br><br>
+
+            <h3>{{ 'bitbag_sylius_elasticsearch_plugin.ui.sort'|trans }}</h3>
+            {% set route = app.request.attributes.get('_route') %}
+            {% set slug = app.request.get('slug') %}
+            {% set _order_by = app.request.get('order_by') %}
+            {% set _sort = app.request.get('sort') %}
+            {% set queryParameters = app.request.query.all|unset_elements(['order_by', 'sort', 'page']) %}
+            <ul class="sortList">
+                <li><a class="item{{ _order_by == 'sold_units' ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'order_by': 'sold_units', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.bestsellers'|trans }}</a></li>
+                <li><a class="item{{ (_order_by == 'product_created_at') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'order_by': 'product_created_at', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.newest'|trans }}</a></li>
+                <li><a class="item{{ (_order_by == 'product_created_at') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'order_by': 'product_created_at', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.oldest'|trans }}</a></li>
+                <li><a class="item{{ (_order_by == 'price') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'order_by': 'price', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.most_expensive'|trans }}</a></li>
+                <li><a class="item{{ (_order_by == 'price') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'order_by': 'price', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.cheapest'|trans }}</a></li>
+            </ul>
+        </div>
+        <a href="#"><img src="//picsum.photos/325/325?random=4" alt="Jusqu'à -50% sur vos chaussures trail" class="round5"></a>
+
+        {{ sylius_template_event('sylius.shop.product.index.after_vertical_menu', {'taxon': taxon}) }}
+    </div>
+</div>

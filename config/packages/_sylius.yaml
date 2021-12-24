@@ -7,10 +7,14 @@ imports:
 
     # ci-dessous, utilisation de 'config/packages/sylius_shop_config.yml' à la place
     #- { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
+    
     - { resource: "@SyliusPayPalPlugin/Resources/config/config.yaml" }
+    - { resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/config.yml" }
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
+    bitbag_es_pagination_available_page_limits: [16, 24, 32]
+    bitbag_es_pagination_default_limit: 24
 
 sylius_addressing:
     resources:
