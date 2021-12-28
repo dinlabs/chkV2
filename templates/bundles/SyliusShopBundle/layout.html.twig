@@ -15,6 +15,7 @@
     {% block stylesheets %}
         {#{ sylius_template_event('sylius.shop.layout.stylesheets') }#}
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/shop.style.css'} %}
+        {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/glider.min.css'} %}
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/styles.css'} %}
     {% endblock %}
 

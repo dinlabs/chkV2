@@ -1,0 +1,36 @@
+<div id="announces">
+    <div class="glider-contain">
+        <div class="glider">
+            {% for i in 1..12 %}
+            <a href="#"><img src="//picsum.photos/330/580?random={{ i|number_format }}" alt=""></a>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        // https://nickpiscitelli.github.io/Glider.js/
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#announces .glider'), { 
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                duration: 3,
+                draggable: true,
+                scrollLock: true,
+                dots: '#announces .dots',
+                responsive: [
+                    {
+                        // screens greater than >= 1024px
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 'auto',
+                            itemWidth: 360,
+                            exactWidth: 330
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+
+{#{ render(url('app_shop_partial_product_index_by_brand', {'brand': 3, 'template': '@SyliusShop/Homepage/_brand_products.html.twig'})) }#}

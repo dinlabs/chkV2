@@ -364,7 +364,7 @@ footer #ourAdventure h3 { text-align: center; }
 /* Category Page */
 #categoryTop #news, #catBrands, #checkThat, .autoMargin #description { padding:0 20px; }
 
-#categoryTop { background:no-repeat center top / cover; margin-top:-1rem; padding-top:1rem; }
+#categoryTop { background:no-repeat center top / cover; min-height:200px; margin-top:-1rem; padding-top:1rem; }
 
 #categoryTop #category { position:relative; padding:0 70px; font-weight:700; }
 #categoryTop #category h1 { text-transform:uppercase; }

@@ -1,0 +1,17 @@
+<div id="newProducts" class="prodList">
+    <div class="background" style="background-image:url(//picsum.photos/1500/350?random=8);">
+        <div class="autoMargin">
+            <img src="/chullanka/assets/img/mask_prodlist.png" alt="">
+        </div>
+    </div>
+    <div class="autoMargin">
+        <div class="list">
+            <div class="header">
+                <h2>Les Nouveautés</h2>
+                <p>liste de produits</p>
+            </div>
+            {{ render(url('sylius_shop_partial_product_index_latest', {'count': 10, 'template': '@SyliusShop/Product/_prodlist.html.twig'})) }}
+        </div>
+        <a href="#" class="btn">Voir plus de produits</a>
+    </div>
+</div>

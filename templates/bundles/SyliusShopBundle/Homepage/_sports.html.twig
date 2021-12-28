@@ -1,0 +1,36 @@
+<div id="sports">
+    <div class="autoMargin">
+        <h2>Trouvez votre équipement</h2>
+    </div>
+    <div class="glider-contain">
+        <div class="glider">
+            {% for i in 1..12 %}
+            <a href="#"><img src="//picsum.photos/150/230?random={{ i|number_format }}" alt=""></a>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#sports .glider'), { 
+                slidesToShow: 2.25,
+                slidesToScroll : 1,
+                duration: 2,
+                draggable: true,
+                scrollLock: true,
+                dots: '#sports .dots',
+                responsive: [
+                    {
+                        // screens greater than >= 1024px
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 'auto',
+                            itemWidth: 180,
+                            exactWidth: 150
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
