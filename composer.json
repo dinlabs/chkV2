@@ -22,7 +22,6 @@
         "bitbag/elasticsearch-plugin": "^1.7",
         "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
         "loevgaard/sylius-brand-plugin": "^2.1",
-        "sylius/invoicing-plugin": "^0.18.1",
         "sylius/paypal-plugin": "^1.1",
         "sylius/sylius": "~1.9.0",
         "symfony/dotenv": "^4.4 || ^5.2",
