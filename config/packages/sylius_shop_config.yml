@@ -100,6 +100,9 @@ sylius_ui:
                 new_products:
                     template: "@SyliusShop/Homepage/_new_products.html.twig"
                     priority: 50
+                mountain_products:
+                    template: "@SyliusShop/Homepage/_mountain_products.html.twig"
+                    priority: 40
                 # banner:
                 #     template: "@SyliusShop/Homepage/_banner.html.twig"
                 #     priority: 60

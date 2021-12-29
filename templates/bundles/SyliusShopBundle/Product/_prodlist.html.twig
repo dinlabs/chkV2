@@ -1,3 +1,21 @@
-{% for product in products %}
-    {% include '@SyliusShop/Product/_box.html.twig' %}
-{% endfor %}
+{% if media.enabled and media.products %}
+<div id="{{ media.code }}" class="prodList">
+    <div class="background" style="background-image:url({{ media.path }});">
+        <div class="autoMargin">
+            <img src="/chullanka/assets/img/mask_prodlist.png" alt="">
+        </div>
+    </div>
+    <div class="autoMargin">
+        <div class="list">
+            <div class="header">
+                <h2>{{ media.name|raw }}</h2>
+                <p>{{ bitbag_cms_render_content(media) }}</p>
+            </div>
+            {% include '@SyliusShop/Product/_prodlist_loop.html.twig' with {'products': media.products } %}
+        </div>
+        {% if media.link is defined %}
+        <a href="{{ media.link }}" class="btn">Voir plus de produits</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
