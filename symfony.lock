@@ -43,6 +43,12 @@
     "behat/transliterator": {
         "version": "v1.2.0"
     },
+    "bitbag/cms-plugin": {
+        "version": "v3.0.8"
+    },
+    "bitbag/elasticsearch-plugin": {
+        "version": "v1.7.3"
+    },
     "clue/stream-filter": {
         "version": "v1.4.0"
     },
@@ -151,6 +157,15 @@
     "egulias/email-validator": {
         "version": "2.1.5"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v6.8.2"
+    },
+    "ezimuel/guzzlestreams": {
+        "version": "3.0.1"
+    },
+    "ezimuel/ringphp": {
+        "version": "1.2.0"
+    },
     "fakerphp/faker": {
         "version": "v1.12.0"
     },
@@ -192,6 +207,30 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
+    },
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "f5ad42002183a6881962683e6d84bbb25cdfce5d"
+        },
+        "files": [
+            "./config/packages/fos_ckeditor.yaml"
+        ]
+    },
+    "friendsofsymfony/elastica-bundle": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "5.0",
+            "ref": "46c9cd2c1e07f0fcfd97e96f12b03b2e0845c4cd"
+        },
+        "files": [
+            "./config/packages/fos_elastica.yaml"
+        ]
     },
     "friendsofsymfony/oauth-server-bundle": {
         "version": "1.6.1"
@@ -274,6 +313,21 @@
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
     },
+    "knplabs/knp-snappy": {
+        "version": "v1.3.1"
+    },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        },
+        "files": [
+            "./config/packages/knp_snappy.yaml"
+        ]
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -291,6 +345,9 @@
     },
     "lcobucci/jwt": {
         "version": "3.3.2"
+    },
+    "league/csv": {
+        "version": "9.7.4"
     },
     "league/uri": {
         "version": "5.3.0"
@@ -547,6 +604,12 @@
     "ramsey/uuid": {
         "version": "3.8.0"
     },
+    "react/promise": {
+        "version": "v2.8.0"
+    },
+    "ruflin/elastica": {
+        "version": "6.2.0"
+    },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"
     },
@@ -654,6 +717,19 @@
     },
     "sylius/grid-bundle": {
         "version": "v1.5.1"
+    },
+    "sylius/invoicing-plugin": {
+        "version": "0.18",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.5",
+            "ref": "4720bdeb3db9f81932523a640184244cf75da7f0"
+        },
+        "files": [
+            "./config/packages/sylius_invoicing.yaml",
+            "./config/routes/sylius_invoicing.yaml"
+        ]
     },
     "sylius/mailer-bundle": {
         "version": "v1.4.4"
