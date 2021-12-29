@@ -1,10 +1,27 @@
 bitbag_sylius_elasticsearch_plugin:
     resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/routing.yml"
 
+bitbag_sylius_cms_plugin:
+    resource: "@BitBagSyliusCmsPlugin/Resources/config/routing.yml"
+
 sylius_paypal_webhook:
     resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
 
 # Controllers perso pour Chullanka -------- définis dans services.yaml
+# app_shop_partial_product_index_by_brand:
+#     path: /partial/products/by-brand
+#     methods: [GET]
+#     defaults:
+#         _controller: sylius.controller.product::indexAction
+#         _sylius:
+#             template: '@SyliusShop/Homepage/_announces.html.twig'
+#             repository:
+#                 method: findAllByBrand
+#                 arguments: [1]
+#             criteria: false
+#         paginate: false
+#         limit: 10
+
 app_admin_store:
     resource: |
         alias: app.store

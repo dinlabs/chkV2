@@ -10,6 +10,7 @@ imports:
     
     - { resource: "@SyliusPayPalPlugin/Resources/config/config.yaml" }
     - { resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/config.yml" }
+    - { resource: "@BitBagSyliusCmsPlugin/Resources/config/config.yml" }
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
@@ -150,6 +151,8 @@ sylius_product:
         product:
             classes:
                 model: App\Entity\Product\Product
+                # repository: App\Repository\ProductRepository
+                # controller: App\Controller\ProductController
             translation:
                 classes:
                     model: App\Entity\Product\ProductTranslation
