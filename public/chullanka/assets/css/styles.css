@@ -89,7 +89,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodList .background .autoMargin::after { left:554px; }
 .prodList .background .autoMargin img { max-width:554px; }
 .prodList .header { width:335px; padding-top:80px; color:var(--bg0); }
-.prodList h2 { width:75%; text-align:initial; color:var(--default); }
+.prodList h2 { width:75%; text-align:initial; }
 .prodList .list { display:flex; flex-wrap:wrap; justify-content:space-evenly; text-align:initial; padding-top:90px; }
 .prodInList { position:relative; width:155px; min-height:327px; margin-bottom:30px; padding:11px 3px 0; }
 .prodInList .svg-bg { position:absolute; left:0; top:0; width:100%; min-height:327px; z-index:0; }
@@ -221,7 +221,7 @@ header.search-visible .inside #searchBox input { bottom:10px; opacity:1; transit
 /*.home header.is-pinned { min-height:100px; }*/
 .home header:not(.is-pinned) .inside #searchBox { display:initial; position:absolute; bottom:-20px; left:50%; transform:translateX(-50%); }
 .home header:not(.is-pinned) .inside #searchBox label { position:absolute; left:16px; top:8px; }
-.home header:not(.is-pinned) .inside #searchBox .svg-icon { display:initial; }
+.home header:not(.is-pinned) .inside #searchBox .svg-icon { display:initial; transform:scaleX(-1); }
 .home header:not(.is-pinned) .inside #searchBox .svg-icon-close { display:none; }
 
 .home header:not(.is-pinned) .inside #searchBox input { padding-left:60px; }
@@ -386,6 +386,7 @@ footer #ourAdventure h3 { text-align: center; }
 #searchWrapper { padding-bottom:2em; }
 #searchWrapper img { display:block; margin:auto; }
 #filters .openFilters { position:fixed; bottom:0; background:var(--bg0); display:flex; justify-content:space-around; align-items:center; border-top:2px solid var(--primary); padding:1em; z-index:25; cursor:pointer; }
+#filters .openFilters .svg-montagne { position:absolute; top:-19px; left:20px; width:63.26px; height:19.34px; }
 #filters .openFilters .pichulli { height:60px; width:80px; }
 #filters .openFilters p { font-size:.733em; }
 #filters .openFilters p strong { display:block; font-size:1.364em; }

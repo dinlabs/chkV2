@@ -3,3 +3,11 @@
 twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+
+fos_ck_editor:
+    toolbars:
+        configs:
+            bitbag_sylius_cms_plugin:
+                - '@full.colors'
+        items:
+            full.colors: [ 'TextColor' ]

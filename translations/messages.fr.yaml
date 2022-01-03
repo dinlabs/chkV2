@@ -37,6 +37,7 @@ app:
     avatar: 'Image du Chulli'
   
   front:
+    show_more_products: 'Voir plus de produits'
     readmore: 'Lire la suite'
     gototop: 'Remonter en haut de la page'
     category:

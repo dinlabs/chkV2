@@ -94,6 +94,9 @@ var funcStickyHeader = function()
     const $header = document.querySelector('header');
     if($header)
     {
+        var _scrollTop = 0;
+        var _topLimit = 30;
+        var $topAnnounce = document.querySelector('#topAnnounce');
 
         /*const observer = new IntersectionObserver( 
         ([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1),
@@ -103,7 +106,13 @@ var funcStickyHeader = function()
 
         window.onscroll = function() 
         {
-            if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+            if($topAnnounce.classList.contains('hidden'))
+            {
+                _topLimit = 10;
+            }
+
+            _scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+            if (_scrollTop > _topLimit) {
                 $header.classList.add('is-pinned');
             } else {
                 $header.classList.remove('is-pinned');

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 use Sylius\Component\Resource\Model\TranslatableTrait;
+use Sylius\Component\Resource\Model\TranslationInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ChulltestRepository::class)
@@ -142,7 +143,7 @@ class Chulltest implements ResourceInterface, TranslatableInterface
         return $this;
     }    
 
-    protected function createTranslation()
+    protected function createTranslation(): TranslationInterface
     {
         return new ChulltestTranslation();
     }
