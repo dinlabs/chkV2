@@ -1,3 +1,9 @@
+{% set _count = 0 %}
 {% for product in products %}
     {% include '@SyliusShop/Product/_box.html.twig' %}
+    {% set _count = _count + 1 %}
 {% endfor %}
+{# Fake pour alignement Flex ! #}
+{% set _limit = 4 %}
+{% if _count > _limit %}{% set _limit = 6 %}{% endif %}
+{% for r in 1..(_limit - (_count % _limit)) %}<span style="width:155px;"></span>{% endfor %}

@@ -38,7 +38,7 @@
             </div>
 
             {% if products|length > 0 %}
-                <div class="list" id="products" {{ sylius_test_html_attribute('products') }}>
+                <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
                     {% set _count = 0 %}
                     {% for product in products %}
                         {% include '@SyliusShop/Product/_box.html.twig' %}
@@ -79,7 +79,21 @@
     <script type="application/javascript">
         $(document).ready(function() {
             var $form = $('#filterForm');
-            $form.on('submit', function(e) {
+            $form.on('click', '#showProducts', function(e)
+            {
+                e.preventDefault();
+                $form.find('.mobileFilters').addClass('hidden');
+
+                //var $anchor = document.querySelector('#productList');
+                window.scrollTo({
+                    //top: $anchor.offsetTop - 100,
+                    top: 450,
+                    behavior: 'smooth'
+                });
+            }).on('change', '.field input', function(e)
+            {
+                $form.submit();
+            }).on('submit', function(e) {
                 e.preventDefault();
 
                 $form.addClass('loading');
@@ -96,6 +110,21 @@
                     success(response) {
                         $form.removeClass('loading');
                         $('#searchWrapper').html(response);
+
+                        var _text = 'Aucun produit';
+                        if($('#searchWrapper #products').length && $('#showProducts').length)
+                        {
+                            // nbr total de produits
+                            var _total = $('#searchWrapper #products').data('total');
+                            if(_total > 0)
+                            {
+                                _text = 'Voir le';
+                                if(_total > 1) _text += 's ' + _total;
+                                _text += ' produit';
+                                if(_total > 1) _text += 's ';
+                            }
+                        }
+                        $('#showProducts').html(_text);
 
                         // reload JS events
                         funcFoldable();
