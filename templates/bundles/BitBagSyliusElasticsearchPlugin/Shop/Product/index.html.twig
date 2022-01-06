@@ -15,6 +15,9 @@
 {% endblock %}
 
 {% block content %}
+<div id="js-loader" class="ui form"></div>
+{% set ajax_pagination = app.request.get('page') %}
+
 {% if app.request.xmlHttpRequest == false %}
     {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
             'slug': app.request.attributes.get('slug'),
@@ -22,9 +25,11 @@
     })) }}
 
 <div id="cat_content" class="autoMargin">
-    {{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm', 'class': 'ui loadable form'}}) }}
+    {{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }}
     <div id="searchWrapper">
 {% endif %}
+
+        {% if ajax_pagination == false %}
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
             {% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %}
             {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/Index/_pagination.html.twig' %#}
@@ -38,6 +43,7 @@
             </div>
 
             {% if products|length > 0 %}
+                <h2>Tous nos produits {{ taxon.name }}</h2>
                 <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
                     {% set _count = 0 %}
                     {% for product in products %}
@@ -50,7 +56,7 @@
                         {% set _count = _count + 1 %}
                     {% endfor %}
                     {# Fake pour alignement Flex ! #}
-                    {% for r in 1..(4 - (_count % 4)) %}<span style="width:155px;"></span>{% endfor %}
+                    {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 </div>
 
                 {{ pagination.simple(products) }}
@@ -58,6 +64,19 @@
                 {{ messages.info('sylius.ui.no_results_to_display') }}
             {% endif %}
         </div>
+        {% else %}
+        {# pagination en AJAX #}
+            {% if products|length > 0 %}
+            {% set _count = 0 %}
+            {% for product in products %}
+                {% include '@SyliusShop/Product/_box.html.twig' %}
+                {% set _count = _count + 1 %}
+            {% endfor %}
+            {# Fake pour alignement Flex ! #}
+            {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
+            {% endif %}
+            {{ pagination.simple(products) }}
+        {% endif %}
 
     {% if app.request.xmlHttpRequest == false %}
     </div>
@@ -78,16 +97,55 @@
 
     <script type="application/javascript">
         $(document).ready(function() {
+            var $pagination = $('.pagination');
+            if($pagination.length)
+            {
+                var _target = $pagination.find('.item.active').next().attr('href');
+
+                $btnMore = $('<button class="btn">Voir plus de produits</button>');
+                $btnMore.on('click', function(e)
+                {
+                    e.preventDefault();
+
+                    $('#js-loader').addClass('loading');
+                    $.ajax({
+                        type: 'GET',
+                        url: _target,
+                        error() {
+                            $('#js-loader').removeClass('loading');
+                        },
+                        success(response) {
+                            $('.fakeProduct').each(function(i,o) {
+                                $(o).remove();
+                            })
+                            $('#products').append(response);
+
+                            // màj lien "voir plus"
+                            $pagination = $('.pagination');
+                            if($pagination.find('.item.active').next().hasClass('disabled'))
+                            {
+                                $btnMore.remove();
+                            }
+                            else {
+                                _target = $pagination.find('.item.active').next().attr('href');
+                            }
+                            $pagination.remove();
+
+                            $('#js-loader').removeClass('loading');
+                        },
+                    });
+
+                });
+                $pagination.replaceWith($btnMore);
+            }
             var $form = $('#filterForm');
             $form.on('click', '#showProducts', function(e)
             {
                 e.preventDefault();
-                $form.find('.mobileFilters').addClass('hidden');
-
-                //var $anchor = document.querySelector('#productList');
+                document.querySelector('.mobileFilters').classList.add('hidden');
+                var $anchor = document.querySelector('#filterForm');
                 window.scrollTo({
-                    //top: $anchor.offsetTop - 100,
-                    top: 450,
+                    top: $anchor.offsetTop - _topDecay + 40,
                     behavior: 'smooth'
                 });
             }).on('change', '.field input', function(e)
@@ -96,7 +154,7 @@
             }).on('submit', function(e) {
                 e.preventDefault();
 
-                $form.addClass('loading');
+                $('#js-loader').addClass('loading');
 
                 {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
                 $.ajax({
@@ -105,11 +163,11 @@
                     data: $form.serialize(),
                     dataType: 'html',
                     error() {
-                        $('form').removeClass('loading');
+                        $('#js-loader').removeClass('loading');
                     },
                     success(response) {
-                        $form.removeClass('loading');
                         $('#searchWrapper').html(response);
+                        $('#js-loader').removeClass('loading');
 
                         var _text = 'Aucun produit';
                         if($('#searchWrapper #products').length && $('#showProducts').length)

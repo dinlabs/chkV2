@@ -58,9 +58,9 @@
         {{ sylius_template_event('sylius.shop.product.index.after_vertical_menu', {'taxon': taxon}) }}
     </div>
 
-    <div id="mobileFiltersFooter">
+    <div class="mobileFiltersFooter">
         <svg class="svg-montagne" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-montagne"/></svg>
-        <a href="{{ app.request.uri }}">Réinitialiser</a>
+        <a href="{{ app.request.pathInfo }}">Réinitialiser</a>
         <button id="showProducts" class="btn">Voir les {{ products|length }} produits</button>
     </div>
 </div>

@@ -1,5 +1,7 @@
 /*  =UTILITIES
 ----------------------------------------------------------------------------- */
+var _topDecay = 100;//=stickyHeader!
+
 let log = function(x) {
     if(typeof console != 'undefined') console.log(x);
 };
@@ -135,7 +137,6 @@ var funcStickyHeader = function()
 ------------------------- */
 var funcScrollTo = function()
 {
-    var _topDecay = 100;//=stickyHeader!
     //document.querySelectorAll('.jsToAnchor').forEach(function($target) {
     document.querySelectorAll('a[href^="#"]').forEach(function($target) {
         $target.addEventListener('click', function(event) {
@@ -148,7 +149,7 @@ var funcScrollTo = function()
                 window.scrollTo({
                     top: $anchor.offsetTop - _topDecay,
                     behavior: 'smooth'
-                  });
+                });
             }
               
             /*setTimeout(function () {
@@ -295,6 +296,14 @@ var funcOpenFilters = function()
         });
         $filters.querySelector('.svg-icon-close').addEventListener('click', function(e) {
             $filters.classList.add('hidden');
+        });
+        $filters.querySelector('#showProducts').addEventListener('click', function(e) {
+            $filters.classList.add('hidden');
+            var $anchor = document.querySelector('#productList');
+            window.scrollTo({
+                top: $anchor.offsetTop - _topDecay + 40,
+                behavior: 'smooth'
+            });
         });
     }
 }
