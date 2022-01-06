@@ -15,10 +15,11 @@
 {% endblock %}
 
 {% block content %}
-<div id="js-loader" class="ui form"></div>
 {% set ajax_pagination = app.request.get('page') %}
 
 {% if app.request.xmlHttpRequest == false %}
+    <div id="js-loader" class="ui form"></div>
+    
     {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
             'slug': app.request.attributes.get('slug'),
             'template': '@SyliusShop/Taxon/_header.html.twig'
