@@ -90,9 +90,9 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodList .background .autoMargin::before { transform:translateX(-100%); }
 .prodList .background .autoMargin::after { left:554px; }
 .prodList .background .autoMargin img { max-width:554px; }
-.prodList .header { width:335px; padding-top:80px; color:var(--bg0); }
 .prodList h2 { width:75%; text-align:initial; }
 .prodList .list { display:flex; flex-wrap:wrap; justify-content:space-evenly; text-align:initial; padding-top:90px; }
+.prodList .list .header { width:335px; padding-top:80px; color:var(--bg0); }
 .prodInList { position:relative; width:155px; min-height:327px; margin-bottom:30px; padding:11px 3px 0; }
 .prodInList .svg-bg { position:absolute; left:0; top:0; width:100%; min-height:327px; z-index:0; }
 .prodInList .svg-picto { position:absolute; top:-2px; right:0px; width:40px; height:20px; stroke:var(--primary); fill:var(--primary); z-index:2; }

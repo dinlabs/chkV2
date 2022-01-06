@@ -19,7 +19,7 @@
 
 {% if app.request.xmlHttpRequest == false %}
     <div id="js-loader" class="ui form"></div>
-    
+
     {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
             'slug': app.request.attributes.get('slug'),
             'template': '@SyliusShop/Taxon/_header.html.twig'
@@ -97,12 +97,12 @@
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliuselasticsearchplugin/js/bitbag-autocomplete-search.js'} %}
 
     <script type="application/javascript">
-        $(document).ready(function() {
+        var _manageButtonMore = function()
+        {
             var $pagination = $('.pagination');
             if($pagination.length)
             {
                 var _target = $pagination.find('.item.active').next().attr('href');
-
                 $btnMore = $('<button class="btn">Voir plus de produits</button>');
                 $btnMore.on('click', function(e)
                 {
@@ -135,10 +135,14 @@
                             $('#js-loader').removeClass('loading');
                         },
                     });
-
                 });
                 $pagination.replaceWith($btnMore);
             }
+        };
+
+        $(document).ready(function() {
+            _manageButtonMore();
+
             var $form = $('#filterForm');
             $form.on('click', '#showProducts', function(e)
             {
@@ -189,6 +193,7 @@
                         funcFoldable();
                         funcOpenFilters();
                         funcLoadMoreProds();
+                        _manageButtonMore();
                     },
                 });
             });
