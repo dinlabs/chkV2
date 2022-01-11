@@ -34,6 +34,22 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    #ndY : désactiver l'autowire pour ce controller perso
+    # App\Controller\ProductController:
+    #     autowire: false
+
+    #ndY: pour définir de nouveaux constrolleurs utilisables dans routes.yml
+    chk.controller.ajax:
+        class: App\Controller\Chullanka\AjaxController
+        autowire: true
+        tags: ['controller.service_arguments']
+
+    chk.controller.store:
+        class: App\Controller\Chullanka\StoreController
+        autowire: true
+        tags: ['controller.service_arguments']
+       
+    
     #ndY: pour ajouter des liens dans les menus
     #cf. https://docs.sylius.com/en/latest/customization/menu.html
     app.listener.admin.menu_builder:
@@ -62,7 +78,7 @@ services:
         tags:
             - { name: form.type }
         arguments: ['%app.model.chulltest_translation.class%', ['sylius']]
-
+    
     #ndY: pour ajouter des tabs dans edition de Product
     app.listener.admin.product_form_menu_builder:
         class: App\Menu\AdminProductFormMenuListener
@@ -73,10 +89,4 @@ services:
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Product\ProductType }
 
-    #ndY: pour définir de nouveaux constrolleurs utilisables dans routes.yml
-    chk.controller.store:
-        class: App\Controller\Chullanka\StoreController
-        autowire: true
-        tags: ['controller.service_arguments']
-    
-        
+         

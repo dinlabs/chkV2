@@ -1,21 +1,25 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 {% set product = order_item.variant.product %}
-
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 <div id="sylius-product-selecting-variant" {{ sylius_test_html_attribute('product-selecting-variant') }}>
     {{ sylius_template_event('sylius.shop.product.show.before_add_to_cart', {'product': product, 'order_item': order_item}) }}
 
+    {% if product.isPack %}
+    {% include '@SyliusShop/Product/Show/_addPackToCart.html.twig' %}
+    {% else %}
     {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart', 'class': 'loadable', 'novalidate': 'novalidate', 'data-redirect': path(configuration.getRedirectRoute('summary'))}}) }}
     {{ form_errors(form) }}
 
     <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error" {{ sylius_test_html_attribute('cart-validation-error') }}></div>
+
     {% if not product.simple %}
         <div class="configurability">
-          {% if product.variantSelectionMethodChoice %}
+        {% if product.variantSelectionMethodChoice %}
             {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
-          {% else %}
+        {% else %}
             {% include '@SyliusShop/Product/Show/_options.html.twig' %}
-          {% endif %}
+        {% endif %}
         </div>
     {% endif %}
 
@@ -31,4 +35,6 @@
     
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}
+
+    {% endif %}
 </div>

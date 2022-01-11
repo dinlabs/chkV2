@@ -3,6 +3,9 @@ chullanka_stores:
 chullanka_chullis:
   menu_item: 'Les Chullis'
 app:
+  homepage:
+    newsletter: 'Nos nouveautés, nos promos, nos activités avant tout le monde'
+    newsletter_description: 'Promis on ne vous spammera pas :)'
   ui:
     name: 'Nom'
     store: 'Magasin'

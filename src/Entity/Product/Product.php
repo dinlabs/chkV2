@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Product;
 
 use App\Entity\Chullanka\Chulltest;
+use App\Entity\Chullanka\PackElement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,17 +22,92 @@ use Sylius\Component\Product\Model\ProductTranslationInterface;
 class Product extends BaseProduct implements LoevgaardSyliusBrandPluginProductInterface
 {
     use LoevgaardSyliusBrandPluginProductTrait;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_pack", options={"default":false})
+     */
+    private $isPack = false;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $mounting;
     
+    /**
+     * @ORM\OneToMany(targetEntity=PackElement::class, mappedBy="parent", orphanRemoval=true)
+     */
+    private $packElements;
+
     /**
      * @ORM\OneToOne(targetEntity=Chulltest::class, mappedBy="product", cascade={"persist", "remove"})
      */
     private $chulltest;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->packElements = new ArrayCollection();
+    }
     
     protected function createTranslation(): ProductTranslationInterface
     {
         return new ProductTranslation();
     }
     
+    public function getIsPack(): ?bool
+    {
+        return $this->isPack;
+    }
+
+    public function setIsPack(bool $isPack): self
+    {
+        $this->isPack = $isPack;
+
+        return $this;
+    }
+
+    public function getMounting(): ?int
+    {
+        return $this->mounting;
+    }
+
+    public function setMounting(?int $mounting): self
+    {
+        $this->mounting = $mounting;
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|PackElement[]
+     */
+    public function getPackElements(): Collection
+    {
+        return $this->packElements;
+    }
+
+    public function addPackElement(PackElement $packElement): self
+    {
+        if (!$this->packElements->contains($packElement)) {
+            $this->packElements[] = $packElement;
+            $packElement->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePackElement(PackElement $packElement): self
+    {
+        if ($this->packElements->removeElement($packElement)) {
+            // set the owning side to null (unless already changed)
+            if ($packElement->getParent() === $this) {
+                $packElement->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getChulltest(): ?Chulltest
     {
         return $this->chulltest;

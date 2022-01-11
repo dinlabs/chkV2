@@ -150,5 +150,31 @@
     lightbox.option({
         'albumLabel': '{{ 'sylius.lightbox.image_album_label'|trans|escape('js') }}'
     });
+
+    {% if product.isPack %}
+    $(document).ready(function() {
+        $('#packElements .packElement label').on('click', function(e) {
+            var $this = $(this);
+            $this.find('input[type=radio]').prop('checked', true); // force for IE !
+            $this.addClass('selected');
+            $this.parents('#packElements').find('label').not($this).removeClass('selected').find('input[type=radio]').prop('checked', false);
+              
+            // copy config selector
+            $('.subconfig').empty();
+            if($this.find('.product-option-data').length)
+            {
+                var $optionData = $this.find('.product-option-data').find('.pack-conf-products').clone();
+                $optionData.addClass('packElement');
+                $optionData.find('label').removeClass('hidden').wrap('<div class="elementTitle"></div>');
+                $optionData.find('select').each(function(i,o){
+                    var _id = $(o).data('id');
+                    var _name = $(o).data('name');
+                    $(o).attr('id', _id).attr('name', _name);
+                });
+                $('.subconfig').append($optionData);
+            }
+        });
+    });
+    {% endif %}
 </script>
 {% endblock %}

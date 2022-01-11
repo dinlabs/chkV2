@@ -1,0 +1,124 @@
+<div id="mountingOptions">
+    <div class="elementTitle">Souhaitez-vous un montage gratuit ?</div>
+    <div class="mounting-choose">
+        <ul>
+            <li>
+                <label for="mounting-yes">Oui</label>
+                <input type="radio" id="mounting-yes" name="sylius_add_to_cart[mounting]" value="1">
+            </li>
+            <li class="selected">
+                <label for="mounting-no">Non</label>
+                <input type="radio" id="mounting-no" name="sylius_add_to_cart[mounting]" value="0" checked="checked">
+            </li>
+        </ul>
+    </div>
+    
+    {# $typePopin = ($attributeSetName == "Fixation Snow") ? 'snowboard' : 'ski'; #}
+    {% set typePopin = 'ski' %}
+    {% if product.mounting == 2 %}{% set typePopin = 'snowboard' %}{% endif %}
+    
+    <div id="mountingPop" class="popin hidden">
+        <div class="popinside">
+            <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-close-alt"/></svg></button>
+
+            <h2 class="popin-title">Montage de vos fixations</h2>
+            <div class="popin-mounting-inner section">
+                <p class="notabene">Afin de préparer au mieux votre matériel dans nos ateliers, veuillez renseigner les informations ci-dessous :</p>
+            
+                <section class="level">
+                    <h3><span>Quel est votre niveau de {{ typePopin|capitalize }} ?</span></h3>
+                    <ul class="skinradio">
+                        <li class="choose-level-ski">
+                            <input type="radio" id="level-ski-debut" name="sylius_add_to_cart[mount][level]" value="Débutant">
+                            <label for="level-ski-debut">Débutant</label>
+                        </li>
+                        <li class="choose-level-ski">
+                            <input type="radio" id="level-ski-inter" name="sylius_add_to_cart[mount][level]" value="Intermédiaire">
+                            <label for="level-ski-inter">Intermédiaire</label>
+                        </li>
+                        <li class="choose-level-ski">
+                            <input type="radio" id="level-ski-conf" name="sylius_add_to_cart[mount][level]" value="Confirmé">
+                            <label for="level-ski-conf">Confirmé</label>
+                        </li>
+                        <li class="choose-level-ski">
+                            <input type="radio" id="level-ski-exp" name="sylius_add_to_cart[mount][level]" value="Expert">
+                            <label for="level-ski-exp">Expert</label>
+                        </li>
+                    </ul>
+                </section>
+                
+                <section class="size">
+                    <h3>
+                        <span>Quelle taille pour vos semelles ?
+                            <span class="icon icon-info-with-circle">i
+                                <span>
+                                    <h4>Taille de la semelle</h4>
+                                    <p>La longueur de la semelle en mm est indiqué au niveau du talon sur l’un des côtés de votre chaussure de ski ou de vos boots. Si cette information n’est pas présente merci de nous préciser la pointure en mondopoint dans la case « pointure (mdp) ». En dernier recours, vous pouvez aussi mesurer la semelle de votre chaussure (de la pointe au talon) et rentrer l’information dans la case « En mm ».</p>
+                                </span>
+                            </span>
+                        </span>
+                    </h3>
+                    <div class="position-validation-advice block-inline">
+                        <ul>
+                            <li>
+                                <label for="size-shoes-mm">En mm</label>
+                                <input type="text" id="size-shoes-mm" name="sylius_add_to_cart[mount][mm_size]" placeholder="En mm">
+                            </li>
+                            <li class="spacer">ou</li>
+                            <li>
+                                <label for="size-shoes-fr">En pointure (mdp)</label>
+                                <input type="text" id="size-shoes-fr" name="sylius_add_to_cart[mount][shoe_size]" placeholder="En pointure (mdp)">
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                
+                {% if typePopin == 'snowboard' %}
+                <section class="snowtype">
+                    <h3>
+                        <span>Quel est votre pied d'appui ?
+                            <span class="icon icon-info-with-circle">i
+                                <span>
+                                    <h4>Votre pied d'appui</h4>
+                                    <p>Votre pied d'appui est celui que vous allez mettre à l'avant de votre snowboard. <br>Goofie = pied droit à l'avant, Regular = pied gauche à l'avant. <br>Pour savoir quel est votre pied d'appui, demandez à un ami de vous pousser vers l'avant et regardez quel pied vous utilisez pour vous équilibrer</p>
+                                </span>
+                            </span>
+                        </span>
+                    </h3>
+                    <ul class="skinradio">
+                        <li class="choose-position-snow">
+                            <input type="radio" id="snow-pos-goofie" name="sylius_add_to_cart[mount][snow-position]" value="Goofy">
+                            <label for="snow-pos-goofie">Goofy</label>
+                        </li>
+                        <li class="choose-position-snow">
+                            <input type="radio" id="snow-pos-reg" name="sylius_add_to_cart[mount][snow-position]" value="Regular">
+                            <label for="snow-pos-reg">Regular</label>
+                        </li>
+                    </ul>
+                </section>
+                {% endif %}
+                
+                <section class="weight">
+                    <h3><span>Quel est votre poids ?</span></h3>
+                    <div class="position-validation-advice">
+                        <div class="block-inline">
+                            <label for="weight">En Kg</label>
+                            <input id="weight" name="sylius_add_to_cart[mount][weight]" type="text" placeholder="En Kg">
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="infosup">
+                    <h3><span><label for="comments">Vous souhaitez nous spécifier quelque chose (optionel) ?</label></span></h3>
+                    <div class="position-validation-advice">
+                        <textarea name="sylius_add_to_cart[mount][comments]" id="comments" placeholder="..."></textarea>
+                    </div>
+                </section>
+                
+                <div class="button-wrapper">
+                    <span class="btn ">Valider</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,136 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+<form action="{{ path('chk_ajax_addpacktocart') }}" method="post">
+    {% set variant = product|sylius_resolve_variant %}
+    <input type="hidden" name="sylius_add_to_cart[packId]" value="{{ variant.id }}">
+    <div id="packElements" class="configurability">
+        {% set _countElement = 0 %}
+        {% for element in product.packElements %}
+        <div class="packElement">
+            <div class="elementTitle">{{ element.name }}</div>
+            {# si un seul produit pour cet élément... #}
+            {% if element.products|length == 1 %}
+                {% set choice = element.products.first %}
+                {% if choice.simple %}
+                <label for="choice_{{ choice.id }}">{{ choice }}</label>
+                <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}">
+                {% else %}
+                <select id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]">
+                    <option value="">Choisir</option>
+                    {% for choiceVariant in choice.variants %}
+                    {% set _label = choiceVariant.name %}
+                    {% if choiceVariant.optionValues %}
+                        {% for option in choiceVariant.optionValues %}
+                            {% set _label = option.value %}
+                        {% endfor %}
+                    {% endif %}
+                    <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+            {% else %}
+                {# plusieurs choix possibles dans cet élement #}
+
+                {# pack ski+fixations ! #}
+                {% if _countElement == 1 and product.mounting %}
+                    <div class="prodList" style="">
+                        <section class="list" style="padding:1em 0;">
+                        {% for choice in element.products %}
+                            {% set choiceVariant = choice|sylius_resolve_variant %}
+                            <label for="choice_{{ choice.id }}" class="prodInList">
+                                
+                                <svg class="svg-bg" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#bg-prodinlist"/></svg>
+                                <svg class="svg-picto" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#notation"/></svg>
+                                <div class="picture">
+                                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
+                                </div>
+                                <div class="infos">
+                                    <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
+                                    <div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>
+                                    <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
+                                    {% if choice.averageRating %}
+                                    <div class="clientRating">
+                                        <ul class="rating">
+                                            {% for n in 1..5  %}
+                                            <li class="{{ (n <= choice.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-star"/></svg></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if choice.simple %}
+                                <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
+                                {% else %}
+                                <div class="product-option-data hidden">
+                                    <div class="pack-conf-products">
+                                        <label>Titre de l'option</label>
+                                        <select data-name="sylius_add_to_cart[packItem][{{ _countElement }}]">
+                                            <option value="">Choisir</option>
+                                            {% for choiceVariant in choice.variants %}
+                                            {% set _label = choiceVariant.name %}
+                                            {% if choiceVariant.optionValues %}
+                                                {% for option in choiceVariant.optionValues %}
+                                                {% set _label = option.value %}
+                                                {% endfor %}
+                                            {% endif %}
+                                            <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </label>
+                        {% endfor %}
+                        </section>
+                    </div>
+                {% else %}
+                    {% for choice in element.products %}
+                    <label for="choice_{{ choice.id }}">{{ choice }}</label>
+                        {% if choice.simple %}
+                        {% set choiceVariant = choice|sylius_resolve_variant %}
+                        
+                            {% if element.products|length == 1 %}
+                                <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}"> {{ money.calculatePrice(choiceVariant) }}
+                            {% else %}
+                            
+                            <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}"> {{ money.calculatePrice(choiceVariant) }}
+                            {% endif %}
+
+                        {% else %}
+                        <select id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]">
+                            <option value="">Choisir</option>
+                            {% for choiceVariant in choice.variants %}
+                            {% set _label = choiceVariant.name %}
+                            {% if choiceVariant.optionValues %}
+                                {% for option in choiceVariant.optionValues %}
+                                    {% set _label = option.value %}
+                                {% endfor %}
+                            {% endif %}
+                            <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                    {% endfor %}{# for choice in element.products #}
+
+                {% endif %}{# if _countElement == 1 and product.mounting #}
+            {% endif %}{# if element.products|length == 1 #}
+            {% set _countElement = _countElement + 1 %}
+        </div>
+        {% endfor %}
+        
+        <div class="subconfig"></div>
+
+        {% if product.mounting %}
+        <div class="packElement">
+            {% include '@SyliusShop/Product/Show/_popMountOptions.html.twig' %}
+        </div>
+        {% endif %}
+
+        <div id="addToCart">
+            <button type="submit" class="btn" style="font-weight:300;" {{ sylius_test_html_attribute('add-to-cart-button') }}>
+                <span>{{ 'sylius.ui.add_to_cart'|trans }}</span>
+            </button>
+        </div>
+    </div>
+</form>

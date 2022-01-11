@@ -1,0 +1,9 @@
+{% set product = variant.product %}
+<div>
+    {{ product.name }}
+    {% if variant.optionValues %}
+        {% for option in variant.optionValues %}
+        {{ ' - ' ~ option.value }}
+        {% endfor %}
+    {% endif %}
+</div>

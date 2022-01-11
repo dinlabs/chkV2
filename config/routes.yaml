@@ -7,7 +7,55 @@ bitbag_sylius_cms_plugin:
 sylius_paypal_webhook:
     resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
 
+#ndY: pour gérer les produits packagés
+sylius_admin_product_create_pack:
+    path: /products/new/pack
+    methods: [GET, POST]
+    defaults:
+        _controller: sylius.controller.product:createAction
+        _sylius:
+            section: admin
+            permission: true
+            factory:
+                method: createWithVariant
+            template: "@SyliusAdmin/Crud/create.html.twig"
+            redirect: sylius_admin_product_update
+            vars:
+                subheader: sylius.ui.manage_your_product_catalog
+                templates:
+                    form: "@SyliusAdmin/Product/_form.html.twig"
+                route:
+                    name: sylius_admin_product_create_simple
+
+
 # Controllers perso pour Chullanka -------- définis dans services.yaml
+chk_ajax:
+    path: /{_locale}/chkajax
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.ajax::index
+chk_ajax_addpacktocart:
+    path: /{_locale}/chkajax/addpacktocart
+    methods: [POST]
+    defaults:
+        _controller: chk.controller.ajax::addPackToCartAction
+chk_ajax_showpackitem:
+    path: /{_locale}/chkajax/showpackitem/{variantId}
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.ajax::showPackItemAction
+
+chk_store_action_index:
+    path: /{_locale}/store
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.store::indexAction
+chk_store_action_view:
+    path: /{_locale}/store/{slug}
+    methods: [GET]
+    defaults:
+        _controller: chk.controller.store::viewAction
+
 # app_shop_partial_product_index_by_brand:
 #     path: /partial/products/by-brand
 #     methods: [GET]
@@ -52,13 +100,13 @@ app_admin_chulli:
     type: sylius.resource
     prefix: /admin
 
-chk_store_action_index:
-    path: /{_locale}/store
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.store::indexAction
-chk_store_action_view:
-    path: /{_locale}/store/{slug}
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.store::viewAction
+# app_product_bundle:
+#     resource: |
+#         alias: app.product_bundle
+#         section: admin
+#         templates: "@SyliusAdmin\\Crud"
+#         redirect: index
+#         grid: app_admin_product_bundle
+#     type: sylius.resource
+#     prefix: /admin
+

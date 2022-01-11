@@ -63,10 +63,12 @@ bindEvent(document, 'DOMContentLoaded', function(e) {
     funcTopAnnounce();
     funcStickyHeader();
     funcScrollTo();
+    funcPopin();
     funcMainMenu();
     funcFoldable();
     funcOpenFilters();
     funcLoadMoreProds();
+    funcMountingPop();
 });
 
 /* TopAnnounce
@@ -125,7 +127,8 @@ var funcStickyHeader = function()
         const $searchBox = document.querySelector('#searchBox');
         if($searchBox)
         {
-            $searchBox.querySelector('label').addEventListener('click', function(e) {
+            bindEvent($searchBox.querySelector('label'), 'click', function(event) {
+            //$searchBox.querySelector('label').addEventListener('click', function(e) {
                 $header.classList.toggle('search-visible');
             });
         }
@@ -137,24 +140,68 @@ var funcStickyHeader = function()
 ------------------------- */
 var funcScrollTo = function()
 {
-    //document.querySelectorAll('.jsToAnchor').forEach(function($target) {
-    document.querySelectorAll('a[href^="#"]').forEach(function($target) {
-        $target.addEventListener('click', function(event) {
+    //document.querySelectorAll('.jsToAnchor').forEach(function($link) {
+    document.querySelectorAll('a[href^="#"]').forEach(function($link) {
+        bindEvent($link, 'click', function(event) {
             event.preventDefault();
             
-            var _target = $target.getAttribute('href');
+            var _target = $link.getAttribute('href');
             if(_target != '#')
             {
                 var $anchor = document.querySelector(_target);
-                window.scrollTo({
-                    top: $anchor.offsetTop - _topDecay,
-                    behavior: 'smooth'
-                });
+
+                if($link.classList.contains('topopin'))
+                {
+                    document.querySelector($anchor).classList.remove('hidden');
+                    document.querySelector('body').classList.add('overflow');
+                }
+                else
+                {
+                    window.scrollTo({
+                        top: $anchor.offsetTop - _topDecay,
+                        behavior: 'smooth'
+                    });
+                }
             }
               
             /*setTimeout(function () {
                 anchor.scrollIntoView();
             }, 1000);*/
+        });
+    });
+}
+
+
+/* Popin
+------------------------- */
+var funcPopin = function()
+{
+    document.querySelectorAll('.popin').forEach(function($popin) {
+        bindEvent($popin.querySelector('.popinside'), 'click', function(e) {
+        //$popin.querySelector('.popinside').addEventListener('click', function(e) {
+            e.stopPropagation();
+            return false;
+        });
+
+        // Close popin
+        var _closePopin = function()
+        {
+            $popin.classList.add('hidden');
+            document.querySelector('body').classList.remove('overflow');
+        }
+        bindEvent($popin, 'click', function(e) {
+        //$popin.addEventListener('click', function(e) {
+            e.stopPropagation();
+            _closePopin();
+        });
+        bindEvent($popin.querySelector('.closePopin'), 'click', function(e) {
+        //$popin.querySelector('.closePopin').addEventListener('click', function(e) {
+            e.preventDefault();
+            _closePopin();
+        });
+        bindEvent(document, 'keydown', function(e) {
+        //document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape') _closePopin();
         });
     });
 }
@@ -172,7 +219,8 @@ var funcMainMenu = function()
         var _navBlock = $mainNav.querySelector('#navBlock');
         
         // Open main menu
-        _openBtn.addEventListener('click', function(e) {
+        bindEvent(_openBtn, 'click', function(e) {
+        //_openBtn.addEventListener('click', function(e) {
             $mainNav.classList.add('shown');
         });
 
@@ -185,8 +233,10 @@ var funcMainMenu = function()
                 $elmt.classList.remove('shown');
             });
         }
-        _closeBtn.addEventListener('click', _closeMainMenu);
-        document.addEventListener('keydown', function(e) {
+        bindEvent(_closeBtn, 'click', _closeMainMenu);
+        //_closeBtn.addEventListener('click', _closeMainMenu);
+        bindEvent(document, 'keydown', function(e) {
+        //document.addEventListener('keydown', function(e) {
             if(e.key === 'Escape') _closeMainMenu();
             //(e.ctrlKey && e.altKey) 
             if(e.altKey) 
@@ -201,7 +251,8 @@ var funcMainMenu = function()
 
         // submenus
         $mainNav.querySelectorAll('.openSubnav').forEach(function($subLnk, _index, _obj) {
-            $subLnk.addEventListener('click', function(e) {
+            bindEvent($subLnk, 'click', function(e) {
+            //$subLnk.addEventListener('click', function(e) {
                 e.preventDefault();
                 var $_target = $subLnk.parentNode.nextElementSibling;
                 $_target.scrollTop = 0;
@@ -213,7 +264,8 @@ var funcMainMenu = function()
             });
         });
         $mainNav.querySelectorAll('.closeSubNav').forEach(function($returnLnk, _index, _obj) {
-            $returnLnk.addEventListener('click', function(e) {
+            bindEvent($returnLnk, 'click', function(e) {
+            //$returnLnk.addEventListener('click', function(e) {
                 var $_target = $returnLnk.parentNode.parentNode;
                 $_target.classList.remove('shown');
 
@@ -291,13 +343,16 @@ var funcOpenFilters = function()
     var $filters = document.querySelector('.mobileFilters');
     if($filters)
     {
-        document.querySelector('.openFilters').addEventListener('click', function(e) {
+        bindEvent(document.querySelector('.openFilters'), 'click', function(e) {
+        //document.querySelector('.openFilters').addEventListener('click', function(e) {
             $filters.classList.remove('hidden');
         });
-        $filters.querySelector('.svg-icon-close').addEventListener('click', function(e) {
+        bindEvent($filters.querySelector('.svg-icon-close'), 'click', function(e) {
+        //$filters.querySelector('.svg-icon-close').addEventListener('click', function(e) {
             $filters.classList.add('hidden');
         });
-        $filters.querySelector('#showProducts').addEventListener('click', function(e) {
+        bindEvent($filters.querySelector('#showProducts'), 'click', function(e) {
+        //$filters.querySelector('#showProducts').addEventListener('click', function(e) {
             $filters.classList.add('hidden');
             var $anchor = document.querySelector('#productList');
             window.scrollTo({
@@ -334,6 +389,41 @@ var funcLoadMoreProds = function()
                 }
             };
             xhr.send(null);
+        });
+    }
+}
+
+
+/* MountingPop
+------------------------- */
+var funcMountingPop = function()
+{
+    var $mountingPop = document.querySelector('#mountingPop');
+    if($mountingPop)
+    {
+        //temp
+        //$mountingPop.classList.remove('hidden');
+        //document.querySelector('body').classList.add('overflow');
+        //temp
+
+        var _openBtn = document.querySelector('#mountingOptions #mounting-yes');
+        
+        // Open main menu
+        bindEvent(_openBtn, 'click', function(e) {
+            $mountingPop.classList.remove('hidden');
+            document.querySelector('body').classList.add('overflow');
+        });
+
+        // validate btn
+        bindEvent($mountingPop.querySelector('.button-wrapper .btn'), 'click', function(e) {
+            log("On verifie si tout est rempli comme il faut !");
+
+            //si oui
+            if(true)
+            {
+                $mountingPop.classList.add('hidden');
+                document.querySelector('body').classList.remove('overflow');
+            }
         });
     }
 }

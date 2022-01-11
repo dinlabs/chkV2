@@ -142,13 +142,13 @@
 
         $(document).ready(function() {
             _manageButtonMore();
+            var $anchor = document.querySelector('#filterForm');
 
             var $form = $('#filterForm');
             $form.on('click', '#showProducts', function(e)
             {
                 e.preventDefault();
                 document.querySelector('.mobileFilters').classList.add('hidden');
-                var $anchor = document.querySelector('#filterForm');
                 window.scrollTo({
                     top: $anchor.offsetTop - _topDecay + 40,
                     behavior: 'smooth'
@@ -194,6 +194,10 @@
                         funcOpenFilters();
                         funcLoadMoreProds();
                         _manageButtonMore();
+                        window.scrollTo({
+                            top: $anchor.offsetTop - _topDecay,
+                            behavior: 'smooth'
+                        });
                     },
                 });
             });

@@ -6,6 +6,20 @@
         {% set _qty = _qty + variant.onHand %}
     {% endfor %}
 {% endif %}
+
+<div class="todo" style="text-align:initial;">
+    <h3>Stocks</h3>
+{% for variant in product.variants %}
+    <br>
+    <h4>{{ variant.name }}</h4>
+    Web : {{ variant.onHand }}<br>
+    {% for stock in variant.stocks %}
+        {{ stock.store }} : {{ stock.onHand }}<br>
+    {% endfor %}
+{% endfor %}
+</div>
+
+
 {% if _qty > 1 %}
 <div class="availability good">
     <p>En stock - Livraison à  9,90€ : 12 -  20 juil</p>

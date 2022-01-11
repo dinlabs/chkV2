@@ -3,6 +3,8 @@
 namespace App\Entity\Chullanka;
 
 use App\Repository\Chullanka\StoreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
@@ -46,9 +48,15 @@ class Store implements ResourceInterface, TranslatableInterface
      */
     private $surface;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Stock::class, mappedBy="store", orphanRemoval=true)
+     */
+    private $stocks;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
+        $this->stocks = new ArrayCollection();
     }
 
     public function __toString()
@@ -136,5 +144,35 @@ class Store implements ResourceInterface, TranslatableInterface
     protected function createTranslation(): TranslationInterface
     {
         return new StoreTranslation();
+    }
+
+    /**
+     * @return Collection|Stock[]
+     */
+    public function getStocks(): Collection
+    {
+        return $this->stocks;
+    }
+
+    public function addStock(Stock $stock): self
+    {
+        if (!$this->stocks->contains($stock)) {
+            $this->stocks[] = $stock;
+            $stock->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStock(Stock $stock): self
+    {
+        if ($this->stocks->removeElement($stock)) {
+            // set the owning side to null (unless already changed)
+            if ($stock->getStore() === $this) {
+                $stock->setStore(null);
+            }
+        }
+
+        return $this;
     }
 }
