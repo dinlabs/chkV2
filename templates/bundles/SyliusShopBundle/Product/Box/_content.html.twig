@@ -16,7 +16,7 @@
     </a>
     <div class="infos">
         {% include '@SyliusShop/Product/_price.html.twig' %}
-        <div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>
+        {% if product.brand.code %}<div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
         <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</div>
         {% if product.averageRating %}
         <div class="clientRating">
