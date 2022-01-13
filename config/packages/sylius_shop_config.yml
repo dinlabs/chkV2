@@ -97,9 +97,9 @@ sylius_ui:
                 sports:
                     template: "@SyliusShop/Homepage/_sports.html.twig"
                     priority: 70
-                new_products:
-                    template: "@SyliusShop/Homepage/_new_products.html.twig"
-                    priority: 50
+                # new_products:
+                #     template: "@SyliusShop/Homepage/_new_products.html.twig"
+                #     priority: 50
                 mountain_products:
                     template: "@SyliusShop/Homepage/_mountain_products.html.twig"
                     priority: 40
@@ -109,15 +109,15 @@ sylius_ui:
                 shop_news:
                     template: "@SyliusShop/Homepage/_shopNews.html.twig"
                     priority: 25
-                featured_brand:
-                    template: "@SyliusShop/Homepage/_featuredBrand.html.twig"
-                    priority: 20
+                # featured_brand:
+                #     template: "@SyliusShop/Homepage/_featuredBrand.html.twig"
+                #     priority: 20
                 plus_chullanka:
                     template: "@SyliusShop/Homepage/_plusChullanka.html.twig"
                     priority: 15
-                for_you:
-                    template: "@SyliusShop/Homepage/_forYou.html.twig"
-                    priority: 10
+                # for_you:
+                #     template: "@SyliusShop/Homepage/_forYou.html.twig"
+                #     priority: 10
                 # abouto_us:
                 #     template: "@SyliusShop/Homepage/_aboutUs.html.twig"
                 #     priority: 30
