@@ -103,6 +103,24 @@ sylius_ui:
                 mountain_products:
                     template: "@SyliusShop/Homepage/_mountain_products.html.twig"
                     priority: 40
+                about_us:
+                    template: "@SyliusShop/Homepage/_aboutUs.html.twig"
+                    priority: 30
+                shop_news:
+                    template: "@SyliusShop/Homepage/_shopNews.html.twig"
+                    priority: 25
+                featured_brand:
+                    template: "@SyliusShop/Homepage/_featuredBrand.html.twig"
+                    priority: 20
+                plus_chullanka:
+                    template: "@SyliusShop/Homepage/_plusChullanka.html.twig"
+                    priority: 15
+                for_you:
+                    template: "@SyliusShop/Homepage/_forYou.html.twig"
+                    priority: 10
+                # abouto_us:
+                #     template: "@SyliusShop/Homepage/_aboutUs.html.twig"
+                #     priority: 30
                 # banner:
                 #     template: "@SyliusShop/Homepage/_banner.html.twig"
                 #     priority: 60
@@ -112,15 +130,10 @@ sylius_ui:
                 # latest_products_carousel:
                 #     template: "@SyliusShop/Homepage/_latestProductsCarousel.html.twig"
                 #     priority: 40
-                newsletter:
-                    template: "@SyliusShop/Homepage/_newsletter.html.twig"
-                    priority: 30
                 # products_grid:
                 #     template: "@SyliusShop/Homepage/_productsGrid.html.twig"
                 #     priority: 20
-                about_us:
-                    template: "@SyliusShop/Homepage/_aboutUs.html.twig"
-                    priority: 10
+                
 
         sylius.shop.cart.widget.button:
             blocks:
@@ -223,9 +236,9 @@ sylius_ui:
                     priority: 15
                     context:
                         event: sylius.shop.cart.summary.after_totals
-                checkout:
-                    template: "@SyliusShop/Cart/Summary/_checkout.html.twig"
-                    priority: 10
+                # checkout:
+                #     template: "@SyliusShop/Cart/Summary/_checkout.html.twig"
+                #     priority: 10
 
         sylius.shop.cart.summary.totals:
             blocks:

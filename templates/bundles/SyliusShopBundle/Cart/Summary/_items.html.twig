@@ -1,0 +1,20 @@
+<div id="cartProducts">
+    {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+    {{ form_errors(form) }}
+    <input type="hidden" name="_method" value="PATCH"/>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+
+    {{ sylius_template_event('sylius.shop.cart.summary.items', {'cart': cart, 'form': form}) }}
+
+    {% for key, item in cart.items %}
+        {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id, 'loop_index': loop.index} %}
+    {% endfor %}
+    <button type="submit" class="btn icon" id="sylius-cart-update" {{ sylius_test_html_attribute('cart-update-button') }} form="{{ form.vars.id }}"><i class="save icon"></i> {{ 'sylius.ui.update_cart'|trans }}</button>
+</div>
+
+{#% if form.promotionCoupon is defined %}
+    <div class="insert">
+        {{ sylius_template_event('sylius.shop.cart.coupon', {'cart': cart, 'form': form, 'main_form': form.vars.id}) }}
+    </div>
+{% endif %#}

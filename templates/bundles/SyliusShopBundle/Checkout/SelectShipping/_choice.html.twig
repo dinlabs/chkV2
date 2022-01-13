@@ -1,0 +1,14 @@
+{% import '@SyliusShop/Common/Macro/money.html.twig' as money %}
+
+<div class="item" {{ sylius_test_html_attribute('shipping-item') }}>
+    {{ form_widget(form, sylius_test_form_attribute('shipping-method-select')) }}
+    {{ form_label(form) }}
+
+    <strong>{{ (fee == 0) ? 'app.front.free_delivery'|trans : money.convertAndFormat(fee) }}</strong>
+
+    {% if method.description is not null %}
+    <div class="description">
+        <p>{{ method.description }}</p>
+    </div>
+    {% endif %}
+</div>

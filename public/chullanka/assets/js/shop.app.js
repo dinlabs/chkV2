@@ -45587,12 +45587,15 @@
 
 	    if (price !== undefined) {
 	      jquery('#product-price').text(price);
+		  jquery('#addToCart .price strong').text(price);
 	      jquery('button[type=submit]').removeAttr('disabled');
 
 	      if (originalPrice !== undefined) {
 	        jquery('#product-original-price').css('display', 'block').html(originalPrice);
-	      } else {
-	        jquery('#product-original-price').css('display', 'none');
+			jquery('#addToCart .price del').html(originalPrice);
+		} else {
+			jquery('#product-original-price').css('display', 'none');
+			jquery('#addToCart .price del').html('');
 	      }
 	    } else {
 	      jquery('#product-price').text(jquery('#sylius-variants-pricing').attr('data-unavailable-text'));
@@ -45607,11 +45610,14 @@
 	    var price = priceRow.text();
 	    var originalPrice = priceRow.attr('data-original-price');
 	    jquery('#product-price').text(price);
+	    jquery('#addToCart .price strong').text(price);
 
 	    if (originalPrice !== undefined) {
 	      jquery('#product-original-price').css('display', 'block').html(originalPrice);
+	      jquery('#addToCart .price del').html(originalPrice);
 	    } else {
 	      jquery('#product-original-price').css('display', 'none');
+		  jquery('#addToCart .price del').html('');
 	    }
 	  });
 	};

@@ -85,9 +85,14 @@ class AjaxController extends AbstractController
 
 
                 // montage des fixations
-                if(isset($sylius_add_to_cart['mounting']) && isset($sylius_add_to_cart['mount']) && count($sylius_add_to_cart['mount']))
+                if(isset($sylius_add_to_cart['mounting']) && ($sylius_add_to_cart['mounting'] != false) && isset($sylius_add_to_cart['mount']))
                 {
-                    $further['mount'] = $sylius_add_to_cart['mount'];
+                    //$further['mount'] = $sylius_add_to_cart['mount'];
+                    $further['mount'] = [];
+                    foreach($sylius_add_to_cart['mount'] as $key => $val)
+                    {
+                        if(!empty($val)) $further['mount'][ $key ] = $val;
+                    }
                 }
                 $orderItem->setFurther($further);
 

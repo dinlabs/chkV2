@@ -1,0 +1,19 @@
+<header>
+    <div class="autoMargin">
+        <a href="{{ path('sylius_shop_homepage') }}" id="logo">
+            <img src="/chullanka/assets/img/logo-chullanka.svg" alt="Logo Chullanka">
+        </a>
+        
+        {% if app.request.get('_route') == 'sylius_shop_cart_summary' %}
+        <a href="{{ path('sylius_shop_homepage') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche-back"/></svg> <span>Continuer mes achats</span></a>
+        {% else %}
+        <a href="{{ path('sylius_shop_cart_summary') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche-back"/></svg> <span>Récapitulatif de mon panier</span></a>
+        {% endif %}
+
+        {% if order.customer.id|default(null) is not null %}
+            <div class="item" id="purchaser-email" {{ sylius_test_html_attribute('purchaser-name-or-email') }}>{{ 'sylius.ui.checking_out_as'|trans }} {{ app.user is null ? order.customer.email : order.customer.fullName|default(order.customer.email) }}.</div>
+        {% else %}
+            <a href="{{ path('sylius_shop_login') }}" class="item">{{ 'sylius.ui.sign_in'|trans }}</a>
+        {% endif %}
+    </div>
+</header>

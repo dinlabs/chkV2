@@ -49,7 +49,17 @@ app:
         affiner_recherche: 'Affiner votre recherche'
         affiner_recherche_suite: "avec les filtres d'experts que je vous ai configuré"
         filtrer_par: "Filtrer par"
-  
+    shipping_type:
+      home: 'A votre domicile'
+      pickup: 'En point relais'
+      store: 'En magasin Chullanka'
+    free_delivery: 'GRATUIT'
+
+sylius:
+  ui:
+    your_shopping_cart: 'Mon panier'
+    products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
+
 bitbag_sylius_elasticsearch_plugin:
   ui:
       min_price: Prix min

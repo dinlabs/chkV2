@@ -22,7 +22,22 @@
     {{ sylius_template_event('sylius.shop.layout.head') }}
 </head>
 
-<body class="{{ (app.request.get('_route') == 'sylius_shop_homepage') ? 'home' : '' }}">
+
+{% set _where = app.request.attributes.get('_controller')|split(':') %}
+{% set _controller = _where[0] %}
+
+{% set body_class = '' %}
+{% if app.request.get('_route') == 'sylius_shop_homepage' %}
+    {% set body_class = 'home' %}
+{% elseif _controller == 'sylius.controller.order' %}
+    {% set body_class = 'checkout' %}
+    {% if app.request.get('_route') == 'sylius_shop_cart_summary' %}
+    {% set body_class = body_class ~ ' cart' %}
+    {% endif %}
+{% endif %}
+
+<body class="{{ body_class }}">
+{# {{ dump(_where) }} #}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}
     <div id="topAnnounce">
@@ -52,7 +67,9 @@
 
 <!--div class="ui container"-->
     {{ sylius_template_event('sylius.shop.layout.before_content') }}
-    {% block content %}
+    {% block centersite %}
+        {% block content %}
+        {% endblock %}
     {% endblock %}
     {{ sylius_template_event('sylius.shop.layout.after_content') }}
 <!--/div-->

@@ -1,0 +1,67 @@
+{{ form_errors(form.method) }}
+
+{% set choices = {} %}
+{% set home_choices = {} %}
+{% set pickup_choices = {} %}
+{% for key, choice_form in form.method %}
+    {% set method = form.method.vars.choices[key].data %}
+    {% set _part = method.code|split('_') %}
+    {% if _part|length > 1 %}
+        {% set choices = choices|merge({(_part[0]): {}}) %}
+        {% if _part[0] == 'home' %}
+            {% set home_choices = home_choices|merge({(_part[1]): choice_form}) %}
+        {% else %}
+            {% set pickup_choices = pickup_choices|merge({(_part[1]): choice_form}) %}
+        {% endif %}
+    {% else %}
+        {% set choices = choices|merge({(_part[0]): choice_form}) %}
+    {% endif %}
+{% else %}
+    <div class="insert">
+        {% include '@SyliusShop/Checkout/SelectShipping/_unavailable.html.twig' %}
+    </div>
+{% endfor %}
+{% set choices = choices|merge({'home': home_choices})|merge({'pickup': pickup_choices}) %}
+
+{% if choices|length %}
+    {% for where, choice_form in choices %}
+    <div class="insert">
+        <div class="shippingType">{{ ('app.front.shipping_type.' ~ where)|trans }}</div>
+        {% if where == 'store' %}
+            {% set method = form.method.vars.choices[choice_form.vars.name].data %}
+            {% set fee = form.method.vars.shipping_costs[choice_form.vars.value] %}
+            {% include '@SyliusShop/Checkout/SelectShipping/_choice.html.twig' with {'form': choice_form, 'method': method, 'fee': fee} %}
+            <p>Retirez GRATUITEMENT votre commande sous 3 heures dans un de nos magasins Chullanka</p>
+            <div>
+                <a href="#">Vérifiez la disponibilité dans nos magasins</a>
+            </div>
+        {% else %}
+            {% if where == 'pickup' %}
+            <p>Trouvez un point-relais près de chez vous</p>
+            <div class="todo">
+                <input type="text" placeholder="votre adresse">
+            </div>
+            {% endif %}
+
+            {% set sub_choices = choice_form %}
+            {% for type, choice_form in sub_choices %}
+                {% set method = form.method.vars.choices[choice_form.vars.name].data %}
+                {% set fee = form.method.vars.shipping_costs[choice_form.vars.value] %}
+                {% include '@SyliusShop/Checkout/SelectShipping/_choice.html.twig' with {'form': choice_form, 'method': method, 'fee': fee} %}
+            {% endfor %}
+
+            {% if where == 'home' %}
+            <small>* Livraison en France Métropolitaine – Hors livraison à l'international</small>
+            {% elseif where == 'pickup' %}
+            <div class="todo">
+                <p>Liste de points-relais</p>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% if loop.length > 1 %}
+<div class="dividing">{{ 'sylius.ui.shipment'|trans }} #{{ loop.index }}</div>
+{% endif %}

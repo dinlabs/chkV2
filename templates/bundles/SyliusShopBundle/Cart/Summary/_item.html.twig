@@ -1,0 +1,36 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+{% set variant = item.variant %}
+{% set product = variant.product %}
+<div class="cartItem insert" {{ sylius_test_html_attribute('cart-product-row', item.productName) }}>
+    <div class="inside">
+        <div class="picture">
+            {% if variant.hasImages %}
+                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+            {% else %}
+                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+            {% endif %}
+        </div>
+        <div class="infos">
+            {% include '@SyliusShop/Product/_info.html.twig' with {'item': item, 'variant': variant} %}
+
+            <div>
+                <small>{{ 'sylius.ui.quantity'|trans }}</small>
+                <div class="sylius-quantity ui form">{{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form}})) }}</div>
+            </div>
+            
+            <div>
+                <small>{{ 'sylius.ui.total'|trans }}</small>
+                <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="actions-line">
+        <span></span>
+        <form action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token(item.id) }}" />
+            <button type="submit" class="sylius-cart-remove-button" {{ sylius_test_html_attribute('cart-remove-button', item.productName) }} >Supprimer</button>
+        </form>
+    </div>
+</div>

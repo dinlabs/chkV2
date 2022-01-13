@@ -110,7 +110,7 @@ var funcStickyHeader = function()
 
         window.onscroll = function() 
         {
-            if($topAnnounce.classList.contains('hidden'))
+            if($topAnnounce && $topAnnounce.classList.contains('hidden'))
             {
                 _topLimit = 10;
             }

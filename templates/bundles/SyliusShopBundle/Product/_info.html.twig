@@ -1,48 +1,50 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
 {% set product = variant.product %}
 
-<div class="ui header">
-    {% if variant.hasImages %}
-        {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_tiny_thumbnail'} %}
-    {% else %}
-        {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_tiny_thumbnail'} %}
-    {% endif %}
-    <div class="content">
-        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">
-            <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>{{ item.productName }}</div>
-            <span class="sub header sylius-product-variant-code" {{ sylius_test_html_attribute('product-variant-code') }}>
-                {{ variant.code }}
-            </span>
-        </a>
-    </div>
+{% if product.brand.code %}<div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
+
+<div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
+    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">{{ item.productName }}</a>
+    {#<span class="sub header sylius-product-variant-code" {{ sylius_test_html_attribute('product-variant-code') }}>{{ variant.code }}</span>#}
 </div>
 
-{% if product.isPack and item.further|length and item.further.pack|length %}
-    <h3>Contenu du pack</h3>
+<small>{{ 'sylius.ui.unit_price'|trans }}</small>
+<div class="price">
+    {% if item.unitPrice != item.discountedUnitPrice %}
+        <del class="sylius-regular-unit-price" {{ sylius_test_html_attribute('cart-product-regular-unit-price') }}>
+            <span class="old-price">{{ money.convertAndFormat(item.unitPrice) }}</span>
+        </del>
+    {% endif %}
+    <strong class="sylius-unit-price" {{ sylius_test_html_attribute('cart-product-unit-price', item.productName) }}>{{ money.convertAndFormat(item.discountedUnitPrice) }}</strong>
+</div>
+
+{% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}
+    <small>Contenu du pack</small>
     {% for variantId in item.further.pack %}
         {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
     {% endfor %}
 {% else %}
-
     {% if product.hasOptions() %}
-        <div class="ui horizontal divided list sylius-product-options" {{ sylius_test_html_attribute('product-options') }}>
+        <div class="sylius-product-options" {{ sylius_test_html_attribute('product-options') }}>
             {% for optionValue in variant.optionValues %}
+                <small>{{ optionValue.name }}</small>
                 <div class="item" data-sylius-option-name="{{ optionValue.name }}" {{ sylius_test_html_attribute('option-name', optionValue.name) }}>
                     {{ optionValue.value }}
                 </div>
             {% endfor %}
         </div>
     {% elseif item.variantName is not null %}
-        <div class="ui horizontal divided list">
+        <div class="list">
             <div class="item sylius-product-variant-name" {{ sylius_test_html_attribute('product-variant-name') }}>
                 {{ item.variantName }}
             </div>
         </div>
     {% endif %}
-
 {% endif %}
 
-{% if item.further|length and item.further.mount|length %}
-    <h3>Options de montage</h3>
+{% if item.further|length and item.further.mount is defined and item.further.mount|length %}
+    <small>Options de montage</small>
     <dl>
     {% for _key,_val in item.further.mount %}
         <dt><strong>{{ _key }}</strong></dt>

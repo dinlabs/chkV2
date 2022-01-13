@@ -1,3 +1,5 @@
+{# |imagine_filter : https://docs.sylius.com/en/latest/cookbook/images/images.html #}
+
 {% if product.imagesByType('thumbnail') is not empty %}
     {% set path = product.imagesByType('thumbnail').first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
 {% elseif product.images.first %}

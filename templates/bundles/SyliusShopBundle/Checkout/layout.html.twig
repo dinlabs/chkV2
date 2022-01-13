@@ -1,0 +1,17 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block top %}
+    {# Clear the topmost section. We do not want it in the checkout.  #}
+{% endblock %}
+
+{% block header %}
+    {# Override the normal page header with a custom one for all checkout steps. #}
+    {{ sylius_template_event('sylius.shop.checkout.header', _context) }}
+{% endblock %}
+
+{% block centersite %}
+    <div id="content" class="autoMargin">
+    {% block content %}
+    {% endblock %}
+    </div>
+{% endblock %}

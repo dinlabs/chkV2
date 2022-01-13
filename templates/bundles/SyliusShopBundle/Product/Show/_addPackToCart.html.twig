@@ -34,7 +34,7 @@
                 {# pack ski+fixations ! #}
                 {% if _countElement == 1 and product.mounting %}
                     <div class="prodList" style="">
-                        <section class="list" style="padding:1em 0;">
+                        <section class="list">
                         {% for choice in element.products %}
                             {% set choiceVariant = choice|sylius_resolve_variant %}
                             <label for="choice_{{ choice.id }}" class="prodInList">
