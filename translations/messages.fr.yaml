@@ -6,6 +6,12 @@ app:
   homepage:
     newsletter: 'Nos nouveautés, nos promos, nos activités avant tout le monde'
     newsletter_description: 'Promis on ne vous spammera pas :)'
+  calculator:
+    chullanka:
+      price: 'Montant'
+      sup_for_corsica: 'Supplément pour la Corse'
+      sup_outside_france: 'Supplément en-dehors de la France'
+      free_above: 'Montant du panier à partir duquel le transport est gratuit (en France Métropolitaine)'
   ui:
     name: 'Nom'
     store: 'Magasin'

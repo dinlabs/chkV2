@@ -38,6 +38,25 @@ services:
     # App\Controller\ProductController:
     #     autowire: false
 
+    App\ShippingCalculator\ChullankaCalculator:
+        tags:
+            -
+                {
+                    name: sylius.shipping_calculator,
+                    calculator: 'chullanka',
+                    label: 'Chullankaculator',
+                    form_type: App\Form\Type\ChullankaShippingCalculatorType
+                }
+    App\ShippingCheckerRule\ChullankaRulesChecker:
+        tags:
+            - 
+                { 
+                    name: sylius.shipping_method_rule_checker, 
+                    type: chullanka_rules, 
+                    label: 'Règles pour Chullanka',
+                    form_type: App\Form\Type\ChullankaRulesConfigurationType
+                }
+
     #ndY: pour définir de nouveaux constrolleurs utilisables dans routes.yml
     chk.controller.ajax:
         class: App\Controller\Chullanka\AjaxController
