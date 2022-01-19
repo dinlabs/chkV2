@@ -1,0 +1,14 @@
+{% extends '@SyliusShop/layout_ajax.html.twig' %}
+
+{% block content %}
+  {% if stores|length %}
+  <ul class="storelist">
+    {% for store in stores %}
+    <li>
+        <input type="radio" name="ship_in_store" value="{{ store.id }}" id="ship_in_store_{{ store.id }}"{% if store.selected %} checked="checked"{% endif %}{% if store.dispo == false %} disabled="disabled"{% endif %}>
+        <label for="ship_in_store_{{ store.id }}"{% if store.dispo == false %} class="disabled"{% endif %}>{{ store.name }}</label>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endblock %}

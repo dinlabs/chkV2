@@ -16,6 +16,10 @@ services:
         # fetching services directly from the container via $container->get() won't work
         public: false
 
+        #ndY: permet d'avoir cette variable dans tous les Services
+        bind:
+            $projectDir: "%kernel.project_dir%"
+
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
             autowire: false

@@ -29,7 +29,7 @@ class Product extends BaseProduct implements LoevgaardSyliusBrandPluginProductIn
     private $isPack = false;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true, columnDefinition="TINYINT(1) DEFAULT NULL")
      */
     private $mounting;
     

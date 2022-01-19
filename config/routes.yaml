@@ -45,16 +45,15 @@ chk_ajax_showpackitem:
     defaults:
         _controller: chk.controller.ajax::showPackItemAction
 
-chk_store_action_index:
-    path: /{_locale}/store
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.store::indexAction
-chk_store_action_view:
-    path: /{_locale}/store/{slug}
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.store::viewAction
+App\Controller\Chullanka\StoreController:
+    type: annotation
+    resource: App\Controller\Chullanka\StoreController
+    prefix: /{_locale}/store
+# chk_store_action_index:
+#     path: /{_locale}/store
+#     methods: [GET]
+#     defaults:
+#         _controller: chk.controller.store::indexAction
 
 # app_shop_partial_product_index_by_brand:
 #     path: /partial/products/by-brand

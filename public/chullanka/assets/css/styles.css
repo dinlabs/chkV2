@@ -703,7 +703,7 @@ body.checkout { background:var(--bg1); }
 .checkout .steps .step:hover, .checkout .steps .step:hover::after { background:var(--primary); color:var(--default); cursor:pointer; }
 
 
-.checkout form input[type='text'], .checkout form select { border:2px solid var(--default) !important; padding:.5em 2em; }
+.checkout form input[type='text'], .checkout form input[type='email'], .checkout form input[type='password'], .checkout form select { border:2px solid var(--default) !important; padding:.5em 2em; }
 .checkout #sylius-billing-address { padding:1em 2em; margin-bottom:1em; }
 .checkout #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em 2em; }
 
@@ -712,9 +712,16 @@ body.checkout { background:var(--bg1); }
 .checkout #sylius-shipping-methods .item { padding:1em 0 1em 50px; }
 
 .checkout #sylius-shipping-methods input[type='radio'] { display:none; }
-.checkout #sylius-shipping-methods input[type='radio'] + label { position:relative; margin-left:-50px; padding-left:50px; font-weight:700; }
+.checkout #sylius-shipping-methods input[type='radio'] + label { position:relative; margin-left:-50px; padding-left:50px; font-weight:700; cursor:pointer; }
+.checkout #sylius-shipping-methods input[type='radio'] + label.disabled { opacity:.5; cursor:not-allowed; }
 .checkout #sylius-shipping-methods input[type='radio'] + label::before { content:''; position:absolute; left:0; top:50%; background:var(--bg0); width:34px; height:34px; border:2px solid var(--default); border-radius:50%; transform:translateY(-50%); cursor:pointer; }
 .checkout #sylius-shipping-methods input[type='radio']:checked + label::after { content:''; position:absolute; left:8px; top:50%; background:var(--primary); border-radius:50%; width:22px; height:22px; transform:translateY(-50%); }
+
+.checkout #sylius-shipping-methods .storelist { padding-left:50px; }
+.checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }
+.checkout #sylius-shipping-methods .storelist li input[type='radio'] + label { padding-left:2em; }
+.checkout #sylius-shipping-methods .storelist li input[type='radio'] + label::before { width:20px; height:20px; }
+.checkout #sylius-shipping-methods .storelist li input[type='radio']:checked + label::after { left:5px; width:14px; height:14px; }
 
 
 /* MEDIA QUERIES */

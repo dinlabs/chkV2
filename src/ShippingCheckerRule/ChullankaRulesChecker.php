@@ -22,6 +22,25 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
 
         //$method = $subject->getMethod()->getCode();//genre "home_standart"
 
+        foreach($order->getItems() as $item)
+        {
+            $variant = $item->getVariant();
+
+            //test $variant->getOnHand() pour désactiver les méthodes de livraison si pas tous les produits dispo ?
+
+            // test stock mag
+            // todo: boucler sur les "store" pour voir ceux où tous les produits sont dispo
+            // peut-être créer une méthode pour chaque store (pour les grouper dans la section retrait-magasin) et désactiver celles qui n'ont pas tous les produits ? 
+            
+            // test override
+            $product = $variant->getProduct();
+            $oversize = $product->getAttributeByCodeAndLocale('oversize');
+            if(!is_null($oversize) && ($oversize == true))
+            {
+                $oneIsOversize = true;
+            }
+        }
+
         if($shipAddress = $order->getShippingAddress())
         {
             $countryCode = $shipAddress->getCountryCode();

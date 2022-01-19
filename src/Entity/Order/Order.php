@@ -13,4 +13,20 @@ use Sylius\Component\Core\Model\Order as BaseOrder;
  */
 class Order extends BaseOrder
 {
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $further = [];
+
+    public function getFurther(): ?array
+    {
+        return $this->further;
+    }
+
+    public function setFurther(?array $further): self
+    {
+        $this->further = $further;
+
+        return $this;
+    }
 }

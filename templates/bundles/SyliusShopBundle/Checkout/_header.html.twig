@@ -10,6 +10,8 @@
         <a href="{{ path('sylius_shop_cart_summary') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche-back"/></svg> <span>Récapitulatif de mon panier</span></a>
         {% endif %}
 
+        {% if cart is defined %}{% set order = cart %}{% endif %}
+
         {% if order.customer.id|default(null) is not null %}
             <div class="item" id="purchaser-email" {{ sylius_test_html_attribute('purchaser-name-or-email') }}>{{ 'sylius.ui.checking_out_as'|trans }} {{ app.user is null ? order.customer.email : order.customer.fullName|default(order.customer.email) }}.</div>
         {% else %}

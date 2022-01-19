@@ -21,7 +21,7 @@
 
 {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}
     <small>Contenu du pack</small>
-    {% for variantId in item.further.pack %}
+    {% for variantId, variantPrice in item.further.pack %}
         {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
     {% endfor %}
 {% else %}

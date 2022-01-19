@@ -11,6 +11,7 @@ use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AjaxController extends AbstractController
 {
@@ -51,9 +52,7 @@ class AjaxController extends AbstractController
 
     public function index(): Response
     {
-        return $this->render('chullanka/ajax/index.html.twig', [
-            'controller_name' => 'AjaxController',
-        ]);
+        return new Response('AJAX', 200, ['Content-Type' => 'text/html']);
     }
 
     public function addPackToCartAction(Request $request): Response
@@ -74,12 +73,15 @@ class AjaxController extends AbstractController
                 $orderItem->setVariant($variantPack);
                 
                 $price = 0;
-                $further = ['pack' => $sylius_add_to_cart['packItem']];
+                $further = ['pack' => []];
                 foreach($sylius_add_to_cart['packItem'] as $vid)
                 {
                     /** @var ProductVariantInterface $variant */
                     $variant = $this->productVariantRepository->find($vid);
-                    $price += $variant->getChannelPricingForChannel($channel)->getPrice();
+                    $variantPrice = $variant->getChannelPricingForChannel($channel)->getPrice();
+                    $price += $variantPrice;
+                    
+                    $further['pack'][ $vid ] = $variantPrice;
                 }
                 $orderItem->setUnitPrice($price);
 
@@ -105,10 +107,6 @@ class AjaxController extends AbstractController
         }
 
         return $this->redirectToRoute('sylius_shop_cart_summary');
-
-        return $this->render('chullanka/ajax/index.html.twig', [
-            'controller_name' => 'ChullAjaxController',
-        ]);
     }
 
     public function showPackItemAction(Int $variantId): Response

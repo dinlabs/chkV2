@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Product;
 
 use App\Entity\Chullanka\Stock;
+use App\Entity\Chullanka\Store;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,11 +20,6 @@ use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
  */
 class ProductVariant extends BaseProductVariant implements BaseProductVariantInterface
 {
-    /**
-     * @ORM\OneToOne(targetEntity=Stock::class, mappedBy="variant", cascade={"persist", "remove"})
-     */
-    private $store;
-
     /**
      * @ORM\OneToMany(targetEntity=Stock::class, mappedBy="variant", orphanRemoval=true)
      */
@@ -45,28 +41,6 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         $product = parent::getProduct();
         $product->addVariant($this);
         return $product;
-    }
-
-    public function getStore(): ?Stock
-    {
-        return $this->store;
-    }
-
-    public function setStore(?Stock $store): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($store === null && $this->store !== null) {
-            $this->store->setVariant(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($store !== null && $store->getVariant() !== $this) {
-            $store->setVariant($this);
-        }
-
-        $this->store = $store;
-
-        return $this;
     }
 
     /**
@@ -97,5 +71,17 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         }
 
         return $this;
+    }
+
+    public function getStockByStore(Store $store): ?Stock
+    {
+        foreach($this->stocks as $stock)
+        {
+            if($stock->getStore() === $store)
+            {
+                return $stock;
+            }
+        }
+        return false;
     }
 }

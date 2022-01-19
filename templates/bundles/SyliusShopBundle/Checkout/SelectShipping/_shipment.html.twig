@@ -32,9 +32,7 @@
             {% set fee = form.method.vars.shipping_costs[choice_form.vars.value] %}
             {% include '@SyliusShop/Checkout/SelectShipping/_choice.html.twig' with {'form': choice_form, 'method': method, 'fee': fee} %}
             <p>Retirez GRATUITEMENT votre commande sous 3 heures dans un de nos magasins Chullanka</p>
-            <div>
-                <a href="#">Vérifiez la disponibilité dans nos magasins</a>
-            </div>
+            {{ render(url('store_shipment_list', {'id_order': order.id})) }}
         {% else %}
             {% if where == 'pickup' %}
             <p>Trouvez un point-relais près de chez vous</p>
