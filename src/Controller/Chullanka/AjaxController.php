@@ -2,6 +2,7 @@
 
 namespace App\Controller\Chullanka;
 
+use App\Service\DpdHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
@@ -50,11 +51,17 @@ class AjaxController extends AbstractController
         $this->cartManager = $cartManager;
     }
 
+    /**
+     * @Route("/", name="chk_ajax")
+     */
     public function index(): Response
     {
         return new Response('AJAX', 200, ['Content-Type' => 'text/html']);
     }
 
+    /**
+     * @Route("/addpacktocart", methods={"POST"}, name="chk_ajax_addpacktocart")
+     */
     public function addPackToCartAction(Request $request): Response
     {
         if($sylius_add_to_cart = $request->get('sylius_add_to_cart'))
@@ -109,11 +116,37 @@ class AjaxController extends AbstractController
         return $this->redirectToRoute('sylius_shop_cart_summary');
     }
 
-    public function showPackItemAction(Int $variantId): Response
+    /**
+     * @Route("/showpackitem/{variantId}/{inadmin}", name="chk_ajax_showpackitem")
+     */
+    public function showPackItemAction(int $variantId, int $inadmin = 0): Response
     {
         $variant = $this->productVariantRepository->find($variantId);
         return $this->render('@SyliusShop/Product/_packitem.html.twig', [
             'variant' => $variant,
+            'inadmin' => (bool)$inadmin,
         ]);
+    }
+
+    /**
+     * @Route("/getpickuppoints", name="chk_ajax_getpickuppoints")
+     */
+    public function getPickupPointsAction(Request $request, DpdHelper $dpdHelper)
+    {
+        $data = [];
+        if($address = $request->get('address'))
+        {
+            $data['address'] = $address;
+        }
+        if($zip = $request->get('zip'))
+        {
+            $data['zip'] = $zip;
+        }
+        if($city = $request->get('city'))
+        {
+            $data['city'] = $city;
+        }
+
+        $dpdHelper->getPickupPoints($data);
     }
 }

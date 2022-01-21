@@ -6,4 +6,7 @@
         {{ ' - ' ~ option.value }}
         {% endfor %}
     {% endif %}
+    {% if inadmin %}
+        <br><em>{{ 'sylius.form.variant.sku'|trans }}&nbsp;: <strong>{{ variant.code }}</strong></em>
+    {% endif %}
 </div>

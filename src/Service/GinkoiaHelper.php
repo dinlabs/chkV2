@@ -66,8 +66,12 @@ class GinkoiaHelper
         $realOrderId = $order->getNumber();
         $commandeId = $order->getId();
         $commandeDate = $order->getCheckoutCompletedAt()->format('Y-m-d H:i:s');
+
+        //todo:
+        $creditmemo = new \stdClass();
         
         // paiement
+        $dateReglement = '';
         if($order->hasPayments())
         {
             $payment = $order->getPayments()->first();
@@ -201,12 +205,24 @@ class GinkoiaHelper
         // Colis
         if($order->hasShipments())
         {
-            $store = '';
+            $codeRelais = $store = '';
             $shipment = $order->getShipments()->first();
+
             $shipping_method = $shipment->getMethod()->getCode();
-            if($shipping_method == 'store')
+            $split_ship = explode('_', $shipping_method);
+            $shipping_method_type = $split_ship[0];
+
+            if($shipping_method_type == 'pickup')
             {
-                $shipping_method = 'Retait en magasin';
+                $further = $order->getFurther();
+                if($further && isset($further['pickup_id']) && !empty($further['pickup_id']))
+                {
+                    $codeRelais = $further['pickup_id'];
+                }
+            }
+            elseif($shipping_method == 'store')
+            {
+                $shipping_method = 'Retrait en magasin';
                 $further = $order->getFurther();
                 if($further && isset($further['store']) && !empty($further['store']))
                 {
@@ -226,7 +242,7 @@ class GinkoiaHelper
                 $colisNode->appendChild($this->addKeyVal('Transporteur', $shipping_method));
                 //$colisNode->appendChild($this->addKeyVal('CodeProduit', ''));
                 $colisNode->appendChild($this->addKeyVal('MagasinRetrait', $store));
-                //$colisNode->appendChild($this->addKeyVal('CodeRelais', ''));
+                if(!empty($codeRelais)) $colisNode->appendChild($this->addKeyVal('CodeRelais', $codeRelais));
             $orderNode->appendChild($colisNode);
         }
         
@@ -414,33 +430,31 @@ class GinkoiaHelper
         $orderNode->appendChild($tvasNode);
         
         
-
-/* TMP */
-$this->doc->appendChild($orderNode);
-return $this->doc;
-/* TMP */
-        
         // Règlements
-        /*$reglementsNode = $this->doc->createElement('Reglements');
-            $reglementNode = $this->doc->createElement('Reglement');
-            $reglementNode->appendChild($this->addKeyVal('Mode', $codeName));
-            $reglementNode->appendChild($this->addKeyVal('MontantTTC', number_format((float)$payment->getAmountOrdered(), 2, '.', '')));
-            $reglementNode->appendChild($this->addKeyVal('Date', $order->getCreatedAtStoreDate()->toString('yyyy-MM-dd HH:mm:ss') . '.00'));
-        $reglementsNode->appendChild($reglementNode);
-        
-        $orderNode->appendChild($reglementsNode);*/
+        if($payment)
+        {
+            $reglementsNode = $this->doc->createElement('Reglements');
+                $reglementNode = $this->doc->createElement('Reglement');
+                $reglementNode->appendChild($this->addKeyVal('Mode', $codeName));
+                $reglementNode->appendChild($this->addKeyVal('MontantTTC', number_format($payment->getAmount() / 100, 2, '.', '')));
+                $reglementNode->appendChild($this->addKeyVal('Date', $dateReglement . '.00'));
+            $reglementsNode->appendChild($reglementNode);
+            
+            $orderNode->appendChild($reglementsNode);
+        }
         
         
         // Fin
-        $shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() : (float)$creditmemo->getShippingInclTax() * $coef;
-        $shipTVA = 0;//à calculer
-        $shipping = $shipInclTax - $shipTVA;
+        $taxAmount = .2;
+        $shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
+        $shipping = $shipInclTax / (1 + $taxAmount);
+        $shipTVA = $shipInclTax - $shipping;
         
         $totHT += $shipping;
         $totTVA += $shipTVA;
         $totTTC += $shipInclTax;
         
-        $netPayer = ($coef > 0) ? (float)$payment->getAmountOrdered() : $totTTC;
+        $netPayer = ($coef > 0) ? (float)$payment->getAmount()/100 : $totTTC;
         
         $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
         $orderNode->appendChild($this->addKeyVal('TotalHT', number_format($totHT, 2, '.', '')));

@@ -28,27 +28,17 @@ sylius_admin_product_create_pack:
                     name: sylius_admin_product_create_simple
 
 
-# Controllers perso pour Chullanka -------- définis dans services.yaml
-chk_ajax:
-    path: /{_locale}/chkajax
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.ajax::index
-chk_ajax_addpacktocart:
-    path: /{_locale}/chkajax/addpacktocart
-    methods: [POST]
-    defaults:
-        _controller: chk.controller.ajax::addPackToCartAction
-chk_ajax_showpackitem:
-    path: /{_locale}/chkajax/showpackitem/{variantId}
-    methods: [GET]
-    defaults:
-        _controller: chk.controller.ajax::showPackItemAction
+# Controllers perso pour Chullanka
+App\Controller\Chullanka\AjaxController:
+    type: annotation
+    resource: App\Controller\Chullanka\AjaxController
+    prefix: /{_locale}/chkajax
 
 App\Controller\Chullanka\StoreController:
     type: annotation
     resource: App\Controller\Chullanka\StoreController
     prefix: /{_locale}/store
+# noms définis dans services.yaml
 # chk_store_action_index:
 #     path: /{_locale}/store
 #     methods: [GET]

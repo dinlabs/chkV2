@@ -29,4 +29,19 @@ class OrderItem extends BaseOrderItem
 
         return $this;
     }
+
+    public function setUnitPrice(int $unitPrice): void
+    {
+        if(!empty($this->further) && isset($this->further['pack']) && !empty($this->further['pack']))
+        {
+            $unitPrice = 0;
+            foreach($this->further['pack'] as $vid => $vPrice)
+            {
+                $unitPrice += $vPrice;
+            }
+        }
+        $this->unitPrice = $unitPrice;
+        
+        $this->recalculateUnitsTotal();
+    }
 }

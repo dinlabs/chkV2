@@ -67,10 +67,10 @@ services:
         autowire: true
         tags: ['controller.service_arguments']
 
-    chk.controller.store:
-        class: App\Controller\Chullanka\StoreController
-        autowire: true
-        tags: ['controller.service_arguments']
+    # chk.controller.store:
+    #     class: App\Controller\Chullanka\StoreController
+    #     autowire: true
+    #     tags: ['controller.service_arguments']
        
     
     #ndY: pour ajouter des liens dans les menus

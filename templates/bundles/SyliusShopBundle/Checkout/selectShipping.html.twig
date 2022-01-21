@@ -8,11 +8,11 @@
     {{ sylius_template_event(['sylius.shop.checkout.select_shipping.steps', 'sylius.shop.checkout.steps'], _context|merge({'active': 'select_shipping', 'orderTotal': order.total})) }}
 
     <div class="ui stackable grid">
-        <div class="eleven wide column">
+        <div class="ten wide column">
             <div id="sylius-shipping-methods">
                 {{ sylius_template_event('sylius.shop.checkout.select_shipping.before_form', {'order': order}) }}
 
-                {{ form_start(form, {'action': path('sylius_shop_checkout_select_shipping'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+                {{ form_start(form, {'action': path('sylius_shop_checkout_select_shipping'), 'attr': {'class': 'loadable', 'novalidate': 'novalidate'}}) }}
                     {{ form_errors(form) }}
                     <input type="hidden" name="_method" value="PUT" />
 
@@ -30,8 +30,53 @@
                 {{ form_end(form, {'render_rest': false}) }}
             </div>
         </div>
-        <div class="five wide column">
+        <div class="six wide column">
             {{ sylius_template_event(['sylius.shop.checkout.select_shipping.sidebar', 'sylius.shop.checkout.sidebar'], _context) }}
         </div>
     </div>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        /*bindEvent(document.querySelector('#findPickups'), 'click', function(e) {
+            e.preventDefault();
+            //
+            log("AJAX Time!");
+        });*/
+
+        $('#findPickups').on('click', function(e) {
+            e.preventDefault();
+
+            var $pickupBox = $('#findPickups').parents('.insert');
+
+            var _address = $('#pickup_address').val();
+            var _zip = $('#pickup_zip').val();
+            var _city = $('#pickup_city').val();
+
+            $('#pickupList').html('');// on vide
+            
+            $pickupBox.addClass('loading');
+            $.ajax({
+                type: 'GET',
+                url: '{{ path('chk_ajax_getpickuppoints') }}',
+                data: {'address': _address, 'zip': _zip, 'city': _city},
+                error() {
+                    $pickupBox.removeClass('loading');
+                    alert("error");
+                },
+                success(response) {
+                    $('#pickupList').html(response);
+
+                    funcFoldable();
+                    $pickupBox.removeClass('loading');
+                },
+            });
+        });
+    });
+</script>
 {% endblock %}

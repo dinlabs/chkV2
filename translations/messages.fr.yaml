@@ -34,11 +34,16 @@ app:
     note: 'Note Rapport Qualité/Prix (de 1 à 5)'
   store:
     name: 'Nom'
-    description: 'Description'
-    joinus: 'Rejoignez-nous'
-    surface: 'Surface (en m²)'
+    street: 'Adresse (rue)'
+    postcode: 'Code postal'
+    city: 'Ville'
     latitude: 'Latitude'
     longitude: 'Longitude'
+    phone_number: 'Numéro de téléphone'
+    email: "Email(s) (séparés par une virgule s'il y en a plusieurs)"
+    surface: 'Surface (en m²)'
+    description: 'Description'
+    joinus: 'Rejoignez-nous'
   chulli:
     firstname: 'Prénom'
     lastname: 'Nom'

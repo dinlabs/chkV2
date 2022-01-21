@@ -9,7 +9,7 @@
         <div class="content">
             <div class="header" id="sylius-shipping-method" {{ sylius_test_html_attribute('shipping-method') }}>
                 {{ shipment.method }}
-                {% if order.further and order.further.store %}
+                {% if order.further is defined and order.further.store is defined %}
                 &ndash; {{ render(url('store_name', {'id': order.further.store})) }}
                 {% endif %}
             </div>

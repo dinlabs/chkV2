@@ -16,12 +16,16 @@ class StoreType extends AbstractResourceType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'app.store.name',
-                'required' => false
+                'label' => 'app.store.name'
             ])
-            ->add('surface', TextType::class, [
-                'label' => 'app.store.surface',
-                'required' => false
+            ->add('street', TextType::class, [
+                'label' => 'app.store.street'
+            ])
+            ->add('postcode', TextType::class, [
+                'label' => 'app.store.postcode'
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'app.store.city'
             ])
             ->add('latitude', TextType::class, [
                 'label' => 'app.store.latitude',
@@ -29,6 +33,18 @@ class StoreType extends AbstractResourceType
             ])
             ->add('longitude', TextType::class, [
                 'label' => 'app.store.longitude',
+                'required' => false
+            ])
+            ->add('phone_number', TextType::class, [
+                'label' => 'app.store.phone_number',
+                'required' => false
+            ])
+            ->add('email', TextType::class, [
+                'label' => 'app.store.email',
+                'required' => false
+            ])
+            ->add('surface', TextType::class, [
+                'label' => 'app.store.surface',
                 'required' => false
             ])
             ->add('translations', ResourceTranslationsType::class, [
