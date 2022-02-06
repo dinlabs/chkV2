@@ -9,8 +9,8 @@ use App\Entity\Chullanka\PackElement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Loevgaard\SyliusBrandPlugin\Model\ProductInterface as LoevgaardSyliusBrandPluginProductInterface;
-use Loevgaard\SyliusBrandPlugin\Model\ProductTrait as LoevgaardSyliusBrandPluginProductTrait;
+//use Loevgaard\SyliusBrandPlugin\Model\ProductInterface as LoevgaardSyliusBrandPluginProductInterface;
+//use Loevgaard\SyliusBrandPlugin\Model\ProductTrait as LoevgaardSyliusBrandPluginProductTrait;
 use Sylius\Component\Core\Model\Product as BaseProduct;
 use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
@@ -19,9 +19,11 @@ use Sylius\Component\Product\Model\ProductTranslationInterface;
  * @ORM\Entity
  * @ORM\Table(name="sylius_product")
  */
-class Product extends BaseProduct implements LoevgaardSyliusBrandPluginProductInterface
+class Product extends BaseProduct //implements LoevgaardSyliusBrandPluginProductInterface
 {
-    use LoevgaardSyliusBrandPluginProductTrait;
+    //use LoevgaardSyliusBrandPluginProductTrait;
+    /** @var Array */
+    public $brand = ['code' => false];//tmp pour les templates
 
     /**
      * @ORM\Column(type="boolean", name="is_pack", options={"default":false})
@@ -29,7 +31,7 @@ class Product extends BaseProduct implements LoevgaardSyliusBrandPluginProductIn
     private $isPack = false;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true, columnDefinition="TINYINT(1) DEFAULT NULL")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $mounting;
     

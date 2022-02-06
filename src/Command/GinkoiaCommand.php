@@ -1,10 +1,12 @@
 <?php
 namespace App\Command;
 
+use App\Entity\Channel\ChannelPricing;
 use Doctrine\ORM\EntityManagerInterface;
-use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\BrandRepositoryInterface;
-use Loevgaard\SyliusBrandPlugin\Model\BrandInterface;
+//use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\BrandRepositoryInterface;
+//use Loevgaard\SyliusBrandPlugin\Model\BrandInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -26,11 +28,12 @@ class GinkoiaCommand extends Command
     protected $slugGenerator;
     protected $productFactory;
     protected $productVariantFactory;
-    protected $brandFactory;
+    //protected $brandFactory;
+    protected $channelPricingFactory;
     protected $productRepository;
     protected $productVariantRepository;
     protected $channelRepository;
-    protected $brandRepository;
+    //protected $brandRepository;
     protected $output;
     
     
@@ -41,7 +44,7 @@ class GinkoiaCommand extends Command
     protected $channel = [];
     protected $compteur = 0;
     
-    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $brandFactory, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository, BrandRepositoryInterface $brandRepository)
+    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $channelPricingFactory, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository)
     {
         parent::__construct();
         
@@ -49,11 +52,12 @@ class GinkoiaCommand extends Command
         $this->slugGenerator = $slugGenerator;
         $this->productFactory = $productFactory;
         $this->productVariantFactory = $productVariantFactory;
-        $this->brandFactory = $brandFactory;
+        //$this->brandFactory = $brandFactory;
+        $this->channelPricingFactory = $channelPricingFactory;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->channelRepository = $channelRepository;
-        $this->brandRepository = $brandRepository;
+        //$this->brandRepository = $brandRepository;
     }
     
     protected function configure(): void
@@ -302,7 +306,7 @@ class GinkoiaCommand extends Command
     /**
      * Retrouve la marque via son nom
      * ou bien la crée d'abord si besoin
-     */
+     *
     private function getMarque(string $marque): BrandInterface
     {
         $brand_code = $this->slugGenerator->generate($marque);
@@ -321,7 +325,7 @@ class GinkoiaCommand extends Command
             $this->manager->persist($brand);
         }
         return $brand;
-    }
+    }*/
     
     public function manageArticles($file)
     {
@@ -367,7 +371,7 @@ class GinkoiaCommand extends Command
         if($product = $this->productRepository->findOneByCode($art_uuid))
         {
             $this->output->writeln("Produit trouvé : ".$product->getName());
-            $this->output->writeln("marque : ".$product->getBrand()->getName());
+            //$this->output->writeln("marque : ".$product->getBrand()->getName());
             
             //$product->setName($name);
             //$this->manager->persist($product);
@@ -382,10 +386,10 @@ class GinkoiaCommand extends Command
             $product->addChannel($this->channel);
             $product->setEnabled(false);
 
-            if($brand = $this->getMarque( $article['MARQUE'] ))
+            /*if($brand = $this->getMarque( $article['MARQUE'] ))
             {
                 $product->setBrand($brand);
-            }
+            }*/
             $this->productRepository->add($product);
         }
 
@@ -404,6 +408,25 @@ class GinkoiaCommand extends Command
             if($productVariant = $this->productVariantRepository->findOneByCode($art_uuid))
             {
                 $this->output->writeln("Variante trouvée : ".$productVariant->getName());
+
+                // utile pour la màj des prix
+                if($priceChannels = $productVariant->getChannelPricings())
+                {
+                    if(count($priceChannels) == 0)
+                    {
+                        $priceChannel = $this->channelPricingFactory->createNew();
+                        $priceChannel->setChannelCode('default');
+                        $priceChannel->setProductVariant($productVariant);
+                        $productVariant->addChannelPricing($priceChannel);
+                    }
+                    else
+                    {
+                        $priceChannel = $priceChannels->first();
+                    }
+                    $_newPrice = rand(1000, 50000);
+                    $priceChannel->setPrice($_newPrice);
+                    $this->manager->persist($priceChannel);
+                }
             }
             else 
             {
@@ -412,12 +435,13 @@ class GinkoiaCommand extends Command
                 $productVariant->setProduct($product);
                 $productVariant->setCode($art_uuid);
                 $productVariant->setName($name . ' - ' . $article['TAILLE'] . ' - ' . $article['COULEUR']);
+                $productVariant->setShippingRequired(true);
                 $productVariant->setEnabled(false);
                 $this->productVariantRepository->add($productVariant);
             }
         }
 
-        //$this->manager->flush();
+        $this->manager->flush();
         return true;
     }
 }

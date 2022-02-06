@@ -2,7 +2,6 @@ imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
 
     - { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
-    - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusApiBundle/Resources/config/app/config.yaml" }
 
     # ci-dessous, utilisation de 'config/packages/sylius_shop_config.yml' à la place
@@ -34,21 +33,6 @@ sylius_addressing:
         zone_member:
             classes:
                 model: App\Entity\Addressing\ZoneMember
-
-sylius_admin_api:
-    resources:
-        api_client:
-            classes:
-                model: App\Entity\AdminApi\Client
-        api_access_token:
-            classes:
-                model: App\Entity\AdminApi\AccessToken
-        api_refresh_token:
-            classes:
-                model: App\Entity\AdminApi\RefreshToken
-        api_auth_code:
-            classes:
-                model: App\Entity\AdminApi\AuthCode
 
 sylius_attribute:
     resources:
@@ -272,6 +256,12 @@ sylius_grid:
                 options:
                     class: App\Entity\Chullanka\Store
             fields:
+                enabled:
+                    type: twig
+                    label: app.store.enabled
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
                 name:
                     type: string
                     label: 'Magasin'
@@ -299,6 +289,12 @@ sylius_grid:
                 options:
                     class: App\Entity\Chullanka\Chulli
             fields:
+                enabled:
+                    type: twig
+                    label: app.chulli.enabled
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
                 firstname:
                     type: string
                     label: 'Prénom'
@@ -321,5 +317,9 @@ sylius_grid:
                     #delete:
                     #    type: delete
             filters:
+                enabled:
+                    label: app.chulli.enabled
+                    type: boolean
                 firstname:
+                    label: app.chulli.firstname
                     type: string
