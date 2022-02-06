@@ -14,10 +14,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RmaRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /*public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Rma::class);
-    }
+    }*/
 
     // /**
     //  * @return Rma[] Returns an array of Rma objects
