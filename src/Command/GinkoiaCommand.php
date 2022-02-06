@@ -3,8 +3,8 @@ namespace App\Command;
 
 use App\Entity\Channel\ChannelPricing;
 use Doctrine\ORM\EntityManagerInterface;
-#use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\BrandRepositoryInterface;
-#use Loevgaard\SyliusBrandPlugin\Model\BrandInterface;
+//use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\BrandRepositoryInterface;
+//use Loevgaard\SyliusBrandPlugin\Model\BrandInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
@@ -52,10 +52,12 @@ class GinkoiaCommand extends Command
         $this->slugGenerator = $slugGenerator;
         $this->productFactory = $productFactory;
         $this->productVariantFactory = $productVariantFactory;
+        //$this->brandFactory = $brandFactory;
         $this->channelPricingFactory = $channelPricingFactory;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->channelRepository = $channelRepository;
+        //$this->brandRepository = $brandRepository;
     }
     
     protected function configure(): void
