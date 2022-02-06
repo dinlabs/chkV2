@@ -1,0 +1,62 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        dl.datas dt { font-weight:700; }
+        dl.datas dd { padding-left:1em; }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+<ul id="breadcrumb">
+    <li><a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+    <li><a href="{{ path('rma_request_list') }}" class="section">Vos demandes</a></li>
+    <li class="active">{{ rma.number }}</li>
+</ul>
+{% endblock %}
+
+{% block subcontent %}
+<h1>Retour produit n°{{ rma.number }}</h1>
+
+<h2>Information du contact</h2>
+<dl class="datas">
+    <dt>Statut</dt>
+    <dd>{{ rma.state }}</dd>
+
+    <dt>Téléphone</dt>
+    <dd>{{ rma.phoneNumber }}</dd>
+
+    <dt>Adresse de contact</dt>
+    <dd>{{ rma.customerEmail }}</dd>
+
+    <dt>Adresse</dt>
+    <dd>{{ rma.address }}</dd>
+</dl>
+<br>
+
+<h2>Produits</h2>
+<ul>
+{% for rmaProduct in rma.rmaProducts %}
+    <li style="padding-bottom:2em; border-bottom:1px dashed; margin-bottom:2em;">
+        {% set orderItem = rmaProduct.orderItem %}
+        {% if orderItem.further|length and orderItem.further.pack is defined and orderItem.further.pack|length %}
+            <h3>Pack : {{ orderItem.variant.product.name }}</h3>
+            {% for variantId, variantPrice in orderItem.further.pack %}
+                {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
+            {% endfor %}
+        {% else %}
+        <h3>{{ orderItem.variantName }} - {{ orderItem.id }} -- {{ orderItem.variant.id }}</h3>
+        {% endif %}
+        <dl class="datas">
+            <dt>Quantité</dt>
+            <dd>{{ rmaProduct.quantity }}</dd>
+
+            <dt>Raison</dt>
+            <dd>{{ rmaProduct.reason }}</dd>
+        </dl>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}

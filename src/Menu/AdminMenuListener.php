@@ -33,5 +33,11 @@ final class AdminMenuListener
             ])
             ->setLabel('chullanka_chullis.menu_item')
             ->setLabelAttribute('icon', 'users');
+        $item
+            ->addChild('rma', [
+                'route' => 'app_admin_rma_index',
+            ])
+            ->setLabel('RMA')
+            ->setLabelAttribute('icon', 'exchange');
     }
 }

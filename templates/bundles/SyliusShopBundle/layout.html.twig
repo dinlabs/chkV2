@@ -34,10 +34,12 @@
     {% if app.request.get('_route') == 'sylius_shop_cart_summary' %}
     {% set body_class = body_class ~ ' cart' %}
     {% endif %}
+{% elseif _controller == 'sylius.controller.customer' %}
+    {% set body_class = 'customer' %}
 {% endif %}
 
 <body class="{{ body_class }}">
-{# {{ dump(_where) }} #}
+{#{ dump(_where) }#}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}
     <div id="topAnnounce">

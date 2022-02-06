@@ -1,0 +1,74 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        dl.datas dt { font-weight:700; }
+        dl.datas dd { padding-left:1em; }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+<ul id="breadcrumb">
+    <li><a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_order_index') }}" class="section">{{ 'sylius.ui.order_history'|trans }}</a></li>
+    <li><a href="{{ path('chk_historic_orders') }}" class="section">Commandes plus anciennes</a></li>
+    <li class="active">{{ order.sku }}</li>
+</ul>
+{% endblock %}
+
+{% block subcontent %}
+<h1>Commande historique n°{{ order.sku }}</h1>
+
+<h2>Informations</h2>
+<dl class="datas">
+    <dt>Origine</dt>
+    <dd>{{ order.origin }}</dd>
+
+    <dt>Date de commande</dt>
+    <dd>{{ order.orderDate|format_date('medium') }}</dd>
+
+    <dt>Adresse</dt>
+    <dd>{{ order.address }}</dd>
+
+    <dt>Livraison</dt>
+    <dd>{{ order.shipment }}{% if order.shipmentPrice %} &ndash; {{ money.convertAndFormat(order.shipmentPrice) }}{% endif %}</dd>
+
+    <dt>Total</dt>
+    <dd>{{ money.convertAndFormat(order.total) }}</dd>
+
+    <dt>Moyen de Paiement</dt>
+    <dd>{{ order.paymethod }}</dd>
+
+    {% if order.invoice %}
+    <dt>Facture</dt>
+    <dd><a href="#">{{ order.invoice }} </a></dd>
+    {% endif %}
+</dl>
+<br>
+
+<h2>Produits</h2>
+<ul>
+{% for item in order.items %}
+    <li style="padding-bottom:2em; border-bottom:1px dashed; margin-bottom:2em;">
+        <h3>{{ item.name }}</h3>
+
+        {% if item.plink is defined %}Y a un lien !{% endif %}
+        
+
+        <dl class="datas">
+            <dt>Référence</dt>
+            <dd>{{ item.reference }}</dd>
+
+            <dt>Quantité</dt>
+            <dd>{{ item.quantity }}</dd>
+
+            <dt>Prix total</dt>
+            <dd>{{ money.convertAndFormat(item.price) }}</dd>
+        </dl>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}

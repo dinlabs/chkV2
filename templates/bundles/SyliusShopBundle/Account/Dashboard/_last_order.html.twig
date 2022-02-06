@@ -1,0 +1,95 @@
+{% if customer.completedOrders %}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+<div class="insert">
+    <h2>Merci encore pour votre dernier achat !</h2>
+    {% set order = customer.completedOrders.last %}
+    le {{ order.checkoutCompletedAt|format_datetime('short','short') }}<br>
+    {#le {{ order.checkoutCompletedAt|date('d/m/Y \\à H\\hi') }}<br>#}
+    N° {{ order.number }}<br>
+    <ul>
+        {% for item in order.items %}
+        {% set variant = item.variant %}
+        {% set product = variant.product %}
+        <li>
+            <div class="picture">
+                {% if variant.hasImages %}
+                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                {% else %}
+                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                {% endif %}
+            </div>
+            <div class="infos">
+                <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
+                    {% if product.brand.code %}<a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
+                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">{{ item.productName }}</a>
+
+                    {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}
+                        <br><small>Contenu du pack</small>
+                        {% for variantId, variantPrice in item.further.pack %}
+                            {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
+                        {% endfor %}
+                    {% else %}
+                        {% if product.hasOptions() %}
+                            {% for optionValue in variant.optionValues %}
+                            &ndash; {{ optionValue.name }} {{ optionValue.value }}
+                            {% endfor %}
+                        {% elseif item.variantName is not null %}
+                            &ndash; {{ item.variantName }}
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% if item.further|length and item.further.mount is defined and item.further.mount|length %}
+                    <small>Options de montage</small>
+                    <dl>
+                    {% for _key,_val in item.further.mount %}
+                        <dt><strong>{{ _key }}</strong></dt>
+                        <dd style="padding-left:1em;">{{ _val|nl2br }}</dd>
+                    {% endfor %}
+                    </dl>
+                {% endif %}
+
+                <div>
+                    <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% for shipment in order.shipments %}
+        {{ shipment.method }}
+        {% if order.further is defined and order.further.store is defined %}
+        : {{ render(url('store_name', {'id': order.further.store})) }}
+        {% endif %}
+        &ndash; 
+        {% if shipment.adjustmentsTotal > 0 %}
+        {{ money.convertAndFormat(shipment.adjustmentsTotal) }}
+        {% else %}
+        {{ 'app.front.free_delivery'|trans }}
+        {% endif %}
+        
+
+        {% set state = shipment.state %}
+        {% if state != 'cart' %}
+            <p id="shipment-status" {{ sylius_test_html_attribute('shipment-state') }}>
+                {% include "@SyliusShop/Common/Order/Label/ShipmentState/singleShipmentState.html.twig" with { 'state': state } %}
+            </p>
+            {% endif %}
+    {% endfor %}
+
+    {# INVOICE #}
+    {% if order.invoices %}
+        {% for invoice in order.invoices %}
+            <p><a href="{{ path('sylius_invoicing_plugin_shop_invoice_download', { 'id': invoice.id }) }}">Télécharger ma facture (PDF)</a></p>
+        {% endfor %}
+    {% endif %}
+    
+    {#todo: test if is delivery #}
+    {% if true %}
+    <p><a href="{{ path('rma_ask_return', {'order_id': order.id}) }}">Retourner un article</a></p>
+    {% endif %}
+
+    <a href="{{ path('sylius_shop_account_order_index') }}" class="btn primary">Voir mes achats précédents</a>
+</div>
+{% endif %}

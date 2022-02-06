@@ -1,0 +1,16 @@
+{% include '@SyliusShop/Common/Order/_addresses.html.twig' %}
+{% include '@SyliusShop/Common/Order/_table.html.twig' %}
+
+<div class="ui two column stackable grid">
+    <div class="column" id="sylius-payments">
+        {% include '@SyliusShop/Common/Order/_payments.html.twig' %}
+    </div>
+    <div class="column" id="sylius-shipments">
+        {% include '@SyliusShop/Common/Order/_shipments.html.twig' %}
+    </div>
+</div>
+
+{#todo: test if is delivery #}
+{% if true %}
+<p style="padding:2em; text-align:center;"><a href="{{ path('rma_ask_return', {'order_id': order.id}) }}">Retourner un article</a></p>
+{% endif %}

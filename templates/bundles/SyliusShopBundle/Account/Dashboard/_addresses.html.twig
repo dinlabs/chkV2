@@ -1,0 +1,25 @@
+<div class="insert" style="height:355px">
+    <h2>Vos adresses</h2>
+    {% set default_address = (sylius.customer.defaultAddress) %}
+    {% for address in customer.addresses %}
+    <address {{ sylius_test_html_attribute('address-context', "%s %s"|format(address.firstName, address.lastName)) }}>
+        {% if address.company is not null %}<strong>{{ address.company }}</strong><br>{% endif %}
+
+        <strong {{ sylius_test_html_attribute('full-name ', "%s %s"|format(address.firstName, address.lastName)) }}>{{ address.firstName }} {{ address.lastName }}</strong>{% if address == default_address %} (Par défaut){% endif %}<br>
+        {#% if address.phoneNumber is not null %}
+            {{ address.phoneNumber }}<br>
+        {% endif %#}
+        {{ address.street }}<br>
+        {{ address.postcode }} {{ address.city }}<br>
+        {% if address|sylius_province_name is not empty %}
+            {{ address|sylius_province_name }}<br>
+        {% endif %}
+        {{ address.countryCode|sylius_country_name }}
+        
+        <p><a href="{{ path('sylius_shop_account_address_book_update', {'id': address.id}) }}">Modifier</a></p>
+    </address>
+    <br>
+    {% endfor %}
+
+    <a href="{{ path('sylius_shop_account_address_book_create') }}" class="btn primary">Ajouter</a>
+</div>

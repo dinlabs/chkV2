@@ -1,0 +1,24 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+<div class="autoMargin">
+    <h1>Vos sports favoris</h1>
+    
+    {{ form_start(form, {'attr': {'id': 'favorite_sports'}}) }}
+    {{ form_errors(form) }}
+    {% form_theme form _self %}
+    {% block choice_widget %}
+        {% for child in form.favoriteSports %}
+        <div class="choice_sport">
+            {{ form_widget(child) }}
+            <label for="{{ child.vars.id }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-love"/></svg> {{ child.vars.label }}</label>
+        </div>
+        {% endfor %}
+    {% endblock choice_widget %}
+
+    <div class="formaction">
+        <button type="submit" class="btn primary">Enregistrer</button>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

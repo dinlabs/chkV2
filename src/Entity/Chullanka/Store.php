@@ -2,6 +2,7 @@
 
 namespace App\Entity\Chullanka;
 
+use App\Entity\Customer\Customer;
 use App\Repository\Chullanka\StoreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,11 @@ class Store implements ResourceInterface, TranslatableInterface
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -78,10 +84,16 @@ class Store implements ResourceInterface, TranslatableInterface
      */
     private $stocks;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Customer::class, mappedBy="favoriteStores")
+     */
+    private $customers;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
         $this->stocks = new ArrayCollection();
+        $this->customers = new ArrayCollection();
     }
 
     public function __toString()
@@ -92,6 +104,18 @@ class Store implements ResourceInterface, TranslatableInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -256,6 +280,33 @@ class Store implements ResourceInterface, TranslatableInterface
             if ($stock->getStore() === $this) {
                 $stock->setStore(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Customer[]
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->addFavoriteStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->removeElement($customer)) {
+            $customer->removeFavoriteStore($this);
         }
 
         return $this;

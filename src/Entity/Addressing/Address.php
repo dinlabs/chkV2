@@ -13,4 +13,10 @@ use Sylius\Component\Core\Model\Address as BaseAddress;
  */
 class Address extends BaseAddress
 {
+    //todo:ajout mobile
+
+    public function __toString()
+    {
+        return $this->getFullName() . ' ' . $this->street . ' ' . $this->postcode . ' ' . $this->city . ' ' . $this->countryCode;
+    }
 }

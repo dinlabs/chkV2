@@ -1,0 +1,56 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{% block breadcrumb %}
+<ul id="breadcrumb">
+    <li><a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+    <li><a href="{{ path('rma_request_list') }}" class="section">Vos demandes</a></li>
+    <li class="active">Retours produit</li>
+</ul>
+{% endblock %}
+
+{% block subcontent %}
+<h1>Demande de retour produit pour la commande n°{{ order.number }}</h1>
+<p style="float:right"><a href="{{ path('rma_request_list') }}">Annuler</a></p>
+
+<p>Merci de remplir et soumettre le formulaire ci-dessous afin de valider la demande de retour.<br>
+Notre service traitera votre demande dans les plus brefs délais.</p>
+
+{{ form_start(form, {'attr': {'id': 'ask_return_product'}}) }}
+{{ form_errors(form) }}
+
+<h2>Détails du contact</h2>
+<div>
+    {{ form_row(form.phone_number) }}
+</div>
+<div>
+    {{ form_row(form.customer_email) }}
+</div>
+<div>
+    {{ form_row(form.address) }}
+</div>
+<br><br><br>
+<ul>
+{% for rmaProduct in form.rmaProducts %}
+    <li style="padding-bottom:2em; border-bottom:1px dashed; margin-bottom:2em;">
+        {% set orderItem = rmaProduct.vars.value.orderItem %}
+        {% if orderItem.further|length and orderItem.further.pack is defined and orderItem.further.pack|length %}
+            <h3>Pack : {{ orderItem.variant.product.name }}</h3>
+            {% for variantId, variantPrice in orderItem.further.pack %}
+                {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
+            {% endfor %}
+        {% else %}
+        <h3>{{ orderItem.variantName }} - {{ orderItem.id }} -- {{ orderItem.variant.id }}</h3>
+        {% endif %}
+        <div>{{ form_row(rmaProduct.quantity) }}</div>
+        <div>{{ form_row(rmaProduct.reason) }}</div>
+    </li>
+{% endfor %}
+</ul>
+
+<br>
+<div class="formaction">
+    <button type="submit" class="btn primary">Soumettre</button>
+</div>
+{{ form_end(form) }}
+{% endblock %}

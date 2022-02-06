@@ -33,6 +33,7 @@ app:
     cons: 'Les points négatifs'
     note: 'Note Rapport Qualité/Prix (de 1 à 5)'
   store:
+    enabled: 'Activé'
     name: 'Nom'
     street: 'Adresse (rue)'
     postcode: 'Code postal'
@@ -45,6 +46,7 @@ app:
     description: 'Description'
     joinus: 'Rejoignez-nous'
   chulli:
+    enabled: 'Activé'
     firstname: 'Prénom'
     lastname: 'Nom'
     expertise: 'Expertise'

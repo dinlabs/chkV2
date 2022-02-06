@@ -95,8 +95,8 @@ security:
                 provider: sylius_shop_user_provider
                 login_path: sylius_shop_login
                 check_path: sylius_shop_login_check
-                #failure_path: sylius_shop_login
-                failure_path: chk_security_checkws
+                failure_path: sylius_shop_login
+                #failure_path: chk_security_checkws
                 #default_target_path: sylius_shop_homepage
                 default_target_path: sylius_shop_account_dashboard
                 use_forward: false

@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Entity\Chullanka\Store;
 use App\Entity\Order\Order;
-use App\Entity\Order\OrderItem;
 use App\Entity\Product\ProductVariant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,9 +45,9 @@ class GinkoiaHelper
 
             //todo: envoyer le XML par FTP
 
-            return  "XML bien généré : ".$filename;
+            return  "XML well done: ".$filename;
         }
-        else return "Pb pour générer le fichier $filename";
+        else return "Issue to generate file: $filename";
     }
     
     /**
@@ -446,7 +445,8 @@ class GinkoiaHelper
         
         // Fin
         $taxAmount = .2;
-        $shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
+        //$shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
+        $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
         $shipping = $shipInclTax / (1 + $taxAmount);
         $shipTVA = $shipInclTax - $shipping;
         

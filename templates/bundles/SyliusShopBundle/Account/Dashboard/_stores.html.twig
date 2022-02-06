@@ -1,0 +1,13 @@
+<div id="favoriteStores" class="insert">
+    <h2>Vos magasins favoris</h2>
+    {% if customer.favoriteStores|length == 0 %}
+        <a href="{{ path('store_manage_favorites') }}" class="btn primary">Commencer</a>
+    {% else %}
+        <ul>
+        {% for store in customer.favoriteStores %}
+            <li><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-love"/></svg> {{ store.name }}</li>
+        {% endfor %}
+        </ul>
+        <a href="{{ path('store_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>
+    {% endif %}
+</div>

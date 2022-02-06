@@ -1,0 +1,74 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{#% block title %}{{ 'sylius.ui.your_profile'|trans }} | {{ parent() }}{% endblock %#}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        h2 { padding:1em 0; }
+        table.datas { width:100%; }
+        table.datas th, table.datas td { border:1px solid var(--default); padding:.5em; }
+        table.datas th { background:var(--primary); color:var(--bg0); }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+<ul id="breadcrumb">
+    <li><a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_order_index') }}" class="section">{{ 'sylius.ui.order_history'|trans }}</a></li>
+    <li class="active">Commandes plus anciennes</li>
+</ul>
+{% endblock %}
+
+{% block subcontent %}
+<h1>Liste de vos anciennes commandes passées...</h1>
+
+<h2>...directement en boutiques Chullanka</h2>
+<table class="datas">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Référence de la commande</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in magasin_orders %}
+        <tr title="n°{{ order.id }}">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.sku }}</td>
+            <td>{{ order.orderDate|format_date('medium') }}</td>
+            <td><a href="{{ path('chk_historic_order_view', {'id': order.id}) }}">Voir</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="margin-top:3em; border-top:2px dashed; padding-top:1em"></div>
+
+<h2>...sur le site d'Approach Outdoor</h2>
+<table class="datas">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Référence de la commande</th>
+            <th>Date</th>
+            <th>Facture</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in approach_orders %}
+        <tr title="n°{{ order.id }}">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.sku }}</td>
+            <td>{{ order.orderDate|format_date('medium') }}</td>
+            <td>{% if order.invoice %}{{ order.invoice }}{% else %}n/a{% endif %}</td>
+            <td><a href="{{ path('chk_historic_order_view', {'id': order.id}) }}">Voir</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

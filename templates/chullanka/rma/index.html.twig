@@ -1,0 +1,47 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{#% block title %}{{ 'sylius.ui.your_profile'|trans }} | {{ parent() }}{% endblock %#}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        table.datas { width:100%; }
+        table.datas th, table.datas td { border:1px solid var(--default); padding:.5em; }
+        table.datas th { background:var(--primary); color:var(--bg0); }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+<ul id="breadcrumb">
+    <li><a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+    <li class="active">Retours produit</li>
+</ul>
+{% endblock %}
+
+{% block subcontent %}
+<h1>Liste de vos demandes de retour produit</h1>
+
+<table class="datas">
+    <thead>
+        <tr>
+            <th>Référence de la demande</th>
+            <th>Date</th>
+            <th>Commande</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rma in rmas %}
+        <tr title="n°{{ rma.id }}">
+            <td>{{ rma.number }}</td>
+            <td>{{ rma.createdAt|format_date('medium') }}</td>
+            <td>{{ rma.order.number }}</td>
+            <td>{{ rma.state }}</td>
+            <td><a href="{{ path('rma_request_view', {'id': rma.id}) }}">Voir</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

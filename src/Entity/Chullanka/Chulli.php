@@ -22,6 +22,11 @@ class Chulli implements ResourceInterface
     private $id;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
@@ -59,6 +64,18 @@ class Chulli implements ResourceInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 
     public function getFirstname(): ?string

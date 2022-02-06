@@ -36,10 +36,10 @@
         {% else %}
             {% if where == 'pickup' %}
             <p>Trouvez un point-relais près de chez vous</p>
-            <div class="form ui" style="display:grid; grid-template-columns:4fr 1fr 2fr 1fr;">
-                <input type="text" id="pickup_address" placeholder="votre adresse">
-                <input type="text" id="pickup_zip" placeholder="code postal">
-                <input type="text" id="pickup_city" placeholder="ville">
+            <div class="form ui" style="display:grid; grid-template-columns:3fr 1fr 2fr 1fr;">
+                <input type="text" id="pickup_address" placeholder="votre adresse" value="{{ order.shippingAddress.street }}">
+                <input type="text" id="pickup_zip" placeholder="code postal" value="{{ order.shippingAddress.postcode }}">
+                <input type="text" id="pickup_city" placeholder="ville" value="{{ order.shippingAddress.city }}">
                 <button id="findPickups" class="btn">Chercher</button>
             </div>
             {% endif %}

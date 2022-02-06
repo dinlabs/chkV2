@@ -3,11 +3,14 @@
 namespace App\Controller\Chullanka;
 
 use App\Service\DpdHelper;
+use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +35,10 @@ class AjaxController extends AbstractController
     private $cartContext;
 
     /** @var EntityManagerInterface */
-    private $cartManager;
+    private $entityManager;
+
+    /** @var GinkoiaCustomerWs */
+    private $ginkoiaCustomerWs;
 
     public function __construct(
         ProductRepositoryInterface $productRepository, 
@@ -40,7 +46,8 @@ class AjaxController extends AbstractController
         FactoryInterface $orderItemFactory, 
         OrderItemQuantityModifierInterface $orderItemQuantityModifier,
         CartContextInterface $cartContext,
-        EntityManagerInterface $cartManager
+        EntityManagerInterface $entityManager,
+        GinkoiaCustomerWs $ginkoiaCustomerWs
     )
     {
         $this->productRepository = $productRepository;
@@ -48,7 +55,8 @@ class AjaxController extends AbstractController
         $this->orderItemFactory = $orderItemFactory;
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
         $this->cartContext = $cartContext;
-        $this->cartManager = $cartManager;
+        $this->entityManager = $entityManager;
+        $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
     }
 
     /**
@@ -108,8 +116,8 @@ class AjaxController extends AbstractController
                 $this->orderItemQuantityModifier->modify($orderItem, 1);
                 $cart->addItem($orderItem);
 
-                $this->cartManager->persist($cart);
-                $this->cartManager->flush();
+                $this->entityManager->persist($cart);
+                $this->entityManager->flush();
             }
         }
 
@@ -126,6 +134,58 @@ class AjaxController extends AbstractController
             'variant' => $variant,
             'inadmin' => (bool)$inadmin,
         ]);
+    }
+
+    /**
+     * @Route("/usechullpoints", name="chk_ajax_chullpoints")
+     */
+    public function useChullpointsAction(AdjustmentFactoryInterface $adjustmentFactory): Response
+    {
+        $codeName = 'chk_chullpoints';
+        $order = $this->cartContext->getCart();
+
+        $fidelityUsed = false;
+        foreach($order->getAdjustments() as $adjustement)
+        {
+            if($adjustement->getOriginCode() == $codeName)
+            {
+                $order->removeAdjustment($adjustement);
+                $fidelityUsed = true;
+            }
+        }
+        if(!$fidelityUsed)
+        {
+            $chullz = 0; //nbr de points
+            if($customer = $order->getCustomer())
+            {
+                $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                
+                $email = $customer->getEmail();
+                $webserv = $this->ginkoiaCustomerWs;
+                /*if(($loyalties = $webserv->getCustomerLoyalties($email)) && isset($loyalties['loyalty_total_points']))
+                {
+                    $chullz = $loyalties['loyalty_total_points'];// on récupère le nbre de point à jour sur le WS
+                    // on met à jour sur le site
+                    $customer->setChullpoints($chullz);
+                    $this->entityManager->persist($customer);
+                }*/
+            }
+            $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+		    $discountAmount = $nbrReduc * 10; // 1 bon = 10€
+            $amount = -100 * (int) $discountAmount;
+            $adjustment = $adjustmentFactory->createWithData(
+                AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
+                $codeName,
+                $amount
+            );
+            $adjustment->setOriginCode($codeName);
+            $order->addAdjustment($adjustment);
+        }
+        
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('sylius_shop_cart_summary');
     }
 
     /**

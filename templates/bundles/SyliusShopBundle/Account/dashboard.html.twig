@@ -1,0 +1,30 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ 'sylius.ui.my_account'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+<div class="autoMargin">
+    {% block breadcrumb %}
+    <div class="ui breadcrumb">
+        <a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a>
+        <div class="divider"> / </div>
+        <div class="active section">{{ 'sylius.ui.my_account'|trans }}</div>
+    </div>
+    {% endblock %}
+
+    {% block subcontent %}
+    <div class="dashboard">
+        {% include '@SyliusShop/Account/Dashboard/_welcome.html.twig' with {'customer': customer} %}
+        {% include '@SyliusShop/Account/Dashboard/_last_order.html.twig' %}
+        {% include '@SyliusShop/Account/Dashboard/_sports.html.twig' %}
+        <div class="" style="height:330px">
+            encart pub
+        </div>
+        {% include '@SyliusShop/Account/Dashboard/_addresses.html.twig' %}
+        {% include '@SyliusShop/Account/Dashboard/_stores.html.twig' %}
+        {% include '@SyliusShop/Account/Dashboard/_chullpoints.html.twig' %}
+        {% include '@SyliusShop/Account/Dashboard/_wishlists.html.twig' %}
+    </div>
+    {% endblock %}
+</div>
+{% endblock %}

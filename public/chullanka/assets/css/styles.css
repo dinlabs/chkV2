@@ -737,6 +737,34 @@ body.checkout { background:var(--bg1); }
 .checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }
 
 
+/* CUSTOMER */
+body.customer { background:var(--bg1); }
+.customer .insert { margin-bottom:1em; }
+.customer .dashboard { margin-bottom:2em; text-align:center; }
+.customer .dashboard > * { width:330px; margin:0 auto 1em; text-align:initial; }
+
+.customer .dashboard #welcome h1 { font-family:var(--altFont); font-size:1.867em; }
+.customer .dashboard #welcome .preferences { margin-top:1em; border-top:2px dashed var(--default); }
+.customer .dashboard #welcome .preferences .links { margin-bottom:1em; }
+.customer .dashboard #welcome .preferences .links li { display:block; }
+
+.customer .dashboard #favoriteStores ul,
+    .customer .dashboard #favoriteSports ul { margin:1em 0; }
+.customer .dashboard #favoriteStores ul li,
+    .customer .dashboard #favoriteSports ul li { display:inline-flex; align-items:center; height:30px; }
+.customer .dashboard #favoriteStores ul li .svg-icon,
+    .customer .dashboard #favoriteSports ul li .svg-icon { margin-right:.5em; width:30px; height:28px; fill:var(--primary); }
+
+#favorite_stores .choice_store input[type='checkbox'],
+    #favorite_sports .choice_sport input[type='checkbox'] { display:none; }
+#favorite_stores .choice_store label,
+    #favorite_sports .choice_sport label { display:flex; align-items:center; height:40px; cursor:pointer; }
+#favorite_stores .choice_store label .svg-icon,
+    #favorite_sports .choice_sport label .svg-icon { margin-right:.5em; width:30px; height:28px; fill:none; cursor:pointer; }
+#favorite_stores .choice_store input[type='checkbox']:checked + label .svg-icon,
+    #favorite_sports .choice_sport input[type='checkbox']:checked + label .svg-icon { fill:var(--primary); }
+
+
 /* MEDIA QUERIES */
 @media screen and (min-width:500px) {
     .prodList .background .autoMargin { left:-20px; }
@@ -862,6 +890,9 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #entreprise .team h3 { color:inherit; text-shadow:none; }
 
     .checkout #cartProducts .cartItem .inside { grid-template-columns:1fr 3fr; gap:10px; }
+
+    .customer .dashboard { column-count:2; }
+    .customer .dashboard > * { display:inline-block; }
 }
 
 @media screen and (min-width:1050px) {
@@ -902,4 +933,6 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     #checkThat > ul { grid-template-columns:1fr 1fr 1fr; }
     #checkThat ul ul { padding:0; }
+
+    .customer .dashboard { column-count:3; }
 }

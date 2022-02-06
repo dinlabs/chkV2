@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="infos">
                                     <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
-                                    <div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>
+                                    {% if product.brand.code %}<div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
                                     <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
                                     {% if choice.averageRating %}
                                     <div class="clientRating">
