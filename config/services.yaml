@@ -80,6 +80,24 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
 
+    app.listener.shop.menu_builder:
+        class: App\Menu\AccountMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.shop.account, method: addAccountMenuItems }
+
+    app.ginkoiaws:
+        class: App\Service\GinkoiaCustomerWs
+    # app.security.success_handler:
+    #     class: App\Security\AuthenticationSuccessHandler
+    #     parent: security.authentication.success_handler
+    #     public: false
+    # app.security.failure_handler:
+    #     class: App\Security\AuthenticationFailureHandler
+    #     arguments:
+    #         - '@app.ginkoiaws'
+    #     parent: security.authentication.failure_handler
+    #     public: false
+
     #ndY: pour définir de nouveaux Type traduisibles
     app.store.form.type:
         class: App\Form\Type\StoreType
@@ -112,4 +130,26 @@ services:
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Product\ProductType }
 
-         
+
+    #ndY: solution de Paiement
+    # app.upstream_pay:
+    #     class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+    #     arguments: [ App\Payum\UpstreamPayGatewayFactory ]
+    #     tags:
+    #         - { name: payum.gateway_factory_builder, factory: upstream_pay }
+    # App\Form\Type\UpstreamPayGatewayConfigurationType:
+    #     tags:
+    #         - { name: sylius.gateway_configuration_type, type: upstream_pay, label: 'Upstream Pay' }
+    #         - { name: form.type }
+    # App\Payum\Action\CaptureAction:
+    #     public: true
+    #     arguments:
+    #         - '@sylius.http_client'
+    #     tags:
+    #         - { name: payum.action, factory: upstream_pay, alias: payum.action.capture }
+    # App\Payum\Action\StatusAction:
+    #     public: true
+    #     arguments:
+    #         - '@sylius.http_client'
+    #     tags:
+    #         - { name: payum.action, factory: upstream_pay, alias: payum.action.status }
