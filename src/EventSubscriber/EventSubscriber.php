@@ -179,9 +179,8 @@ class EventSubscriber implements EventSubscriberInterface
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
-        
         $connectedUser = $event->getAuthenticationToken()->getUser();
-        if($connectedUser && ($customer = $connectedUser->getCustomer()))
+        if($connectedUser && method_exists($connectedUser, 'getCustomer') && ($customer = $connectedUser->getCustomer()))
         {
             $webserv = $this->ginkoiaCustomerWs;
 
