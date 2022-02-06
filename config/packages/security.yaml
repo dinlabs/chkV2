@@ -1,6 +1,5 @@
 parameters:
     sylius.security.admin_regex: "^/%sylius_admin.path_name%"
-    sylius.security.api_regex: "^/api/v1"
     sylius.security.shop_regex: "^/(?!%sylius_admin.path_name%|api/.*|api$|media/.*)[^/]++"
     sylius.security.new_api_route: "/api/v2"
     sylius.security.new_api_regex: "^%sylius.security.new_api_route%"
@@ -53,10 +52,6 @@ security:
                 target: sylius_admin_login
             anonymous: true
 
-        oauth_token:
-            pattern: "%sylius.security.api_regex%/oauth/v2/token"
-            security: false
-
         new_api_admin_user:
             pattern: "%sylius.security.new_api_admin_regex%/.*"
             provider: sylius_api_admin_user_provider
@@ -87,13 +82,6 @@ security:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
-        api:
-            pattern: "%sylius.security.api_regex%/.*"
-            provider: sylius_admin_user_provider
-            fos_oauth: true
-            stateless: true
-            anonymous: true
-
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
             context: shop
@@ -101,12 +89,16 @@ security:
             provider: sylius_shop_user_provider
             form_login:
                 success_handler: sylius.authentication.success_handler
+                # success_handler: app.security.success_handler
+                # failure_handler: app.security.failure_handler
                 failure_handler: sylius.authentication.failure_handler
                 provider: sylius_shop_user_provider
                 login_path: sylius_shop_login
                 check_path: sylius_shop_login_check
-                failure_path: sylius_shop_login
-                default_target_path: sylius_shop_homepage
+                #failure_path: sylius_shop_login
+                failure_path: chk_security_checkws
+                #default_target_path: sylius_shop_homepage
+                default_target_path: sylius_shop_account_dashboard
                 use_forward: false
                 use_referer: true
                 csrf_token_generator: security.csrf.token_manager
@@ -135,14 +127,12 @@ security:
         - { path: "%sylius.security.shop_regex%/_partial", role: ROLE_NO_ACCESS }
 
         - { path: "%sylius.security.admin_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: "%sylius.security.api_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.shop_regex%/register", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/verify", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
-        - { path: "%sylius.security.api_regex%/.*", role: ROLE_API_ACCESS }
         - { path: "%sylius.security.shop_regex%/account", role: ROLE_USER }
 
         - { path: "%sylius.security.new_api_admin_regex%/.*", role: ROLE_API_ACCESS }

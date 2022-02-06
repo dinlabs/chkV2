@@ -17,13 +17,15 @@
         }
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.3 || ^8.0",
         "bitbag/cms-plugin": "^3.0",
-        "bitbag/elasticsearch-plugin": "^1.7",
-        "friendsofsymfony/oauth-server-bundle": ">2.0.0-alpha.0 ^2.0@dev",
-        "loevgaard/sylius-brand-plugin": "^2.1",
+        "bitbag/elasticsearch-plugin": "^2.0",
+        "bitbag/wishlist-plugin": "^1.9",
+        "sensio/framework-extra-bundle": "^6.2",
+        "sylius/invoicing-plugin": "^0.19.0",
         "sylius/paypal-plugin": "^1.1",
-        "sylius/sylius": "~1.9.0",
+        "sylius/refund-plugin": "^1.0",
+        "sylius/sylius": "~1.10.0",
         "symfony/dotenv": "^4.4 || ^5.2",
         "symfony/flex": "^1.11",
         "symfony/security-bundle": "5.3"
@@ -44,18 +46,18 @@
         "lchrusciel/api-test-case": "^5.0",
         "phpspec/phpspec": "^7.0",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "0.12.80",
+        "phpstan/phpstan": "0.12.96",
         "phpstan/phpstan-doctrine": "0.12.32",
         "phpstan/phpstan-webmozart-assert": "0.12.12",
         "phpunit/phpunit": "^8.5",
         "stripe/stripe-php": "^6.43",
-        "sylius-labs/coding-standard": "^3.2",
+        "sylius-labs/coding-standard": "^4.2",
         "symfony/browser-kit": "^4.4 || ^5.2",
         "symfony/debug-bundle": "^4.4 || ^5.2",
         "symfony/intl": "^4.4 || ^5.2",
         "symfony/maker-bundle": "^1.36",
         "symfony/web-profiler-bundle": "^4.4 || ^5.2",
-        "symplify/easy-coding-standard": "^8.3"
+        "symplify/easy-coding-standard": "^9.4"
     },
     "conflict": {
         "symfony/form": "4.4.11|4.4.12"

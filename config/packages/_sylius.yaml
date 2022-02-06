@@ -2,7 +2,6 @@ imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
 
     - { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
-    - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
     - { resource: "@SyliusApiBundle/Resources/config/app/config.yaml" }
 
     # ci-dessous, utilisation de 'config/packages/sylius_shop_config.yml' à la place
@@ -11,11 +10,16 @@ imports:
     - { resource: "@SyliusPayPalPlugin/Resources/config/config.yaml" }
     - { resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/config.yml" }
     - { resource: "@BitBagSyliusCmsPlugin/Resources/config/config.yml" }
+    - { resource: "@BitBagSyliusWishlistPlugin/Resources/config/config.yml" }
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
     bitbag_es_pagination_available_page_limits: [16, 24, 32]
     bitbag_es_pagination_default_limit: 24
+    mailchimp.api_key: '123'
+    mailchimp.list_id: '1'
+    mailchimp.webhook_secret: '456'
+    
 
 sylius_addressing:
     resources:
@@ -34,21 +38,6 @@ sylius_addressing:
         zone_member:
             classes:
                 model: App\Entity\Addressing\ZoneMember
-
-sylius_admin_api:
-    resources:
-        api_client:
-            classes:
-                model: App\Entity\AdminApi\Client
-        api_access_token:
-            classes:
-                model: App\Entity\AdminApi\AccessToken
-        api_refresh_token:
-            classes:
-                model: App\Entity\AdminApi\RefreshToken
-        api_auth_code:
-            classes:
-                model: App\Entity\AdminApi\AuthCode
 
 sylius_attribute:
     resources:
@@ -272,6 +261,12 @@ sylius_grid:
                 options:
                     class: App\Entity\Chullanka\Store
             fields:
+                enabled:
+                    type: twig
+                    label: app.store.enabled
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
                 name:
                     type: string
                     label: 'Magasin'
@@ -299,6 +294,12 @@ sylius_grid:
                 options:
                     class: App\Entity\Chullanka\Chulli
             fields:
+                enabled:
+                    type: twig
+                    label: app.chulli.enabled
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
                 firstname:
                     type: string
                     label: 'Prénom'
@@ -321,5 +322,24 @@ sylius_grid:
                     #delete:
                     #    type: delete
             filters:
+                enabled:
+                    label: app.chulli.enabled
+                    type: boolean
                 firstname:
+                    label: app.chulli.firstname
                     type: string
+        app_admin_rma:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Rma
+            fields:
+                number:
+                    type: string
+                    label: 'Réf.'
+            actions:
+                item:
+                    update:
+                        type: update
+                    #delete:
+                    #    type: delete
