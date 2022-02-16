@@ -9,3 +9,16 @@
     {% include '@SyliusShop/Product/_price.html.twig' with { 'productPage': true } %}
     {% endif %}
 </div>
+
+{% set locale = configuration.request.locale %}
+{% set attribute = product.getAttributeByCodeAndLocale('label', locale) %}
+{% if attribute and attribute.value is not null %}
+<div class="tags">
+    {% set values = attribute.attribute.configuration.choices %}
+    {% for value in attribute.value %}
+        {% if locale in values[value]|keys and values[value][locale] is not empty %}
+        <span>{{ values[value][locale] }}</span>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

@@ -129,6 +129,16 @@ services:
         tags:
             - { name: form.type }
         arguments: ['%app.model.chulltest_translation.class%', ['sylius']]
+    app.complementary_product.form.type:
+        class: App\Form\Type\ComplementaryProductType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.complementary_product.class%', ['sylius']]
+    app.complementary_product_translation.form.type:
+        class: App\Form\Type\ComplementaryProductTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.complementary_product_translation.class%', ['sylius']]
     
     #ndY: pour ajouter des tabs dans edition de Product
     app.listener.admin.product_form_menu_builder:

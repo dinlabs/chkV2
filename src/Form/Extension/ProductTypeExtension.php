@@ -7,6 +7,7 @@ namespace App\Form\Extension;
 use App\Entity\Chullanka\Brand;
 use App\Form\Type\ChulltestType;
 use App\Form\Type\BrandAutocompleteChoiceType;
+use App\Form\Type\ComplementaryProductType;
 use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityRepository;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductType;
@@ -59,6 +60,11 @@ class ProductTypeExtension extends AbstractTypeExtension
 
         $object = $builder->getData();
         $builder->add('chulltest', ChulltestType::class, [
+            'object' => $object,
+            'label' => false
+        ]);
+
+        $builder->add('complementaryProduct', ComplementaryProductType::class, [
             'object' => $object,
             'label' => false
         ]);

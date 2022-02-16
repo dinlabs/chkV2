@@ -78,6 +78,32 @@ class EventSubscriber implements EventSubscriberInterface
             //ne créé de Chulltest si la date et la description n'ont pas été renseigné
             $subject->setChulltest(null);
         }
+
+        $complementary = $subject->getComplementaryProduct();
+        if(!$complementary || (empty($complementary->getTitle())))
+        {
+            //ne créé pas de ComplementaryProduct si le titre et la description n'ont pas été renseigné
+            $subject->setComplementaryProduct(null);
+        }
+        else
+        {
+            if($backgroundFile = $complementary->getBackgroundFile())
+            {
+                $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
+                $path = 'upload/complementary/backgrounds';
+                try {
+                    $backgroundFile->move($path, $newFilename);
+                } catch (FileException $e) {
+                    error_log(print_r($e, true));
+                }
+                if(!empty($complementary->getBackground()))
+                {
+                    @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$complementary->getBackground() );
+                }
+                $complementary->setBackground($newFilename);
+            }
+        }
     }
 
     /**
@@ -301,7 +327,7 @@ class EventSubscriber implements EventSubscriberInterface
         $this->entityManager->persist($store);
         $this->entityManager->flush();
     }
-
+    
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {

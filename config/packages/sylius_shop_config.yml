@@ -100,9 +100,9 @@ sylius_ui:
                 top_brands:
                     template: "@SyliusShop/Homepage/_top_brands.html.twig"
                     priority: 60
-                # new_products:
-                #     template: "@SyliusShop/Homepage/_new_products.html.twig"
-                #     priority: 50
+                new_products:
+                    template: "@SyliusShop/Homepage/_new_products.html.twig"
+                    priority: 50
                 test_products:
                     template: "@SyliusShop/Homepage/_test_products.html.twig"
                     priority: 45
@@ -118,9 +118,9 @@ sylius_ui:
                 shop_news:
                     template: "@SyliusShop/Homepage/_shopNews.html.twig"
                     priority: 25
-                # featured_brand:
-                #     template: "@SyliusShop/Homepage/_featuredBrand.html.twig"
-                #     priority: 20
+                featured_brand:
+                    template: "@SyliusShop/Homepage/_featuredBrand.html.twig"
+                    priority: 20
                 plus_chullanka:
                     template: "@SyliusShop/Homepage/_plusChullanka.html.twig"
                     priority: 15

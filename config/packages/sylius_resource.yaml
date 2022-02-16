@@ -35,6 +35,15 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\ChulltestTranslation
                     form: App\Form\Type\ChulltestTranslationType
+        app.complementary_product:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\ComplementaryProduct
+                form: App\Form\Type\ComplementaryProductType
+            translation:
+                classes:
+                    model: App\Entity\Chullanka\ComplementaryProductTranslation
+                    form: App\Form\Type\ComplementaryProductTranslationType
         # app.rma:
         #     driver: doctrine/orm
         #     classes:

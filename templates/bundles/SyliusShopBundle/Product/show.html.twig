@@ -16,6 +16,38 @@
     </div>
 </div>
 
+{% if product.complementaryProduct %}
+{% set complementary = product.complementaryProduct %}
+<div id="otherProducts" class="prodList">
+    <div class="background"{% if complementary.background %} style="background-image:url({{ asset('upload/complementary/backgrounds/' ~ complementary.background) }});"{% endif %}>
+        <div class="autoMargin">
+            <img src="{{ asset('chullanka/assets/img/mask_prodlist.png') }}" alt="">
+        </div>
+    </div>
+    <div class="autoMargin">
+        <div class="list">
+            <div class="header">
+                {% set chulli = complementary.chulli %}
+                {% if chulli %}
+                <div class="pichulli">
+                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="190" height="190" alt="{{ chulli }}">
+                </div>
+                {% endif %}
+                <h2>{{ complementary.title }}</h2>
+                
+                {% if chulli %}
+                <div class="info">
+                    <strong>{{ chulli }}</strong>, {{ chulli.expertise }}
+                </div>
+                {% endif %}
+            </div>
+            {% include '@SyliusShop/Product/_prodlist_loop.html.twig' with {'products': complementary.products} %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
 {#<div id="otherProducts" class="prodList"></div>#}
 
 <div id="productContent" class="autoMargin">

@@ -6,6 +6,7 @@ namespace App\Entity\Product;
 
 use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Chulltest;
+use App\Entity\Chullanka\ComplementaryProduct;
 use App\Entity\Chullanka\PackElement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -46,6 +47,11 @@ class Product extends BaseProduct
      * @ORM\OneToOne(targetEntity=Chulltest::class, mappedBy="product", cascade={"persist", "remove"})
      */
     private $chulltest;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ComplementaryProduct::class, mappedBy="product", cascade={"persist", "remove"})
+     */
+    private $complementaryProduct;
 
     public function __construct()
     {
@@ -146,6 +152,28 @@ class Product extends BaseProduct
         }
         
         $this->chulltest = $chulltest;
+
+        return $this;
+    }
+
+    public function getComplementaryProduct(): ?ComplementaryProduct
+    {
+        return $this->complementaryProduct;
+    }
+
+    public function setComplementaryProduct(?ComplementaryProduct $complementaryProduct): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($complementaryProduct === null && $this->complementaryProduct !== null) {
+            $this->complementaryProduct->setProduct(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($complementaryProduct !== null && $complementaryProduct->getProduct() !== $this) {
+            $complementaryProduct->setProduct($this);
+        }
+        
+        $this->complementaryProduct = $complementaryProduct;
 
         return $this;
     }
