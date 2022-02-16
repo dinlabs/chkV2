@@ -73,8 +73,14 @@
         {% set others = [] %}
         {% set others = others|merge(['Gamme PRO']) %}
         {% set others = others|merge(['Pièces détachées et réparations']) %}
-        {% set others = others|merge(['Nos marques']) %}
-        {% set others = others|merge(['Nos magasins']) %}
+        {% for other in others %}
+            {{ macros.itemsimple(other, '#') }}
+        {% endfor %}
+
+        {{ render(url('brand_menu_list')) }}
+        {{ render(url('store_menu_list')) }}
+
+        {% set others = [] %}
         {% set others = others|merge(['Nos Services']) %}
         {% set others = others|merge(['Guides d\'achat']) %}
         {% set others = others|merge(['Carte cadeau']) %}

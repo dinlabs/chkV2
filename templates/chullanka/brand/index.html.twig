@@ -1,0 +1,51 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ 'app.front.brands'|trans }}{% endblock %}
+{% block bodyattr %}id="brands"{% endblock %}
+
+{% block content %}
+<div class="autoMargin" id="brandsTop">
+	<h1>{{ 'app.front.brands'|trans }}</h1>
+	<p>Chullanka sélectionne pour vous le meilleur des plus grandes marques de l'outdoor. À cette sélection d'équipement pour les passionné(e)s de sports de montagne et de vélo s'ajoute les conseils de nos Chullis. Des passionnés, eux aussi, qui partagent leurs expériences pour vous faire vivre votre pratique sportive avec le matériel le plus adapté au meilleur prix.</p>
+	<p>En magasin comme sur notre site internet, vous bénéficiez d'un grand choix de références pour toutes vos activités outdoor, du trail à l'escalade en passant par la randonnée en montagne ou le ski.</p>
+
+	{% if topBrands %}
+	<div id="topBrands">
+	{% for brand in topBrands %}
+		<a href="{{ path('brand_view', {'code': brand.code}) }}">{% if brand.logo %}<img src="{{ asset('upload/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo">{% else %}{{ brand.name }}{% endif %}</a>
+	{% endfor %}
+	</div>
+	{% endif %}
+	
+
+	{% if letters %}
+	<h2>Trouver une marque Outdoor&nbsp;:</h2>
+	<div id="listLetters">       
+	{% for letter, brands in letters %}
+		<a href="#letter-{{ letter }}" class="scroll-to">{{ letter }}</a>
+	{% endfor %}
+	</div>
+	
+	<ul id="listBrands">
+	{% for letter, brands in letters %}
+		<li id="letter-{{ letter }}">
+			<h3>{{ letter }}</h3>
+			<ul>
+			{% for brand in brands %}
+			<li>
+				<a href="{{ path('brand_view', {'code': brand.code}) }}">{{ brand.name }}</a>
+			</li>
+			{% endfor %}
+			</ul>
+		</li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+
+	<div id="description" class="anchor">
+		<div class="toAnchor">
+			<a href="#brandsTop">{{ 'app.front.gototop'|trans }}</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 {% set product = variant.product %}
 
-{% if product.brand.code %}<div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
+{% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
 
 <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
     <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">{{ item.productName }}</a>

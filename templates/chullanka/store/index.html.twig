@@ -1,0 +1,19 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ 'app.front.stores'|trans }}{% endblock %}
+{% block bodyattr %}id="stores"{% endblock %}
+
+{% block content %}
+<div class="autoMargin">
+    <div class="insert">
+        <h1>{{ 'app.front.stores'|trans }}</h1>
+        <ul>
+            {% for store in stores %}
+            <li>
+                <a href="{{ path('store_view', {'code': store.code}) }}">{{ store.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
+use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Chulltest;
 use App\Entity\Chullanka\PackElement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-//use Loevgaard\SyliusBrandPlugin\Model\ProductInterface as LoevgaardSyliusBrandPluginProductInterface;
-//use Loevgaard\SyliusBrandPlugin\Model\ProductTrait as LoevgaardSyliusBrandPluginProductTrait;
 use Sylius\Component\Core\Model\Product as BaseProduct;
 use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
@@ -19,11 +18,14 @@ use Sylius\Component\Product\Model\ProductTranslationInterface;
  * @ORM\Entity
  * @ORM\Table(name="sylius_product")
  */
-class Product extends BaseProduct //implements LoevgaardSyliusBrandPluginProductInterface
+class Product extends BaseProduct
 {
-    //use LoevgaardSyliusBrandPluginProductTrait;
-    /** @var Array */
-    public $brand = ['code' => false];//tmp pour les templates
+    /**
+     * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="products")
+     */
+    private $brand;
+    /** @var string */
+    private $esbrand;
 
     /**
      * @ORM\Column(type="boolean", name="is_pack", options={"default":false})
@@ -54,6 +56,22 @@ class Product extends BaseProduct //implements LoevgaardSyliusBrandPluginProduct
     protected function createTranslation(): ProductTranslationInterface
     {
         return new ProductTranslation();
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+    public function getEsbrand(): ?string
+    {
+        return $this->brand ? $this->brand->getEscode() : null;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
     }
     
     public function getIsPack(): ?bool

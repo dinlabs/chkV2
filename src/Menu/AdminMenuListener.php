@@ -22,6 +22,12 @@ final class AdminMenuListener
     private function addChild(ItemInterface $item): void
     {
         $item
+            ->addChild('brands', [
+                'route' => 'app_admin_brand_index',
+            ])
+            ->setLabel('chullanka_brands.menu_item')
+            ->setLabelAttribute('icon', 'building');
+        $item
             ->addChild('stores', [
                 'route' => 'app_admin_store_index',
             ])

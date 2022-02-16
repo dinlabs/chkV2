@@ -11,18 +11,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class EventSubscriber implements EventSubscriberInterface
 {
     private $entityManager;
+    private $slugger;
     private $ginkoiaHelper;
     private $ginkoiaCustomerWs;
 
-    public function __construct(EntityManagerInterface $entityManager, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs)
+    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs)
     {
         $this->entityManager = $entityManager;
+        $this->slugger = $slugger;
         $this->ginkoiaHelper = $ginkoiaHelper;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
     }
@@ -39,6 +43,13 @@ class EventSubscriber implements EventSubscriberInterface
             'sylius.product.pre_update' => 'onSyliusProductPreCreUpdate',
             'sylius.order.post_select_shipping' => 'onSyliusOrderPostSelectShipping',
             'sylius.order.post_complete' => 'onSyliusOrderPostComplete',
+
+            'app.brand.pre_create' => 'onAppBrandPreCreUpdate',
+            'app.brand.pre_update' => 'onAppBrandPreCreUpdate',
+            'app.chulli.pre_create' => 'onAppChulliPreCreUpdate',
+            'app.chulli.pre_update' => 'onAppChulliPreCreUpdate',
+            'app.store.pre_create' => 'onAppStorePreCreUpdate',
+            'app.store.pre_update' => 'onAppStorePreCreUpdate',
 
             //'security.interactive_login' => 'onSecurityInteractiveLogin',
             SecurityEvents::INTERACTIVE_LOGIN => 'onSecurityInteractiveLogin',
@@ -174,6 +185,121 @@ class EventSubscriber implements EventSubscriberInterface
     {
         $order = $event->getSubject();
         error_log($this->ginkoiaHelper->export($order));
+    }
+
+
+    /**
+     * Gère l'upload du logo et de l'image de fond d'une marque
+     */
+    public function onAppBrandPreCreUpdate(GenericEvent $event): void
+    {
+        $brand = $event->getSubject();
+        if($logoFile = $brand->getLogoFile())
+        {
+            $originalFilename = pathinfo($logoFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$logoFile->guessExtension());
+            
+            // Move the file to the directory where brochures are stored
+            $path = 'upload/brand/logos';
+            try {
+                $logoFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                // ... handle exception if something happens during file upload
+                error_log(print_r($e, true));
+            }
+            if(!empty($brand->getLogo()))
+            {
+                //delete file
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$brand->getLogo() );
+            }
+            $brand->setLogo($newFilename);
+        }
+        if($backgroundFile = $brand->getBackgroundFile())
+        {
+            $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
+            $path = 'upload/brand/backgrounds';
+            try {
+                $backgroundFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                error_log(print_r($e, true));
+            }
+            if(!empty($brand->getBackground()))
+            {
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$brand->getBackground() );
+            }
+            $brand->setBackground($newFilename);
+        }
+        if($productBackgroundFile = $brand->getProductBackgroundFile())
+        {
+            $originalFilename = pathinfo($productBackgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$productBackgroundFile->guessExtension());
+            $path = 'upload/brand/backgrounds';
+            try {
+                $productBackgroundFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                error_log(print_r($e, true));
+            }
+            if(!empty($brand->getProductBackground()))
+            {
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$brand->getProductBackground() );
+            }
+            $brand->setProductBackground($newFilename);
+        }
+        $this->entityManager->persist($brand);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Gère l'upload de l'avatar d'un chulli
+     */
+    public function onAppChulliPreCreUpdate(GenericEvent $event): void
+    {
+        $chulli = $event->getSubject();
+        if($avatarFile = $chulli->getAvatarFile())
+        {
+            $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$avatarFile->guessExtension());
+            $path = 'upload/chullis';
+            try {
+                $avatarFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                error_log(print_r($e, true));
+            }
+            if(!empty($chulli->getAvatar()))
+            {
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$chulli->getAvatar() );
+            }
+            $chulli->setAvatar($newFilename);
+        }
+        $this->entityManager->persist($chulli);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Gère l'upload de l'image de fond d'un magasin
+     */
+    public function onAppStorePreCreUpdate(GenericEvent $event): void
+    {
+        $store = $event->getSubject();
+        if($backgroundFile = $store->getBackgroundFile())
+        {
+            $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
+            $path = 'upload/store/backgrounds';
+            try {
+                $backgroundFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                error_log(print_r($e, true));
+            }
+            if(!empty($store->getBackground()))
+            {
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$store->getBackground() );
+            }
+            $store->setBackground($newFilename);
+        }
+        $this->entityManager->persist($store);
+        $this->entityManager->flush();
     }
 
 

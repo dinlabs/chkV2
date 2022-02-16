@@ -1,5 +1,7 @@
 chullanka_stores:
   menu_item: 'Les Magasins'
+chullanka_brands:
+  menu_item: 'Les Marques'
 chullanka_chullis:
   menu_item: 'Les Chullis'
 app:
@@ -18,6 +20,10 @@ app:
     stores: 'Magasins'
     edit_store: 'Modifier le magasin'
     new_store: 'Nouveau magasin'
+    brand: 'Marque'
+    brands: 'Marques'
+    edit_brand: 'Modifier la marque'
+    new_brand: 'Nouvelle marque'
     chulli: 'Chulli'
     chullis: 'Chullis'
     edit_chulli: 'Modifier ce chulli'
@@ -26,6 +32,9 @@ app:
       admin:
         test:
           titre: 'Test du produit'
+  brand:
+    name: 'Nom'
+    code: 'Code'
   chull_test:
     date: 'Date du test'
     description: 'Description longue des tests'
@@ -35,16 +44,19 @@ app:
   store:
     enabled: 'Activé'
     name: 'Nom'
+    introduction: 'Introduction'
+    warning: "Notification d'alerte"
+    opening_hours: "Horaires d'ouverture"
     street: 'Adresse (rue)'
     postcode: 'Code postal'
     city: 'Ville'
     latitude: 'Latitude'
     longitude: 'Longitude'
     phone_number: 'Numéro de téléphone'
-    email: "Email(s) (séparés par une virgule s'il y en a plusieurs)"
-    surface: 'Surface (en m²)'
     description: 'Description'
-    joinus: 'Rejoignez-nous'
+    director_note: 'Le mot du Directeur'
+    website: "URL d'une page sociale pour le magasin"
+    email: "Email(s) (séparés par une virgule s'il y en a plusieurs)"
   chulli:
     enabled: 'Activé'
     firstname: 'Prénom'
@@ -67,6 +79,8 @@ app:
       pickup: 'En point relais'
       store: 'En magasin Chullanka'
     free_delivery: 'GRATUIT'
+    stores: 'Nos Magasins'
+    brands: 'Nos Marques'
 
 sylius:
   ui:

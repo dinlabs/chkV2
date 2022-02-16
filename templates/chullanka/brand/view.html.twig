@@ -1,0 +1,80 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ 'app.front.brands'|trans }}{% endblock %}
+{% block bodyattr %}id="brand"{% endblock %}
+
+{% block content %}
+<div id="brandTop"{% if brand.background %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.background) }});"{% endif %}>
+    <div class="autoMargin">
+        <ul id="breadcrumb" class="autoMargin">
+            <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+            <li><a href="{{ path('brand_index') }}">{{ 'app.front.brands'|trans }}</a></li>
+            <li>{{ brand.name }}</li>
+        </ul>
+        
+        <div class="grid">
+            <div>
+                <h1>{{ brand.name }}</h1>
+                <p>{{ brand.introduction|raw }}</p>
+                <ul class="socials">
+                    {% if brand.logo %}<li><img src="{{ asset('upload/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo"></li>{% endif %}
+                    {% if brand.SocInstagram %}<li><a href="{{ brand.SocInstagram }}" target="_blank"><i class="icon instagram" title="Instagram"></i></a></li>{% endif %}
+                    {% if brand.SocYoutube %}<li><a href="{{ brand.SocYoutube }}" target="_blank"><i class="icon youtube" title="YouTube"></i></a></li>{% endif %}
+                    {% if brand.SocTwitter %}<li><a href="{{ brand.SocTwitter }}" target="_blank"><i class="icon twitter" title="Twitter"></i></a></li>{% endif %}
+                    {% if brand.SocFacebook %}<li><a href="{{ brand.SocFacebook }}" target="_blank"><i class="icon facebook" title="Facebook"></i></a></li>{% endif %}
+                    {% if brand.SocPinterest %}<li><a href="{{ brand.SocPinterest }}" target="_blank"><i class="icon pinterest" title="Pinterest"></i></a></li>{% endif %}
+                </ul>
+
+                {% if brand.advertising %}{{ brand.advertising|raw }}{% endif %}
+            </div>
+
+            {% if brand.TopProduct %}
+            <div class="topProduct"{% if brand.ProductBackground %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
+                {% include '@SyliusShop/Product/_box.html.twig' with {'product': brand.TopProduct} %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="autoMargin">
+{{ bitbag_cms_render_block('un_code') }}
+    
+    {#{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }#}
+    <div id="searchWrapper">
+        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
+            {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
+        </div>
+        <div id="productList" class="prodList">
+            {% if products|length > 0 %}
+                <h2>Tous les produits {{ brand.name }}</h2>
+                <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
+                    {% set _count = 0 %}
+                    {% for product in products %}
+                        {% include '@SyliusShop/Product/_box.html.twig' %}
+                        
+                        {#% if _count == 1 %}
+                        {% include 'prodlist/encartPromo.html.twig' %}
+                        {% endif %#}
+                        
+                        {% set _count = _count + 1 %}
+                    {% endfor %}
+                    {# Fake pour alignement Flex ! #}
+                    {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
+                </div>
+
+                {#{ pagination.simple(products) }#}
+            {% endif %}
+        </div>
+    </div>
+    {#{ form_end(form, {'render_rest': false}) }#}
+
+
+    <div id="description" class="anchor">
+        <div>{{ brand.description|raw }}</div>
+		<div class="toAnchor">
+			<a href="#brandTop">{{ 'app.front.gototop'|trans }}</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

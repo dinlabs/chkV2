@@ -1,0 +1,34 @@
+{% for block in blocks %}
+<div class="glider-slide">
+    <div class="testBlock">
+        {% if null != block.products and block.products.first %}
+        {% set product = block.products.first %}
+        <div class="inside split">
+            {% include '@SyliusShop/Product/_box.html.twig' with {'product': product} %}
+            {% if product.chulltest %}
+            <div class="tested">
+                {% set chulli = product.chulltest.chulli %}
+                <div class="header">
+                    <div class="pichulli">
+                        <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="60" height="60" alt="Chulli">
+                        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                    </div>
+                    <img src="/chullanka/assets/img/ico-guillemets.svg" style="width:42px; height:38px">
+                </div>
+                {{ bitbag_cms_render_content(block) }}
+                <div class="signature">
+                    <p>{{ chulli }}, {{ chulli.expertise }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div>{{ bitbag_cms_render_content(block) }}</div>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="inside">
+            {{ bitbag_cms_render_content(block) }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}

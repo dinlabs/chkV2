@@ -3,6 +3,8 @@
 namespace App\Form\Type;
 
 use App\Entity\Chullanka\Chulli;
+use App\Entity\Chullanka\Store;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -25,19 +27,25 @@ class ChulliType extends AbstractType
                 'label' => 'app.chulli.lastname',
                 'required' => false
             ])
+            ->add('store', EntityType::class, [
+                'class' => Store::class,
+                'label' => 'app.ui.store',
+                'placeholder' => 'Choisir un magasin',
+                'required' => false
+            ])
             ->add('expertise', TextType::class, [
                 'label' => 'app.chulli.expertise',
                 'required' => false
             ])
-            /*->add('avatar', TextType::class, [
+            ->add('avatar', TextType::class, [
                 'label' => 'app.chulli.avatar',
                 'required' => false,
-            ])*/
-            /*->add('avatar', FileType::class, [
-                'label' => 'app.chulli.avatar',
+                'disabled' => true
+            ])
+            ->add('avatar_file', FileType::class, [
+                'label' => 'Télécharger un nouvel avatar (si besoin)',
                 'required' => false,
-                'data_class' => null
-            ])*/
+            ])
         ;
     }
 

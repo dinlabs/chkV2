@@ -47,6 +47,10 @@ App\Controller\Chullanka\AjaxController:
     resource: App\Controller\Chullanka\AjaxController
     prefix: /{_locale}/chkajax
 
+App\Controller\Chullanka\BrandController:
+    type: annotation
+    resource: App\Controller\Chullanka\BrandController
+    prefix: /{_locale}/brand
 App\Controller\Chullanka\StoreController:
     type: annotation
     resource: App\Controller\Chullanka\StoreController
@@ -87,6 +91,21 @@ app_admin_store:
     type: sylius.resource
     prefix: /admin
 
+app_admin_brand:
+    resource: |
+        alias: app.brand
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_brand
+        vars:
+            all:
+                subheader: 'Gestion des marques'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
 app_admin_chulli:
     resource: |
         alias: app.chulli
@@ -111,4 +130,3 @@ app_admin_chulli:
 #         grid: app_admin_product_bundle
 #     type: sylius.resource
 #     prefix: /admin
-

@@ -1,9 +1,7 @@
 <div id="announces">
     <div class="glider-contain">
         <div class="glider">
-            {% for i in 1..12 %}
-            <a href="#"><img src="//picsum.photos/330/580?random={{ i|number_format }}" alt=""></a>
-            {% endfor %}
+            {{ render(path('bitbag_sylius_cms_plugin_shop_block_index_by_section_code', {'sectionCode' : 'announces', 'template' : '@SyliusShop/Block/simple_blocklist.html.twig'})) }}
         </div>
         <div role="tablist" class="dots"></div>
     </div>
@@ -32,5 +30,3 @@
         });
     </script>
 </div>
-
-{#{ render(url('app_shop_partial_product_index_by_brand', {'brand': 3, 'template': '@SyliusShop/Homepage/_brand_products.html.twig'})) }#}

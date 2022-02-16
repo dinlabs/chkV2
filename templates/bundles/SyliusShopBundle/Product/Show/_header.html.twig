@@ -1,6 +1,6 @@
 {% include '@SyliusShop/Product/_starRating.html.twig' %}
 
-{% if product.brand.code %}<div class="brand"><a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
+{% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
 
 <div class="titleAndPrice">
     <h1 id="sylius-product-name" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</h1>

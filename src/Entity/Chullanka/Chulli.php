@@ -6,6 +6,7 @@ use App\Repository\Chullanka\ChulliRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
@@ -27,6 +28,11 @@ class Chulli implements ResourceInterface
     private $enabled;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $leader;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
@@ -45,6 +51,14 @@ class Chulli implements ResourceInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatar;
+
+    /** @var File|null */
+    protected $avatar_file;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity=Store::class, inversedBy="chullis")
+     */
+    private $store;
 
     /**
      * @ORM\OneToMany(targetEntity=Chulltest::class, mappedBy="chulli")
@@ -74,6 +88,18 @@ class Chulli implements ResourceInterface
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function isLeader(): ?bool
+    {
+        return $this->leader;
+    }
+
+    public function setLeader(?bool $leader): self
+    {
+        $this->leader = $leader;
 
         return $this;
     }
@@ -122,6 +148,33 @@ class Chulli implements ResourceInterface
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getAvatarFile(): ?File
+    {
+        return $this->avatar_file;
+    }
+
+    public function setAvatarFile(?File $avatar_file): void
+    {
+        $this->avatar_file = $avatar_file;
+    }
+
+    public function hasAvatarFile(): bool
+    {
+        return null !== $this->avatar_file;
+    }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): self
+    {
+        $this->store = $store;
 
         return $this;
     }

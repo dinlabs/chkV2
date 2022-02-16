@@ -7,6 +7,7 @@ use App\Repository\Chullanka\StoreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Faker\Core\File;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 use Sylius\Component\Resource\Model\TranslatableTrait;
@@ -38,6 +39,11 @@ class Store implements ResourceInterface, TranslatableInterface
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $code;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -75,9 +81,12 @@ class Store implements ResourceInterface, TranslatableInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $surface;
+    private $background;
+
+    /** @var File|null */
+    protected $background_file;
 
     /**
      * @ORM\OneToMany(targetEntity=Stock::class, mappedBy="store", orphanRemoval=true)
@@ -89,11 +98,17 @@ class Store implements ResourceInterface, TranslatableInterface
      */
     private $customers;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Chulli::class, mappedBy="store")
+     */
+    private $chullis;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
         $this->stocks = new ArrayCollection();
         $this->customers = new ArrayCollection();
+        $this->chullis = new ArrayCollection();
     }
 
     public function __toString()
@@ -126,6 +141,78 @@ class Store implements ResourceInterface, TranslatableInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getIntroduction(): ?string
+    {
+        return $this->getTranslation()->getIntroduction();
+    }
+
+    public function setIntroduction(?string $introduction): self
+    {
+        $this->getTranslation()->setIntroduction($introduction);
+
+        return $this;
+    }
+
+    public function getWarning(): ?string
+    {
+        return $this->getTranslation()->getWarning();
+    }
+
+    public function setWarning(?string $warning): self
+    {
+        $this->getTranslation()->setWarning($warning);
+
+        return $this;
+    }
+
+    public function getOpeningHours(): ?string
+    {
+        return $this->getTranslation()->getOpeningHours();
+    }
+
+    public function setOpeningHours(string $opening_hours): self
+    {
+        $this->getTranslation()->setOpeningHours($opening_hours);
+
+        return $this;
+    }
+
+    public function getDirectorNote(): ?string
+    {
+        return $this->getTranslation()->getDirectorNote();
+    }
+
+    public function setDirectorNote(?string $director_note): self
+    {
+        $this->getTranslation()->setDirectorNote($director_note);
+
+        return $this;
+    }
+
+    public function getAdvertising(): ?string
+    {
+        return $this->getTranslation()->getAdvertising();
+    }
+
+    public function setAdvertising(?string $advertising): self
+    {
+        $this->getTranslation()->setAdvertising($advertising);
 
         return $this;
     }
@@ -214,16 +301,31 @@ class Store implements ResourceInterface, TranslatableInterface
         return $this;
     }
 
-    public function getSurface(): ?string
+    public function getBackground(): ?string
     {
-        return $this->surface;
+        return $this->background;
     }
 
-    public function setSurface(?string $surface): self
+    public function setBackground(?string $background): self
     {
-        $this->surface = $surface;
+        $this->background = $background;
 
         return $this;
+    }
+
+    public function getBackgroundFile(): ?File
+    {
+        return $this->background_file;
+    }
+
+    public function setBackgroundFile(?File $background_file): void
+    {
+        $this->background_file = $background_file;
+    }
+
+    public function hasBackgroundFile(): bool
+    {
+        return null !== $this->background_file;
     }
 
     public function getDescription(): ?string
@@ -234,18 +336,6 @@ class Store implements ResourceInterface, TranslatableInterface
     public function setDescription(?string $description): self
     {
         $this->getTranslation()->setDescription($description);
-
-        return $this;
-    }
-
-    public function getJoinus(): ?string
-    {
-        return $this->getTranslation()->getJoinus();
-    }
-
-    public function setJoinus(?string $joinus): self
-    {
-        $this->getTranslation()->setJoinus($joinus);
 
         return $this;
     }
@@ -307,6 +397,36 @@ class Store implements ResourceInterface, TranslatableInterface
     {
         if ($this->customers->removeElement($customer)) {
             $customer->removeFavoriteStore($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chulli[]
+     */
+    public function getChullis(): Collection
+    {
+        return $this->chullis;
+    }
+
+    public function addChulli(Chulli $chulli): self
+    {
+        if (!$this->chullis->contains($chulli)) {
+            $this->chullis[] = $chulli;
+            $chulli->setStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChulli(Chulli $chulli): self
+    {
+        if ($this->chullis->removeElement($chulli)) {
+            // set the owning side to null (unless already changed)
+            if ($chulli->getStore() === $this) {
+                $chulli->setStore(null);
+            }
         }
 
         return $this;

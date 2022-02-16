@@ -5,6 +5,7 @@ namespace App\Repository\Chullanka;
 use App\Entity\Chullanka\Rma;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 
 /**
  * @method Rma|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,12 +13,12 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Rma[]    findAll()
  * @method Rma[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RmaRepository extends ServiceEntityRepository
+class RmaRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /*public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Rma::class);
-    }
+    }*/
 
     // /**
     //  * @return Rma[] Returns an array of Rma objects

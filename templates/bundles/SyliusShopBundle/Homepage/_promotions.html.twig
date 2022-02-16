@@ -1,0 +1,45 @@
+<div id="promos">
+    <h2 class="autoMargin">Profitez de nos promotions !</h2>
+    <div class="glider-contain">
+        <div class="glider">
+            {{ render(path('bitbag_sylius_cms_plugin_shop_block_index_by_section_code', {'sectionCode' : 'promos', 'template' : '@SyliusShop/Block/simple_blocklist.html.twig'})) }}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        // https://nickpiscitelli.github.io/Glider.js/
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#promos .glider'), { 
+                slidesToShow: 2.25,
+                slidesToScroll : 1,
+                duration: 2,
+                draggable: true,
+                scrollLock: true,
+                specialGlider: true,
+                dots: '#promos .dots',
+                responsive: [
+                    {
+                        // screens greater than >= 1024px
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 'auto',
+                            itemWidth: 360,
+                            exactWidth: 330
+                        }
+                    }
+                ]
+            });
+        });
+        var _specialGlider = function(glider) {
+            var _elmtWidth = _totalWidth = 0;
+            glider.track.childNodes.forEach(function(gliderSlide) {
+                _elmtWidth = gliderSlide.querySelector('.big') ? 360 : 180;
+                gliderSlide.style.width = _elmtWidth + 'px';
+                _totalWidth += _elmtWidth;
+            });
+            glider.track.style.width = _totalWidth + 'px';
+            glider.trackWidth = _totalWidth;
+        }
+    </script>
+    {#<a href="#" class="btn">Profitez de nos promotions</a>#}
+</div>

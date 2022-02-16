@@ -15,12 +15,28 @@ class StoreTranslationType extends AbstractResourceType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('introduction', TextareaType::class, [
+                'label' => 'app.store.introduction',
+                'required' => false
+            ])
+            ->add('warning', TextareaType::class, [
+                'label' => 'app.store.warning',
+                'required' => false
+            ])
+            ->add('opening_hours', TextareaType::class, [
+                'label' => 'app.store.opening_hours',
+                'required' => false
+            ])
             ->add('description', WysiwygType::class, [
                 'label' => 'app.store.description',
                 'required' => false
             ])
-            ->add('joinus', TextareaType::class, [
-                'label' => 'app.store.joinus',
+            ->add('director_note', TextareaType::class, [
+                'label' => 'app.store.director_note',
+                'required' => false
+            ])
+            ->add('advertising', WysiwygType::class, [
+                'label' => 'Encart promo',
                 'required' => false
             ])
         ;

@@ -1,0 +1,30 @@
+<div id="widget-payment-kit"></div>
+    <button id="pay-button" class="ui huge primary fluid icon labeled button">
+        <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
+    </button>
+</div>
+<script src="https://ui.preprod.upstreampay.com/configuration.js"></script>
+<script src="https://ui.preprod.upstreampay.com/message_default.js"></script>
+<script src="https://ui.preprod.upstreampay.com/payment.js"></script>
+<script>
+    configPayment = {
+        'config' : {
+            "redirection_url": "{{ path('chk_upstream_payment_return', {'success': 1}) }}",
+            "payment_base_url": "https://api.preprod.upstreampay.com",
+            "entity_id": "{{ entity_id }}",
+            "use_css": true,
+            "locale": {
+              "country": "FR",
+              "language": "fr"
+            },
+            "currency": "EUR",
+            "key": "{{ api_key }}"
+          }, 
+        'session' : {{ chk_upstreampay|raw }}
+    }
+    window.payment.init(configPayment);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#pay-button').addEventListener('click', window.payment.processPayment);
+    });
+</script>

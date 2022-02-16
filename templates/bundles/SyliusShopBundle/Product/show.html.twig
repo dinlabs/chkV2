@@ -22,22 +22,25 @@
     {#% set chulli_test_date = product.getAttributeByCodeAndLocale('chulli_test_date', configuration.request.locale) %#}
     {% if product.chulltest and product.chulltest.date and product.chulltest.description %}
     <div id="productTest" class="frame">
+        {% if product.chulltest.chulli %}
+        {% set chulli = product.chulltest.chulli %}
         <div class="pichulli">
-            <img src="/chullanka/assets/img/chulli.jpg" width="70" height="70" alt="Chulli">
+            <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
             <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
         </div>
+        {% endif %}
         <h2>Découvrez le test complet</h2>
         <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
         <div class="foldable">
             <article>
                 <div class="header">
                     <date>Le {{ product.chulltest.date|date('m/d/Y') }}</date>
-                    {% if product.chulltest.chulli %}
+                    {% if chulli %}
                     <strong>PAR</strong>
                     <div class="inline">
-                        <span>{{ product.chulltest.chulli }}</span>
-                        <img src="//picsum.photos/150/150" alt="">
-                        <span>{{ product.chulltest.chulli.expertise }}</span>
+                        <span>{{ chulli }}</span>
+                        <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="150" height="150" alt="{{ chulli }}">
+                        <span>{{ chulli.expertise }}</span>
                     </div>
                     {% endif %}
                 </div>

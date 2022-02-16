@@ -9,17 +9,16 @@ use App\Repository\Chullanka\RmaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Sylius\Component\Resource\Model\ResourceInterface;
-use Sylius\Component\Resource\Model\TimestampableInterface;
-use Sylius\Component\Resource\Model\TimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass=RmaRepository::class)
  * @ORM\Table(name="nan_chk_rma")
  */
-class Rma implements ResourceInterface, TimestampableInterface
+class Rma implements ResourceInterface
 {
-    use TimestampableTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\Id
@@ -74,6 +73,11 @@ class Rma implements ResourceInterface, TimestampableInterface
     public function __construct()
     {
         $this->rmaProducts = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return 'rma-' . $this->id;
     }
 
     public function getId(): ?int

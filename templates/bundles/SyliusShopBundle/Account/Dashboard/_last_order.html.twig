@@ -20,7 +20,7 @@
             </div>
             <div class="infos">
                 <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
-                    {% if product.brand.code %}<a href="{{ path('loevgaard_sylius_brand_shop_brand_show', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
+                    {% if product.brand %}<a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
                     <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">{{ item.productName }}</a>
 
                     {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}

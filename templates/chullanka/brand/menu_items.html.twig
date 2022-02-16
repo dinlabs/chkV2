@@ -1,0 +1,27 @@
+{% if brands|length %}
+<li>
+    <div class="wrapper">
+        <a href="{{ path('brand_index') }}" class="openSubnav">
+            <span>{{ 'app.front.brands'|trans }}</span>
+            <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg>
+        </a>
+    </div>
+    <div class="subNav" data-level="1">
+        <div class="subNavHeader">
+            <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche"/></svg></button>
+            <a href="{{ path('brand_index') }}"><strong class="name">{{ 'app.front.brands'|trans }}</strong></a>
+        </div>
+        <ul>
+            {% for brand in brands %}
+            <li>
+                <div class="wrapper">
+                    <a href="{{ path('brand_view', {'code': brand.code}) }}">
+                        <span>{{ brand.name }}</span>
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</li>
+{% endif %}

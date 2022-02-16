@@ -22,7 +22,6 @@
     {{ sylius_template_event('sylius.shop.layout.head') }}
 </head>
 
-
 {% set _where = app.request.attributes.get('_controller')|split(':') %}
 {% set _controller = _where[0] %}
 
@@ -38,7 +37,7 @@
     {% set body_class = 'customer' %}
 {% endif %}
 
-<body class="{{ body_class }}">
+<body {% block bodyattr %}{% endblock %} class="{{ body_class }}">
 {#{ dump(_where) }#}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}

@@ -13,19 +13,26 @@ use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
 use App\Service\GinkoiaHelper;
+use App\Service\UpstreamPayWidget;
+use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
 final class DefaultController extends AbstractController
 {
+    /** @var CartContextInterface */
+    private $cartContext;
+
     /** @var Environment */
     private $twig;
 
-    public function __construct(Environment $twig)
+    public function __construct(CartContextInterface $cartContext, Environment $twig)
     {
+        $this->cartContext = $cartContext;
         $this->twig = $twig;
     }
 
@@ -111,6 +118,74 @@ final class DefaultController extends AbstractController
             $em->flush();
 
             echo "C ajouté !";*/
+        }
+        die;
+    }
+
+
+    /**
+     * @Route("/upstreampaywidget", name="chk_upstream_payment_widget")
+     */
+    public function UpstreamPayWidgetAction(UpstreamPayWidget $upstreamPayWidget)
+    {
+        $cart = $this->cartContext->getCart();
+
+        //$data = $upstreamPayWidget->getFormattedData($cart);
+        //dd(json_decode($data));
+
+        $upStreamSession = '{}';
+        if(($userCustomer = $this->getCurrentCustomer()) && $userCustomer->hasOrder($cart))
+        {
+            $upStreamSession = $upstreamPayWidget->getUpStreamPaySession($cart);
+        }
+        error_log("session : ".$upStreamSession);
+
+        return $this->render('chullanka/upstreampay_widget.html.twig', [
+            'entity_id' => $upstreamPayWidget->entity_id,
+            'api_key' => $upstreamPayWidget->api_key,
+            'chk_upstreampay' => $upStreamSession,
+        ]);
+    }
+
+    /**
+     * @Route("/upstreampayreturn", name="chk_upstream_payment_return")
+     */
+    public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, SessionInterface $session)
+    {
+        if($request->get('hook'))
+        {
+            echo "HOOK !";
+        }
+
+        if($request->get('success'))
+        {
+            //echo "SUCCESS !";
+            if($infos = $upstreamPayWidget->getSessionInfos())
+            {
+                $return = $infos[0];
+                dd($return);
+
+                $okay = true;
+                if($okay)
+                {
+                    //todo: complete Order!
+                    /*$order = $this->cartContext->getCart();
+                    $order->setState('new');
+                    $order->setCheckoutState('completed');
+                    $order->setPaymentState('paid');
+
+                    $em = $this->container->get('doctrine')->getManager();
+                    $em->persist($order);
+                    $em->flush();*/
+
+                }
+            }
+            //return $this->redirectToRoute('sylius_shop_order_thank_you');
+        }
+
+        if($request->get('failure'))
+        {
+            echo "FAIL";
         }
         die;
     }

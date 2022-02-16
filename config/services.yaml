@@ -87,16 +87,16 @@ services:
 
     app.ginkoiaws:
         class: App\Service\GinkoiaCustomerWs
-    # app.security.success_handler:
-    #     class: App\Security\AuthenticationSuccessHandler
-    #     parent: security.authentication.success_handler
-    #     public: false
-    # app.security.failure_handler:
-    #     class: App\Security\AuthenticationFailureHandler
-    #     arguments:
-    #         - '@app.ginkoiaws'
-    #     parent: security.authentication.failure_handler
-    #     public: false
+    app.security.success_handler:
+        class: App\Security\AuthenticationSuccessHandler
+        parent: security.authentication.success_handler
+        public: false
+    app.security.failure_handler:
+        class: App\Security\AuthenticationFailureHandler
+        arguments:
+            - '@app.ginkoiaws'
+        parent: security.authentication.failure_handler
+        public: false
 
     #ndY: pour définir de nouveaux Type traduisibles
     app.store.form.type:
@@ -109,6 +109,16 @@ services:
         tags:
             - { name: form.type }
         arguments: ['%app.model.store_translation.class%', ['sylius']]
+    app.brand.form.type:
+        class: App\Form\Type\BrandType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.brand.class%', ['sylius']]
+    app.brand_translation.form.type:
+        class: App\Form\Type\BrandTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.brand_translation.class%', ['sylius']]
     app.chull_test.form.type:
         class: App\Form\Type\ChulltestType
         tags:
@@ -132,24 +142,24 @@ services:
 
 
     #ndY: solution de Paiement
-    # app.upstream_pay:
-    #     class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
-    #     arguments: [ App\Payum\UpstreamPayGatewayFactory ]
-    #     tags:
-    #         - { name: payum.gateway_factory_builder, factory: upstream_pay }
-    # App\Form\Type\UpstreamPayGatewayConfigurationType:
-    #     tags:
-    #         - { name: sylius.gateway_configuration_type, type: upstream_pay, label: 'Upstream Pay' }
-    #         - { name: form.type }
-    # App\Payum\Action\CaptureAction:
-    #     public: true
-    #     arguments:
-    #         - '@sylius.http_client'
-    #     tags:
-    #         - { name: payum.action, factory: upstream_pay, alias: payum.action.capture }
-    # App\Payum\Action\StatusAction:
-    #     public: true
-    #     arguments:
-    #         - '@sylius.http_client'
-    #     tags:
-    #         - { name: payum.action, factory: upstream_pay, alias: payum.action.status }
+    app.upstream_pay:
+        class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+        arguments: [ App\Payum\UpstreamPayGatewayFactory ]
+        tags:
+            - { name: payum.gateway_factory_builder, factory: upstream_pay }
+    App\Form\Type\UpstreamPayGatewayConfigurationType:
+        tags:
+            - { name: sylius.gateway_configuration_type, type: upstream_pay, label: 'Upstream Pay' }
+            - { name: form.type }
+    App\Payum\Action\CaptureAction:
+        public: true
+        arguments:
+            - '@sylius.http_client'
+        tags:
+            - { name: payum.action, factory: upstream_pay, alias: payum.action.capture }
+    App\Payum\Action\StatusAction:
+        public: true
+        arguments:
+            - '@sylius.http_client'
+        tags:
+            - { name: payum.action, factory: upstream_pay, alias: payum.action.status }

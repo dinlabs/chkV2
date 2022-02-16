@@ -1,0 +1,112 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block title %}{{ store.name }}{% endblock %}
+{% block bodyattr %}id="store"{% endblock %}
+
+{% block content %}
+<ul id="breadcrumb" class="autoMargin">
+    <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li><a href="{{ path('store_index') }}">{{ 'app.front.stores'|trans }}</a></li>
+    <li>{{ store.name }}</li>
+</ul>
+
+<div class="autoMargin">
+    <h1>Magasin {{ store.name }}</h1>
+
+    <div class="intro">
+        {{ store.introduction }}
+    </div>
+
+    {% if store.warning %}
+    <div class="insert alert">
+        {{ store.warning }}
+    </div>
+    {% endif %}
+
+    {#{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }#}
+    <div id="searchWrapper">
+        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
+            {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
+        </div>
+        <div id="productList" class="prodList">
+            {% if products|length > 0 %}
+                <h2>Tous nos produits</h2>
+                <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
+                    {% set _count = 0 %}
+                    {% for product in products %}
+                        {% include '@SyliusShop/Product/_box.html.twig' %}
+                        
+                        {#% if _count == 1 %}
+                        {% include 'prodlist/encartPromo.html.twig' %}
+                        {% endif %#}
+                        
+                        {% set _count = _count + 1 %}
+                    {% endfor %}
+                    {# Fake pour alignement Flex ! #}
+                    {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
+                </div>
+
+                {#{ pagination.simple(products) }#}
+            {% endif %}
+
+            <div id="content">
+
+                <div class="details" style="background-image:url(/chullanka/assets/img/bg-category.jpg)">
+                    <div class="insert">
+                        <h2>{{ store.name }}</h2>
+                        
+                        {% if store.openingHours %}
+                        <div>
+                            <strong>Horaires d'ouverture&nbsp;:</strong><br>
+                            {{ store.openingHours }}
+                        </div>
+                        {% endif %}
+
+                        <div class="address">
+                            {{ store.street ~ ' ' ~ store.postcode ~ ' ' ~ store.city  }}
+                            <br>
+                            <a href="https://www.google.com/maps/@{{ store.latitude }},{{ store.longitude }},15z" target="_blank">Ouvrir le plan (Google Map)</a>
+                        </div>
+
+                        <span class="btn primary">
+                            Nous contacter
+                            <br>{{ store.phoneNumber }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="insert infos">
+                    <h2>Le magasin</h2>
+                    {{ store.description|raw }}
+                </div>
+
+                <div class="insert">
+                    <h2>Votre équipe en magasin</h2>
+                    <div class="director">
+                        <div class="pichulli">
+                            <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
+                            <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                        </div>
+                        <strong>Le mot du directeur</strong><br>
+                        {{ store.directorNote }}
+                    </div>
+                    <div class="chullis">
+                    {% for chulli in store.chullis %}
+                        <div>
+                            {{ chulli }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+
+                {#<p>liste services en magasin</p>#}
+
+                {% if store.advertising %}
+                {{ store.advertising|raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {#{ form_end(form, {'render_rest': false}) }#}
+</div>
+{% endblock %}

@@ -6,3 +6,37 @@ fos_elastica:
     clients:
         #default: { url: '%env(ELASTICSEARCH_URL)%' }
         default: { host: localhost, port: 9200 }
+    indexes:
+        nan_chk_brands:
+            index_name: "nan_chk_brands_%kernel.environment%"
+            properties: 
+                name: ~
+                code: 
+                    property_path: escode
+            persistence:
+                driver: orm
+                model: App\Entity\Chullanka\Brand
+                listener:
+                    defer: true
+                    logger: true
+                elastica_to_model_transformer:
+                    ignore_missing: true
+        
+        bitbag_shop_product:
+            index_name: "bitbag_shop_products_%kernel.environment%"
+            properties:
+                enabled: ~
+                brand:
+                    property_path: esbrand
+                # brand: 
+                #     type: 'object'
+                #     properties: 
+                #         escode: ~
+            persistence:
+                driver: orm
+                model: "%sylius.model.product.class%"
+                listener:
+                    defer: true
+                    logger: true
+                elastica_to_model_transformer:
+                    ignore_missing: true

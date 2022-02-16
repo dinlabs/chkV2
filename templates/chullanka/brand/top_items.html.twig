@@ -1,0 +1,39 @@
+{% if brands|length %}
+<div id="topBrands">
+    <div class="autoMargin">
+        <h2>Nos marques au top</h2>
+    </div>
+    <div class="glider-contain">
+        <div class="glider">
+            {% for brand in brands %}
+            <div>
+                <a href="{{ path('brand_view', {'code': brand.code}) }}">{% if brand.logo %}<img src="{{ asset('upload/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo">{% else %}{{ brand.name }}{% endif %}</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#topBrands .glider'), { 
+                slidesToShow: 5,
+                slidesToScroll: 1,
+                draggable: true,
+                scrollLock: true,
+                dots: '#topBrands .dots',
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 'auto',
+                            itemWidth: 180,
+                            exactWidth: 150,
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+    <a href="{{ path('brand_index') }}" class="btn">Toutes les marques</a>
+</div>
+{% endif %}

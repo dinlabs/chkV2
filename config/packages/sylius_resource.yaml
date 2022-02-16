@@ -10,8 +10,18 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\StoreTranslation
                     form: App\Form\Type\StoreTranslationType
+        app.brand:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Brand
+                form: App\Form\Type\BrandType
+                repository: App\Repository\Chullanka\BrandRepository
+            translation:
+                classes:
+                    model: App\Entity\Chullanka\BrandTranslation
+                    form: App\Form\Type\BrandTranslationType
         app.chulli:
-            driver: doctrine/orm # You can use also different driver here
+            driver: doctrine/orm
             classes:
                 model: App\Entity\Chullanka\Chulli
                 form: App\Form\Type\ChulliType
@@ -25,9 +35,9 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\ChulltestTranslation
                     form: App\Form\Type\ChulltestTranslationType
-        app.rma:
-            driver: doctrine/orm
-            classes:
-                model: App\Entity\Chullanka\Rma
-                form: App\Form\Type\RmaType
-                repository: App\Repository\Chullanka\RmaRepository
+        # app.rma:
+        #     driver: doctrine/orm
+        #     classes:
+        #         model: App\Entity\Chullanka\Rma
+        #         form: App\Form\Type\RmaType
+        #         repository: App\Repository\Chullanka\RmaRepository

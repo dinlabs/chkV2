@@ -7,8 +7,11 @@ use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StoreType extends AbstractResourceType
@@ -21,6 +24,9 @@ class StoreType extends AbstractResourceType
             ])
             ->add('name', TextType::class, [
                 'label' => 'app.store.name'
+            ])
+            ->add('code', TextType::class, [
+                'label' => 'Code'
             ])
             ->add('street', TextType::class, [
                 'label' => 'app.store.street'
@@ -47,13 +53,29 @@ class StoreType extends AbstractResourceType
                 'label' => 'app.store.email',
                 'required' => false
             ])
-            ->add('surface', TextType::class, [
-                'label' => 'app.store.surface',
-                'required' => false
+            ->add('background', TextType::class, [
+                'label' => 'Image de fond',
+                'required' => false,
+                'disabled' => true
+            ])
+            ->add('background_file', FileType::class, [
+                'label' => 'Télécharger une nouvelle image de fond (si besoin)',
+                'required' => false,
             ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => StoreTranslationType::class,
             ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+                $entity = $event->getData();
+                if(!is_null($entity->getCode()))
+                {
+                    $form = $event->getForm();
+                    $form->add('code', TextType::class, [
+                        'label' => 'Code',
+                        'disabled' => true
+                    ]);
+                }
+            })
         ;
     }
 

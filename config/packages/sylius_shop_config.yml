@@ -94,15 +94,24 @@ sylius_ui:
                 announces:
                     template: "@SyliusShop/Homepage/_announces.html.twig"
                     priority: 80
-                sports:
-                    template: "@SyliusShop/Homepage/_sports.html.twig"
-                    priority: 70
+                # sports:
+                #     template: "@SyliusShop/Homepage/_sports.html.twig"
+                #     priority: 70
+                top_brands:
+                    template: "@SyliusShop/Homepage/_top_brands.html.twig"
+                    priority: 60
                 # new_products:
                 #     template: "@SyliusShop/Homepage/_new_products.html.twig"
                 #     priority: 50
+                test_products:
+                    template: "@SyliusShop/Homepage/_test_products.html.twig"
+                    priority: 45
                 mountain_products:
                     template: "@SyliusShop/Homepage/_mountain_products.html.twig"
                     priority: 40
+                promotions:
+                    template: "@SyliusShop/Homepage/_promotions.html.twig"
+                    priority: 35
                 about_us:
                     template: "@SyliusShop/Homepage/_aboutUs.html.twig"
                     priority: 30
