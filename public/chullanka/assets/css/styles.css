@@ -531,6 +531,7 @@ footer #ourAdventure h3 { text-align: center; }
 #productInfos #addToWisthList a { display:flex; align-items:center; justify-content:center; font-weight:700; }
 #productInfos #addToWisthList a svg.svg-icon { margin-right:1em; }
 
+#productInfos #availabilities.loading { min-height:100px; margin-top:2em; }
 #productInfos .availability { border:2px solid var(--default); border-radius:5px; margin-bottom:1em; padding:1em 2em; text-align:center; }
 #productInfos .availability.good { border-color:var(--good); }
 #productInfos .availability.warning { border-color:var(--warning); }
@@ -542,6 +543,14 @@ footer #ourAdventure h3 { text-align: center; }
 
 #productInfos .availability .beCalled { margin-top:.5em; font-family:var(--altFont); }
 #productInfos .availability .beCalled span { display:block; font-size:1.2em; text-transform:capitalize; }
+
+#productInfos #dispoMagPop .popinside { max-height:calc(100vh - 50px); overflow:auto; padding:2em; }
+#productInfos #dispoMagPop h2 { font-size:1.2em; }
+#productInfos #dispoMagPop ul { padding:2em 2em 0 2em; }
+#productInfos #dispoMagPop ul li { margin:1.5em 0; }
+#productInfos #dispoMagPop ul li .infos .good strong { color:var(--good); }
+#productInfos #dispoMagPop ul li .infos .warning strong { color:var(--warning); }
+#productInfos #dispoMagPop ul li .infos .infosup { color:var(--warning); }
 
 #productInfos #chullPoints { background:url(../img/bg-chullpoints.jpg) no-repeat center center / cover; margin:0 -1em 1em -1em; padding:30px; }
 #productInfos #chullPoints .insert .fold { float:right; margin-top:2em; }

@@ -13,6 +13,7 @@ use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,6 +66,29 @@ class AjaxController extends AbstractController
     public function index(): Response
     {
         return new Response('AJAX', 200, ['Content-Type' => 'text/html']);
+    }
+
+    /**
+     * @Route("/prodstocks/{id}", name="chk_ajax_prodstocks")
+     */
+    public function prodstocksAction(Request $request): JsonResponse
+    {
+        $data = [];
+        if(($pid = $request->get('id')) && ($product = $this->productRepository->find($pid)))
+        {
+            $variants = $product->getVariants();
+            foreach($variants as $variant)
+            {
+                $quantities = [];
+                foreach($variant->getStocks() as $stock)
+                {
+                    $quantities['store' . $stock->getStore()->getId()] = $stock->getOnHand();
+                }
+                $quantities['web'] = $variant->getOnHand();
+                $data[ $variant->getId() ] = $quantities;
+            }
+        }
+        return new JsonResponse($data);
     }
 
     /**

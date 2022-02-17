@@ -34,21 +34,11 @@ final class StoreController extends AbstractController
     /**
      * @Route("/", name="store_index")
      */
-    public function indexAction(): Response
+    public function indexAction(Request $request): Response
     {
+        $template = $request->get('template') ?? 'chullanka/store/index.html.twig';
         $stores = $this->managerRegistry->getRepository(Store::class)->findAll();
-        return new Response($this->twig->render('chullanka/store/index.html.twig', [
-            'stores' => $stores
-        ]));
-    }
-
-    /**
-     * @Route("/menustorelist", name="store_menu_list")
-     */
-    public function menuStoreListAction(): Response
-    {
-        $stores = $this->managerRegistry->getRepository(Store::class)->findAll();
-        return new Response($this->twig->render('chullanka/store/menu_items.html.twig', [
+        return new Response($this->twig->render($template, [
             'stores' => $stores
         ]));
     }

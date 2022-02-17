@@ -78,7 +78,7 @@
         {% endfor %}
 
         {{ render(url('brand_menu_list')) }}
-        {{ render(url('store_menu_list')) }}
+        {{ render(url('store_index', {'template': 'chullanka/store/menu_items.html.twig'})) }}
 
         {% set others = [] %}
         {% set others = others|merge(['Nos Services']) %}

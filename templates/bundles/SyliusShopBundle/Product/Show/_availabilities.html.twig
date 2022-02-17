@@ -1,50 +1,37 @@
-{% if product.simple %}
-    {% set _qty = product.variants.get(0).onHand %}
-{% else %}
-    {% set _qty = 0 %}
-    {% for variant in product.variants %}
-        {% set _qty = _qty + variant.onHand %}
-    {% endfor %}
-{% endif %}
+{% if product.isPack == false %}
+<div id="availabilities" class="loading">
+    <div id="variantMapping">
+        {% for variant in product.EnabledVariants %}
+        <div data-id="{{ variant.id }}"{% for option in variant.OptionValues %} data-{{ option.OptionCode }}="{{ option.code }}"{% endfor %} data-price="{{ variant|sylius_calculate_price({'channel': sylius.channel}) }}"></div>
+        {% endfor %}
+    </div>
+    <div id="js_good" class="availability good hidden">
+        <p>En stock - Livraison <span class="price">à 9,90€</span> : <span class="date">12 - 20 juil</span></p>
+        <a href="#dispoMagPop" class="dispoMag topopin">Vérifiez la disponibilité en magasin</a>
+    </div>
 
-<div class="todo" style="text-align:initial;">
-    <h3>Stocks</h3>
-{% for variant in product.variants %}
-    <br>
-    <h4>{{ variant.name }}</h4>
-    Web : {{ variant.onHand }}<br>
-    {% for stock in variant.stocks %}
-        {{ stock.store }} : {{ stock.onHand }}<br>
-    {% endfor %}
-{% endfor %}
-</div>
+    <div id="js_warning" class="availability warning hidden">
+        <p>En stock - Disponible uniquement dans le magasin <span class="magname">Chullanka Antibes</span> en Click and Collect GRATUIT</p>
+    </div>
 
+    <div id="js_alert" class="availability alert hidden">
+        <p>Ce produit n'est plus en stock dans cette configuration</p>
+        <div class="beCalled">
+            <span>Pour trouver une alternative</span>
+            <a href="#" class="btn btnCall">
+                <div class="pichulli">
+                    <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                </div>
+                <strong>Faites-vous appeler</strong>
+            </a>
+        </div>
+    </div>
 
-{% if _qty > 1 %}
-<div class="availability good">
-    <p>En stock - Livraison à  9,90€ : 12 -  20 juil</p>
-    <a href="#" class="dispoMag">Vérifiez la disponibilité en magasin</a>
-</div>
-{% elseif _qty == 1 %}
-<div class="availability warning">
-    <p>En stock - Plus que {{ _qty }} disponible uniquement dans le magasin Chullanka Antibes en Click and Collect GRATUIT</p>
-</div>
-{% else %}
-<div class="availability alert">
-    <p>Ce produit n'est plus en stock dans cette configuration</p>
-    <div class="beCalled">
-        <span>Pour trouver une alternative</span>
-        <a href="#" class="btn btnCall">
-            <div class="pichulli">
-                <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
-                <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
-            </div>
-            <strong>Faites-vous appeler</strong>
-        </a>
+    <div id="js_stores" class="availability warning stores hidden">
+        <p>En stock - uniquement dans les magasins Chullanka en Click and Collect GRATUIT</p>
+        <a href="#dispoMagPop" class="dispoMag topopin">Vérifiez la disponibilité en magasin</a>
     </div>
 </div>
-<div class="availability warning">
-    <p>En stock - uniquement dans les magasins Chullanka en Click and Collect GRATUIT</p>
-    <a href="#" class="dispoMag">Vérifiez la disponibilité en magasin</a>
-</div>
+{{ render(url('store_index', {'template': 'chullanka/store/popin.html.twig'})) }}
 {% endif %}

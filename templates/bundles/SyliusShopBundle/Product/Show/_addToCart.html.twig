@@ -27,7 +27,7 @@
 
     <div style="display:none;">{{ form_row(form.cartItem.quantity, sylius_test_form_attribute('quantity')) }}</div>
     <div id="addToCart">
-        <button type="submit" class="btn" style="font-weight:300;" {{ sylius_test_html_attribute('add-to-cart-button') }}>
+        <button type="submit" class="btn" style="font-weight:300;" disabled="disabled" {{ sylius_test_html_attribute('add-to-cart-button') }}>
             <span>{{ 'sylius.ui.add_to_cart'|trans }}</span>
             {% include '@SyliusShop/Product/_price.html.twig' %}
         </button>

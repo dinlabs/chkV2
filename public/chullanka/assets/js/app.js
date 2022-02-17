@@ -149,14 +149,18 @@ var funcScrollTo = function()
             if(_target != '#')
             {
                 var $anchor = document.querySelector(_target);
-
                 if($link.classList.contains('topopin'))
                 {
-                    document.querySelector($anchor).classList.remove('hidden');
+                    $anchor.classList.remove('hidden');
                     document.querySelector('body').classList.add('overflow');
                 }
                 else
                 {
+                    if($anchor.classList.contains('frame') && !$anchor.querySelector('.fold').classList.contains('on'))
+                    {
+                        //pour ouvrir l'onglet avant le scroll
+                        $anchor.querySelector('.fold').click();
+                    }
                     window.scrollTo({
                         top: $anchor.offsetTop - _topDecay,
                         behavior: 'smooth'

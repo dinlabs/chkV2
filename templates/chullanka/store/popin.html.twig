@@ -1,0 +1,25 @@
+<div id="dispoMagPop" class="popin hidden">
+    <div class="popinside">
+        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg></button>
+
+        <h2 class="popin-title">Disponibilités en magasin</h2>
+        <ul>
+        {% for store in stores %}
+            <li id="store{{ store.id }}">
+                <h3>{{ store }}</h3>
+                <p>{{ store.address }}</p>
+                <div class="infos">
+                    <div class="good">
+                        <strong>En stock</strong> 
+                        <span class="">&ndash; Disponible en 3 heures gratuitement</span>
+                    </div>
+                    <div class="warning hidden">
+                        <strong>Indisponible</strong>
+                    </div>
+                    <span class="infosup hidden">plus que 1 article disponible</span>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>

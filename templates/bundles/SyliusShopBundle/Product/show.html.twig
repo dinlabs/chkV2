@@ -159,6 +159,7 @@
         </div>
     </div>
 
+    {% if product.reviews|length > 0 %}
     <div id="reviews" class="frame">
         <h2 class="clientRating">
             <ul class="rating">
@@ -167,11 +168,12 @@
                 {% endfor %}
             </ul>
         </h2>
-        <a href="#" class="pictoLink fold" data-on="Replier" data-off="45 avis">45 avis</a>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="{{ product.reviews|length }} avis">{{ product.reviews|length }} avis</a>
         <div class="foldable">
             {{ sylius_template_event('sylius.shop.product.show.tab_reviews', _context) }}
         </div>
     </div>
+    {% endif %}
 
     {{ sylius_template_event('sylius.shop.product.show.content', _context) }}
 </div>
@@ -180,14 +182,15 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('chullanka/assets/js/availabilities.js') }}"></script>
 
 <script type="text/javascript">
     lightbox.option({
         'albumLabel': '{{ 'sylius.lightbox.image_album_label'|trans|escape('js') }}'
     });
 
-    {% if product.isPack %}
     $(document).ready(function() {
+    {% if product.isPack %}
         $('#packElements .packElement label').on('click', function(e) {
             var $this = $(this);
             $this.find('input[type=radio]').prop('checked', true); // force for IE !
@@ -209,7 +212,27 @@
                 $('.subconfig').append($optionData);
             }
         });
-    });
+    {% else %}
+        var _url = '{{ path('chk_ajax_prodstocks', {'id': product.id}) }}';
+        //_url += '?rand=' + Math.random().toString(16).substr(2,8);
+        
+        jQuery.ajax({
+            url: _url,
+            dataType: 'json',
+        }).done(function(data) {
+            if(data) {
+                dispos = data;
+            {% if product.simple %}
+                displayAvailabilities({{ product.variants.first.id }});
+            {% else %}
+                checkAvailabilities();
+                $('[name*="sylius_add_to_cart[cartItem][variant]"]').on('change', function () {
+                    checkAvailabilities();
+                });
+            {% endif %}
+            }
+        });
     {% endif %}
+    });
 </script>
 {% endblock %}

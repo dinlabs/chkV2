@@ -217,6 +217,11 @@ class Store implements ResourceInterface, TranslatableInterface
         return $this;
     }
 
+    public function getAddress(): ?string
+    {
+        return $this->street . ' – ' . $this->postcode . ' ' . $this->city;
+    }
+
     public function getStreet(): ?string
     {
         return $this->street;
