@@ -3,7 +3,6 @@
 namespace App\Form\Type;
 
 use App\Entity\Chullanka\Brand;
-use Liip\ImagineBundle\Form\Type\ImageType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductAutocompleteChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
@@ -66,10 +65,6 @@ class BrandType extends AbstractResourceType
             ->add('product_background_file', FileType::class, [
                 'label' => 'Télécharger une nouvelle image de fond de produit (si besoin)',
                 'required' => false,
-            ])
-            ->add('size_guide', TextType::class, [
-                'label' => 'Guide des tailles',
-                'required' => false
             ])
             ->add('soc_facebook', TextType::class, [
                 'label' => 'URL de la page Facebook',

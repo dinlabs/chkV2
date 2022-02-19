@@ -35,6 +35,11 @@ class BrandTranslation extends AbstractTranslation implements ResourceInterface
      */
     private $advertising;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $size_guide;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,6 +77,18 @@ class BrandTranslation extends AbstractTranslation implements ResourceInterface
     public function setAdvertising(?string $advertising): self
     {
         $this->advertising = $advertising;
+
+        return $this;
+    }
+
+    public function getSizeGuide(): ?string
+    {
+        return $this->size_guide;
+    }
+
+    public function setSizeGuide(?string $size_guide): self
+    {
+        $this->size_guide = $size_guide;
 
         return $this;
     }

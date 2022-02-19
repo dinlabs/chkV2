@@ -69,11 +69,6 @@ class Brand implements ResourceInterface, TranslatableInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $size_guide;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $background;
 
     /** @var File|null */
@@ -208,6 +203,18 @@ class Brand implements ResourceInterface, TranslatableInterface
 
         return $this;
     }
+    
+    public function getSizeGuide(): ?string
+    {
+        return $this->getTranslation()->getSizeGuide();
+    }
+
+    public function setSizeGuide(?string $size_guide): self
+    {
+        return $this->getTranslation()->setSizeGuide($size_guide);
+
+        return $this;
+    }
 
     /**
      * @return Collection|Product[]
@@ -286,18 +293,6 @@ class Brand implements ResourceInterface, TranslatableInterface
     public function setTopPosition(?int $top_position): self
     {
         $this->top_position = $top_position;
-
-        return $this;
-    }
-
-    public function getSizeGuide(): ?string
-    {
-        return $this->size_guide;
-    }
-
-    public function setSizeGuide(?string $size_guide): self
-    {
-        $this->size_guide = $size_guide;
 
         return $this;
     }

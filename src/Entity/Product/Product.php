@@ -7,7 +7,9 @@ namespace App\Entity\Product;
 use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Chulltest;
 use App\Entity\Chullanka\ComplementaryProduct;
+use App\Entity\Chullanka\Faq;
 use App\Entity\Chullanka\PackElement;
+use App\Entity\Chullanka\Recall;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,10 +55,22 @@ class Product extends BaseProduct
      */
     private $complementaryProduct;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Faq::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $faqs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Recall::class, mappedBy="product")
+     */
+    private $recalls;
+
     public function __construct()
     {
         parent::__construct();
         $this->packElements = new ArrayCollection();
+        $this->faqs = new ArrayCollection();
+        $this->recalls = new ArrayCollection();
     }
     
     protected function createTranslation(): ProductTranslationInterface
@@ -205,5 +219,72 @@ class Product extends BaseProduct
         }
 
         return new ArrayCollection($attributesWithFallback);
+    }
+
+    /**
+     * @return Collection|Faq[]
+     */
+    public function getFaqs(): Collection
+    {
+        return $this->faqs;
+    }
+
+    public function getEnabledFaqs(): Collection
+    {
+        return $this->faqs->filter(
+            function ($faq) { return $faq->isEnabled(); }
+        );
+    }
+
+    public function addFaq(Faq $faq): self
+    {
+        if (!$this->faqs->contains($faq)) {
+            $this->faqs[] = $faq;
+            $faq->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFaq(Faq $faq): self
+    {
+        if ($this->faqs->removeElement($faq)) {
+            // set the owning side to null (unless already changed)
+            if ($faq->getProduct() === $this) {
+                $faq->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Recall[]
+     */
+    public function getRecalls(): Collection
+    {
+        return $this->recalls;
+    }
+
+    public function addRecall(Recall $recall): self
+    {
+        if (!$this->recalls->contains($recall)) {
+            $this->recalls[] = $recall;
+            $recall->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecall(Recall $recall): self
+    {
+        if ($this->recalls->removeElement($recall)) {
+            // set the owning side to null (unless already changed)
+            if ($recall->getProduct() === $this) {
+                $recall->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

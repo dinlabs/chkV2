@@ -47,9 +47,6 @@
 </div>
 {% endif %}
 
-
-{#<div id="otherProducts" class="prodList"></div>#}
-
 <div id="productContent" class="autoMargin">
     {#% set chulli_test_date = product.getAttributeByCodeAndLocale('chulli_test_date', configuration.request.locale) %#}
     {% if product.chulltest and product.chulltest.date and product.chulltest.description %}
@@ -139,25 +136,33 @@
         </div>
     </div>
 
+    {% if product.brand and product.brand.sizeGuide %}
     <div id="guideDesTailles" class="frame">
         <h2>Guide des tailles</h2>
         <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
         <div class="foldable">
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            {{ product.brand.sizeGuide|raw }}
         </div>
     </div>
+    {% endif %}
 
+    {% if product.enabledFaqs|length > 0 %}
     <div id="askAnswers" class="frame">
         <h2>Vos questions - Nos réponses</h2>
         <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
         <div class="foldable">
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi magni eveniet consequatur nostrum, praesentium in velit deleniti cupiditate blanditiis dolores non tempore necessitatibus odit minus perspiciatis optio atque quidem temporibus.</p>
+            <ul class="faqs">
+                {% for faq in product.enabledFaqs|slice(0, 2) %}
+                <li>
+                    <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-question') }}"/></svg>
+                    <strong>{{ faq.question }}</strong>
+                    <div>{{ faq.answer }}</div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
+    {% endif %}
 
     {% if product.reviews|length > 0 %}
     <div id="reviews" class="frame">

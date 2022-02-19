@@ -104,6 +104,15 @@ class EventSubscriber implements EventSubscriberInterface
                 $complementary->setBackground($newFilename);
             }
         }
+
+        if($faqs = $subject->getFaqs())
+        {
+            foreach($faqs as $faq)
+            {
+                $this->entityManager->persist($faq);
+            }
+            $this->entityManager->flush();
+        }
     }
 
     /**

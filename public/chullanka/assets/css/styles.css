@@ -559,9 +559,10 @@ footer #ourAdventure h3 { text-align: center; }
 #productInfos #askAnswer { margin:1em -1em; }
 #productInfos #askAnswer > strong { font-family: var(--altFont); font-size:1.2em; }
 #productInfos #askAnswer ul { padding-top:1em; }
-#productInfos #askAnswer ul li { position:relative; padding-left:2em; padding-bottom:1em; }
-#productInfos #askAnswer ul li .svg-icon { position:absolute; left:0; top:0; }
-#productInfos #askAnswer .pictoLink { float:right; margin-bottom:1em; }
+#productInfos #askAnswer ul li, #askAnswers ul li { position:relative; padding-left:2em; padding-bottom:1em; }
+#productInfos #askAnswer ul li .svg-icon, #askAnswers ul li .svg-icon { position:absolute; left:0; top:0; }
+#productInfos #askAnswer .footline { text-align:right; }
+#productInfos #askAnswer .footline + .getAdvice { margin-top:1em; }
 #productInfos #askAnswer .getAdvice .btnCall { background:var(--default); }
 
 #otherProducts .header { position:relative; padding-top:100px; }
@@ -817,6 +818,10 @@ body.customer { background:var(--bg1); }
 #brand #brandTop .socials a { display:grid; place-items:center; background:var(--bg0); border-radius:50%; width:60px; height:60px; text-decoration:none; }
 #brand #brandTop .socials a .icon { margin:0; font-size:2em; }
 
+
+/* CMS */
+.bitbag-page-content h2 { padding-bottom:1em; }
+.bitbag-page-content p { padding-bottom:1.5em; }
 
 /* MEDIA QUERIES */
 @media screen and (min-width:500px) {

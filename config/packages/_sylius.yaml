@@ -353,6 +353,36 @@ sylius_grid:
                 firstname:
                     label: app.chulli.firstname
                     type: string
+        app_admin_recall:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Recall
+            sorting:
+                createdAt: desc
+            fields:
+                createdAt:
+                    type: datetime
+                    sortable: ~
+                    label: 'Date de demande'
+                phone_number:
+                    type: string
+                    label: 'Numéro de téléphone'
+                state:
+                    type: string
+                    label: 'Statut'
+            actions:
+                item:
+                    # show:
+                    #     type: show
+                    update:
+                        type: update
+                    #delete:
+                    #    type: delete
+            filters:
+                state:
+                    type: string
+                    label: app.recall.state
         app_admin_rma:
             driver:
                 name: doctrine/orm
@@ -362,8 +392,14 @@ sylius_grid:
                 number:
                     type: string
                     label: 'Réf.'
+                # createdAt:
+                #     type: datetime
+                #     sortable: ~
+                #     label: 'Date de demande'
             actions:
                 item:
+                    # show:
+                    #     type: show
                     update:
                         type: update
                     #delete:

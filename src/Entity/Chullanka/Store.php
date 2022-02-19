@@ -157,6 +157,11 @@ class Store implements ResourceInterface, TranslatableInterface
         return $this;
     }
 
+    protected function createTranslation(): TranslationInterface
+    {
+        return new StoreTranslation();
+    }
+
     public function getIntroduction(): ?string
     {
         return $this->getTranslation()->getIntroduction();
@@ -343,11 +348,6 @@ class Store implements ResourceInterface, TranslatableInterface
         $this->getTranslation()->setDescription($description);
 
         return $this;
-    }
-
-    protected function createTranslation(): TranslationInterface
-    {
-        return new StoreTranslation();
     }
 
     /**

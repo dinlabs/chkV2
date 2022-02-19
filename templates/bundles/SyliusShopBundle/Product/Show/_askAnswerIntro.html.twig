@@ -1,19 +1,19 @@
 <div id="askAnswer" class="frame">
+    {% if product.enabledFaqs|length > 0 %}
     <strong>Vos questions &ndash; nos réponses</strong>
-    <ul>
+    <ul class="faqs">
+        {% for faq in product.enabledFaqs|slice(0, 2) %}
         <li>
-            <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-question"/></svg>
-            <strong>Comment l'utiliser sur des baudriers fixes ?</strong>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore repellendus illum voluptates vitae culpa ut sapiente, expedita voluptatibus corrupti tempora quibusdam facilis dolor deserunt eveniet quis natus officiis? Beatae, aperiam!</p>
+            <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-question') }}"/></svg>
+            <strong>{{ faq.question }}</strong>
+            <div>{{ faq.answer }}</div>
         </li>
-        <li>
-            <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-question"/></svg>
-            <strong>Faut-il la graisser ? Et peut-on la nettoyer au savon ?</strong>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore repellendus illum voluptates vitae culpa ut sapiente, expedita voluptatibus corrupti tempora quibusdam facilis dolor deserunt eveniet quis natus officiis? Beatae, aperiam!</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus debitis ducimus exercitationem dolorem libero numquam alias. Aspernatur, error voluptates. Maxime similique perspiciatis mollitia, sint dolore ex fuga recusandae vel ea.</p>
-        </li>
+        {% endfor %}
     </ul>
-    <a href="#askAnswers" class="pictoLink">Plus (35)</a>
+    <div class="footline">
+        <a href="#askAnswers" class="pictoLink">Plus ({{ product.enabledFaqs|length }})</a>
+    </div>
+    {% endif %}
 
-    {#% include('inc/inc-getadvice.php') %#}
+    {{ render(url('chk_ajax_getadviceform')) }}
 </div>

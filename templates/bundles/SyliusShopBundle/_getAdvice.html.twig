@@ -1,0 +1,20 @@
+<div class="getAdvice">
+    <div class="insert">
+        <strong>Faites-vous conseiller</strong>
+    {% if allIsGood %}
+        <p>Votre demande a été enregistrée ; nous allons vous appeler !</p>
+    {% else %}
+        {{ form_start(form) }}
+            {{ form_widget(form.phone_number, {'attr': {'placeholder': 'Votre numéro de téléphone'}}) }}
+            <button type="submit" class="btn btnCall">
+                <div class="pichulli">
+                    <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                </div>
+                <strong>Faites-vous appeler</strong>
+            </button>
+            <p>Un de nos Chullis se chargera de vous contacter et promis on ne vous spammera pas :)</p>
+        {{ form_end(form) }}
+    {% endif %}
+    </div>
+</div>

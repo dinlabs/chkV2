@@ -2,6 +2,8 @@
 
 namespace App\Controller\Chullanka;
 
+use App\Entity\Chullanka\Recall;
+use App\Form\Type\RecallFrontType;
 use App\Service\DpdHelper;
 use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,6 +68,48 @@ class AjaxController extends AbstractController
     public function index(): Response
     {
         return new Response('AJAX', 200, ['Content-Type' => 'text/html']);
+    }
+
+    /**
+     * @Route("/getadvice", name="chk_ajax_getadviceform")
+     */
+    public function getAdviceFormAction(Request $request): Response
+    {
+        $recall = new Recall();
+        $recall->setState(0);
+        
+        if($customer = $this->getCurrentCustomer())
+        {
+            $recall->setCustomer($customer);
+        }
+        /*if($pid = $request->get('id'))
+        {
+            error_log("pid : $pid");
+        }
+        else error_log("pas pid");*/
+        
+        if(($pid = $request->get('id')) && ($product = $this->productRepository->find($pid)))
+        {
+            $recall->setProduct($product);
+        }
+        
+        //$form = $this->get('form.factory')->create('app_recall');
+
+        $form = $this->createForm(RecallFrontType::class, $recall);
+        $form->handleRequest($request);
+        
+        $allIsGood = false;
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $em = $this->container->get('doctrine')->getManager();
+            $em->persist($recall);
+            $em->flush();
+            $allIsGood = true;
+        }
+        return $this->render('@SyliusShop/_getAdvice.html.twig', [
+            'allIsGood' => $allIsGood,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -232,5 +276,14 @@ class AjaxController extends AbstractController
         }
 
         $dpdHelper->getPickupPoints($data);
+    }
+
+
+    /**
+     * Get current connected Customer
+     */
+    private function getCurrentCustomer()
+    {
+        return (($user = $this->getUser()) && ($customer = $user->getCustomer())) ? $customer : null;
     }
 }

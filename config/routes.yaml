@@ -121,6 +121,36 @@ app_admin_chulli:
     type: sylius.resource
     prefix: /admin
 
+app_admin_recall:
+    resource: |
+        alias: app.recall
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_recall
+        vars:
+            all:
+                subheader: 'Gestion des Rappels'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
+app_admin_rma:
+    resource: |
+        alias: app.rma
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_rma
+        vars:
+            all:
+                subheader: 'RMA'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
 # app_product_bundle:
 #     resource: |
 #         alias: app.product_bundle

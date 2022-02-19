@@ -1,0 +1,55 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% set published = (page.publishAt is not null and page.publishAt|date("Y-m-d H:i:s") < "now"|date("Y-m-d H:i:s") or page.publishAt is null) %}
+
+{%- block title -%}
+    {% if page.title is not empty and published == true  %}
+        {{ page.title }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{%- endblock -%}
+
+{% block metatags %}
+    {% if published == true %}
+        {% if page.metaKeywords is not empty %}
+            <meta name="keywords" content="{{ page.metaKeywords }}"/>
+        {% endif %}
+        {% if page.metaDescription is not empty %}
+            <meta name="description" content="{{ page.metaDescription }}"/>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% block content %}
+<div class="autoMargin">
+    {% if published == true %}
+        <ul id="breadcrumb">
+            <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+            <li>{{ page.breadcrumb }}</li>
+        </ul>
+        
+        <h1 class="bitbag-page-name">{{ page.name }}</h1>
+
+        <div class="ui grid center aligned">
+            <div class="eight wide column">
+                {% if page.image %}
+                    <img class="page-image ui fluid image" src="{{ page.image.path }}" alt="">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bitbag-page-content">{{ bitbag_cms_render_content(page) }}</div>
+        
+        {% if page.products|length > 0 %}
+            <h2>
+                {{ 'bitbag_sylius_cms_plugin.ui.page_related_products'|trans }}
+            </h2>
+            <div class="bitbag-page-products">
+                {% include '@SyliusShop/Product/_horizontalList.html.twig' with {'products': page.products} %}
+            </div>
+        {% endif %}
+    {% else %}
+        {% include '@BitBagSyliusCmsPlugin/Shop/Page/Error/_notPublished.html.twig' with {'publishAt': page.publishAt} %}
+    {% endif %}
+</div>
+{% endblock %}

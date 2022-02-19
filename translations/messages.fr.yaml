@@ -1,9 +1,13 @@
+chullanka_chullis:
+  menu_item: 'Les Chullis'
 chullanka_stores:
   menu_item: 'Les Magasins'
 chullanka_brands:
   menu_item: 'Les Marques'
-chullanka_chullis:
-  menu_item: 'Les Chullis'
+chullanka_recalls:
+  menu_item: 'Demandes de rappel'
+chullanka_rmas:
+  menu_item: 'RMA'
 app:
   homepage:
     newsletter: 'Nos nouveautés, nos promos, nos activités avant tout le monde'
@@ -28,6 +32,11 @@ app:
     chullis: 'Chullis'
     edit_chulli: 'Modifier ce chulli'
     new_chulli: 'Nouveau chulli'
+    recall: 'Demande de rappel'
+    recalls: 'Demandes de rappel'
+    edit_recall: 'Modifier cette demande'
+    rma: 'RMA'
+    rmas: 'RMAs'
     product:
       admin:
         test:

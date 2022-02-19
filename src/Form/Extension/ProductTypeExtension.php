@@ -8,12 +8,14 @@ use App\Entity\Chullanka\Brand;
 use App\Form\Type\ChulltestType;
 use App\Form\Type\BrandAutocompleteChoiceType;
 use App\Form\Type\ComplementaryProductType;
+use App\Form\Type\FaqType;
 use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityRepository;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductType;
 use Sylius\Bundle\ResourceBundle\Form\DataTransformer\ResourceToIdentifierTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\ReversedTransformer;
 
@@ -67,6 +69,15 @@ class ProductTypeExtension extends AbstractTypeExtension
         $builder->add('complementaryProduct', ComplementaryProductType::class, [
             'object' => $object,
             'label' => false
+        ]);
+
+        $builder->add('faqs', CollectionType::class, [
+            'entry_type' => FaqType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'label' => 'FAQ',
+            'block_name' => 'entry',
         ]);
     }
 

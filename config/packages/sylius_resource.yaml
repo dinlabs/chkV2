@@ -20,6 +20,16 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\BrandTranslation
                     form: App\Form\Type\BrandTranslationType
+        app.faq:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Faq
+                form: App\Form\Type\FaqType
+                repository: App\Repository\Chullanka\FaqRepository
+            translation:
+                classes:
+                    model: App\Entity\Chullanka\FaqTranslation
+                    form: App\Form\Type\FaqTranslationType
         app.chulli:
             driver: doctrine/orm
             classes:
@@ -44,9 +54,15 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\ComplementaryProductTranslation
                     form: App\Form\Type\ComplementaryProductTranslationType
-        # app.rma:
-        #     driver: doctrine/orm
-        #     classes:
-        #         model: App\Entity\Chullanka\Rma
-        #         form: App\Form\Type\RmaType
-        #         repository: App\Repository\Chullanka\RmaRepository
+        app.recall:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Recall
+                form: App\Form\Type\RecallType
+                repository: App\Repository\Chullanka\RecallRepository
+        app.rma:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Rma
+                form: App\Form\Type\RmaType
+                repository: App\Repository\Chullanka\RmaRepository

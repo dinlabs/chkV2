@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Customer;
 
 use App\Entity\Chullanka\HistoricOrder;
+use App\Entity\Chullanka\Recall;
 use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\Sport;
 use App\Entity\Chullanka\Store;
@@ -52,6 +53,11 @@ class Customer extends BaseCustomer
     private $licence_file;
 
     /**
+     * @ORM\OneToMany(targetEntity=Recall::class, mappedBy="customer")
+     */
+    private $recalls;
+
+    /**
      * @ORM\OneToMany(targetEntity=Rma::class, mappedBy="customer")
      */
     private $rmas;
@@ -66,6 +72,7 @@ class Customer extends BaseCustomer
         parent::__construct();
         $this->favoriteStores = new ArrayCollection();
         $this->favoriteSports = new ArrayCollection();
+        $this->recalls = new ArrayCollection();
         $this->rmas = new ArrayCollection();
         $this->historicOrders = new ArrayCollection();
     }
@@ -181,6 +188,36 @@ class Customer extends BaseCustomer
     }
 
     /**
+     * @return Collection|Recall[]
+     */
+    public function getRecalls(): Collection
+    {
+        return $this->recalls;
+    }
+
+    public function addRecall(Recall $recall): self
+    {
+        if (!$this->recalls->contains($recall)) {
+            $this->recalls[] = $recall;
+            $recall->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecall(Recall $recall): self
+    {
+        if ($this->recalls->removeElement($recall)) {
+            // set the owning side to null (unless already changed)
+            if ($recall->getCustomer() === $this) {
+                $recall->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Rma[]
      */
     public function getRmas(): Collection
@@ -208,15 +245,6 @@ class Customer extends BaseCustomer
         }
 
         return $this;
-    }
-    
-    
-    /**
-     * for Twig templates
-     */
-    public function reduction()
-    {
-        return floor($this->chullpoints / 500) * -10;
     }
 
     /**
@@ -247,5 +275,14 @@ class Customer extends BaseCustomer
         }
 
         return $this;
+    }
+    
+    
+    /**
+     * for Twig templates
+     */
+    public function reduction()
+    {
+        return floor($this->chullpoints / 500) * -10;
     }
 }

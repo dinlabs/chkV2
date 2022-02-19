@@ -84,6 +84,25 @@
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %}
+    <script>
+    $(document).ready(function() {
+        $('body').on('submit', '.getAdvice form', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            $form.addClass('loading');
+            var $block = $(this).parents('.getAdvice');
+            $.ajax({
+                type: 'POST',
+                url: '{{ path('chk_ajax_getadviceform') }}',
+                data: $form.serialize()
+            }).done(function(data){
+                $block.replaceWith(data);
+            });
+            /*.fail(function(data){
+            });*/
+        });
+    });
+    </script>
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

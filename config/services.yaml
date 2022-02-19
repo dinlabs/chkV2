@@ -98,17 +98,7 @@ services:
         parent: security.authentication.failure_handler
         public: false
 
-    #ndY: pour définir de nouveaux Type traduisibles
-    app.store.form.type:
-        class: App\Form\Type\StoreType
-        tags:
-            - { name: form.type }
-        arguments: ['%app.model.store.class%', ['sylius']]
-    app.store_translation.form.type:
-        class: App\Form\Type\StoreTranslationType
-        tags:
-            - { name: form.type }
-        arguments: ['%app.model.store_translation.class%', ['sylius']]
+    #ndY: services nécessaires si le FormType extends AbstractResourceType
     app.brand.form.type:
         class: App\Form\Type\BrandType
         tags:
@@ -139,6 +129,37 @@ services:
         tags:
             - { name: form.type }
         arguments: ['%app.model.complementary_product_translation.class%', ['sylius']]
+    app.faq.form.type:
+        class: App\Form\Type\FaqType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.faq.class%', ['sylius']]
+    app.faq_translation.form.type:
+        class: App\Form\Type\FaqTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.faq_translation.class%', ['sylius']]
+    app.recall.form.type:
+        class: App\Form\Type\RecallType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.recall.class%', ['sylius']]
+    # app.rma.form.type:
+    #     class: App\Form\Type\RmaType
+    #     tags:
+    #         - { name: form.type }
+    #     arguments: ['%app.model.rma.class%', ['sylius']]
+    app.store.form.type:
+        class: App\Form\Type\StoreType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.store.class%', ['sylius']]
+    app.store_translation.form.type:
+        class: App\Form\Type\StoreTranslationType
+        tags:
+            - { name: form.type }
+        arguments: ['%app.model.store_translation.class%', ['sylius']]
+    
     
     #ndY: pour ajouter des tabs dans edition de Product
     app.listener.admin.product_form_menu_builder:
