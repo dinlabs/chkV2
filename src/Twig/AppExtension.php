@@ -38,7 +38,7 @@ class AppExtension extends AbstractExtension
 
         if(!is_null($link))
         {
-            $excerpt .= "<a href=\"$link\">" .  $this->translator->trans('app.front.readmore') . "</a>.";
+            $excerpt .= " <a href=\"$link\">" .  $this->translator->trans('app.front.readmore') . "</a>.";
         }
 
         return "<p>$excerpt</p>";

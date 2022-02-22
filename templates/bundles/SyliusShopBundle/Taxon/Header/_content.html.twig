@@ -1,7 +1,7 @@
 <div id="category">
     {% if taxon.parent is not empty and not taxon.parent.isRoot() and taxon.parent.enabled %}
         <a href="{{ path('sylius_shop_product_index', {'slug': taxon.parent.slug, '_locale': taxon.parent.translation.locale}) }}" class="btnRetour" {{ sylius_test_html_attribute('vertical-menu-go-level-up') }} title="{{ 'sylius.ui.go_level_up'|trans }}">
-            <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche-back"/></svg>
+            <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche-back') }}"/></svg>
         </a>
     {% endif %}
     <h1>{{ taxon.name }}</h1>
@@ -10,24 +10,30 @@
     {% endif %}
 </div>
 
-{#
+{% if taxon is defined and taxon.enabledChildren %}
 <ul class="ctaCats">
-    <li><a href="#">Chaussures randonnées femme</a></li>
-    <li><a href="#">Chaussures randonnées homme</a></li>
+    {% for child in taxon.enabledChildren %}
+    <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}">{{ child.name }}</a></li>
+    {% endfor %}
 </ul>
-#}
+{% endif %}
+
+{% if taxon.topProducts %}
 <div id="news">
     <p>&nbsp;</p>
-    {#
     <h2>Voici les Nouveautés Chullanka</h2>
     <div class="prodList">
         <div class="list">
-            <div><?php include('inc/inc-prodinlist.php'); ?></div>
-            <div><?php include('inc/inc-prodinlist.php'); ?></div>
-            <div><div class="prodInList">
+            {% for product in taxon.topProducts %}
+            <div>
+                {% include '@SyliusShop/Product/_box.html.twig' %}
+            </div>
+            {% endfor %}
+            <div>
+                <div class="prodInList">
                     <a href="#"><img src="//picsum.photos/330/467?random=44" alt="" class="round5 guide"></a>
                 </div>
-            </div></div>
+            </div>
         </div>
         <div role="tablist" class="dots"></div>
         <script>
@@ -52,5 +58,5 @@
             });
         </script>
     </div>
-    #}
 </div>
+{% endif %}

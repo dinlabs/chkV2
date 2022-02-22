@@ -1,5 +1,19 @@
+{% if taxon.topBrands %}
+{% include 'chullanka/brand/top_items.html.twig' with {'brands': taxon.topBrands, '_title': 'Nos Top Marques'} %}
+{% endif %}
+
+<div>
+    <h2>D'autres vont aussi voir</h2>
+</div>
+
+<div>
+    <h2>Et si vous regardiez aussi</h2>
+</div>
+
+<br>
+
 <div id="description" class="anchor">
-    <div>{{ taxon.description|nl2br }}</div>
+    {{ taxon.content|raw }}
     <div class="toAnchor">
         <a href="#categoryTop">{{ 'app.front.gototop'|trans }}</a>
     </div>

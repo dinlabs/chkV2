@@ -5,7 +5,7 @@
     {% else %}
         <ul>
         {% for store in customer.favoriteStores %}
-            <li><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-love"/></svg> {{ store.name }}</li>
+            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ store.name }}</li>
         {% endfor %}
         </ul>
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>

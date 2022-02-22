@@ -3,6 +3,7 @@
 namespace App\Entity\Chullanka;
 
 use App\Entity\Product\Product;
+use App\Entity\Taxonomy\Taxon;
 use App\Repository\Chullanka\BrandRepository;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -117,11 +118,17 @@ class Brand implements ResourceInterface, TranslatableInterface
      */
     private $tag_instagram;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Taxon::class, mappedBy="top_brands")
+     */
+    private $taxa;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
         $this->setCurrentLocale('fr_FR');// hack de YL pour forcer la locale !
         $this->products = new ArrayCollection();
+        $this->taxa = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -433,5 +440,32 @@ class Brand implements ResourceInterface, TranslatableInterface
     public function hasProductBackgroundFile(): bool
     {
         return null !== $this->product_background_file;
+    }
+
+    /**
+     * @return Collection|Taxon[]
+     */
+    public function getTaxa(): Collection
+    {
+        return $this->taxa;
+    }
+
+    public function addTaxon(Taxon $taxon): self
+    {
+        if (!$this->taxa->contains($taxon)) {
+            $this->taxa[] = $taxon;
+            $taxon->addTopBrand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaxon(Taxon $taxon): self
+    {
+        if ($this->taxa->removeElement($taxon)) {
+            $taxon->removeTopBrand($this);
+        }
+
+        return $this;
     }
 }

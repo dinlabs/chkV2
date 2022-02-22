@@ -1,16 +1,30 @@
+{% set univers = null %}
+{% if taxon is defined %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+
 {# cf. https://symfony.com/bundles/LiipImagineBundle/current/basic-usage.html#create-thumbnails #}
-{% set _bgCat = '/chullanka/assets/img/bg-category.jpg' %}
-{% if taxon.images %}
-    {% if taxon.imagesByType('bg') is not empty %}
-    {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+{% set _bgCat = null %}
+{% if univers and univers.images %}
+    {% if univers.imagesByType('bg') is not empty %}
+    {% set _bgCat = univers.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
     {% else %}
-    {% for image in taxon.images %}
+    {% for image in univers.images %}
         {% if image.type == 'bg' %}
         {% set _bgCat = image.path|imagine_filter(filter|default('sylius_shop_product_original')) %}
         {% endif %}
     {% endfor %}
     {% endif %}
 {% endif %}
+
 
 <div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
     <div class="autoMargin">

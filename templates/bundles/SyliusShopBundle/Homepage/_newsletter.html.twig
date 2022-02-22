@@ -2,15 +2,15 @@
     <div class="inside">
         <h2>{{ 'app.homepage.newsletter'|trans }}</h2>
         <form action="post">
-            <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-newsletter"/></svg>
+            <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-newsletter') }}"/></svg>
             <input type="email" name="email" placeholder="Votre adresse e-mail">
             <button type="submit" class="btn">Je m'abonne</button>
         </form>
         <p>
             {{ 'app.homepage.newsletter_description'|trans }}
             <span class="pichulli">
-                <img src="/chullanka/assets/img/chulli.jpg" width="50" height="50" alt="Chulli">
-                <svg class="svg-icon" role="img" style="width:50px; height:50px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="50" height="50" alt="Chulli">
+                <svg class="svg-icon" role="img" style="width:50px; height:50px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
             </span>
         </p>
     </div>

@@ -6,7 +6,7 @@
     {% else %}
         <ul>
         {% for sport in customer.favoriteSports %}
-            <li><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-love"/></svg> {{ sport.name }}</li>
+            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ sport.name }}</li>
         {% endfor %}
         </ul>
         <a href="{{ path('sport_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>

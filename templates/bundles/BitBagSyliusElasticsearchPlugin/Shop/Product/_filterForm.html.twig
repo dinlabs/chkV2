@@ -1,24 +1,37 @@
+{% set univers = null %}
+{% if taxon is defined %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+
 <div class="openFilters">
-    <svg class="svg-montagne" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-montagne"/></svg>
+    <svg class="svg-montagne" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-montagne') }}"/></svg>
     <div class="pichulli">
-        <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
-        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+        <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">
+        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
     </div>
     <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
-    <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-affiner"/></svg>
+    <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
 </div>
 
 <div class="mobileFilters{% if app.request.xmlHttpRequest == false %} hidden{% endif %}">
     <h2>
-        <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-affiner"/></svg>
+        <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
         {{ 'app.front.category.filter.affiner'|trans }}
-        <svg class="svg-icon-close" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-close-alt"/></svg>
+        <svg class="svg-icon-close" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg>
     </h2>
     <div class="scroller">
         {% if taxon is defined and taxon.enabledChildren %}
         <ul class="subCats">
             {% for child in taxon.enabledChildren %}
-            <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg> {{ child.name }}</a></li>
+            <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg> {{ child.name }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
@@ -26,8 +39,8 @@
         <div class="filterWrapper">
             <div class="filterInfo">
                 <div class="pichulli">
-                    <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
-                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                    <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
                 </div>
                 <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
             </div>
@@ -55,15 +68,18 @@
             </ul>
             #}
         </div>
-        <a href="#"><img src="//picsum.photos/325/325?random=4" alt="Jusqu'à -50% sur vos chaussures trail" class="round5"></a>
 
         {% if taxon is defined %}
+        <div class="push_univers">
+            {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_filters', 'taxonCode': univers.code})) }}
+        </div>
+
         {{ sylius_template_event('sylius.shop.product.index.after_vertical_menu', {'taxon': taxon}) }}
         {% endif %}
     </div>
 
     <div class="mobileFiltersFooter">
-        <svg class="svg-montagne" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-montagne"/></svg>
+        <svg class="svg-montagne" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-montagne') }}"/></svg>
         <a href="{{ app.request.pathInfo }}">Réinitialiser</a>
         <button id="showProducts" class="btn">Voir les {{ products ? products|length : '' }} produits</button>
     </div>

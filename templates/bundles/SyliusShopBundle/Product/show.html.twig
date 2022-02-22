@@ -2,6 +2,19 @@
 
 {% block title %}{{ product.name }} | {{ parent() }}{% endblock %}
 
+{% set univers = null %}
+{% if taxon is defined %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+
 {% block content %}
 {% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
 
@@ -55,7 +68,7 @@
         {% set chulli = product.chulltest.chulli %}
         <div class="pichulli">
             <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
-            <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+            <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
         </div>
         {% endif %}
         <h2>Découvrez le test complet</h2>
@@ -74,7 +87,7 @@
                     {% endif %}
                 </div>
                 
-                <div>{{ product.chulltest.description|raw }}</div>
+                <div class="body">{{ product.chulltest.description|raw }}</div>
 
                 {#<div class="sumup">
                     <div class="title">Pour résumer :</div>
@@ -109,7 +122,7 @@
                         <span>Rapport qualité prix</span>
                         <ul>
                             {% for n in 1..5  %}
-                            <li class="{{ (n <= product.chulltest.note) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#notation"/></svg></li>
+                            <li class="{{ (n <= product.chulltest.note) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#notation') }}"/></svg></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -169,7 +182,7 @@
         <h2 class="clientRating">
             <ul class="rating">
                 {% for n in 1..5  %}
-                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-star"/></svg></li>
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-star') }}"/></svg></li>
                 {% endfor %}
             </ul>
         </h2>

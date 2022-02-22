@@ -3,12 +3,12 @@
     <div class="wrapper">
         <a href="{{ path('store_index') }}" class="openSubnav">
             <span>{{ 'app.front.stores'|trans }}</span>
-            <svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-caret-right"/></svg>
+            <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg>
         </a>
     </div>
     <div class="subNav" data-level="1">
         <div class="subNavHeader">
-            <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-fleche"/></svg></button>
+            <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche') }}"/></svg></button>
             <a href="{{ path('store_index') }}"><strong class="name">{{ 'app.front.stores'|trans }}</strong></a>
         </div>
         <ul>

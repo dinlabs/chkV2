@@ -1,0 +1,135 @@
+{% set _bgCat = null %}
+{% if taxon and taxon.images %}
+    {% if taxon.imagesByType('bg') is not empty %}
+    {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+    {% else %}
+    {% for image in taxon.images %}
+        {% if image.type == 'bg' %}
+        {% set _bgCat = image.path|imagine_filter(filter|default('sylius_shop_product_original')) %}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+{% endif %}
+
+<div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
+    <div class="autoMargin">
+        <ul id="breadcrumb">
+            <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+            <li>{{ taxon.name }}</li>
+        </ul>
+        <div id="category">
+            <h1>{{ taxon.name }}</h1>
+            {% if taxon.description %}
+            {{ taxon.description|excerpt(50, '#description') }}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if taxon is defined and taxon.enabledChildren %}
+    <div class="subcats">
+        <div class="glider-contain">
+            <div class="glider">
+                {% for child in taxon.enabledChildren %}
+                <div>
+                    <a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}">
+                    {% if child.images %}<img src="{{ child.images.first.path|imagine_filter(filter|default('chullanka_category')) }}" alt="{{ child.name }}">{% endif %}
+                    {{ child.name }}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <div role="tablist" class="dots"></div>
+        </div>
+        <script>
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#categoryTop .subcats .glider'), { 
+                    slidesToShow: 5,
+                    slidesToScroll: 1,
+                    draggable: true,
+                    scrollLock: true,
+                    dots: '#categoryTop .subcats .dots',
+                    responsive: [
+                        {
+                            breakpoint: 1024,
+                            settings: {
+                                slidesToShow: 'auto',
+                                itemWidth: 180,
+                                exactWidth: 150,
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+        
+    </div>
+    {% endif %}
+</div>
+
+{% if taxon.topProducts %}
+<div id="topProds">
+    <div class="autoMargin">
+        <h2>Les Top produits</h2>
+    </div>
+    <div class="glider-contain">
+        <div class="glider">
+            {% for product in taxon.topProducts %}
+            <div>
+                {% include '@SyliusShop/Product/_box.html.twig' %}
+            </div>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#topProds .glider'), { 
+                slidesToShow: 2.1,
+                slidesToScroll: 1,
+                draggable: true,
+                scrollLock: true,
+                dots: '#topProds .dots',
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 'auto',
+                            itemWidth: 180,
+                            exactWidth: 150,
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+{% endif %}
+
+{% if taxon.topBrands %}
+{% include 'chullanka/brand/top_items.html.twig' with {'brands': taxon.topBrands, '_title': 'Nos Top Marques'} %}
+{% endif %}
+
+{{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'univers_guides', 'taxonCode': taxon.code, 'template': '@SyliusShop/Block/univers_guides.html.twig'})) }}
+
+{{ render(path('chk_ajax_getadviceform')) }}
+
+<div class="autoMargin">
+    <div class="todo">
+        <h2>Nos top articles (blog)</h2>
+    </div>
+
+    <div class="todo">
+        <h2>D'autres vont aussi voir</h2>
+    </div>
+
+    <div class="todo">
+        <h2>Et si vous regardiez aussi</h2>
+    </div>
+
+    <div id="description" class="anchor">
+        {{ taxon.content|raw }}
+        <div class="toAnchor">
+            <a href="#categoryTop">{{ 'app.front.gototop'|trans }}</a>
+        </div>
+    </div>
+</div>

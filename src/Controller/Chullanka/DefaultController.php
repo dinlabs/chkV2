@@ -14,6 +14,7 @@ use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
 use App\Service\GinkoiaHelper;
 use App\Service\UpstreamPayWidget;
+use BitBag\SyliusCmsPlugin\Entity\Block;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,6 +123,32 @@ final class DefaultController extends AbstractController
         die;
     }
 
+    /**
+     * @Route("/blocksbysectiontaxon", name="get_blocks_by_section_taxon")
+     */
+    public function getBlocksBySectionAndTaxonAction(Request $request)
+    {
+        $template = $request->get('template') ?? '@SyliusShop/Block/simple_blocklist.html.twig';
+        $sectionCode = $request->get('sectionCode');
+        $taxonCode = $request->get('taxonCode');
+        
+        $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
+        $blocks = $blockRepo->createQueryBuilder('o')
+            ->innerJoin('o.taxonomies', 'taxon')
+            ->innerJoin('o.sections', 'section')
+            ->where('o.enabled = true')
+            ->andWhere('section.code = :sectionCode')
+            ->andWhere('taxon.code = :taxonCode')
+            ->setParameter('sectionCode', $sectionCode)
+            ->setParameter('taxonCode', $taxonCode)
+            ->getQuery()
+            //->getOneOrNullResult()
+            ->getResult()
+        ;
+        return $this->render($template, [
+            'blocks' => $blocks
+        ]);
+    }
 
     /**
      * @Route("/upstreampaywidget", name="chk_upstream_payment_widget")

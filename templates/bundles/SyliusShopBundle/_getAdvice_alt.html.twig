@@ -1,0 +1,20 @@
+<div class="getAdvice beCalled">
+    {% if allIsGood %}
+    <p>Votre demande a été enregistrée ; nous allons vous appeler !</p>
+    {% else %}
+    <span>Pour trouver une alternative</span>
+    {{ form_start(form) }}
+        {{ form_widget(form.phone_number, {'attr': {'placeholder': 'Votre numéro de téléphone'}}) }}
+        {% if recall.product %}
+        <input type="hidden" name="pid" value="{{ recall.product.id }}">
+        {% endif %}
+        <button type="submit" class="btn btnCall">
+            <div class="pichulli">
+                <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">
+                <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+            </div>
+            <strong>Faites-vous appeler</strong>
+        </button>
+    {{ form_end(form) }}
+    {% endif %}
+</div>

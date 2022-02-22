@@ -1,7 +1,7 @@
 {% if brands|length %}
 <div id="topBrands">
     <div class="autoMargin">
-        <h2>Nos marques au top</h2>
+        <h2>{{ _title is defined ? _title : 'Nos marques au top' }}</h2>
     </div>
     <div class="glider-contain">
         <div class="glider">
@@ -16,7 +16,7 @@
     <script>
         window.addEventListener('load', function(){
             new Glider(document.querySelector('#topBrands .glider'), { 
-                slidesToShow: 5,
+                slidesToShow: 2.1,
                 slidesToScroll: 1,
                 draggable: true,
                 scrollLock: true,
@@ -34,6 +34,8 @@
             });
         });
     </script>
+    {% if _title is not defined %}
     <a href="{{ path('brand_index') }}" class="btn">Toutes les marques</a>
+    {% endif %}
 </div>
 {% endif %}

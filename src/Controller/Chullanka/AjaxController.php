@@ -75,6 +75,7 @@ class AjaxController extends AbstractController
      */
     public function getAdviceFormAction(Request $request): Response
     {
+        $template = $request->get('template') ?? '@SyliusShop/_getAdvice.html.twig';
         $recall = new Recall();
         $recall->setState(0);
         
@@ -82,19 +83,12 @@ class AjaxController extends AbstractController
         {
             $recall->setCustomer($customer);
         }
-        /*if($pid = $request->get('id'))
-        {
-            error_log("pid : $pid");
-        }
-        else error_log("pas pid");*/
-        
-        if(($pid = $request->get('id')) && ($product = $this->productRepository->find($pid)))
+        if(($pid = $request->get('pid')) && ($product = $this->productRepository->find($pid)))
         {
             $recall->setProduct($product);
         }
         
         //$form = $this->get('form.factory')->create('app_recall');
-
         $form = $this->createForm(RecallFrontType::class, $recall);
         $form->handleRequest($request);
         
@@ -106,8 +100,9 @@ class AjaxController extends AbstractController
             $em->flush();
             $allIsGood = true;
         }
-        return $this->render('@SyliusShop/_getAdvice.html.twig', [
+        return $this->render($template, [
             'allIsGood' => $allIsGood,
+            'recall' => $recall,
             'form' => $form->createView()
         ]);
     }

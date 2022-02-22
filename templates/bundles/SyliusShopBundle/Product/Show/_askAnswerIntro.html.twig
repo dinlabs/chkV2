@@ -15,5 +15,5 @@
     </div>
     {% endif %}
 
-    {{ render(url('chk_ajax_getadviceform')) }}
+    {{ render(path('chk_ajax_getadviceform', {'pid': product.id})) }}
 </div>

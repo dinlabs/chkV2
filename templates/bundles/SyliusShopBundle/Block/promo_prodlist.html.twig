@@ -1,0 +1,36 @@
+{% set _randId = random() %}
+<div id="promos_{{ _randId }}" class="promos glider-contain">
+    <div class="glider">
+        {% for block in blocks %}
+        <div>
+            {% if block.name == 'test' %}
+            {% include '@SyliusShop/Block/test_block.html.twig' %}
+            {% else %}
+                {{ bitbag_cms_render_content(block) }}
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div role="tablist" class="dots"></div>
+</div>
+<script>
+    window.addEventListener('load', function(){
+        new Glider(document.querySelector('#promos_{{ _randId }} .glider'), { 
+            slidesToShow: 1,
+            slidesToScroll : 1,
+            duration: 2,
+            draggable: true,
+            scrollLock: true,
+            dots: '#promos_{{ _randId }} .dots',
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        itemWidth: 330,
+                        slidesToShow: 'auto'
+                    }
+                }
+            ]
+        });
+    });
+</script>

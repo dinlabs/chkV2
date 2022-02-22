@@ -6,6 +6,9 @@
     {% else %}
         {{ form_start(form) }}
             {{ form_widget(form.phone_number, {'attr': {'placeholder': 'Votre numéro de téléphone'}}) }}
+            {% if recall.product %}
+            <input type="hidden" name="pid" value="{{ recall.product.id }}">
+            {% endif %}
             <button type="submit" class="btn btnCall">
                 <div class="pichulli">
                     <img src="{{ asset('chullanka/assets/img/chulli.jpg') }}" width="60" height="60" alt="Chulli">

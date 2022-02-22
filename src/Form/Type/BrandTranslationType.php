@@ -23,6 +23,10 @@ class BrandTranslationType extends AbstractResourceType
                 'label' => 'Description',
                 'required' => false
             ])
+            ->add('size_guide', WysiwygType::class, [
+                'label' => 'Guide des tailles',
+                'required' => false
+            ])
             ->add('advertising', WysiwygType::class, [
                 'label' => 'Encart promo',
                 'required' => false

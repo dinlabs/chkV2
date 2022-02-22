@@ -1,23 +1,27 @@
-<div id="announces">
+{% if blocks|length %}
+<div id="guideList">
+    <div class="autoMargin">
+        <h2>Vous avez du mal à choisir ?</h2>
+    </div>
     <div class="glider-contain">
         <div class="glider">
-            {{ render(path('bitbag_sylius_cms_plugin_shop_block_index_by_section_code', {'sectionCode' : 'home_announces', 'template' : '@SyliusShop/Block/simple_blocklist.html.twig'})) }}
+            {% for block in blocks %}
+                {{ bitbag_cms_render_content(block) }}
+            {% endfor %}
         </div>
         <div role="tablist" class="dots"></div>
     </div>
     <script>
-        // https://nickpiscitelli.github.io/Glider.js/
         window.addEventListener('load', function(){
-            new Glider(document.querySelector('#announces .glider'), { 
+            new Glider(document.querySelector('#guideList .glider'), { 
                 slidesToShow: 1,
                 slidesToScroll: 1,
                 duration: 3,
                 draggable: true,
                 scrollLock: true,
-                dots: '#announces .dots',
+                dots: '#guideList .dots',
                 responsive: [
                     {
-                        // screens greater than >= 1024px
                         breakpoint: 1024,
                         settings: {
                             slidesToShow: 'auto',
@@ -30,3 +34,4 @@
         });
     </script>
 </div>
+{% endif %}

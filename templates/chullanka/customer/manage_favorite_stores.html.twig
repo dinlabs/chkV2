@@ -12,7 +12,7 @@
         {% for child in form.favoriteStores %}
         <div class="choice_store">
             {{ form_widget(child) }}
-            <label for="{{ child.vars.id }}"><svg class="svg-icon" role="img"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-love"/></svg> {{ child.vars.label }}</label>
+            <label for="{{ child.vars.id }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ child.vars.label }}</label>
         </div>
         {% endfor %}
     {% endblock choice_widget %}

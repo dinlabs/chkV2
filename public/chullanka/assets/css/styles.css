@@ -91,11 +91,12 @@ ul.list li::before { content:''; position:absolute; left:0; top:5px; background:
 .pichulli img { position:absolute; left:0; top:0; border-radius:50% !important; max-width:initial; z-index:1; }
 .pichulli .svg-icon { position:absolute; left:0; top:0; z-index:2; }
 
-.getAdvice { clear:both; background:url(../img/bg-advice.jpg) no-repeat center top / cover; border-radius:5px; padding:1em; text-align:center; }
+.getAdvice:not(.beCalled) { clear:both; background:url(../img/bg-advice.jpg) no-repeat center top / cover; border-radius:5px; padding:1em; text-align:center; }
+.getAdvice .insert { max-width:330px; margin:auto; }
 .getAdvice .insert > strong { display:block; font-family:var(--altFont); font-size:1.2em; text-transform:capitalize; }
 .getAdvice input { border-width:2px; width:100%; margin:1em 0; }
-.getAdvice .btnCall { width:calc(100% - 20px); }
-.getAdvice .btnCall + p { padding:0 2em; font-size:.733em; }
+.getAdvice .btnCall { width:calc(100% - 20px); margin-bottom:2em; }
+.getAdvice .btnCall + p { font-size:.733em; }
 
 ul.ctaCats { display:flex; }
 ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); background:var(--bg0); border-radius:5px; margin:10px; padding:.5em; color:inherit; font-weight:700; text-decoration:none; }
@@ -144,7 +145,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .testBlock .inside .prodInList { top:-5px; left:-2px; min-height:auto; overflow:hidden; }
 .testBlock .inside .prodInList .clientRating { display:none; }
 .testBlock .inside .tested { padding:1em; }
-.testBlock .inside .tested .header { display:flex; justify-content:space-between; align-items:center; }
+.testBlock .inside .tested .head { display:flex; justify-content:space-between; align-items:center; }
 .testBlock .inside .tested .pichulli { height:60px; }
 .testBlock .inside .tested p { margin:.5em 0; }
 .testBlock .inside .tested .signature { font-size:.733em; }
@@ -331,8 +332,8 @@ footer #ourAdventure h3 { text-align: center; }
 .home #sports .glider .glider-slide img { width:150px; height:230px; border-radius:5px; }
 
 .home #topBrands { background:url(../img/bg-marques.jpg) no-repeat center center / cover; padding:30px 0; text-align:center; }
-.home #topBrands h2 { padding:0 20px; text-align:initial; }
-.home #topBrands .glider a { display:grid; place-items:center; background:var(--bg0); border-radius:5px; padding:15px; width:150px; height:150px; color:inherit; }
+.home #topBrands h2, .univers #topBrands h2, .category #topBrands h2 { padding:0 20px; text-align:initial; }
+.home #topBrands .glider a, .univers #topBrands .glider a, .category #topBrands .glider a { display:grid; place-items:center; background:var(--bg0); border:1px solid var(--bg1); border-radius:5px; padding:15px; width:150px; height:150px; color:inherit; }
 
 #testProducts { position:relative; background:url(../img/bg-test.jpg) no-repeat center center / cover; text-align:center; margin-top:100px; padding:20px 0; }
 #testProducts::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:var(--bg0); opacity:.75; z-index:0; }
@@ -445,6 +446,8 @@ footer #ourAdventure h3 { text-align: center; }
 #filters .sortList li a { display:inline-block;  border:1px solid var(--line); background:var(--bg0); border-radius:5px; margin:5px; padding:.5em 1em; color:inherit; text-decoration:none; }
 #filters .sortList li a.active { background:var(--primary); border-color:var(--primary); color:var(--bg0); }
 
+#filters .push_univers a img { border-radius:5px; }
+
 #filters .mobileFilters .mobileFiltersFooter { position:fixed; bottom:0; height:70px; width:100%; background:var(--bg0); display:flex; justify-content:space-evenly; align-items:center; border-top:2px solid var(--primary); padding:1em; z-index:3; cursor:pointer; }
 #filters .mobileFilters .mobileFiltersFooter .svg-montagne { position:absolute; top:-19px; left:160px; width:63.26px; height:19.34px; }
 #filters .mobileFilters .mobileFiltersFooter a { color:var(--default); font-weight:700; }
@@ -453,13 +456,14 @@ footer #ourAdventure h3 { text-align: center; }
 #searchWrapper #productList { margin:0; padding:20px; }
 #searchWrapper #productList h2 { width:initial; padding-bottom:.4em; font-size:1.5em; }
 #searchWrapper #productList .list { padding:0; }
-#searchWrapper #productList #promos { padding:0; }
-#searchWrapper #productList #promos .glider { padding:0; }
+#searchWrapper #productList .promos { padding:0; }
+#searchWrapper #productList .promos .glider { padding:0; }
+#searchWrapper #productList .promos a img { border-radius:5px; }
 #searchWrapper #productList .glider-contain { max-width:100%; }
-#searchWrapper #productList #promos .glider-slide > a img { border-radius:5px; }
-#searchWrapper #productList #promos .testBlock { width:330px; height:330px; }
-#searchWrapper #productList #promos .testBlock .inside .tested .header { width:initial; padding:initial; }
-#searchWrapper #productList #promos .testBlock .inside .tested .header img { margin:initial; }
+#searchWrapper #productList .promos .glider-slide > a img { border-radius:5px; }
+#searchWrapper #productList .promos .testBlock { width:330px; height:330px; }
+#searchWrapper #productList .promos .testBlock .inside .tested .head { width:initial; padding:initial; }
+#searchWrapper #productList .promos .testBlock .inside .tested .head img { margin:initial; }
 
 #searchWrapper #productList .helpChoice { display:grid; grid-template:1fr 1fr / 1fr; gap:2em; margin:1em 0; }
 #searchWrapper #productList .getAdvice .insert { height:305px; }
@@ -485,6 +489,15 @@ footer #ourAdventure h3 { text-align: center; }
 #checkThat ul ul li { padding-bottom:1.5em; }
 
 #description { margin-bottom:1em; }
+
+/* Univers */
+.univers .getAdvice { margin:2em 0; padding:3em 1em; }
+.univers #topBrands, .category #topBrands { padding:30px 0; text-align:center; }
+.univers #categoryTop { padding-bottom:1em; }
+.univers #categoryTop #category { padding:0; }
+.univers #categoryTop .subcats .glider a { display:flex; flex-wrap:wrap; align-content:space-between; border-radius:5px; padding:1em; background:rgba(255,255,255,.8); width:150px; height:260px; text-align:center; font-family:var(--altFont); font-size:1.2em; font-weight:700; color:inherit; text-decoration:none; }
+.univers #categoryTop .subcats .glider a img { max-width:114px; border-radius:5px; }
+
 
 
 /* Product page */
@@ -591,6 +604,7 @@ footer #ourAdventure h3 { text-align: center; }
 #productTest article .header .inline span:first-child { align-self:start; text-align:right; }
 #productTest article .header .inline img { border-radius:50%; border:3px solid #fff; }
 #productTest article .header .inline span:last-child { align-self:end; text-align:left; }
+#productTest article .body h2 { padding:0; }
 #productTest article .video p { font-family:var(--altFont); font-weight:700; font-size:1.2em; text-transform:capitalize; }
 #productTest article .video iframe { border-radius:6px; width:100%; height:210px; margin-bottom:1em; }
 
@@ -940,7 +954,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #otherProductsBis .header .autoMargin > * { width:330px; padding:0; }
     #otherProductsBis .header .svg-icon { top:-15px; right:auto; left:350px; width:132.938px; height:72.172px; }
 
-    .home #sports h2, .home #topBrands h2, .home #promos h2 { padding:0; }
+    .home #sports h2, .home #topBrands h2, .univers #topBrands h2, .category #topBrands h2, .home #promos h2 { padding:0; }
 
     .home #promos .glider .glider-slide { margin:0; }
 
@@ -972,7 +986,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     
     /* home Gliders */
     .home #announces .glider .glider-slide img { width:330px; height:580px; }
-    .home #topBrands .glider .glider-slide { min-width:170px; }
+    .home #topBrands .glider .glider-slide, .univers #topBrands .glider .glider-slide, .category #topBrands .glider .glider-slide { min-width:170px; }
 
     
     .home #entreprise { padding:50px 0; }

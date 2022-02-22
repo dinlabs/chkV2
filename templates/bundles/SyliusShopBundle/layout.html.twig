@@ -37,12 +37,12 @@
     {% set body_class = 'customer' %}
 {% endif %}
 
-<body {% block bodyattr %}{% endblock %} class="{{ body_class }}">
+<body {% block bodyattr %}{% endblock %}{% if body_class %} class="{{ body_class }}"{% endif %}>
 {#{ dump(_where) }#}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}
     <div id="topAnnounce">
-        <button class="close"><svg class="svg-icon" role="img" style="width:18px; height:18px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-close"/></svg></button>
+        <button class="close"><svg class="svg-icon" role="img" style="width:18px; height:18px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close') }}"/></svg></button>
         <p>
             <strong>Soldes : jusqu'à -70%</strong>
             Profitez vite de nos nouvelles offres
@@ -96,6 +96,7 @@
                 url: '{{ path('chk_ajax_getadviceform') }}',
                 data: $form.serialize()
             }).done(function(data){
+                //if($block.hasClass('.beCalled'))
                 $block.replaceWith(data);
             });
             /*.fail(function(data){
