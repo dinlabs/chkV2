@@ -4,6 +4,7 @@ namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\Recall;
 use App\Form\Type\RecallFrontType;
+use App\Service\ChronorelaisHelper;
 use App\Service\DpdHelper;
 use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
@@ -254,23 +255,36 @@ class AjaxController extends AbstractController
     /**
      * @Route("/getpickuppoints", name="chk_ajax_getpickuppoints")
      */
-    public function getPickupPointsAction(Request $request, DpdHelper $dpdHelper)
+    public function getPickupPointsAction(Request $request, DpdHelper $dpdHelper, ChronorelaisHelper $chronoRelais): Response
     {
         $data = [];
-        if($address = $request->get('address'))
+        if($address = $request->request->get('address'))
         {
             $data['address'] = $address;
         }
-        if($zip = $request->get('zip'))
+        if($zip = $request->request->get('zip'))
         {
             $data['zip'] = $zip;
         }
-        if($city = $request->get('city'))
+        if($city = $request->request->get('city'))
         {
             $data['city'] = $city;
         }
 
-        $dpdHelper->getPickupPoints($data);
+        $pickups = [];
+        $trouble = null;
+        if($shipmethod = $request->request->get('shipmethod'))
+        {
+            if($shipmethod == 'pickup_standart') $pickups = $dpdHelper->getPickupPoints($data);
+            elseif($shipmethod == 'pickup_express') $pickups = $chronoRelais->getPickupPoints($data);
+            else $trouble = "Veuillez, au préalable, choisir le tarif souhaité.";
+            
+            return $this->render('@SyliusShop/Checkout/SelectShipping/_pickuplist.html.twig', [
+                'pickups' => $pickups,
+                'trouble' => $trouble
+            ]);
+        }
+        return new Response('Error');
     }
 
 

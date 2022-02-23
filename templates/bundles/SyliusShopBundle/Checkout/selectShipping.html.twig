@@ -54,6 +54,7 @@
 
             var $pickupBox = $('#findPickups').parents('.insert');
 
+            var _shipmethod = $('[name="sylius_checkout_select_shipping[shipments][0][method]"]:checked').val();
             var _address = $('#pickup_address').val();
             var _zip = $('#pickup_zip').val();
             var _city = $('#pickup_city').val();
@@ -62,9 +63,9 @@
             
             $pickupBox.addClass('loading');
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: '{{ path('chk_ajax_getpickuppoints') }}',
-                data: {'address': _address, 'zip': _zip, 'city': _city},
+                data: {'address': _address, 'zip': _zip, 'city': _city, 'shipmethod': _shipmethod},
                 error() {
                     $pickupBox.removeClass('loading');
                     alert("error");

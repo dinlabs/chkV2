@@ -6,20 +6,11 @@ namespace App\Service;
 
 class DpdHelper
 {
-    private $projectDir;
-
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
-        $this->exportDir = $this->projectDir . '/var/exports/';
-    }
-
     public function getPickupPoints(array $data)
 	{
         if(!isset($data['address']))
         {
             //die('<div style="color:red; font-weight:700;">L\'adresse est obligatoire</div>');
-            //$data['address'] = "17 Boulevard de la Prairie au Duc";
             $data['address'] = '';
         }
         $address = $data['address'];
@@ -29,7 +20,6 @@ class DpdHelper
         if(!isset($data['zip']) || empty($data['zip']))
         {
             die('<div style="color:red; font-weight:700;">Le code postal est obligatoire</div>');
-            //$data['zip'] = "44200";
         }
         $zipcode = $data['zip'];
 		$zipcode = trim(urldecode($zipcode));
@@ -38,24 +28,23 @@ class DpdHelper
         if(!isset($data['city']) || empty($data['city']))
         {
             die('<div style="color:red; font-weight:700;">La ville est obligatoire</div>');
-            //$data['city'] = "Nantes";
         }
         $city = $data['city'];
 		$city = mb_convert_encoding(urldecode($city),'UTF-8');
 		$city = self::stripAccents($city);
 
 
-        //Mage::getStoreConfig('carriers/dpdfrrelais/serviceurl');
+        //Mage::getStoreConfig('carriers/dpdfrrelais');
         $serviceurl = 'http://mypudo.pickup-services.com/mypudo/mypudo.asmx?WSDL';
-
-        //Mage::getStoreConfig('carriers/dpdfrrelais/indentifier');
-        $firmid = 'EXA';
-
-        //Mage::getStoreConfig('carriers/dpdfrrelais/key');
+        $indentifier = 'EXA';
         $key = 'deecd7bc81b71fcc0e292b53e826c48f';
+
+        //fallback IDs pour Chronopost WS
+        //$indentifier = 'CHR';
+        //$key = '75f6fe195dc88ceecbc0f8a2f70a8f3a';
         
         // Paramètres d'appel au WS MyPudo
-        $variables = array( 'carrier'			=> $firmid,
+        $variables = array( 'carrier'			=> $indentifier,
                             'key'				=> $key,
                             'address'			=> $address,
                             'zipCode'			=> $zipcode,
@@ -87,11 +76,10 @@ class DpdHelper
         }
         catch (\Exception $e)
         {
-                echo '<div stlye="color:red; font-weight:bold;">Une erreur s\'est produite lors de la récupération des points-relais. Merci de réessayer.</div>';
-                exit;
+            echo '<div stlye="color:red; font-weight:bold;">Une erreur s\'est produite lors de la récupération des points-relais. Merci de réessayer.</div>';
+            exit;
         }
         $doc_xml = new \SimpleXMLElement($GetPudoList->GetPudoListResult->any);  // parsage XML de la réponse SOAP
-            
         $quality = (int)$doc_xml->attributes()->quality; // indice de qualité de la réponse SOAP
         
         if ($doc_xml->xpath('ERROR')) // si le webservice répond un code erreur, afficher un message d'indisponibilité
@@ -102,10 +90,7 @@ class DpdHelper
                 echo '<div stlye="color:red; font-weight:bold;">Il n\'y a aucun point-relais pour cette adresse. Merci de la modifier.</div>';
             else
             {
-                $filename = 'PICKUPS.xml';
-                $file = $this->exportDir . $filename;
-                //file_put_contents($file, $doc_xml->saveXML(), FILE_APPEND);
-
+                $return = [];
                 $allpudoitems = $doc_xml->xpath('PUDO_ITEMS'); // acceder a la balise pudo_items
                 foreach($allpudoitems as $singlepudoitem) // eclatement des données contenues dans pudo_items
                 {
@@ -113,100 +98,74 @@ class DpdHelper
                     $i=0;
                     foreach($result as $result2)
                     {
-                        $offset = $i;
-                        
-                        $LATITUDE = (float)str_replace(",",".",(string)$result2->LATITUDE);
-                        $LONGITUDE = (float)str_replace(",",".",(string)$result2->LONGITUDE);
+                        // Nombre de points relais à afficher - max 10
+                        if($i == 10) continue;
+                        $i++;
 
-                        $html = '
-                        <div class="pickupElement">
-                            <input type="radio" id="pickup_point'.$offset.'" name="pickup_point" value="'.self::stripAccents((string)$result2->NAME).'|||'.self::stripAccents((string)$result2->ADDRESS1).'  '.self::stripAccents((string)$result2->ADDRESS2).'|||'.$result2->ZIPCODE.'|||'.self::stripAccents((string)$result2->CITY).'|||'.(string)$result2->PUDO_ID.'">
-                            <label class="small" for="pickup_point'.$offset.'"><strong>'.self::stripAccents((string)$result2->NAME).'</strong></label><br/>'.self::stripAccents((string)$result2->ADDRESS1).', '.$result2->ZIPCODE.' '.self::stripAccents((string)$result2->CITY).'<br>
-                            <button class="pictoLink fold" data-on="Replier" data-off="Détails">Détails</button>
-                            ';
-                            
-                        $days=array(1=>'monday',2=>'tuesday',3=>'wednesday',4=>'thursday',5=>'friday',6=>'saturday',7=>'sunday');
-                        $point=array();
-                        $item=(array)$result2;
-                        
-                        if(count($item['OPENING_HOURS_ITEMS']->OPENING_HOURS_ITEM)>0)
+                        $newPr = (object)[];
+                        $newPr->inputValue = self::stripAccents((string)$result2->NAME).'|||'.self::stripAccents((string)$result2->ADDRESS1).'  '.self::stripAccents((string)$result2->ADDRESS2).'|||'.$result2->ZIPCODE.'|||'.self::stripAccents((string)$result2->CITY).'|||'.(string)$result2->PUDO_ID;
+                        $newPr->nomEnseigne = $result2->NAME;
+                        $newPr->adresse1 = $result2->ADDRESS1;
+                        $newPr->adresse2 = $result2->ADDRESS2;
+                        $newPr->adresse3 = $result2->ADDRESS3;
+                        $newPr->codePostal = $result2->ZIPCODE;
+                        $newPr->identifiantRelais = $result2->PUDO_ID;
+                        $newPr->localite = $result2->CITY;
+                        $newPr->latitude = (float)str_replace(',', '.', (string)$result2->LATITUDE);
+                        $newPr->longitude = (float)str_replace(',', '.', (string)$result2->LONGITUDE);
+                        $newPr->distance = $result2->DISTANCE/1000;//en km
+
+                        $newPr->horairesOuvertureLundi = $newPr->horairesOuvertureMardi = $newPr->horairesOuvertureMercredi = $newPr->horairesOuvertureJeudi = $newPr->horairesOuvertureVendredi = $newPr->horairesOuvertureSamedi = $newPr->horairesOuvertureDimanche = '';
+                        if(count($result2->OPENING_HOURS_ITEMS->OPENING_HOURS_ITEM)>0)
                         {
-                            foreach($item['OPENING_HOURS_ITEMS']->OPENING_HOURS_ITEM as $k=>$oh_item)
+                            $listeHoraires = $result2->OPENING_HOURS_ITEMS->OPENING_HOURS_ITEM;
+                            foreach($listeHoraires as $horaire) 
                             {
-                                $oh_item=(array)$oh_item;
-                                $point[$days[$oh_item['DAY_ID']]][]=$oh_item['START_TM'].' - '.$oh_item['END_TM'];
+                                $horaire = (array)$horaire;
+                                switch($horaire['DAY_ID']) {
+                                    case '1' :
+                                        if(!empty($newPr->horairesOuvertureLundi)) $newPr->horairesOuvertureLundi .= ' ';
+                                        $newPr->horairesOuvertureLundi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '2' :
+                                        if(!empty($newPr->horairesOuvertureMardi)) $newPr->horairesOuvertureMardi .= ' ';
+                                        $newPr->horairesOuvertureMardi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '3' :
+                                        if(!empty($newPr->horairesOuvertureMercredi)) $newPr->horairesOuvertureMercredi .= ' ';
+                                        $newPr->horairesOuvertureMercredi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '4' :
+                                        if(!empty($newPr->horairesOuvertureJeudi)) $newPr->horairesOuvertureJeudi .= ' ';
+                                        $newPr->horairesOuvertureJeudi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '5' :
+                                        if(!empty($newPr->horairesOuvertureVendredi)) $newPr->horairesOuvertureVendredi .= ' ';
+                                        $newPr->horairesOuvertureVendredi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '6' :
+                                        if(!empty($newPr->horairesOuvertureSamedi)) $newPr->horairesOuvertureSamedi .= ' ';
+                                        $newPr->horairesOuvertureSamedi .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                    case '7' :
+                                        if(!empty($newPr->horairesOuvertureDimanche)) $newPr->horairesOuvertureDimanche .= ' ';
+                                        $newPr->horairesOuvertureDimanche .= $horaire['START_TM'].'-'.$horaire['END_TM'];
+                                        break;
+                                }
                             }
                         }
-                        
-                        if(empty($point['monday'])){$h1 = 'Fermé';}
-                        else{if(empty($point['monday'][1])){$h1 = $point['monday'][0];}
-                                else{$h1 = $point['monday'][0].' & '.$point['monday'][1];}}
-                                
-                        if(empty($point['tuesday'])){$h2 = 'Fermé';}
-                            else{if(empty($point['tuesday'][1])){$h2 = $point['tuesday'][0];}
-                                else{$h2 = $point['tuesday'][0].' & '.$point['tuesday'][1];}}
-                                
-                        if(empty($point['wednesday'])){$h3 = 'Fermé';}
-                            else{if(empty($point['wednesday'][1])){$h3 = $point['wednesday'][0];}
-                                else{$h3 = $point['wednesday'][0].' & '.$point['wednesday'][1];}}
-                                
-                        if(empty($point['thursday'])){$h4 = 'Fermé';}
-                            else{if(empty($point['thursday'][1])){$h4 = $point['thursday'][0];}
-                                else{$h4 = $point['thursday'][0].' & '.$point['thursday'][1];}}
-                                
-                        if(empty($point['friday'])){$h5 = 'Fermé';}
-                            else{if(empty($point['friday'][1])){$h5 = $point['friday'][0];}
-                                else{$h5 = $point['friday'][0].' & '.$point['friday'][1];}}
-                                
-                        if(empty($point['saturday'])){$h6 = 'Fermé';}
-                            else{if(empty($point['saturday'][1])){$h6 = $point['saturday'][0];}
-                                else{$h6 = $point['saturday'][0].' & '.$point['saturday'][1];}}
-                                
-                        if(empty($point['sunday'])){$h7 = 'Fermé';}
-                            else{if(empty($point['sunday'][1])){$h7 = $point['sunday'][0];}
-                                else{$h7 = $point['sunday'][0].' & '.$point['sunday'][1];}}
-                        
-                        $html .= '<div id="relaydetail'.$offset.'" class="foldable"><div class="relayDetails">
-                                    <strong>'.$result2->NAME.'</strong></br>
-                                    '.$result2->ADDRESS1.'</br>';
-                                    if (!empty($result2->ADDRESS2)) $html .= $result2->ADDRESS2.'</br>';
-                                    $html .= $result2->ZIPCODE.'  '.$result2->CITY.'<br/>';
-                                    if (!empty($result2->LOCAL_HINT)) $html .= '<p>info  :  '.$result2->LOCAL_HINT.'</p>';
+                        if(empty($newPr->horairesOuvertureLundi)) $newPr->horairesOuvertureLundi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureMardi)) $newPr->horairesOuvertureMardi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureMercredi)) $newPr->horairesOuvertureMercredi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureJeudi)) $newPr->horairesOuvertureJeudi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureVendredi)) $newPr->horairesOuvertureVendredi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureSamedi)) $newPr->horairesOuvertureSamedi = 'Fermé';
+                        if(empty($newPr->horairesOuvertureDimanche)) $newPr->horairesOuvertureDimanche = 'Fermé';
 
-                        $html .= '<div class="boxhoraires">
-                                    <div>Horaires</div>
-                                    <p><strong>Lundi : </strong>'.$h1.'</p>
-                                    <p><strong>Mardi : </strong>'.$h2.'</p>
-                                    <p><strong>Mercreci : </strong>'.$h3.'</p>
-                                    <p><strong>Jeudi : </strong>'.$h4.'</p>
-                                    <p><strong>Vendredi : </strong>'.$h5.'</p>
-                                    <p><strong>Samedi : </strong>'.$h6.'</p>
-                                    <p><strong>Dimanche : </strong>'.$h7.'</p>
-                                </div>';
-
-                        $html .= '<div class="boxinfos">
-                                    <div>Plus d\'infos</div>
-                                    <div><h5>Distance en KM  :  </h5><strong>'.sprintf("%01.2f", $result2->DISTANCE/1000).' km </strong></div>
-                                    <div><h5>Identifiant du relais :  </h5><strong>'.(string)$result2->PUDO_ID.'</strong></div>';
-                                if (count($result2->HOLIDAY_ITEMS->HOLIDAY_ITEM) > 0)
-                                {
-                                    foreach ($result2->HOLIDAY_ITEMS->HOLIDAY_ITEM as $holiday_item)
-                                    {
-                                        $holiday_item = (array)$holiday_item;
-                                        $html .= '<div><h4>Période de fermeture : </h4> '.$holiday_item['START_DTM'].' - '.$holiday_item['END_DTM'].'</div>';
-                                    }
-                                }	
-                            $html .= '</div>';
-                        
-                        $html .= '</div></div></div>'; // relaydetail
-                        echo $html;
-                        
-                        $i++;
-                        $hd1 = $hd2 = $hd3 = $hd4 = $hd5 = $hd6 = $hd7 = $h1 = $h2 = $h3 = $h4 = $h5 = $h6 = $h7 = null;
-                        if($i == 10) // Nombre de points relais à afficher - max 10
-                            exit();
+                        $return[] = $newPr;
                     }
                 }
+                return $return;
             }
         }
 	}

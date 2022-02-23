@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Payment\GatewayConfig;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UpstreamPayWidget
 {
+    private $entityManager;
     private $session;
     private $router;
     private $upstreampay_base_url;
@@ -17,17 +20,22 @@ class UpstreamPayWidget
     public $api_key;
     public $entity_id;
 
-    public function __construct(SessionInterface $session, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router)
     {
+        $this->entityManager = $entityManager;
         $this->session = $session;
         $this->router = $router;
-
-        // à récupére par rapport à la méthode de paiement ! dans `sylius_gateway_config`
+        
+        // à récupérer par rapport à la méthode de paiement ! dans `sylius_gateway_config`
         $this->upstreampay_base_url = 'https://api.preprod.upstreampay.com/';
-        $this->client_id = '0oa2y332wdiqfYIje417';
-        $this->client_secret = '5d67RZR3KgXg_5bJNYoXoC9IodZvrj98uxnNDj3q';
-        $this->api_key = '20d52d3a-f0de-434e-9b15-6c6d642faead';
-        $this->entity_id = 'ead278b3-8f52-4257-8e46-dea8813461a8';
+        
+        if(($gatewayConfig = $this->entityManager->getRepository(GatewayConfig::class)->findOneBy(['gatewayName' => 'upstream_pay'])) && ($config = $gatewayConfig->getConfig()))
+        {
+            $this->client_id = $config['client_id'];//'0oa2y332wdiqfYIje417';
+            $this->client_secret = $config['client_secret'];//'5d67RZR3KgXg_5bJNYoXoC9IodZvrj98uxnNDj3q';
+            $this->api_key = $config['api_key'];//'20d52d3a-f0de-434e-9b15-6c6d642faead';
+            $this->entity_id = $config['entity_id'];//'ead278b3-8f52-4257-8e46-dea8813461a8';
+        }
     }
 
     public function getToken()
@@ -67,38 +75,35 @@ class UpstreamPayWidget
     public function getUpStreamPaySession($order = null)
     {
         error_log("getUpStreamPaySession");
-        if(is_null($this->session->get('upstreampay_session')) || empty($this->session->get('upstreampay_session')) || is_null($this->session->get('upstreampay_session_id')) || empty($this->session->get('upstreampay_session_id')))
-        //if(true);
+        $createSessionUrl = $this->upstreampay_base_url . $this->entity_id . '/sessions/create';
+        $ch = curl_init($createSessionUrl);
+        $customHeaders = [
+            'Content-Type: application/json',
+            'x-api-key: '.$this->api_key,
+            'Authorization: Bearer '.$this->getToken()
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
+        
+        $data = $this->getFormattedData($order);
+        error_log($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        
+        $json_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        error_log("http_code : $http_code");
+        curl_close($ch);
+        
+        $response = json_decode($json_response);
+        if(isset($response->id))
         {
-            $createSessionUrl = $this->upstreampay_base_url . $this->entity_id . '/sessions/create';
-            $ch = curl_init($createSessionUrl);
-            $customHeaders = [
-                'Content-Type: application/json',
-                'x-api-key: '.$this->api_key,
-                'Authorization: Bearer '.$this->getToken()
-            ];
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
-            
-            $data = $this->getFormattedData($order);
-            error_log($data);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            
-            $json_response = curl_exec($ch);
-            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            error_log("http_code : $http_code");
-            curl_close($ch);
-            
-            $response = json_decode($json_response);
-            if(isset($response->id))
-            {
-                $this->session->set('upstreampay_session', $json_response);
-                $this->session->set('upstreampay_session_id', $response->id);
-            }
-            else error_log($json_response);
+            $this->session->set('upstreampay_session_id', $response->id);
+            return $json_response;
         }
-        return $this->session->get('upstreampay_session');
+        else error_log($json_response);
+
+        return;
     }
     
     public function getSessionId()
@@ -141,6 +146,7 @@ class UpstreamPayWidget
     public function getFormattedData($order)
     {
         $data = [];
+        $urlHook = $urlSuccess = $urlFailure = '';
         $customer = $order->getCustomer();
         foreach($order->getPayments() as $payment)
         {
@@ -579,8 +585,9 @@ class UpstreamPayWidget
                     }
                 ]
                 }
-            }';
-            return $datavalid;
+            }'
+        ;
+        return $datavalid;
     }
     
 }

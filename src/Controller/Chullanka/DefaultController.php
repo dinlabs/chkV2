@@ -15,6 +15,10 @@ use App\Form\Type\RmaType;
 use App\Service\GinkoiaHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
+use SM\Factory\FactoryInterface;
+use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,8 +53,31 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(GinkoiaHelper $ginkoiaHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper)
     {
+
+        //$stateMachineFactory = $this->container->get('sm.factory');
+        //dd($stateMachineFactory);
+
+        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
+        //dd($order);
+
+        
+
+        $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+
+
+
+        //$em->persist($order);
+        
+        //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
+        $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+        dd($stateMachineBis->getPossibleTransitions());
+
+        echo "oui !";
+
+        die;
+
         //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(10);
         //echo $ginkoiaHelper->export($order);
 
@@ -177,7 +204,7 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/upstreampayreturn", name="chk_upstream_payment_return")
      */
-    public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, SessionInterface $session)
+    public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
         if($request->get('hook'))
         {
@@ -186,28 +213,57 @@ final class DefaultController extends AbstractController
 
         if($request->get('success'))
         {
-            //echo "SUCCESS !";
+            error_log('SUCCESS !');
             if($infos = $upstreamPayWidget->getSessionInfos())
             {
+                error_log(print_r($infos, true));
                 $return = $infos[0];
-                dd($return);
 
-                $okay = true;
-                if($okay)
+                /*
+                stdClass Object
+                (
+                    [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                    [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
+                    [partner] => braintree
+                    [method] => paypal
+                    [status] => stdClass Object
+                            [action] => AUTHORIZE
+                            [state] => SUCCESS
+                            [code] => SUCCEEDED
+                    [date] => 2022-02-23T16:52:15.646668501
+                    [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                    [plugin_result] => stdClass Object
+                            [status] => 1000
+                            [amount] => 16
+                            [logs] => stdClass Object
+                                    [cardHolder] => payer@example.com
+                                    [status] => authorized
+                 */
+                if($return->status && ($return->status->state == 'SUCCESS'))
                 {
-                    //todo: complete Order!
-                    /*$order = $this->cartContext->getCart();
-                    $order->setState('new');
-                    $order->setCheckoutState('completed');
-                    $order->setPaymentState('paid');
+                    $order = $this->cartContext->getCart();
+                    
+                    $order->setNotes('Revenu avec succès de la plateforme de paiement : '.$return->method);
 
+                    //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
+                    $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+                    $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+                    //$em->persist($order);
+                    
+                    //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
+                    $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                    $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
+
+                    $payment = $order->getPayments()->first();
+                    $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
+                    $paymentStateMachine->apply('complete');
+                    
                     $em = $this->container->get('doctrine')->getManager();
                     $em->persist($order);
-                    $em->flush();*/
-
+                    $em->flush();
                 }
             }
-            //return $this->redirectToRoute('sylius_shop_order_thank_you');
+            return $this->redirectToRoute('sylius_shop_order_thank_you');
         }
 
         if($request->get('failure'))

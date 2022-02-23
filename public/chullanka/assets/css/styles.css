@@ -751,12 +751,15 @@ body.checkout { background:var(--bg1); }
 .checkout #sylius-shipping-methods input[type='radio'] + label.small::before { width:20px; height:20px; }
 .checkout #sylius-shipping-methods input[type='radio']:checked + label.small::after { left:5px; width:14px; height:14px; }
 
-.checkout #sylius-shipping-methods #pickupList { padding:1em 3em; }
-.checkout #sylius-shipping-methods #pickupList .pickupElement { padding-left:1em; margin-bottom:1em; }
-.checkout #sylius-shipping-methods #pickupList .pickupElement label { margin-left:-2em; }
-.checkout #sylius-shipping-methods #pickupList .pickupElement .relayDetails { display:none; border:1px solid var(--primary); padding:1em; margin-bottom:2em; }
-.checkout #sylius-shipping-methods #pickupList .pickupElement .shown .relayDetails { display:block; clear:both; }
-.checkout #sylius-shipping-methods #pickupList .pickupElement .relayDetails .boxhoraires { padding:1em 0; }
+.checkout #getPickups .form { display:grid; grid-template-columns:3fr 1fr; }
+.checkout #getPickups .form input { width:100%; padding:.5em 1em; }
+
+.checkout #getPickups #pickupList { padding:1em 0; }
+.checkout #getPickups #pickupList .pickupElement { padding-left:3em; margin-bottom:1em; }
+.checkout #getPickups #pickupList .pickupElement label { margin-left:-2em; }
+.checkout #getPickups #pickupList .pickupElement .relayDetails { display:none; border:1px solid var(--primary); padding:1em; margin-bottom:2em; }
+.checkout #getPickups #pickupList .pickupElement .shown .relayDetails { display:block; clear:both; }
+.checkout #getPickups #pickupList .pickupElement .relayDetails .boxhoraires { padding:1em 0; }
 
 .checkout #sylius-shipping-methods .storelist { padding-left:50px; }
 .checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }
@@ -962,6 +965,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #entreprise .team h3 { color:inherit; text-shadow:none; }
 
     .checkout #cartProducts .cartItem .inside { grid-template-columns:1fr 3fr; gap:10px; }
+    .checkout #getPickups .form { display:grid; grid-template-columns:3fr 1fr 2fr 1fr; }
 
     .customer .dashboard { column-count:2; }
     .customer .dashboard > * { display:inline-block; }

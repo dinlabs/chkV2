@@ -1,0 +1,41 @@
+{% if pickups|length > 0 %}
+    {% for pickup in pickups %}
+    <div class="pickupElement">
+        <input type="radio" id="pickup_point{{ loop.index }}" name="pickup_point" value="{{ pickup.inputValue }}">
+        <label class="small" for="pickup_point{{ loop.index }}"><strong>{{ pickup.nomEnseigne }}</strong></label>
+        <br>{{ pickup.adresse1 ~ ', ' ~ pickup.codePostal ~ ' ' ~ pickup.localite }}<br>
+        <button class="pictoLink fold" data-on="Replier" data-off="Détails">Détails</button>
+        
+        <div id="relaydetail{{ loop.index }}" class="foldable">
+            <div class="relayDetails">
+                <strong>{{ pickup.nomEnseigne }}</strong><br>
+                {{ pickup.adresse1 }}<br>
+                {% if pickup.adresse2 != '' %}{{ pickup.adresse2 }}<br>{% endif %}
+                {% if pickup.adresse3 != '' %}{{ pickup.adresse3 }}<br>{% endif %}
+                {{ pickup.codePostal ~ ' ' ~ pickup.localite }}<br>
+
+                <div class="boxhoraires">
+                    <div>Horaires</div>
+                    <p><strong>Lundi : </strong>{{ pickup.horairesOuvertureLundi }}</p>
+                    <p><strong>Mardi : </strong>{{ pickup.horairesOuvertureMardi }}</p>
+                    <p><strong>Mercreci : </strong>{{ pickup.horairesOuvertureMercredi }}</p>
+                    <p><strong>Jeudi : </strong>{{ pickup.horairesOuvertureJeudi }}</p>
+                    <p><strong>Vendredi : </strong>{{ pickup.horairesOuvertureVendredi }}</p>
+                    <p><strong>Samedi : </strong>{{ pickup.horairesOuvertureSamedi }}</p>
+                    <p><strong>Dimanche : </strong>{{ pickup.horairesOuvertureDimanche }}</p>
+                </div>
+
+                <div class="boxinfos">
+                    <div>Plus d'infos</div>
+                    <div><h5>Distance en KM : </h5><strong>{{ pickup.distance|number_format(3, ',') }} km </strong></div>
+                    <div><h5>Identifiant du relais :  </h5><strong>{{ pickup.identifiantRelais }}</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    {% if trouble is not null %}
+    <strong style="color:red;">{{ trouble }}</strong>
+    {% endif %}
+{% endif %}
