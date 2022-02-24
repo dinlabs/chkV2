@@ -251,6 +251,9 @@ sylius_ui:
 
         sylius.shop.cart.summary.totals:
             blocks:
+                fidelity_coupon:
+                    template: "@SyliusShop/Cart/Summary/_fidelity_coupon.html.twig"
+                    priority: 22
                 totals_legacy:
                     template: "@SyliusUi/Block/_legacySonataEvent.html.twig"
                     context:

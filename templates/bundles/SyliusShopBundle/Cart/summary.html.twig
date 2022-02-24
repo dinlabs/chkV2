@@ -16,7 +16,7 @@
                 {{ sylius_template_event('sylius.shop.cart.items', {'cart': cart, 'form': form}) }}
             </div>
             <div class="five wide column">
-                {{ sylius_template_event('sylius.shop.cart.summary', {'cart': cart}) }}
+                {{ sylius_template_event('sylius.shop.cart.summary', {'cart': cart, 'form': form}) }}
             </div>
         </div>
         {#{ sylius_template_event('sylius.shop.cart.suggestions', {'cart': cart}) }#}

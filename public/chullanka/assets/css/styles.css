@@ -700,8 +700,20 @@ body.checkout { background:var(--bg1); }
 .checkout #cartProducts .cartItem .actions-line { display:flex; justify-content:space-between; margin-top:.5em; border-top:2px dashed var(--default); padding-top:.5em; }
 .checkout #cartProducts .cartItem .actions-line button { background:none; color:var(--primary); font-weight:700; text-decoration:underline; cursor:pointer; }
 
+.checkout.cart #fidelity_coupon { padding-bottom:.5em; border-bottom:2px dashed var(--default); }
+.checkout.cart #fidelity_coupon .pictoLink { width:calc(100% + 1em); margin:0 -1em 0 -.5em; text-align:initial; font-size:.85em; font-weight:700; text-decoration:underline; }
+.checkout.cart #fidelity_coupon .foldable.shown { margin-bottom:0; }
+.checkout.cart #fidelity_coupon .fidelity { padding-bottom:1em; }
+.checkout.cart #fidelity_coupon .fidelity .inner { display:flex; justify-content:space-around; align-items:center; gap:15px; padding-right:2em; font-weight:700; }
+
+.checkout.cart #fidelity_coupon #sylius-coupon { padding-top:1em; }
+.checkout.cart #fidelity_coupon #sylius-coupon input { border-width:2px; width:100%; margin:1em 0; }
+.checkout.cart #fidelity_coupon #sylius-coupon button { background:none; color:var(--primary); font-weight:700; text-decoration:underline; cursor:pointer; }
+
 .checkout #sylius-cart-update { display:block; margin-left:auto; }
 .checkout #btnToCheckout { background:var(--primary); width:100%; }
+
+.checkout.cart .getAdvice .btnCall { background:var(--default); }
 
 
 .checkout .steps { display: inline-flex; flex-direction:row; align-items:stretch; margin:1em 0; border-radius:5px; border:1px solid var(--default); }
@@ -737,29 +749,42 @@ body.checkout { background:var(--bg1); }
 .checkout #sylius-billing-address { padding:1em 2em; margin-bottom:1em; }
 .checkout #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em 2em; }
 
+.checkout .ui.fluid.dropdown { background:var(--primary) !important; color: #fff !important; }
+.checkout .ui.fluid.dropdown > .text, .checkout .ui.active.search.dropdown input.search, .checkout .ui.active.search.dropdown input.search:focus + .text { color: #fff !important; }
+
+.checkout .insert.addresses { padding-bottom:0; }
+
+.checkout #sylius-checkout-subtotal + .btn.primary { width:100%; height:3.75em; font-size:1em; }
+
 .checkout #sylius-shipping-methods .insert { padding:1em 2em; }
 .checkout #sylius-shipping-methods .shippingType { padding-bottom:1em; font-size:1.2em; font-family:var(--altFont); text-transform:capitalize; }
 .checkout #sylius-shipping-methods .item { padding:1em 0 1em 50px; }
 
 .checkout #sylius-shipping-methods input[type='radio'] { display:none; }
-.checkout #sylius-shipping-methods input[type='radio'] + label { position:relative; margin-left:-50px; padding-left:50px; font-weight:700; cursor:pointer; }
-.checkout #sylius-shipping-methods input[type='radio'] + label.disabled { opacity:.5; cursor:not-allowed; }
-.checkout #sylius-shipping-methods input[type='radio'] + label::before { content:''; position:absolute; left:0; top:50%; background:var(--bg0); width:34px; height:34px; border:2px solid var(--default); border-radius:50%; transform:translateY(-50%); cursor:pointer; }
-.checkout #sylius-shipping-methods input[type='radio']:checked + label::after { content:''; position:absolute; left:8px; top:50%; background:var(--primary); border-radius:50%; width:22px; height:22px; transform:translateY(-50%); }
+.checkout #sylius-shipping-methods input[type='radio'] + label:not(.btn) { position:relative; margin-left:-50px; padding-left:50px; font-weight:700; cursor:pointer; }
+.checkout #sylius-shipping-methods input[type='radio'] + label.disabled:not(.btn) { opacity:.5; cursor:not-allowed; }
+.checkout #sylius-shipping-methods input[type='radio'] + label:not(.btn)::before { content:''; position:absolute; left:0; top:50%; background:var(--bg0); width:34px; height:34px; border:2px solid var(--default); border-radius:50%; transform:translateY(-50%); cursor:pointer; }
+.checkout #sylius-shipping-methods input[type='radio']:checked + label:not(.btn)::after { content:''; position:absolute; left:8px; top:50%; background:var(--primary); border-radius:50%; width:22px; height:22px; transform:translateY(-50%); }
 
 .checkout #sylius-shipping-methods input[type='radio'] + label.small { padding-left:2em; }
 .checkout #sylius-shipping-methods input[type='radio'] + label.small::before { width:20px; height:20px; }
 .checkout #sylius-shipping-methods input[type='radio']:checked + label.small::after { left:5px; width:14px; height:14px; }
 
-.checkout #getPickups .form { display:grid; grid-template-columns:3fr 1fr; }
+.checkout #getPickups { padding-top:1em; }
+.checkout #getPickups .form { display:grid; grid-template-columns:3fr 1fr; padding-top:1em; }
 .checkout #getPickups .form input { width:100%; padding:.5em 1em; }
 
 .checkout #getPickups #pickupList { padding:1em 0; }
-.checkout #getPickups #pickupList .pickupElement { padding-left:3em; margin-bottom:1em; }
-.checkout #getPickups #pickupList .pickupElement label { margin-left:-2em; }
-.checkout #getPickups #pickupList .pickupElement .relayDetails { display:none; border:1px solid var(--primary); padding:1em; margin-bottom:2em; }
+.checkout #getPickups #pickupList .pickupElement { position:relative; margin-bottom:1em; }
+.checkout #getPickups #pickupList .pickupElement .head { margin-top:-1em; padding-bottom:1em; }
+.checkout #getPickups #pickupList .pickupElement .fold { position:absolute; right:30px; bottom:30px; }
+.checkout #getPickups #pickupList .pickupElement .shown { margin:0; padding:0; }
 .checkout #getPickups #pickupList .pickupElement .shown .relayDetails { display:block; clear:both; }
-.checkout #getPickups #pickupList .pickupElement .relayDetails .boxhoraires { padding:1em 0; }
+.checkout #getPickups #pickupList .pickupElement .relayDetails { display:none; }
+.checkout #getPickups #pickupList .pickupElement .relayDetails .boxhoraires { margin:2em 0; }
+
+.checkout #sylius-shipping-methods .pickupElement .relayDetails input[type='radio']:checked + label.btn { background:var(--primary); }
+
 
 .checkout #sylius-shipping-methods .storelist { padding-left:50px; }
 .checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }

@@ -5,14 +5,15 @@
     <div class="ui grid">
         <div class="center aligned sixteen wide column">
             <h1 class="ui icon header">
-                {% set lastPayment = order.payments.last() %}
                 <i class="circular rocket icon"></i>
-                <div class="content" id="sylius-thank-you" {{ sylius_test_html_attribute('thank-you') }}>
-                    {{ 'sylius.ui.thank_you'|trans }}
-                    <div class="sub header">{{ 'sylius.ui.placed_an_order'|trans }}</div>
-                </div>
+                {{ 'sylius.ui.thank_you'|trans }}
             </h1>
 
+            <div class="content" id="sylius-thank-you" {{ sylius_test_html_attribute('thank-you') }}>
+                <div class="sub header">{{ 'sylius.ui.placed_an_order'|trans }}</div>
+            </div>
+
+            {% set lastPayment = order.payments.last() %}
             {{ sylius_template_event('sylius.shop.order.thank_you.after_message', {'order': order}) }}
 
             {% if lastPayment != false %}

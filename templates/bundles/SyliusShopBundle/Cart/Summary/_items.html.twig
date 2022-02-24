@@ -10,31 +10,5 @@
     {% for key, item in cart.items %}
         {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id, 'loop_index': loop.index} %}
     {% endfor %}
-    <button type="submit" class="btn icon" id="sylius-cart-update" {{ sylius_test_html_attribute('cart-update-button') }} form="{{ form.vars.id }}"><i class="save icon"></i> {{ 'sylius.ui.update_cart'|trans }}</button>
-</div>
-
-<div class="insert">
-    <h3>Un code promo, des points de fidélité ?</h3>
-
-    {% if app.user and app.user.customer and app.user.customer.chullpoints > 500 %}
-    {% set customer = app.user.customer %}
-    <p>Avec vos <strong>{{ customer.chullpoints }}</strong> Chullpoints</p>
-    <div style="display:flex; justify-content:space-around; align-items:center;">
-        <div>{{ customer.reduction ~ '€' }}</div>
-        <div>
-            <a href="{{ path('chk_ajax_chullpoints') }}">
-            {% if cart.chullpoints %}
-            Ne plus utiliser mes points
-            {% else %}
-            Utiliser mes points pour ce panier
-            {% endif %}
-            </a>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if form.promotionCoupon is defined %}
-        <br><br><br>
-        {{ sylius_template_event('sylius.shop.cart.coupon', {'cart': cart, 'form': form, 'main_form': form.vars.id}) }}
-    {% endif %}
+    {#<button type="submit" class="btn icon" id="sylius-cart-update" {{ sylius_test_html_attribute('cart-update-button') }} form="{{ form.vars.id }}"><i class="save icon"></i> {{ 'sylius.ui.update_cart'|trans }}</button>#}
 </div>

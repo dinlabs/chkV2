@@ -11,4 +11,8 @@
         <p>{{ method.description }}</p>
     </div>
     {% endif %}
+
+    {% if method.code == 'home_express' or method.code == 'pickup_express' %}
+    <p><small>* Livraison en France Métropolitaine – Hors livraison à l'international</small></p>
+    {% endif %}
 </div>

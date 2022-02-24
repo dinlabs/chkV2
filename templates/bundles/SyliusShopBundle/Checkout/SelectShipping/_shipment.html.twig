@@ -42,11 +42,9 @@
                 {% include '@SyliusShop/Checkout/SelectShipping/_choice.html.twig' with {'form': choice_form, 'method': method, 'fee': fee} %}
             {% endfor %}
 
-            {% if where == 'home' %}
-            <small>* Livraison en France Métropolitaine – Hors livraison à l'international</small>
-            {% elseif where == 'pickup' %}
+            {% if where == 'pickup' %}
             <div id="getPickups">
-                <p>Trouvez un point-relais près de chez vous</p>
+                <p><strong>Trouvez un point-relais près de chez vous</strong></p>
                 <div class="form">
                     <input type="text" id="pickup_address" placeholder="votre adresse" value="{{ order.shippingAddress.street }}">
                     <input type="text" id="pickup_zip" placeholder="code postal" value="{{ order.shippingAddress.postcode }}">

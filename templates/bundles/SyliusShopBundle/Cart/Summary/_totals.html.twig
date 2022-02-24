@@ -5,7 +5,7 @@
 {% set taxExcluded = sylius_order_tax_excluded(cart) %}
 
 <div class="insert">
-    {{ sylius_template_event('sylius.shop.cart.summary.totals', {'cart': cart}) }}
+    {{ sylius_template_event('sylius.shop.cart.summary.totals', {'cart': cart, 'form': form}) }}
 
     <table class="ui very basic table">
         <tbody>
@@ -62,3 +62,5 @@
 
     <a href="{{ path('sylius_shop_checkout_start') }}" id="btnToCheckout" class="btn icon button"><i class="check icon"></i> {{ 'sylius.ui.checkout'|trans }}</a>
 </div>
+
+{{ render(path('chk_ajax_getadviceform')) }}

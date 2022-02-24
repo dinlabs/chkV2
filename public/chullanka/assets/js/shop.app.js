@@ -45133,6 +45133,10 @@
 	  jquery('form.loadable button[type=submit]').on('click', function (event) {
 	    jquery(event.currentTarget).closest('form').addClass('loading');
 	  });
+	  jquery('button[type=submit][form]').on('click', function (event) {
+		var _tgt = jquery(event.currentTarget).attr('form');
+	    jquery('form#' + _tgt).addClass('loading');
+	  });
 	  jquery('.loadable.button').on('click', function (event) {
 	    jquery(event.currentTarget).addClass('loading');
 	  });

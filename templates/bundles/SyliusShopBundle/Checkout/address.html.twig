@@ -9,10 +9,10 @@
 
     <div class="ui stackable grid">
         <div class="ten wide column">
-            <div class="insert">
+            <div class="insert addresses">
                 {{ sylius_template_event('sylius.shop.checkout.address.before_form', {'order': order}) }}
 
-                {{ form_start(form, {'action': path('sylius_shop_checkout_address'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+                {{ form_start(form, {'action': path('sylius_shop_checkout_address'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
                     {{ form_errors(form) }}
                     <input type="hidden" name="_method" value="PUT" />
 
@@ -20,7 +20,7 @@
                     
                     {{ sylius_template_event('sylius.shop.checkout.address.before_navigation', {'order': order}) }}
 
-                    {% include '@SyliusShop/Checkout/Address/_navigation.html.twig' %}
+                    {#% include '@SyliusShop/Checkout/Address/_navigation.html.twig' %#}
 
                     {{ form_row(form._token) }}
                 {{ form_end(form, {'render_rest': false}) }}

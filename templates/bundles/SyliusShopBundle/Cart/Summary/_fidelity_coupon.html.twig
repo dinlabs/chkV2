@@ -1,0 +1,23 @@
+<div id="fidelity_coupon">
+    <button class="pictoLink fold">Un code promo, des points de fidélité ?</button>
+    <div class="foldable">
+
+        {% if app.user and app.user.customer and app.user.customer.chullpoints > 500 %}
+        {% set customer = app.user.customer %}
+        <div class="fidelity">
+            <p><strong>Avec vos {{ customer.chullpoints }} Chullpoints</strong></p>
+            <div class="inner">
+                <div class="chullpts">
+                    <svg class="svg-icon" role="img" style="width:87.333px; height:36.958px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#chullpoints') }}"/></svg>
+                    <span>{{ customer.reduction ~ '€' }}</span>
+                </div>
+                <a href="{{ path('chk_ajax_chullpoints') }}">{% if cart.chullpoints %}Ne plus utiliser mes points{% else %}Utiliser mes points pour ce panier{% endif %}</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if form.promotionCoupon is defined %}
+            {{ sylius_template_event('sylius.shop.cart.coupon', {'cart': cart, 'form': form, 'main_form': form.vars.id}) }}
+        {% endif %}
+    </div>
+</div>

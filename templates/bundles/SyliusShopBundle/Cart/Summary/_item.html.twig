@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="actions-line">
-        <span></span>
+        <button type="submit" {{ sylius_test_html_attribute('cart-update-button') }} form="{{ main_form }}">Modifier</button>
         <form action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             <input type="hidden" name="_csrf_token" value="{{ csrf_token(item.id) }}" />

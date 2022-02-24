@@ -1,0 +1,10 @@
+<div id="sylius-coupon" {{ sylius_test_html_attribute('cart-promotion-coupon') }}>
+    <p><strong>Votre code promo</strong></p>
+    <div class="coupon action input">
+        {{ form_widget(form.promotionCoupon, sylius_test_form_attribute('cart-promotion-coupon-input')|sylius_merge_recursive({'attr': {'form': main_form, 'placeholder': 'sylius.ui.enter_your_code'|trans~'...'}})) }}
+
+        <button type="submit" id="sylius-save" {{ sylius_test_html_attribute('apply-coupon-button') }} form="{{ main_form }}">Appliquer le code pour ce panier</button>
+    </div>
+    <br>
+    {{ form_errors(form.promotionCoupon) }}
+</div>

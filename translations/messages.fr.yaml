@@ -95,6 +95,7 @@ sylius:
   ui:
     your_shopping_cart: 'Mon panier'
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
+    checkout: 'Valider mon panier'
 
 bitbag_sylius_elasticsearch_plugin:
   ui:
