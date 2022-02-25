@@ -14,9 +14,10 @@ class UpstreamPayWidget
     private $entityManager;
     private $session;
     private $router;
-    private $upstreampay_base_url;
     private $client_id;
     private $client_secret;
+    private $upstreampay_session;
+    public $upstreampay_base_url;
     public $api_key;
     public $entity_id;
 
@@ -98,6 +99,7 @@ class UpstreamPayWidget
         $response = json_decode($json_response);
         if(isset($response->id))
         {
+            $this->upstreampay_session = $json_response;
             $this->session->set('upstreampay_session_id', $response->id);
             return $json_response;
         }
@@ -110,7 +112,7 @@ class UpstreamPayWidget
     {
         if(is_null($this->session->get('upstreampay_session_id')) || empty($this->session->get('upstreampay_session_id')))
         {
-            $upstreampay_session = json_decode($this->session->get('upstreampay_session'));
+            $upstreampay_session = json_decode($this->upstreampay_session);
             $this->session->set('upstreampay_session_id', $upstreampay_session->id);
         }
         return $this->session->get('upstreampay_session_id');
@@ -140,6 +142,7 @@ class UpstreamPayWidget
     
             return json_decode($json_response);
         }
+        else error_log("pas de session ID");
         return false;
     }
 
@@ -233,8 +236,11 @@ class UpstreamPayWidget
                     }
 
                     // shipment_lines
+                    $delivery_point_name = '';
                     if($order->hasShipments())
                     {
+                        $shipment = $order->getShipments()->first();
+                        $shipmethod = $shipment->getMethod();
                         $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
                         $taxAmount = .2;
                         $shipping = $shipInclTax / (1 + $taxAmount);
@@ -246,10 +252,13 @@ class UpstreamPayWidget
                             'amount' => round($shipTVA, 2)
                         ];
 
+                        $delivery_point_name = explode('-', $shipmethod->getCode());
+                        $delivery_point_name = $delivery_point_name[0];
+
                         $item_line = [
                             'type_code' => 'shipping_fees',
-                            'sku_reference' => '',
-                            'name' => '',
+                            'sku_reference' => $shipmethod->getCode(),
+                            'name' => $shipmethod->getName(),
                             'price' => $shipInclTax,
                             'quantity' => 1,
                             'amount' => $shipInclTax,
@@ -280,18 +289,28 @@ class UpstreamPayWidget
                         'item_lines' => $item_lines
                     ];
 
-                    
+                    //availables gender values
+                    $genders = ['u' => 'unknown', 'm' => 'male', 'f' => 'female'];
+                    $gender = 'unknown';
+                    if(!empty($customer->getGender()))
+                    {
+                        $gender = $genders[ $customer->getGender() ];
+                    }
+
                     $address = $order->getBillingAddress();
                     $customer_lines = [
                         'reference' => 'chk_customer_' . $customer->getId(), //utilisé pour réafficher des paiements la deuxième fois
                         'type_code' => 'customer',
                         'company_name' => $address->getCompany(),
-                        'gender_cod' => $customer->getGender(),
+                        'gender_code' => $gender,
                         'first_name' => $customer->getFirstname(),
                         'last_name' => $customer->getLastname(),
                         'birthdate' => $customer->getBirthday()->format('Y-m-d'),
+                        'ip' => $order->getCustomerIp(),
                         'locale_code' => 'fr_FR',
                         'billing_address' => [
+                            'delivery_point_name' => $delivery_point_name,
+                            'gender_code' => $gender,
                             'first_name' => $address->getFirstname(),
                             'last_name' => $address->getLastname(),
                             'address_lines' => [ $address->getStreet() ],
@@ -351,6 +370,38 @@ class UpstreamPayWidget
         //echo "<pre>";print_r($data);die;
         $json = str_replace('\/', '/', json_encode($data));
         return $json;
+
+
+        /*
+        Pour FLOA (dev du plugin en cours) voici les champs qui seront obligatoires/nécessaires pour transmission à FLOA dans le cadre du paiement 3X et limiter le re-saisie de l’acheteur sur le formulaire suivant
+Customer
+    reference
+    gender_code
+    first_name
+    last_name
+    birthdate
+Adress
+    mobile_phone
+    email
+    address_lines
+    city
+    postal_code
+    country_code
+Order
+    reference
+    amount
+    currency_code
+Items_lines
+    type_code
+    price
+    quantity
+    amount
+Tax_lines
+    Tout
+Shipments
+    delivery_type_code
+    delivery_method_reference
+        */
 
         $datavalid = 
             '{

@@ -1,30 +1,56 @@
-<div id="widget-payment-kit"></div>
-    <button id="pay-button" class="ui huge primary fluid icon labeled button">
-        <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
-    </button>
-</div>
-<script src="https://ui.preprod.upstreampay.com/configuration.js"></script>
-<script src="https://ui.preprod.upstreampay.com/message_default.js"></script>
-<script src="https://ui.preprod.upstreampay.com/payment.js"></script>
+<!-- Numéros de cartes de test -->
+<!-- https://developer.dalenys.com/payment-methods/bank-card.html -->
+<div id="widget-payment" style="margin-top:2em;"></div>
+<button id="pay-button" class="ui huge primary fluid icon labeled button">
+    <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
+</button>
+{#<div id="pay-button"></div>#}
+<script src="https://widget.upstreampay.com/2.0.1/UpStreamPay.js"></script>
 <script>
-    configPayment = {
-        'config' : {
-            "redirection_url": "{{ path('chk_upstream_payment_return', {'success': 1}) }}",
-            "payment_base_url": "https://api.preprod.upstreampay.com",
-            "entity_id": "{{ entity_id }}",
-            "use_css": true,
-            "locale": {
-              "country": "FR",
-              "language": "fr"
-            },
-            "currency": "EUR",
-            "key": "{{ api_key }}"
-          }, 
-        'session' : {{ chk_upstreampay|raw }}
+    const manager = new UpStreamPay.WidgetManager();
+    const configMerchant =  {
+        "payment_base_url": "{{ payment_base_url }}",
+        "entity_id": "{{ entity_id }}",
+        "key": "{{ api_key }}"
     }
-    window.payment.init(configPayment);
+    manager.setMerchantConfig(configMerchant);
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelector('#pay-button').addEventListener('click', window.payment.processPayment);
+    {#//const session = await getSessionFromBackend({{ chk_upstreampay|raw }});#}
+    const session = {{ chk_upstreampay|raw }};
+    manager.setSession(session);
+
+    const widget = manager.createWidget({
+        ui:{
+            layout:{
+                name: "GRID", // LIST, GRID
+                display: "WALLET", // BASIC, WALLET, BARE
+            }
+        },
+        interface: "PAYMENT",
     });
+    widget.mount("widget-payment"); //can be called whenever you want
+
+    /*const buttonWidget = manager.createWidget({
+        ui:{
+            translations:{
+                overrides:{
+                    "WIDGET_PAY_BUTTON_TEXT":"Commander"
+                }
+            }
+        },
+        interface: "PAY_BUTTON",
+    });
+    buttonWidget.mount("pay-button");*/
+
+    manager.registerPayabilityListener((payable) => {
+        if (payable) {
+            document.getElementById('pay-button').removeAttribute('disabled')
+        } else {
+            document.getElementById('pay-button').setAttribute('disabled', true);
+        }
+        document.querySelector('#pay-button').addEventListener('click', function(e) {
+            manager.submit();
+        });
+    })
+    //document.addEventListener('DOMContentLoaded', () => {});
 </script>

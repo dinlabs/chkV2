@@ -42,12 +42,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-
-        /*bindEvent(document.querySelector('#findPickups'), 'click', function(e) {
-            e.preventDefault();
-            //
-            log("AJAX Time!");
-        });*/
+        $('.storelist [name="ship_in_store"]').on('change', function(e) {
+            $('input[value="store"]').prop('checked', true);
+        });
 
         $('#findPickups').on('click', function(e) {
             e.preventDefault();

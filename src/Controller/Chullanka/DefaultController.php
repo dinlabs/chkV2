@@ -12,6 +12,7 @@ use App\Entity\Order\Order;
 use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
+use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
@@ -35,10 +36,14 @@ final class DefaultController extends AbstractController
     /** @var Environment */
     private $twig;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig)
+    /** @var GinkoiaCustomerWs */
+    private $ginkoiaCustomerWs;
+
+    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs)
     {
         $this->cartContext = $cartContext;
         $this->twig = $twig;
+        $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
     }
 
     /**
@@ -180,21 +185,28 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/upstreampaywidget", name="chk_upstream_payment_widget")
      */
-    public function UpstreamPayWidgetAction(UpstreamPayWidget $upstreamPayWidget)
+    public function UpstreamPayWidgetAction(Request $request, UpstreamPayWidget $upstreamPayWidget)
     {
         $cart = $this->cartContext->getCart();
-
-        //$data = $upstreamPayWidget->getFormattedData($cart);
-        //dd(json_decode($data));
+        $cart->setCustomerIp($request->getClientIp());
 
         $upStreamSession = '{}';
         if(($userCustomer = $this->getCurrentCustomer()) && $userCustomer->hasOrder($cart))
         {
             $upStreamSession = $upstreamPayWidget->getUpStreamPaySession($cart);
+            $further = $cart->getFurther();
+            $further['upstreampay_session_id'] = $upstreamPayWidget->getSessionId();
+            $cart->setFurther($further);
         }
         error_log("session : ".$upStreamSession);
 
+        // Save cart
+        $em = $this->container->get('doctrine')->getManager();
+        $em->persist($cart);
+        $em->flush();
+
         return $this->render('chullanka/upstreampay_widget.html.twig', [
+            'payment_base_url' => $upstreamPayWidget->upstreampay_base_url,
             'entity_id' => $upstreamPayWidget->entity_id,
             'api_key' => $upstreamPayWidget->api_key,
             'chk_upstreampay' => $upStreamSession,
@@ -257,18 +269,71 @@ final class DefaultController extends AbstractController
                     $payment = $order->getPayments()->first();
                     $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
                     $paymentStateMachine->apply('complete');
-                    
+
+
+                    // EntityManager
                     $em = $this->container->get('doctrine')->getManager();
+
+                    
+                    // IP
+                    $order->setCustomerIp($request->getClientIp());
+
+                    //Chullpoints
+                    $fidelityUsed = false;
+                    foreach($order->getAdjustments() as $adjustement)
+                    {
+                        if($adjustement->getOriginCode() == 'chk_chullpoints')
+                        {
+                            $fidelityUsed = true;
+                        }
+                    }
+                    if($fidelityUsed)
+                    {
+                        if($customer = $order->getCustomer())
+                        {
+                            $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                            $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+                            $points = ($nbrReduc * 500);// on déduit le nombre de points
+                            
+                            
+                            //on met à jour sur le WS
+                            $webserv = $this->ginkoiaCustomerWs;
+                            $email = $customer->getEmail();
+                            if($webserv->usePoints($points, $email))
+                            {
+                                // on met à jour sur le site
+                                $chullz -= $points;
+                                $customer->setChullpoints($chullz);
+                                $em->persist($customer);
+                            }
+                        }
+                    }
+
+                    // hack
+                    if($number = $order->getNumber())
+                    {
+                        $number = '1' . substr($number, 1);
+                        $order->setNumber($number);
+                    }
+                    
                     $em->persist($order);
                     $em->flush();
                 }
             }
-            return $this->redirectToRoute('sylius_shop_order_thank_you');
+            //return $this->redirectToRoute('sylius_shop_order_thank_you');
+            //==> quelque chose fait que le controller nous renvoie ensuite sur la home
+            return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+                'order' => $order
+            ]);
         }
 
         if($request->get('failure'))
         {
             echo "FAIL";
+            if($infos = $upstreamPayWidget->getSessionInfos())
+            {
+                dd($infos);
+            }
         }
         die;
     }
