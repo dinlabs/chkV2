@@ -308,11 +308,11 @@ footer .inside ul li { margin:1em 0; }
 footer .inside ul li a { color:#fff; }
 footer .inside ul li a:hover { text-decoration:none; }
 
-footer #ourAdventure h3 { text-align: center; }
+footer #ourAdventure picture { display:block; text-align:center; }
 
 
 #feedback { background:url(../img/bg-feedbacks.jpg) no-repeat center center / cover; border-top:5px solid var(--default); padding:2em; color:#fff; text-align:center; }
-#feedback img { border-radius:50%; }
+#feedback img { display:block; border-radius:50%; width:70px; height:70px; margin:auto; }
 #feedback p { margin-bottom:1em; }
 #feedback a { border:2px solid #ED735A; border-radius:5px; display:inline-block; min-width:30%; margin:1em auto; padding:1em; color:#fff; font-weight:700; text-decoration:none; }
 #feedback a:hover { background:#ED735A; }
@@ -819,6 +819,8 @@ body.customer { background:var(--bg1); }
 
 
 /* MAGASINS */
+#stores .framap { display:flex; justify-content:center; gap:2em; flex-wrap:wrap; }
+
 #store h1 { margin-bottom:.5em; font-family:var(--altFont); text-transform:uppercase; }
 #store .intro { padding-bottom:1em; }
 #store #content { text-align:initial; }

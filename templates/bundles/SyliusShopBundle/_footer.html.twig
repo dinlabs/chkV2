@@ -41,17 +41,17 @@
     </div>
 
     <div id="ourAdventure">
-        <h3>Notre aventure</h3>
-
+        <picture>
+            <source media="(max-width: 944px)" srcset="{{ asset('chullanka/assets/img/notre-aventure-mb.png') }}">
+            <source media="(min-width: 945px)" srcset="{{ asset('chullanka/assets/img/notre-aventure.png') }}">
+            <img src="{{ asset('chullanka/assets/img/notre-aventure.png') }}" alt="Notre aventure">
+        </picture>
     </div>
-    
-    <div class="ui container" style="display:none;">
-        {#{ sylius_template_event('sylius.shop.layout.footer') }#}
-    </div>
+    {#{ sylius_template_event('sylius.shop.layout.footer') }#}
 </footer>
 
 <div id="feedback">
-    <img src="//picsum.photos/70/70" alt="">
+    <img src="{{ asset('chullanka/assets/img/chulli_1.jpg') }}" alt="">
     <h2>Et cette page, elle vous plaît ?</h2>
     <p>Faites comme si vous étiez en magasin :)</p>
     <a href="#">Dites-nous franchement ce qui cloche</a>

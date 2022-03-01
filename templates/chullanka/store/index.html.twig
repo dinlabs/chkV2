@@ -4,16 +4,24 @@
 {% block bodyattr %}id="stores"{% endblock %}
 
 {% block content %}
-<div class="autoMargin">
-    <div class="insert">
+<ul id="breadcrumb" class="autoMargin">
+    <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+    <li>{{ 'app.front.stores'|trans }}</li>
+</ul>
+
+<div class="bg">
+    <div class="autoMargin">
         <h1>{{ 'app.front.stores'|trans }}</h1>
-        <ul>
-            {% for store in stores %}
-            <li>
-                <a href="{{ path('store_view', {'code': store.code}) }}">{{ store.name }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="framap">
+            <ul>
+                {% for store in stores %}
+                <li>
+                    <a href="{{ path('store_view', {'code': store.code}) }}">{{ store.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            <img src="{{ asset('chullanka/assets/img/carte_france.png') }}" alt="">
+        </div>
     </div>
 </div>
 {% endblock %}

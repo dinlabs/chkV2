@@ -490,7 +490,7 @@
 .slick-arrow.slick-hidden {
     display: none;
 }
-
+/*
 body {
   background-color: #F9FAFB;
 }
@@ -502,7 +502,7 @@ body {
 #footer {
   padding: 4em;
   margin-top: 4em;
-}
+}*/
 
 .pusher {
   display: flex;

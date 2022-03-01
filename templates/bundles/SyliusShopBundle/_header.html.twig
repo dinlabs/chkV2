@@ -18,7 +18,7 @@
         <input type="text" id="searchField" placeholder="Recherchez un sport, un produit, un service...">
     </form>
     <div id="shopLinks">
-        <a href="#" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-geoloc') }}"/></svg>Trouver un magasin</a>
+        <a href="{{ path('store_index') }}" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-geoloc') }}"/></svg>Trouver un magasin</a>
 
         {% if is_granted('ROLE_USER') %}
             <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg><span style="display:none;">1</span></a>
