@@ -142,7 +142,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .testBlock { background:url(../img/bg-test.jpg) no-repeat center center / cover; border-radius:5px; width:340px; height:340px; padding:15px; text-align:initial; }
 .testBlock .inside { background:var(--bg0); border-radius:5px; height:100%; }
 .testBlock .inside.split { display:grid; grid-template-columns:1fr 1fr; }
-.testBlock .inside .prodInList { top:-5px; left:-2px; min-height:auto; overflow:hidden; }
+.testBlock .inside .prodInList { top:-5px; left:-2px; min-height:auto; margin-bottom:5px; overflow:hidden; }
 .testBlock .inside .prodInList .clientRating { display:none; }
 .testBlock .inside .tested { padding:1em; }
 .testBlock .inside .tested .head { display:flex; justify-content:space-between; align-items:center; }

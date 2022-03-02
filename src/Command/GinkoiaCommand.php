@@ -2,9 +2,8 @@
 namespace App\Command;
 
 use App\Entity\Channel\ChannelPricing;
+use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
-//use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\BrandRepositoryInterface;
-//use Loevgaard\SyliusBrandPlugin\Model\BrandInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
@@ -28,12 +27,12 @@ class GinkoiaCommand extends Command
     protected $slugGenerator;
     protected $productFactory;
     protected $productVariantFactory;
-    //protected $brandFactory;
     protected $channelPricingFactory;
+    protected $brandFactory;
     protected $productRepository;
     protected $productVariantRepository;
     protected $channelRepository;
-    //protected $brandRepository;
+    protected $brandRepository;
     protected $output;
     
     
@@ -44,7 +43,7 @@ class GinkoiaCommand extends Command
     protected $channel = [];
     protected $compteur = 0;
     
-    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $channelPricingFactory, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository)
+    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $channelPricingFactory, FactoryInterface $brandFactory, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository, BrandRepository $brandRepository)
     {
         parent::__construct();
         
@@ -52,12 +51,12 @@ class GinkoiaCommand extends Command
         $this->slugGenerator = $slugGenerator;
         $this->productFactory = $productFactory;
         $this->productVariantFactory = $productVariantFactory;
-        //$this->brandFactory = $brandFactory;
         $this->channelPricingFactory = $channelPricingFactory;
+        $this->brandFactory = $brandFactory;
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
         $this->channelRepository = $channelRepository;
-        //$this->brandRepository = $brandRepository;
+        $this->brandRepository = $brandRepository;
     }
     
     protected function configure(): void
@@ -386,10 +385,10 @@ class GinkoiaCommand extends Command
             $product->addChannel($this->channel);
             $product->setEnabled(false);
 
-            /*if($brand = $this->getMarque( $article['MARQUE'] ))
+            if($brand = $this->getMarque( $article['MARQUE'] ))
             {
                 $product->setBrand($brand);
-            }*/
+            }
             $this->productRepository->add($product);
         }
 

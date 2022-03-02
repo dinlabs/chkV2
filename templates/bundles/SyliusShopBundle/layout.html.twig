@@ -41,14 +41,8 @@
 {#{ dump(_where) }#}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}
-    <div id="topAnnounce">
-        <button class="close"><svg class="svg-icon" role="img" style="width:18px; height:18px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close') }}"/></svg></button>
-        <p>
-            <strong>Soldes : jusqu'à -70%</strong>
-            Profitez vite de nos nouvelles offres
-            <a href="#">C'est par ici</a>
-        </p>
-    </div>
+{{ render(path('bitbag_sylius_cms_plugin_shop_block_render', {'code' : 'topAnnounce', 'template' : '@SyliusShop/Layout/_topAnnounce.html.twig'})) }}
+    
     {#
     <div id="menu" class="ui large sticky inverted stackable menu">
         {{ sylius_template_event('sylius.shop.layout.topbar') }}
@@ -83,6 +77,23 @@
     {#{ sylius_template_event('sylius.shop.layout.javascripts') }#}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %}
+
+    {#
+    <script>
+        const dfLayerOptions = {
+            installationId: 'c7e0949f-6227-4a25-83be-f1fe428af6df',
+            zone: 'eu1'
+        };
+
+        (function (l, a, y, e, r, s) {
+            r = l.createElement(a); r.onload = e; r.async = 1; r.src = y;
+            s = l.getElementsByTagName(a)[0]; s.parentNode.insertBefore(r, s);
+        })(document, 'script', 'https://cdn.doofinder.com/livelayer/1/js/loader.min.js', function () {
+            doofinderLoader.load(dfLayerOptions);
+        });
+    </script>
+    #}
+
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %}
     <script>
     $(document).ready(function() {

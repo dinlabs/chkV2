@@ -137,7 +137,12 @@
         <h2>Description détaillée</h2>
         <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
         <div class="foldable">
-            {{ sylius_template_event('sylius.shop.product.show.tab_details', _context) }}
+            {#{ sylius_template_event('sylius.shop.product.show.tab_details', _context) }#}
+            {% if product.description is not empty %}
+                {{ product.description|raw }}
+            {% else %}
+                {{ 'sylius.ui.no_description'|trans }}.
+            {% endif %}
         </div>
     </div>
 

@@ -13,4 +13,42 @@ use Sylius\Component\Core\Model\ChannelPricing as BaseChannelPricing;
  */
 class ChannelPricing extends BaseChannelPricing
 {
+    /** @ORM\Column(name="discount_price", type="integer", nullable=true) */
+    protected $discountPrice;
+    
+    /** @ORM\Column(name="discount_from", type="date", nullable=true) */
+    protected $discountFrom;
+    
+    /** @ORM\Column(name="discount_to", type="date", nullable=true) */
+    protected $discountTo;
+
+    public function getDiscountPrice(): ?int
+    {
+        return $this->discountPrice;
+    }
+    
+    public function setDiscountPrice(?int $discountPrice): void
+    {
+        $this->discountPrice = $discountPrice;
+    }
+    
+    public function getDiscountFrom(): ?\DateTime
+    {
+        return $this->discountFrom;
+    }
+    
+    public function setDiscountFrom(?\DateTime $discountFrom): void
+    {
+        $this->discountFrom = $discountFrom;
+    }
+    
+    public function getDiscountTo(): ?\DateTime
+    {
+        return $this->discountTo;
+    }
+    
+    public function setDiscountTo(?\DateTime $discountTo): void
+    {
+        $this->discountTo = $discountTo;
+    }
 }

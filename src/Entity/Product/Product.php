@@ -215,6 +215,7 @@ class Product extends BaseProduct
         $attributesWithFallback = [];
         foreach ($attributes as $attribute) {
             if(in_array($attribute->getCode(), $excludeCodes)) continue;
+            if($attribute->getValue() == '') continue;
             $attributesWithFallback[] = $this->getAttributeInDifferentLocale($attribute, $localeCode, $fallbackLocaleCode);
         }
 
