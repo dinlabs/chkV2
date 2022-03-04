@@ -10,13 +10,13 @@
                 {% set _bgCat = taxon.images.first.path|imagine_filter(filter|default('chullanka_category')) %}
               {% endif %}
             {% endif %}
-            <a href="#" class="openSubnav{% if taxon.level == 1 %} withBgImg" style="background-image:url({{ _bgCat }});{% endif %}">
+            <a href="#" class="openSubnav{% if taxon.level == 1 and _bgCat %} withBgImg" style="background-image:url({{ _bgCat }});{% endif %}">
                 <span>{{ taxon.name }}</span>
                 <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg>
             </a>
         </div>
         <div class="subNav" data-level="{{ taxon.level }}">
-            <div class="subNavHeader" style="background-image:url({{ _bgCat }});">
+            <div class="subNavHeader{% if _bgCat %} withBgImg" style="background-image:url({{ _bgCat }});{% endif %}">
                 <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche') }}"/></svg></button>
                 <strong class="name">{{ taxon.name }}</strong>
             </div>

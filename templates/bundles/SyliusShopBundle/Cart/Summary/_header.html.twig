@@ -1,8 +1,22 @@
 {% import '@SyliusUi/Macro/headers.html.twig' as headers %}
 
+<div class="overthetop">
+    <a href="{{ path('sylius_shop_homepage') }}" class="btnRetour">
+        <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche-back') }}"/></svg>
+        <span>Continuer <br>mes achats</span>
+    </a>
+    <ul class="timeline">
+        <li class="active"><span>1</span><strong>Mon panier</strong></li>
+        <li><span>2</span><strong>Livraison</strong></li>
+        <li><span>3</span><strong>Paiement</strong></li>
+    </ul>
+</div>
+
 <div class="ui two column stackable grid">
     <div class="column">
-        {{ headers.default(header|trans, '', 'sylius.ui.products_count_in_cart'|trans({'%nbr%': cart.items|length})) }}
+        {#{ headers.default(header|trans) }#}
+        <h1>Mon panier</h1>
+        <p><strong>Excellent choix, <br>voici les produits dans votre panier</strong></p>
     </div>
     <div class="middle aligned column">
         {#

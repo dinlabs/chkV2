@@ -5,10 +5,14 @@ namespace App\EventSubscriber;
 use App\Entity\Addressing\Address;
 use App\Entity\Chullanka\HistoricOrder;
 use App\Entity\Chullanka\Store;
+use App\Entity\Payment\Payment;
+use App\Entity\Payment\PaymentMethod;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use Doctrine\ORM\EntityManagerInterface;
+use SM\Factory\FactoryInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -22,13 +26,15 @@ class EventSubscriber implements EventSubscriberInterface
     private $slugger;
     private $ginkoiaHelper;
     private $ginkoiaCustomerWs;
+    private $stateMachineFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs)
+    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory)
     {
         $this->entityManager = $entityManager;
         $this->slugger = $slugger;
         $this->ginkoiaHelper = $ginkoiaHelper;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
+        $this->stateMachineFactory = $stateMachineFactory;
     }
 
     public static function getSubscribedEvents()
@@ -208,6 +214,34 @@ class EventSubscriber implements EventSubscriberInterface
                 }
             }
             $order->setFurther($further);
+
+            //force paymethod UpStreamPay - a priori pas utile vu qu'il n'y a qu'une seule méthode
+            /*if($payMethod = $this->entityManager->getRepository(PaymentMethod::class)->findOneByCode('UPSTREAM_PAY'))
+            {
+                if($order->getPayments())
+                {
+                    // on vérifie 
+                    $payment = $order->getPayments()->first();
+                    if($payment->getMethod()->getCode() != 'UPSTREAM_PAY')
+                    {
+                        // si ça n'est pas upstream, on force cette méthode
+                        $payment->setMethod($payMethod);
+                    }
+                }
+                else 
+                {
+                    error_log("on va créer la methode");
+                    //create Payment
+                    //$payment = new Payment();
+                    //$payment->setMethod($payMethod);
+                    //$order->addPayment($payment);
+                }
+            }*/
+
+            // changer le state
+            $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+
             $this->entityManager->flush();
         }
 

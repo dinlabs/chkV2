@@ -3,41 +3,9 @@
 
 <footer id="footer">
     <div class="inside">
-        <div class="linkList">
-            <h3>Nos supers services</h3>
-            <ul>
-                <li><a href="#">Service client, on est là</a></li>
-                <li><a href="#">FAQ, ça peut aider</a></li>
-                <li><a href="#">Livraison : simple et rapide</a></li>
-                <li><a href="#">Clic&amp;Collect, encore plus rapide</a></li>
-                <li><a href="#">Garanties et retours</a></li>
-                <li><a href="#">Guides &amp; conseils d'experts</a></li>
-                <li><a href="#">Programme de fidélité</a></li>
-                <li><a href="#">Moyens de paiement</a></li>
-            </ul>
-        </div>
-        <div class="linkList">
-            <h3>Vous &amp; Nous</h3>
-            <ul>
-                <li><a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': 'qui-sommes-nous'}) }}">Qui sommes-nous ?</a></li>
-                <li><a href="#">Nos magasins, le plein de services</a></li>
-                <li><a href="#">Nous rejoindre</a></li>
-                <li><a href="#">Devenir ambassadeur</a></li>
-                <li><a href="#">Nos partenaires</a></li>
-                <li><a href="#">Jouez et gagnez</a></li>
-            </ul>
-        </div>
-        <div class="linkList">
-            <h3>Les choses sérieuses</h3>
-            <ul>
-                <li><a href="#">Conditions générale de vente</a></li>
-                <li><a href="#">Mentions légales</a></li>
-                <li><a href="#">Données personelles &amp; cookies</a></li>
-                <li><a href="#">Rappel produits</a></li>
-                <li><a href="#">Presse &amp; média</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </div>
+        {{ render(path('get_pages_by_section', {'sectionCode': 'footer_links_1'})) }}
+        {{ render(path('get_pages_by_section', {'sectionCode': 'footer_links_2'})) }}
+        {{ render(path('get_pages_by_section', {'sectionCode': 'footer_links_3'})) }}
     </div>
 
     <div id="ourAdventure">

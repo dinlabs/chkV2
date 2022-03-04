@@ -1,0 +1,11 @@
+{% if pages %}
+{% set section = pages[0].sections.first %}
+<div class="linkList">
+    <h3>{{ section.name }}</h3>
+    <ul>
+        {% for page in pages %}
+        <li><a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': page.slug }) }}">{{ page.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

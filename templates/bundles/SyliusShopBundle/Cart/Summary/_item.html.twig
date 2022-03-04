@@ -14,13 +14,17 @@
         <div class="infos">
             {% include '@SyliusShop/Product/_info.html.twig' with {'item': item, 'variant': variant} %}
 
-            <div>
+            <div class="quantity">
                 <small>{{ 'sylius.ui.quantity'|trans }}</small>
-                <div class="sylius-quantity ui form">{{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form}})) }}</div>
+                <div class="sylius-quantity">
+                    <button class="updateQuantity up">+</button>
+                    {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form}})) }}
+                    <button class="updateQuantity down">-</button>
+                </div>
             </div>
             
-            <div>
-                <small>{{ 'sylius.ui.total'|trans }}</small>
+            <div class="total">
+                <small>{#{ 'sylius.ui.total'|trans }#}Prix total</small>
                 <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
             </div>
         </div>

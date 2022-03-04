@@ -237,6 +237,9 @@ sylius_ui:
                     priority: 25
                     context:
                         event: sylius.shop.cart.summary.before_totals
+                free_delivery:
+                    template: "@SyliusShop/Cart/Summary/_free_delivery.html.twig"
+                    priority: 22
                 totals:
                     template: "@SyliusShop/Cart/Summary/_totals.html.twig"
                     priority: 20

@@ -9,6 +9,12 @@ use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\RmaProduct;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
+use App\Entity\Product\Product;
+use App\Entity\Product\ProductAttribute;
+use App\Entity\Product\ProductAttributeValue;
+use App\Entity\Product\ProductOption;
+use App\Entity\Shipping\ShippingMethod;
+use App\Entity\Taxation\TaxCategory;
 use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
@@ -16,6 +22,8 @@ use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
+use BitBag\SyliusCmsPlugin\Entity\Page;
+use BitBag\SyliusCmsPlugin\Entity\Section;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
@@ -60,6 +68,64 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper)
     {
+
+        $taxCats = $this->container->get('doctrine')->getRepository(TaxCategory::class)->findAll();
+        dd($taxCats);
+        die;
+
+        $_options = [];
+        $options = $this->container->get('doctrine')->getRepository(ProductOption::class)->findAll();
+        foreach($options as $opt)
+        {
+            $_options[ $opt->getId() ] = $opt;
+        }
+        dd($_options);
+        die;
+
+        /*
+        $_attributes = [];
+        $attributes = $this->container->get('doctrine')->getRepository(ProductAttribute::class)->findAll();
+        foreach($attributes as $attr)
+        {
+            $_attributes[ $attr->getCode() ] = $attr;
+        }
+
+        $attribute = $_attributes['couleurs'];
+        
+        $_val = 'Vert';
+
+        $attrValue = new ProductAttributeValue();
+        $attrValue->setAttribute($attribute);
+        switch($attribute->getType())
+        {
+            case 'select':
+                $conf = $attribute->getConfiguration();
+                $choices = $conf['choices'];
+                foreach($choices as $key => $choice)
+                {
+                    if($choice['fr_FR'] == $_val)
+                    {
+                        $attrValue->setValue([$key]);
+                        break;
+                    }
+                }
+                break;
+            
+            case 'checkbox':
+                $attrValue->setValue( (bool)$_val );
+                break;
+            case 'text':
+            default:
+                $attrValue->setValue($_val);
+        }
+
+        $product = $this->container->get('doctrine')->getRepository(Product::class)->findOneBy(['code' => '0-34951']);
+        $product->addAttribute($attrValue);
+
+        $em = $this->container->get('doctrine')->getManager();
+        $em->flush();*/
+
+        die;
 
         //$stateMachineFactory = $this->container->get('sm.factory');
         //dd($stateMachineFactory);
@@ -156,6 +222,29 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/pagesbysection", name="get_pages_by_section")
+     */
+    public function getPagesBySection(Request $request)
+    {
+        $template = $request->get('template') ?? '@SyliusShop/Layout/_footer_links.html.twig';
+        $sectionCode = $request->get('sectionCode');
+        
+        $pageRepo = $this->container->get('doctrine')->getRepository(Page::class);
+        $pages = $pageRepo->createQueryBuilder('o')
+            ->innerJoin('o.sections', 'section')
+            ->where('o.enabled = true')
+            ->andWhere('section.code = :sectionCode')
+            ->setParameter('sectionCode', $sectionCode)
+            ->getQuery()
+            //->getOneOrNullResult()
+            ->getResult()
+        ;
+        return $this->render($template, [
+            'pages' => $pages
+        ]);
+    }
+
+    /**
      * @Route("/blocksbysectiontaxon", name="get_blocks_by_section_taxon")
      */
     public function getBlocksBySectionAndTaxonAction(Request $request)
@@ -179,6 +268,47 @@ final class DefaultController extends AbstractController
         ;
         return $this->render($template, [
             'blocks' => $blocks
+        ]);
+    }
+
+    /**
+     * @Route("/freedeliveryblock", name="chk_free_delivery_block")
+     */
+    public function getFreeDeliveryBlockAction(Request $request)
+    {
+        $amount = 0;
+        $canBeFree = true;
+        $itsFree = false;
+        $repository = $this->container->get('doctrine')->getRepository(ShippingMethod::class);
+        if($shippingMethod = $repository->findOneByCode('home_standart'))
+        {
+            $configuration = $shippingMethod->getConfiguration();
+            $freeAbove = $configuration['free_above'];
+            
+        
+            $order = $order = $this->cartContext->getCart();;
+            if($shipAddress = $order->getShippingAddress())
+            {
+                $countryCode = $shipAddress->getCountryCode();
+                if($countryCode == 'FR')
+                {
+                    $postcode = $shipAddress->getPostcode();
+                    $department = substr($postcode, 0, 2);
+                    if(in_array($department, ['20','97','98'])) $canBeFree = false;
+                }
+                else $canBeFree = false;
+            }
+            if($canBeFree && $freeAbove)
+            {
+                $totalCart = $order->getItemsTotal();
+                if($totalCart >= $freeAbove) $itsFree = true;
+                else  $amount = $freeAbove - $totalCart;
+            }
+        }
+        return $this->render('@SyliusShop/Cart/Summary/_free_delivery_block.html.twig', [
+            'canBeFree' => $canBeFree,
+            'itsFree' => $itsFree,
+            'amount' => $amount,
         ]);
     }
 
@@ -257,8 +387,10 @@ final class DefaultController extends AbstractController
                     
                     $order->setNotes('Revenu avec succès de la plateforme de paiement : '.$return->method);
 
+                    // changer le state
                     //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
                     $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+                    //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
                     $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
                     //$em->persist($order);
                     

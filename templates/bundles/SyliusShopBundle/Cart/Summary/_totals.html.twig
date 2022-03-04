@@ -6,22 +6,24 @@
 
 <div class="insert">
     {{ sylius_template_event('sylius.shop.cart.summary.totals', {'cart': cart, 'form': form}) }}
-
-    <table class="ui very basic table">
+    <table class="totals">
         <tbody>
         <tr>
-            <td>{{ 'sylius.ui.items_total'|trans }}:</td>
+            <td>{#{ 'sylius.ui.items_total'|trans }#}Sous-total</td>
             <td class="right aligned" {{ sylius_test_html_attribute('cart-items-total') }}>{{ money.convertAndFormat(itemsSubtotal) }}</td>
         </tr>
+        {% set _total = itemsSubtotal %}
         {% if cart.orderPromotionTotal %}
             <tr>
-                <td>{{ 'sylius.ui.discount'|trans }}:</td>
+                <td>{{ 'sylius.ui.discount'|trans }}</td>
                 <td id="sylius-cart-promotion-total" {{ sylius_test_html_attribute('cart-promotion-total') }} class="right aligned">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</td>
             </tr>
+            {% set _total = itemsSubtotal + cart.orderPromotionTotal %}
         {% endif %}
+        
         {% if cart.shipments is not empty %}
             <tr>
-                <td>{{ 'sylius.ui.shipping_estimated_cost'|trans }}:</td>
+                <td>{{ 'sylius.ui.shipping_estimated_cost'|trans }}</td>
                 <td class="right aligned">
                     {% if cart.getAdjustmentsTotal('shipping') > cart.shippingTotal %}
                         <span class="old-price">{{ money.convertAndFormat(cart.getAdjustmentsTotal('shipping')) }}</span>
@@ -31,7 +33,12 @@
             </tr>
         {% endif %}
         <tr {% if taxIncluded and not taxExcluded %}class="tax-disabled"{% endif %}>
-            <td>{{ 'sylius.ui.taxes_total'|trans }}:</td>
+            <td>
+                {{ 'sylius.ui.taxes_total'|trans }}
+                {% if taxIncluded %}
+                <br><small>({{ 'sylius.ui.included_in_price'|trans }})</small>
+                {% endif %}
+            </td>
             <td class="right aligned">
                 {% if not taxIncluded and not taxExcluded %}
                     <div id="sylius-cart-tax-none" {{ sylius_test_html_attribute('cart-no-tax') }}>{{ money.convertAndFormat(0) }}</div>
@@ -41,14 +48,14 @@
                 {% endif %}
                 {% if taxIncluded %}
                     <div class="tax-disabled">
-                        <small>({{ 'sylius.ui.included_in_price'|trans }})</small>
                         <span id="sylius-cart-tax-included" {{ sylius_test_html_attribute('cart-tax-included') }}>{{ money.convertAndFormat(taxIncluded) }}</span>
                     </div>
                 {% endif %}
             </td>
         </tr>
-        <tr class="ui large header">
-            <td>{{ 'sylius.ui.order_total'|trans }}:</td>
+        
+        <tr class="total">
+            <td>{#{ 'sylius.ui.order_total'|trans }#}Total</td>
             <td id="sylius-cart-grand-total" {{ sylius_test_html_attribute('cart-grand-total') }} class="right aligned">{{ money.convertAndFormat(cart.total) }}</td>
         </tr>
         {% if cart.currencyCode is not same as(sylius.currencyCode) %}
@@ -60,7 +67,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('sylius_shop_checkout_start') }}" id="btnToCheckout" class="btn icon button"><i class="check icon"></i> {{ 'sylius.ui.checkout'|trans }}</a>
+    <a href="{{ path('sylius_shop_checkout_start') }}" id="btnToCheckout" class="btn">{{ 'sylius.ui.checkout'|trans }}</a>
 </div>
 
 {{ render(path('chk_ajax_getadviceform')) }}

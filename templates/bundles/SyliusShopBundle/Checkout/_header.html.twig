@@ -4,6 +4,7 @@
             <img src="{{ asset('chullanka/assets/img/logo-chullanka.svg') }}" alt="Logo Chullanka">
         </a>
         
+        {#
         {% if app.request.get('_route') == 'sylius_shop_cart_summary' %}
         <a href="{{ path('sylius_shop_homepage') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche-back') }}"/></svg> <span>Continuer mes achats</span></a>
         {% else %}
@@ -17,5 +18,6 @@
         {% else %}
             <a href="{{ path('sylius_shop_login') }}" class="item">{{ 'sylius.ui.sign_in'|trans }}</a>
         {% endif %}
+        #}
     </div>
 </header>

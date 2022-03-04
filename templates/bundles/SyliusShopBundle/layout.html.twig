@@ -56,9 +56,9 @@
     </header>
 {% endblock %}
 
-<div class="autoMargin">
-    {% include '@SyliusShop/_flashes.html.twig' %}
-</div>
+{% block flashmessage %}
+{% include '@SyliusShop/_flashes.html.twig' %}
+{% endblock %}
 
 <!--div class="ui container"-->
     {{ sylius_template_event('sylius.shop.layout.before_content') }}

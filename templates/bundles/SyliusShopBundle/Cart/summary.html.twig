@@ -1,3 +1,4 @@
+
 {% extends '@SyliusShop/Checkout/layout.html.twig' %}
 
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
@@ -11,6 +12,7 @@
 {% block content %}
     {% if not cart.empty %}
         {{ sylius_template_event('sylius.shop.cart.header', {'header': header, 'cart': cart}) }}
+
         <div class="ui stackable grid">
             <div class="eleven wide column">
                 {{ sylius_template_event('sylius.shop.cart.items', {'cart': cart, 'form': form}) }}
@@ -23,4 +25,28 @@
     {% else %}
         {{ messages.info('sylius.ui.your_cart_is_empty') }}
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.sylius-quantity').each(function(i,o) {
+            var $_input = $(o).find('input');
+            $_input.attr('type', 'text');
+            $(o).on('click', '.updateQuantity.up', function(e) {
+                var _val = $_input.val();
+                _val++;
+                $_input.val(_val);
+            });
+            $(o).on('click', '.updateQuantity.down', function(e) {
+                var _val = $_input.val();
+                _val--;
+                if(_val < 1) _val = 1;
+                $_input.val(_val);
+            });
+        });
+    });
+</script>
 {% endblock %}

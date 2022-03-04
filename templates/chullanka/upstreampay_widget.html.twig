@@ -1,9 +1,9 @@
 <!-- Numéros de cartes de test -->
 <!-- https://developer.dalenys.com/payment-methods/bank-card.html -->
-<div id="widget-payment" style="margin-top:2em;"></div>
-<button id="pay-button" class="ui huge primary fluid icon labeled button">
+<div id="widget-payment"></div>
+{#<button id="pay-button" class="ui huge primary fluid icon labeled button">
     <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
-</button>
+</button>#}
 {#<div id="pay-button"></div>#}
 <script src="https://widget.upstreampay.com/2.0.2/UpStreamPay.js"></script>
 <script>
@@ -42,15 +42,17 @@
     });
     buttonWidget.mount("pay-button");*/
 
-    manager.registerPayabilityListener((payable) => {
-        if (payable) {
-            document.getElementById('pay-button').removeAttribute('disabled')
-        } else {
-            document.getElementById('pay-button').setAttribute('disabled', true);
-        }
-        document.querySelector('#pay-button').addEventListener('click', function(e) {
-            manager.submit();
-        });
-    })
-    //document.addEventListener('DOMContentLoaded', () => {});
+    document.addEventListener('DOMContentLoaded', () => {
+        manager.registerPayabilityListener((payable) => {
+            if (payable) {
+                document.getElementById('next-step').removeAttribute('disabled')
+            } else {
+                document.getElementById('next-step').setAttribute('disabled', true);
+            }
+            document.querySelector('#next-step').addEventListener('click', function(e) {
+                e.preventDefault();
+                manager.submit();
+            });
+        })
+    });
 </script>
