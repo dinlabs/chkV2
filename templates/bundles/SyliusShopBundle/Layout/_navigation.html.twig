@@ -70,13 +70,6 @@
             {{ macros.item(taxon) }}
         {% endfor %}
 
-        {% set others = [] %}
-        {% set others = others|merge(['Gamme PRO']) %}
-        {% set others = others|merge(['Pièces détachées et réparations']) %}
-        {% for other in others %}
-            {{ macros.itemsimple(other, '#') }}
-        {% endfor %}
-
         {{ render(url('brand_menu_list')) }}
         {{ render(url('store_index', {'template': 'chullanka/store/menu_items.html.twig'})) }}
 
