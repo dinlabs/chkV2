@@ -81,6 +81,47 @@ class Order extends BaseOrder
     }
 
     /**
+     * Test si panier mixte
+     */
+    public function isPanierMixte()
+    {
+        $noShip = $noShop = false;
+		$inShop = [];
+        foreach($this->getItems() as $item)
+        {
+            $askQty = $item->getQuantity();
+            $variant = $item->getVariant();
+
+            if(!$variant->getOnHand() < $askQty) $noShip = true;
+            foreach($variant->getStocks() as $stock)
+            {
+                $inShop[ $variant->getId() ][ $stock->getStore()->getId() ] = (bool)$stock->getOnHand();
+            }
+        }
+        
+        // test tous les produits par magasin
+		$noShop = true;
+		foreach($inShop as $p => $dispo)
+		{
+			if(!isset($dispoShops)) $dispoShops = $dispo;
+			$dispoShops = array_intersect_assoc($dispoShops, $dispo);
+		}
+
+        foreach($dispoShops as $s => $dispo)
+		{
+			if($dispo) $noShop = false;
+		}
+		
+		// si c'est indispo en livraison et en magasin pour certains produits = panier mixte
+		if((count($this->getItems()) > 1) && $noShip && $noShop) 
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return Collection|Rma[]
      */
     public function getRmas(): Collection

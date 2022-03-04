@@ -12,7 +12,7 @@
 {% block content %}
     {% if not cart.empty %}
         {{ sylius_template_event('sylius.shop.cart.header', {'header': header, 'cart': cart}) }}
-
+        
         <div class="ui stackable grid">
             <div class="eleven wide column">
                 {{ sylius_template_event('sylius.shop.cart.items', {'cart': cart, 'form': form}) }}
@@ -35,9 +35,11 @@
         $('.sylius-quantity').each(function(i,o) {
             var $_input = $(o).find('input');
             $_input.attr('type', 'text');
+            var _max = $_input.data('max-available');
             $(o).on('click', '.updateQuantity.up', function(e) {
                 var _val = $_input.val();
                 _val++;
+                if(_val > _max) _val = _max;
                 $_input.val(_val);
             });
             $(o).on('click', '.updateQuantity.down', function(e) {

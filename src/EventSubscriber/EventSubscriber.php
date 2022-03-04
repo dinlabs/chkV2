@@ -16,6 +16,7 @@ use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -23,14 +24,16 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class EventSubscriber implements EventSubscriberInterface
 {
     private $entityManager;
+    private $session;
     private $slugger;
     private $ginkoiaHelper;
     private $ginkoiaCustomerWs;
     private $stateMachineFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory)
     {
         $this->entityManager = $entityManager;
+        $this->session = $session;
         $this->slugger = $slugger;
         $this->ginkoiaHelper = $ginkoiaHelper;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
@@ -47,6 +50,8 @@ class EventSubscriber implements EventSubscriberInterface
         return [
             'sylius.product.pre_create' => 'onSyliusProductPreCreUpdate',
             'sylius.product.pre_update' => 'onSyliusProductPreCreUpdate',
+            'sylius.order.pre_update' => 'onSyliusOrderPreAdd',
+            'sylius.order_item.post_add' => 'onSyliusOrderItemAddToCart',
             'sylius.order.post_select_shipping' => 'onSyliusOrderPostSelectShipping',
             'sylius.order.post_complete' => 'onSyliusOrderPostComplete',
 
@@ -65,10 +70,6 @@ class EventSubscriber implements EventSubscriberInterface
             'sylius.customer.post_update' => 'onSyliusCustomerPostSave',
             'sylius.address.post_register' => 'onSyliusCustomerPostSave',
             'sylius.address.post_update' => 'onSyliusCustomerPostSave',
-
-            
-            'sylius.order_item.pre_add' => 'onSyliusOrderItemPreAdd',
-            'sylius.order.pre_add' => 'onSyliusOrderPreAdd',
         ];
     }
 
@@ -118,6 +119,44 @@ class EventSubscriber implements EventSubscriberInterface
                 $this->entityManager->persist($faq);
             }
             $this->entityManager->flush();
+        }
+    }
+
+
+    /**
+     * Ajout au panier
+     */
+    public function onSyliusOrderItemAddToCart(GenericEvent $event)
+    {
+        //error_log("onSyliusOrderItemAddToCart");
+        $orderItem = $event->getSubject();//OrderItem::class
+
+        $order = $orderItem->getOrder();
+        if($order->isPanierMixte())
+        {
+            //todo; retirer le message "bien ajouté"!
+            $flash = $this->session->getFlashBag()->get('success');
+
+
+            $this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
+
+            $order->removeItem($orderItem);
+            $this->entityManager->persist($order);
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
+     * Maj du panier
+     */
+    public function onSyliusOrderPreAdd(GenericEvent $event)
+    {
+        //error_log("onSyliusOrderPreAdd");
+        $order = $event->getSubject();
+
+		if($order->isPanierMixte())
+        {
+            $this->session->getFlashBag()->add('error', 'Panier mixte');
         }
     }
 
@@ -523,21 +562,5 @@ class EventSubscriber implements EventSubscriberInterface
         {
             error_log('Ginkoia obs::customerSaved : impossible de mettre à jour le WS pour : '.$email);
         }
-    }
-
-
-    public function onSyliusOrderItemPreAdd(GenericEvent $event)
-    {
-        error_log("onSyliusOrderItemPreAdd");
-        $subject = $event->getSubject();//OrderItem::class
-        //dd($subject);
-        //$subject->getOrder() ==> null :-( !
-    }
-
-    public function onSyliusOrderPreAdd(GenericEvent $event)
-    {
-        error_log("onSyliusOrderPreAdd");
-        $order = $event->getSubject();
-        //dd($subject);
     }
 }

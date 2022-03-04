@@ -18,7 +18,7 @@
                 <small>{{ 'sylius.ui.quantity'|trans }}</small>
                 <div class="sylius-quantity">
                     <button class="updateQuantity up">+</button>
-                    {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form}})) }}
+                    {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form, 'data-max-available': variant.maxQty}})) }}
                     <button class="updateQuantity down">-</button>
                 </div>
             </div>

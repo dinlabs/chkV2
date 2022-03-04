@@ -67,7 +67,9 @@
         </tbody>
     </table>
 
+    {% if cart.isPanierMixte == false %}
     <a href="{{ path('sylius_shop_checkout_start') }}" id="btnToCheckout" class="btn">{{ 'sylius.ui.checkout'|trans }}</a>
+    {% endif %}
 </div>
 
 {{ render(path('chk_ajax_getadviceform')) }}

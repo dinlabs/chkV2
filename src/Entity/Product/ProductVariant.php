@@ -84,4 +84,18 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         }
         return false;
     }
+
+    /**
+     * Renvoi le nombre max dispo en fonction des stocks
+     */
+    public function getMaxQty()
+    {
+        $maxQty = (int)$this->getOnHand();
+        foreach($this->getStocks() as $stock)
+        {
+            if(((int)$stock->getOnHand()) > $maxQty)
+                $maxQty = (int)$stock->getOnHand();
+        }
+        return $maxQty;
+    }
 }
