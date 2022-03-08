@@ -362,7 +362,7 @@ class ImportCatalogCommand extends Command
                         echo "Ajout de la taxo : ".$taxon->getId();
 
                         /** @var ProductTaxonInterface $productTaxon */
-                        $productTaxon = $$this->productTaxonFactory->createNew();
+                        $productTaxon = $this->productTaxonFactory->createNew();
                         $productTaxon->setTaxon($taxon);
                         $productTaxon->setProduct($product);
 
