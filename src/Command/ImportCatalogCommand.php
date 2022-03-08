@@ -321,7 +321,7 @@ class ImportCatalogCommand extends Command
             }
         }
         
-        //$this->manager->flush();
+        $this->manager->flush();
         return Command::SUCCESS;
     }
 
