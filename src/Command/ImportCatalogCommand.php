@@ -340,8 +340,13 @@ class ImportCatalogCommand extends Command
             $product = $this->productFactory->createNew();
             $product->setCode($code);
             $product->setName($name);
-            if(isset($article['url_key'])) $product->setSlug( $article['url_key'] );
-            else $product->setSlug( $this->slugGenerator->generate($name) );
+
+            if($article['visibility'] != 'Not Visible Individually')
+            {
+                if(isset($article['url_key'])) $product->setSlug( $article['url_key'] );
+                //else $product->setSlug( $this->slugGenerator->generate($name) );
+            }
+
             $product->addChannel($this->channel);
             $createdAt = new \DateTime($article['created_at']);
             $product->setCreatedAt($createdAt);
