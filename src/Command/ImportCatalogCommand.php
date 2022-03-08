@@ -352,15 +352,18 @@ class ImportCatalogCommand extends Command
                 $i = 0;
                 foreach($taxos as $t)
                 {
-                    $sylius_id = $this->_mapping[$t];
-                    $taxon = $this->_taxons[ $sylius_id ];
-
-                    echo "Ajout de la taxo : ".$taxon->getId();
-
-                    $product->addProductTaxon($taxon);
-
-                    if($i == 0) $product->setMainTaxon($taxon);
-                    $i++;
+                    if(isset($this->_mapping[$t]))
+                    {
+                        $sylius_id = $this->_mapping[$t];
+                        $taxon = $this->_taxons[ $sylius_id ];
+                        
+                        echo "Ajout de la taxo : ".$taxon->getId();
+                        
+                        $product->addProductTaxon($taxon);
+                        
+                        if($i == 0) $product->setMainTaxon($taxon);
+                        $i++;
+                    }
                 }
             }
             
