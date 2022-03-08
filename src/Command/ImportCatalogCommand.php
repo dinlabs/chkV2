@@ -431,9 +431,9 @@ class ImportCatalogCommand extends Command
                 $images = explode('|', $article['product_images']);
                 foreach($images as $img)
                 {
-                    if(is_file($img))
+                    // on récupère l'image
+                    if($decodedData = @file_get_contents($img);)
                     {
-                        $decodedData = file_get_contents($img);// on récupère l'image
                         $tmpPath = sys_get_temp_dir().'/sf_upload'.uniqid();// qu'on place dans le dossier tmp
                         file_put_contents($tmpPath, $decodedData);
 
