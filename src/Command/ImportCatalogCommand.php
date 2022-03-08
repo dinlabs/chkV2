@@ -10,6 +10,7 @@ use App\Entity\Product\ProductAttributeValue;
 use App\Entity\Product\ProductImage;
 use App\Entity\Product\ProductOption;
 use App\Entity\Taxation\TaxCategory;
+use App\Entity\Taxonomy\Taxon;
 use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
@@ -46,6 +47,8 @@ class ImportCatalogCommand extends Command
     protected $productVariantRepository;
     protected $channelRepository;
     protected $brandRepository;
+    protected $_taxons = [];
+    protected $_mapping = [];
     protected $_taxCategories = [];
     protected $_attributes = [];
     protected $_options = [];
@@ -91,6 +94,18 @@ class ImportCatalogCommand extends Command
 
         $now = new \DateTime();
 
+        // récupération des Taxonomies
+        $taxons = $this->manager->getRepository(Taxon::class)->findAll();
+        foreach($taxons as $taxon)
+        {
+            $this->_taxons[ $taxon->getId() ] = $taxon;
+        }
+        $mapping = self::convertCsvToArray('var/imports/taxon_sylius_arbo_final.csv');
+        foreach($mapping as $tx)
+        {
+            $this->_mapping[ $tx['magento_id'] ] = $tx['sylius_id'];
+        }
+
         // récupération des TaxCategories
         $taxCategories = $this->manager->getRepository(TaxCategory::class)->findAll();
         foreach($taxCategories as $tc)
@@ -123,6 +138,7 @@ class ImportCatalogCommand extends Command
 
         // conversion du CSV en Array
         $articles = self::convertCsvToArray('var/imports/catalog.csv');
+
         
         //$arts = [3];
         //$arts = [86,87,88,89,90];
@@ -305,7 +321,7 @@ class ImportCatalogCommand extends Command
             }
         }
         
-        $this->manager->flush();
+        //$this->manager->flush();
         return Command::SUCCESS;
     }
 
@@ -328,6 +344,26 @@ class ImportCatalogCommand extends Command
             //$product->setEnabled(false);
             //$product->setEnabled($article['visibility'] == 'Catalog, Search') && ($article['status'] == 'Enabled');
             $product->setEnabled($article['status'] == 'Enabled');
+
+            //taxonomie
+            if(isset($article['taxonomy_ids']))
+            {
+                $taxos = explode('|', $article['taxonomy_ids']);
+                $i = 0;
+                foreach($taxos as $t)
+                {
+                    $sylius_id = $this->_mapping[$t];
+                    $taxon = $this->_taxons[ $sylius_id ];
+
+                    echo "Ajout de la taxo : ".$taxon->getId();
+
+                    $product->addProductTaxon($taxon);
+
+                    if($i == 0) $product->setMainTaxon($taxon);
+                    $i++;
+                }
+            }
+            
 
             // ajout attributs du produit
             if(isset($article['description'])) $product->setDescription( $article['description'] );
