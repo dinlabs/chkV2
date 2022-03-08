@@ -9,6 +9,7 @@ use App\Entity\Product\ProductAttribute;
 use App\Entity\Product\ProductAttributeValue;
 use App\Entity\Product\ProductImage;
 use App\Entity\Product\ProductOption;
+use App\Entity\Product\ProductTranslation;
 use App\Entity\Taxation\TaxCategory;
 use App\Entity\Taxonomy\Taxon;
 use App\Repository\Chullanka\BrandRepository;
@@ -341,15 +342,21 @@ class ImportCatalogCommand extends Command
             $product->setCode($code);
             $product->setName($name);
 
+            // test slug
             if($article['visibility'] == 'Not Visible Individually')
             {
-                $product->setSlug( $this->slugGenerator->generate($name) . '-' . $article['code'] );
+                $slug = $this->slugGenerator->generate($name) . '-' . $article['code'];
             }
             else 
             {
-                if(isset($article['url_key'])) $product->setSlug( $article['url_key'] );
-                //else $product->setSlug( $this->slugGenerator->generate($name) );
+                if(isset($article['url_key'])) $slug = $article['url_key'];
+                //else $slug = $this->slugGenerator->generate($name);
             }
+            while($this->manager->getRepository(ProductTranslation::class)->findOneBySlug($slug))
+            {
+                $slug .= '-1';
+            }
+            $product->setSlug($slug);
 
             $product->addChannel($this->channel);
             $createdAt = new \DateTime($article['created_at']);
