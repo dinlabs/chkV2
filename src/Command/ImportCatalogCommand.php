@@ -431,23 +431,26 @@ class ImportCatalogCommand extends Command
                 $images = explode('|', $article['product_images']);
                 foreach($images as $img)
                 {
-                    $decodedData = file_get_contents($img);// on récupère l'image
-                    $tmpPath = sys_get_temp_dir().'/sf_upload'.uniqid();// qu'on place dans le dossier tmp
-                    file_put_contents($tmpPath, $decodedData);
+                    // on récupère l'image
+                    if($decodedData = file_get_contents($img))
+                    {
+                        $tmpPath = sys_get_temp_dir().'/sf_upload'.uniqid();// qu'on place dans le dossier tmp
+                        file_put_contents($tmpPath, $decodedData);
 
-                    //$uploadedImage = new UploadedFile($imagePath, basename($imagePath));
-                    $uploadedImage = new File($tmpPath);
+                        //$uploadedImage = new UploadedFile($imagePath, basename($imagePath));
+                        $uploadedImage = new File($tmpPath);
 
-                    /** @var ImageInterface $productImage */
-                    $productImage = $this->productImageFactory->createNew();
-                    $productImage->setFile($uploadedImage);
-                    //$productImage->setType($imageType);
+                        /** @var ImageInterface $productImage */
+                        $productImage = $this->productImageFactory->createNew();
+                        $productImage->setFile($uploadedImage);
+                        //$productImage->setType($imageType);
 
-                    $this->imageUploader->upload($productImage);
+                        $this->imageUploader->upload($productImage);
 
-                    $product->addImage($productImage);
+                        $product->addImage($productImage);
 
-                    unlink($tmpPath);//on supprime le fichier temporaire
+                        unlink($tmpPath);//on supprime le fichier temporaire
+                    }
                 }
             }
 
