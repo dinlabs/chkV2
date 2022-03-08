@@ -365,6 +365,7 @@ class ImportCatalogCommand extends Command
             {
                 $taxos = explode('|', $article['taxonomy_ids']);
                 $i = 0;
+                $allreadyDone = [];
                 foreach($taxos as $t)
                 {
                     if(isset($this->_mapping[$t]))
@@ -372,17 +373,22 @@ class ImportCatalogCommand extends Command
                         $sylius_id = $this->_mapping[$t];
                         $taxon = $this->_taxons[ $sylius_id ];
                         
-                        echo "Ajout de la taxo : ".$taxon->getId();
+                        echo "Ajout de la taxo : ".$taxon->getId()."\n";
 
-                        /** @var ProductTaxonInterface $productTaxon */
-                        $productTaxon = $this->productTaxonFactory->createNew();
-                        $productTaxon->setTaxon($taxon);
-                        $productTaxon->setProduct($product);
+                        if(!in_array($taxon->getId(), $allreadyDone))
+                        {
+                            /** @var ProductTaxonInterface $productTaxon */
+                            $productTaxon = $this->productTaxonFactory->createNew();
+                            $productTaxon->setTaxon($taxon);
+                            $productTaxon->setProduct($product);
 
-                        $product->addProductTaxon($productTaxon);
-                        
-                        if($i == 0) $product->setMainTaxon($taxon);
-                        $i++;
+                            $product->addProductTaxon($productTaxon);
+                            
+                            $allreadyDone[] = $taxon->getId();//evite les doublons de catégories
+                            
+                            if($i == 0) $product->setMainTaxon($taxon);
+                            $i++;
+                        }
                     }
                 }
             }
