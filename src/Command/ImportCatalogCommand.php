@@ -432,7 +432,7 @@ class ImportCatalogCommand extends Command
                 foreach($images as $img)
                 {
                     // on récupère l'image
-                    if($decodedData = @file_get_contents($img);)
+                    if($decodedData = @file_get_contents($img))
                     {
                         $tmpPath = sys_get_temp_dir().'/sf_upload'.uniqid();// qu'on place dans le dossier tmp
                         file_put_contents($tmpPath, $decodedData);
