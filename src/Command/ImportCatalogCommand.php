@@ -341,7 +341,11 @@ class ImportCatalogCommand extends Command
             $product->setCode($code);
             $product->setName($name);
 
-            if($article['visibility'] != 'Not Visible Individually')
+            if($article['visibility'] == 'Not Visible Individually')
+            {
+                $product->setSlug( $this->slugGenerator->generate($name) . '-' . $article['code'] );
+            }
+            else 
             {
                 if(isset($article['url_key'])) $product->setSlug( $article['url_key'] );
                 //else $product->setSlug( $this->slugGenerator->generate($name) );
