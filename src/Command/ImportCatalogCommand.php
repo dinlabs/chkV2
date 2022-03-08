@@ -39,6 +39,7 @@ class ImportCatalogCommand extends Command
     protected $slugGenerator;
     protected $productFactory;
     protected $productVariantFactory;
+    protected $productTaxonFactory;
     protected $channelPricingFactory;
     protected $brandFactory;
     private FactoryInterface $productImageFactory;
@@ -56,7 +57,7 @@ class ImportCatalogCommand extends Command
     protected $_stores;
     protected $output;
     
-    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $channelPricingFactory, FactoryInterface $brandFactory, FactoryInterface $productImageFactory, ImageUploaderInterface $imageUploader, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository, BrandRepository $brandRepository)
+    public function __construct(EntityManagerInterface $manager, SlugGeneratorInterface $slugGenerator, ProductFactoryInterface $productFactory, ProductVariantFactoryInterface $productVariantFactory, FactoryInterface $productTaxonFactory, FactoryInterface $channelPricingFactory, FactoryInterface $brandFactory, FactoryInterface $productImageFactory, ImageUploaderInterface $imageUploader, ProductRepositoryInterface $productRepository, ProductVariantRepositoryInterface $productVariantRepository, ChannelRepositoryInterface $channelRepository, BrandRepository $brandRepository)
     {
         parent::__construct();
         
@@ -65,6 +66,7 @@ class ImportCatalogCommand extends Command
         $this->productFactory = $productFactory;
         $this->productVariantFactory = $productVariantFactory;
         $this->channelPricingFactory = $channelPricingFactory;
+        $this->productTaxonFactory = $productTaxonFactory;
         $this->brandFactory = $brandFactory;
         $this->productImageFactory = $productImageFactory;
         $this->imageUploader = $imageUploader;
@@ -358,8 +360,13 @@ class ImportCatalogCommand extends Command
                         $taxon = $this->_taxons[ $sylius_id ];
                         
                         echo "Ajout de la taxo : ".$taxon->getId();
-                        
-                        $product->addProductTaxon($taxon);
+
+                        /** @var ProductTaxonInterface $productTaxon */
+                        $productTaxon = $$this->productTaxonFactory->createNew();
+                        $productTaxon->setTaxon($taxon);
+                        $productTaxon->setProduct($product);
+
+                        $product->addProductTaxon($productTaxon);
                         
                         if($i == 0) $product->setMainTaxon($taxon);
                         $i++;
