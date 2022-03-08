@@ -324,6 +324,10 @@ class ImportCatalogCommand extends Command
         }
         
         $this->manager->flush();
+
+        $end = new \DateTime();
+        print_r($end->diff($now));
+        echo $end->diff($now)->format("%hh%i et %ss");
         return Command::SUCCESS;
     }
 
