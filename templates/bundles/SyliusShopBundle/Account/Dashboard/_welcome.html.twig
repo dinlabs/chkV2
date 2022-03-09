@@ -1,20 +1,25 @@
 <div id="welcome" class="insert">
     {{ sylius_template_event('sylius.shop.account.dashboard.after_content_header', {'customer': customer}) }}
 
-    <div id="customer-information" {{ sylius_test_html_attribute('customer-information') }}>
-        <h1>Bienvenue</h1>
-        <strong>{{ customer.fullName }}</strong>
-        <p><a href="{{ path('sylius_shop_logout') }}">{{ 'sylius.ui.logout'|trans }}</a></p>
+    <div class="entete">
+        <div id="customer-information" {{ sylius_test_html_attribute('customer-information') }}>
+            <h1>Bienvenue</h1>
+            <strong>{{ customer.fullName }}</strong>
+        </div>
+        <img src="{{ asset('chullanka/assets/img/ico-montagne-chull.png') }}" alt="">
     </div>
+    <p><a href="{{ path('sylius_shop_logout') }}">{{ 'sylius.ui.logout'|trans }}</a></p>
 
     {{ sylius_template_event('sylius.shop.account.dashboard.after_information', {'customer': customer}) }}
 
     <div class="preferences">
-        <h2>Vos préférences</h2>
+        <h3>Vos préférences</h3>
         <ul class="links">
             <li><a href="{{ path('sylius_shop_account_profile_update') }}">Mes informations de compte</a></li>
             <li><a href="{{ path('sylius_shop_account_change_password') }}">{{ 'sylius.ui.change_password'|trans }}</a></li>
         </ul>
+
+        <p>Pensez à les vérifier au moins une fois en détails 🧐</p>
         
         {% if not customer.user.verified %}
             <form class="item" id="verification-form" {{ sylius_test_html_attribute('verification-form') }} action="{{ path('sylius_shop_user_request_verification_token') }}" method="post">

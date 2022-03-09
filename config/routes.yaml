@@ -4,8 +4,8 @@ bitbag_sylius_elasticsearch_plugin:
 bitbag_sylius_cms_plugin:
     resource: "@BitBagSyliusCmsPlugin/Resources/config/routing.yml"
 
-bitbag_sylius_wishlist_plugin:
-    resource: "@BitBagSyliusWishlistPlugin/Resources/config/routing.yml"
+#bitbag_sylius_wishlist_plugin:
+#    resource: "@BitBagSyliusWishlistPlugin/Resources/config/routing.yml"
 
 sylius_paypal_webhook:
     resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
@@ -55,6 +55,10 @@ App\Controller\Chullanka\StoreController:
     type: annotation
     resource: App\Controller\Chullanka\StoreController
     prefix: /{_locale}/store
+App\Controller\Chullanka\WishlistController:
+    type: annotation
+    resource: App\Controller\Chullanka\WishlistController
+    prefix: /{_locale}/wishlist
 # noms définis dans services.yaml
 # chk_store_action_index:
 #     path: /{_locale}/store
@@ -105,6 +109,21 @@ app_admin_brand:
                 icon: 'file image outline'
     type: sylius.resource
     prefix: /admin
+
+# app_admin_bloc:
+#     resource: |
+#         alias: app.bloc
+#         section: admin
+#         templates: "@SyliusAdmin\\Crud"
+#         redirect: update
+#         grid: app_admin_bloc
+#         vars:
+#             all:
+#                 subheader: 'Gestion des Blocs +'
+#             index:
+#                 icon: 'file image outline'
+#     type: sylius.resource
+#     prefix: /admin
 
 app_admin_chulli:
     resource: |

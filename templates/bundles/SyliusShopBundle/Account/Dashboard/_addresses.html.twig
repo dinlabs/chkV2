@@ -1,5 +1,9 @@
-<div class="insert" style="height:355px">
-    <h2>Vos adresses</h2>
+<div id="addresses" class="insert">
+    <div class="entete">
+        <h2>Vos adresses</h2>
+        <img src="{{ asset('chullanka/assets/img/ico-adresse.png') }}" alt="">
+    </div>
+
     {% set default_address = (sylius.customer.defaultAddress) %}
     {% for address in customer.addresses %}
     <address {{ sylius_test_html_attribute('address-context', "%s %s"|format(address.firstName, address.lastName)) }}>
@@ -9,6 +13,7 @@
         {#% if address.phoneNumber is not null %}
             {{ address.phoneNumber }}<br>
         {% endif %#}
+        
         {{ address.street }}<br>
         {{ address.postcode }} {{ address.city }}<br>
         {% if address|sylius_province_name is not empty %}

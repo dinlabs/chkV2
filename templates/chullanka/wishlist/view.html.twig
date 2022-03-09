@@ -1,0 +1,58 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block bodyattr %}id="wishlistmanage"{% endblock %}
+
+{% block content %}
+<div class="autoMargin">
+    {% block breadcrumb %}
+    <ul id="breadcrumb">
+        <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+        <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+        <li>Vos listes d'envie</li>
+    </ul>
+    {% endblock %}
+
+    <h2>{{ wishlist }}</h2>
+    
+    <div class="intro">
+        <div class="pichulli">
+            <img src="{{ asset('chullanka/assets/img/chulli_5.jpg') }}" width="66" height="66" alt="Chulli">
+            <svg class="svg-icon" role="img" style="width:66px; height:66px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+        </div>
+        <h3>Waouh, belle liste !</h3>
+        <p>Contactez-nous pour bénéficier d'une réduction sur votre panier.</p>
+    </div>
+    
+    {{ render(path('chk_ajax_getadviceform', {'title': ''})) }}
+
+    <h3>Les produits de votre liste</h3>
+    {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+    <ul>
+    {% for item in wishlist.wishlistProducts %}
+        <li>
+            {% set variant = item.variant %}
+            {% set product = item.product %}
+            <div class="picture">
+                {% if variant.hasImages %}
+                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                {% else %}
+                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                {% endif %}
+            </div>
+            <div class="infos">
+                <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', product.name) }}>
+                    {% if product.brand %}<a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
+                    {% if variant is not null %}
+                        {{ variant }}
+                    {% else %}
+                        {{ product.name }}
+                    {% endif %}
+                </div>
+
+                <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.calculatePrice(variant) }}</div>
+            </div>
+        </li>    
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

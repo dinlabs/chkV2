@@ -201,6 +201,15 @@
     {{ sylius_template_event('sylius.shop.product.show.content', _context) }}
 </div>
 
+
+<div id="panierPop" class="popin hidden" data-url="{{ path('chk_ajax_popaddtocart') }}">
+    <div class="popinside">
+        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg></button>
+        <h2 class="popin-title">Ajouter au panier</h2>
+        <div class="section"></div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block javascripts %}

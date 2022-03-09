@@ -8,6 +8,8 @@ use App\Service\ChronorelaisHelper;
 use App\Service\DpdHelper;
 use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Bundle\OrderBundle\Form\Type\CartItemType;
+use Sylius\Bundle\OrderBundle\Form\Type\CartType;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
@@ -88,6 +90,7 @@ class AjaxController extends AbstractController
         {
             $recall->setProduct($product);
         }
+        $title = $request->get('title') ?? 'Faites-vous conseiller';
         
         //$form = $this->get('form.factory')->create('app_recall');
         $form = $this->createForm(RecallFrontType::class, $recall);
@@ -102,6 +105,7 @@ class AjaxController extends AbstractController
             $allIsGood = true;
         }
         return $this->render($template, [
+            'title' => $title,
             'allIsGood' => $allIsGood,
             'recall' => $recall,
             'form' => $form->createView()
@@ -186,6 +190,23 @@ class AjaxController extends AbstractController
         }
 
         return $this->redirectToRoute('sylius_shop_cart_summary');
+    }
+
+    /**
+     * @Route("/popaddtocart", name="chk_ajax_popaddtocart")
+     */
+    public function popAddToCartAction(Request $request): Response
+    {
+        $variant_id = $request->get('variant_id');
+        $error = $request->get('error');
+        $cart = $this->cartContext->getCart();
+        $form = $this->createForm(CartType::class, $cart);
+        return $this->render('chullanka/ajax/pop_addtocart.html.twig', [
+            'form' => $form->createView(),
+            'cart' => $cart,
+            'variant_id' => $variant_id,
+            'error' => $error,
+        ]);
     }
 
     /**

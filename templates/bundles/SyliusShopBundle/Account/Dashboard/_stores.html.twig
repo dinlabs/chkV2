@@ -1,5 +1,9 @@
 <div id="favoriteStores" class="insert">
-    <h2>Vos magasins favoris</h2>
+    <div class="entete">
+        <h2>Vos magasins favoris</h2>
+        <img src="{{ asset('chullanka/assets/img/ico-mag-chull.png') }}" alt="">
+    </div>
+
     {% if customer.favoriteStores|length == 0 %}
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Commencer</a>
     {% else %}

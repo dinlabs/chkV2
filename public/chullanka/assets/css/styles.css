@@ -644,6 +644,21 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #otherProductsBis .header .svg-icon { position:absolute; top:20px; right:20px; width:100px; height:54px; }
 #otherProductsBis .glider-contain { margin-top:-100px; }
 
+/* Popin ajouter au panier */
+#panierPop .popinside { padding:1em; min-width:340px; }
+#panierPop h2 { padding-bottom:1em; font-size:1.2em; }
+#panierPop .infos small { font-weight:700; }
+#panierPop .quantity { padding-top:1em; }
+#panierPop .sylius-quantity { display:flex; padding:1em 0; }
+#panierPop .sylius-quantity input { border:none; padding:12px; text-align: center; width:60px; color:var(--primary); font-family:var(--altFont); font-size:1.2em; font-weight:700; outline:none; }
+#panierPop .sylius-quantity button { display:grid; place-items:center; background:var(--bg0); border:2px solid var(--default); border-radius:50%; width:43px; height:43px; font-family:var(--altFont); font-size:1.75em; cursor:pointer; }
+
+#panierPop .availability { border-top:2px dashed; padding:.5em 0 1em 0; }
+
+#panierPop .btn { display:flex; justify-content:space-between; align-items:center; background:var(--primary); width:100%; height:50px; line-height:20px; margin-bottom:1em; padding:.5em 1.1em; text-align:left; }
+#panierPop .btn .price { float:right; line-height:1em; text-align:right; }
+#panierPop .btn .price strong { color:inherit; }
+
 
 /* Produits "Pack" */
 #packElements { counter-reset:pack-option; }
@@ -816,12 +831,45 @@ body.checkout { background:var(--bg1); }
 body.customer { background:var(--bg1); }
 .customer .insert { margin-bottom:1em; }
 .customer .dashboard { margin-bottom:2em; text-align:center; }
-.customer .dashboard > * { width:330px; margin:0 auto 1em; text-align:initial; }
+.customer .dashboard a { font-weight:700; }
+.customer .dashboard > * { width:330px; margin:0 auto 2em; text-align:initial; }
+
+.customer .dashboard .insert .entete { display:flex; align-items:center; justify-content:space-between; }
 
 .customer .dashboard #welcome h1 { font-family:var(--altFont); font-size:1.867em; }
-.customer .dashboard #welcome .preferences { margin-top:1em; border-top:2px dashed var(--default); }
+.customer .dashboard #welcome .entete { padding-bottom:1em; }
+.customer .dashboard #welcome .preferences { margin-top:1em; border-top:2px dashed var(--default); padding-top:1em; }
+.customer .dashboard #welcome .preferences h3 { padding-bottom:1em; font-size:.95em; }
 .customer .dashboard #welcome .preferences .links { margin-bottom:1em; }
 .customer .dashboard #welcome .preferences .links li { display:block; }
+
+.customer .dashboard #lastorder small { font-size:.75em; }
+.customer .dashboard #lastorder .items { padding-top:2em; }
+.customer .dashboard #lastorder .items li { display:flex; gap:1em; }
+.customer .dashboard #lastorder .items li .picture { width:25%; }
+.customer .dashboard #lastorder .items li .infos a { color:inherit; }
+.customer .dashboard #lastorder .items li .infos .sylius-total { padding-bottom:1em; font-size:.75em; font-weight:700; }
+.customer .dashboard #lastorder .shipment { padding-bottom:1em; font-size:.75em; }
+.customer .dashboard #lastorder #shipment-status { font-weight:700; }
+.customer .dashboard #lastorder #shipment-status.shipped { color:var(--good); }
+.customer .dashboard #lastorder .links { padding-bottom:1em; }
+.customer .dashboard #lastorder .links p { padding-top:1em; }
+.customer .dashboard #lastorder .getAdvice { margin:1em 0; }
+.customer .dashboard #lastorder .btn.prev { width:100%; }
+
+.customer .dashboard #addresses .entete { margin-bottom:2em; }
+.customer .dashboard #addresses address { border-bottom:2px dashed; padding-bottom:1em; font-style:initial; }
+.customer .dashboard #addresses address p { padding-top:1em; text-align:right; }
+
+.customer .dashboard #advantages h2 { padding-bottom:.75em; }
+.customer .dashboard #advantages h3 { padding-bottom:1.5em; }
+.customer .dashboard #advantages .chullpts { display:flex; gap:1em; align-items:center; padding-bottom:1em; }
+.customer .dashboard #advantages .text-right { padding-bottom:1em; text-align:right; }
+
+.customer .dashboard #wishlists .intro { position:relative; padding:1em 0 1em 80px; }
+.customer .dashboard #wishlists .pichulli { position:absolute; left:0; }
+.customer .dashboard #wishlists .wishlist { display:block; margin:1em; border-radius:5px; border:2px solid var(--bg1); padding:1em; color:inherit; text-decoration:none; }
+.customer .dashboard #wishlists .newishlist { margin-top:2.5em; border-top:2px dashed; padding-top:1.5em; }
 
 .customer .dashboard #favoriteStores ul,
     .customer .dashboard #favoriteSports ul { margin:1em 0; }
@@ -838,6 +886,11 @@ body.customer { background:var(--bg1); }
     #favorite_sports .choice_sport label .svg-icon { margin-right:.5em; width:30px; height:28px; fill:none; cursor:pointer; }
 #favorite_stores .choice_store input[type='checkbox']:checked + label .svg-icon,
     #favorite_sports .choice_sport input[type='checkbox']:checked + label .svg-icon { fill:var(--primary); }
+
+#wishlistmanage .intro { position:relative; padding:1em 0 1em 80px; margin-bottom:2em; }
+#wishlistmanage .intro .pichulli { position:absolute; left:0; }
+#wishlistmanage .getAdvice { margin-bottom:2em; }
+#wishlistmanage h3 { padding-bottom:2em; }
 
 
 /* MAGASINS */
@@ -888,6 +941,10 @@ body.customer { background:var(--bg1); }
 /* CMS */
 .bitbag-page-content h2 { padding-bottom:1em; }
 .bitbag-page-content p { padding-bottom:1.5em; }
+.bitbag-page-content ul, .bitbag-page-content ol { padding:0 0 .5em .5em; }
+.bitbag-page-content li { position:relative; padding:0 0 .5em .75em; }
+.bitbag-page-content li::before { content:''; position:absolute; left:0; top:7px; display:block; background:var(--primary); width:5px; height:5px; border-radius:50%; }
+
 
 /* MEDIA QUERIES */
 @media screen and (min-width:500px) {

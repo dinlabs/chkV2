@@ -1,0 +1,82 @@
+{% if error %}
+    <div class="error">
+        {% if app.session is not null and app.session.started %}
+            {% for flash in app.session.flashbag.get('error') %}
+            <div class="message sylius-flash-message">
+                <p {{ sylius_test_html_attribute('flash-messages') }}>
+                {% if flash is iterable %}
+                    {{ flash.message|trans(flash.parameters, 'flashes') }}
+                {% else %}
+                    {{ flash|trans({}, 'flashes') }}
+                {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% else %}
+    {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'loadable', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+    {{ form_errors(form) }}
+    <input type="hidden" name="_method" value="PATCH"/>
+    {{ form_row(form._token) }}
+
+
+    {% for key, item in cart.items %}
+        {% set variant = item.variant %}
+        {% if variant.id == variant_id %}
+        <div class="infos">
+            {% set product = variant.product %}
+            {% if product.hasOptions() %}
+            <div class="sylius-product-options" {{ sylius_test_html_attribute('product-options') }}>
+                {% for optionValue in variant.optionValues %}
+                    <small>{{ optionValue.name }}&nbsp;:</small>
+                    <span class="item" data-sylius-option-name="{{ optionValue.name }}" {{ sylius_test_html_attribute('option-name', optionValue.name) }}>
+                        {{ optionValue.value }}
+                    </span>
+                    <br>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% set formItem = form.items[key] %}
+            <div class="quantity">
+                <small>{{ 'sylius.ui.quantity'|trans }}</small>
+                <div class="sylius-quantity">
+                    <button class="updateQuantity up">+</button>
+                    {{ form_widget(formItem.quantity, {'attr': {'data-max-available': variant.maxQty}}) }}
+                    <button class="updateQuantity down">-</button>
+                </div>
+            </div>
+
+            <div class="availability">
+                {% set dispoMag = 0 %}
+                {% set quelMag = '' %}
+                {% for stock in variant.stocks %}
+                    {% if stock.onHand > 0 %}
+                        {% set dispoMag = dispoMag + 1 %}
+                        {% set quelMag = stock.store.name %}
+                    {% endif %}
+                {% endfor %}
+                {% if variant.onHand > 0 %}
+                <p>En stock</p>
+                {% else %}
+                    {% if dispoMag == 1 %}
+                    <p>En stock - Uniqumement disponible dans le magasin {{ quelMag }} en Click and Collect GRATUIT</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn" style="font-weight:300;" {{ sylius_test_html_attribute('cart-update-button') }}>
+                <span>{{ 'sylius.ui.add_to_cart'|trans }}</span>
+                {% include '@SyliusShop/Product/_price.html.twig' %}
+            </button>
+
+        </div>
+
+        <a href="{{ path('chk_wishlist_add_product', {'variant_id': variant_id}) }}">
+            <i class="icon heart"></i> Ajout à une liste d'envie
+        </a>
+        {% endif %}
+    {% endfor %}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endif %}

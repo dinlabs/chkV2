@@ -69,6 +69,48 @@ final class DefaultController extends AbstractController
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper)
     {
 
+        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(46);
+
+        echo $order->isPanierMixte() ? "panier mixte" :" ok";
+        die;
+
+        $noShip = $noShop = false;
+		$inShop = [];
+        foreach($order->getItems() as $item)
+        {
+            $askQty = $item->getQuantity();
+            $variant = $item->getVariant();
+
+            if(!$variant->getOnHand() < $askQty) $noShip = true;
+            foreach($variant->getStocks() as $stock)
+            {
+                $inShop[ $variant->getId() ][ $stock->getStore()->getId() ] = (bool)$stock->getOnHand();
+            }
+        }
+        
+        // test tous les produits par magasin
+		$noShop = true;
+		foreach($inShop as $p => $dispo)
+		{
+			if(!isset($dispoShops)) $dispoShops = $dispo;
+			$dispoShops = array_intersect_assoc($dispoShops, $dispo);
+		}
+
+        foreach($dispoShops as $s => $dispo)
+		{
+			if($dispo) $noShop = false;
+		}
+		
+		// si c'est indispo en livraison et en magasin pour certains produits = panier mixte
+		if((count($order->getItems()) > 1) && $noShip && $noShop) 
+        {
+            echo "<p>panier mixte !</>";
+        }
+        echo "tout va bien";
+
+        die;
+
+
         $taxCats = $this->container->get('doctrine')->getRepository(TaxCategory::class)->findAll();
         dd($taxCats);
         die;

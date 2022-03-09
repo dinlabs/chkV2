@@ -1,16 +1,11 @@
 <div class="getAdvice">
     <div class="insert">
-    {% if title is not empty %}
-        <strong>{{ title }}</strong>
-    {% endif %}
+        <strong>Un question sur votre achat ?</strong>
     {% if allIsGood %}
         <p>Votre demande a été enregistrée ; nous allons vous appeler !</p>
     {% else %}
         {{ form_start(form) }}
             {{ form_widget(form.phone_number, {'attr': {'placeholder': 'Votre numéro de téléphone'}}) }}
-            {% if recall.product %}
-            <input type="hidden" name="pid" value="{{ recall.product.id }}">
-            {% endif %}
             <button type="submit" class="btn btnCall">
                 <div class="pichulli">
                     <img src="{{ asset('chullanka/assets/img/chulli_3.jpg') }}" width="60" height="60" alt="Chulli">

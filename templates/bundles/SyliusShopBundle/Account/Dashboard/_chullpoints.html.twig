@@ -1,10 +1,21 @@
-<div class="insert" style="height:485px">
+<div id="advantages" class="insert">
     <h2>Vos points et avantage</h2>
-    <p>Vous avez <strong>{{ customer.chullpoints }}</strong> points</p>
-    <p>{{ customer.reduction ~ '€' }} sur votre prochaine commande</p>
 
+    <h3>Vous avez {{ customer.chullpoints }} points</h3>
+
+    <div class="chullpts">
+        <div>
+            <svg class="svg-icon" role="img" style="width:87.333px; height:36.958px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#chullpoints') }}"/></svg>
+            <span>{{ customer.reduction ~ '€' }}</span>
+        </div>
+        <strong>sur votre prochaine commande</strong>
+    </div>
+    <p class="text-right"><a href="#">En savoir plus</a></p>
+
+    {#
     <div>
         <h4>Vous êtes licencié d'un club (FFME, FFS, ...) ?</h4>
         <p>Profitez de réduction toute l'année grâce à votre licence.</p>
     </div>
+    #}
 </div>

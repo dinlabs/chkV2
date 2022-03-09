@@ -16,6 +16,7 @@ use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
@@ -129,21 +130,27 @@ class EventSubscriber implements EventSubscriberInterface
     public function onSyliusOrderItemAddToCart(GenericEvent $event)
     {
         //error_log("onSyliusOrderItemAddToCart");
+        $data = [];
         $orderItem = $event->getSubject();//OrderItem::class
 
-        $order = $orderItem->getOrder();
-        if($order->isPanierMixte())
+        $variant = $orderItem->getVariant();
+        $data['variant_id'] = $variant->getId();
+
+        $data['error'] = '';
+        if(($order = $orderItem->getOrder()) && $order->isPanierMixte())
         {
             //todo; retirer le message "bien ajouté"!
             $flash = $this->session->getFlashBag()->get('success');
-
-
+            
             $this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
-
+            
             $order->removeItem($orderItem);
             $this->entityManager->persist($order);
             $this->entityManager->flush();
+            
+            $data['error'] = 'paniermixte';
         }
+        $event->setResponse(new JsonResponse($data));
     }
 
     /**

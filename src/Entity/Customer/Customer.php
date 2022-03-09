@@ -9,6 +9,7 @@ use App\Entity\Chullanka\Recall;
 use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\Sport;
 use App\Entity\Chullanka\Store;
+use App\Entity\Chullanka\Wishlist;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -67,6 +68,11 @@ class Customer extends BaseCustomer
      */
     private $historicOrders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Wishlist::class, mappedBy="customer", orphanRemoval=true)
+     */
+    private $wishlists;
+
     public function __construct()
     {
         parent::__construct();
@@ -75,6 +81,7 @@ class Customer extends BaseCustomer
         $this->recalls = new ArrayCollection();
         $this->rmas = new ArrayCollection();
         $this->historicOrders = new ArrayCollection();
+        $this->wishlists = new ArrayCollection();
     }
 
     public function getChullpoints(): ?int
@@ -284,5 +291,35 @@ class Customer extends BaseCustomer
     public function reduction()
     {
         return floor($this->chullpoints / 500) * -10;
+    }
+
+    /**
+     * @return Collection|Wishlist[]
+     */
+    public function getWishlists(): Collection
+    {
+        return $this->wishlists;
+    }
+
+    public function addWishlist(Wishlist $wishlist): self
+    {
+        if (!$this->wishlists->contains($wishlist)) {
+            $this->wishlists[] = $wishlist;
+            $wishlist->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWishlist(Wishlist $wishlist): self
+    {
+        if ($this->wishlists->removeElement($wishlist)) {
+            // set the owning side to null (unless already changed)
+            if ($wishlist->getCustomer() === $this) {
+                $wishlist->setCustomer(null);
+            }
+        }
+
+        return $this;
     }
 }

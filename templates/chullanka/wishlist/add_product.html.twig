@@ -1,0 +1,18 @@
+<h2>Ajouter à une liste d'envie</h2>
+<div>
+    <p>Ajoute des produits à tes listes d’envies pour les retrouver plus tard, tu pourras ainsi les partager avec tes compagnons d'aventure et vous pourrez préparer votre prochaine expedition.  </p>
+</div>
+{% if notuser is defined %}
+    <p>Il faut être connecté pour utiliser cette fonctionnalité</p>
+{% else %}
+<form action="{{ path('chk_wishlist_add_product', {'variant_id': variant_id}) }}" method="post">
+    <ul>
+        {% for item in wishlists %}
+        <li><input type="radio" name="wishlist_id" id="wishlist_{{ item.id }}" value="{{ item.id }}"> <label for="wishlist_{{ item.id }}">{{ item.name }}</label></li>
+        {% endfor %}
+        <li><input type="radio" name="wishlist_id" id="newishlist" value="0" checked="checked"> <label for="newishlist">Nouvelle liste</label> <input type="text" name="newishlist" placeholder="Nouvelle liste d'envie"></li>
+    </ul>
+
+    <button type="submit" name="submit" value="true" class="btn primary">Ajouter ce produit</button>
+</form>
+{% endif %}

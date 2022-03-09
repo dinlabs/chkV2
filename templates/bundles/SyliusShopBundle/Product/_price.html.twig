@@ -1,5 +1,7 @@
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
-{% set variant = product|sylius_resolve_variant %}
+{% if variant is not defined %}
+    {% set variant = product|sylius_resolve_variant %}
+{% endif %}
 {% if variant %}
 <div class="price">
     {% if variant|sylius_has_discount({'channel': sylius.channel}) %}
