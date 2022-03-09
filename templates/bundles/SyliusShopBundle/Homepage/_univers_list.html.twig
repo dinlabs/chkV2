@@ -1,0 +1,14 @@
+{% for taxon in univers %}
+    {% set _bgCat = '' %}
+    {% if taxon.images is not empty %}
+        {% if taxon.imagesByType('bg') is not empty %}
+        {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+        {% else %}
+        {% set _bgCat = taxon.images.first.path|imagine_filter(filter|default('chullanka_category')) %}
+        {% endif %}
+    {% endif %}
+
+    <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}"{% if _bgCat %} class="withBgImg"><img src="{{ _bgCat }}" alt="">{% else %}>{% endif %}
+        <span>{{ taxon.name }}</span>
+    </a>
+{% endfor %}
