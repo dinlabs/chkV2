@@ -1,6 +1,10 @@
 # UPDATE `sylius_taxon` SET `code` = replace(`code`, '-', '_');
 # ==> les signes '-'' cassent la recherche ES !
 
+parameters:
+    bitbag_es_excluded_filter_options: []
+    bitbag_es_excluded_filter_attributes: ['imported_data', 'ginkoia_class3']
+
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
     clients:
