@@ -1,0 +1,41 @@
+{% if media.enabled and media.products %}
+<div id="{{ media.code }}" class="noMask">
+    <div class="header" style="background-image:url({{ media.path }});">
+        <div class="autoMargin">
+            <h2>{{ media.name|raw }}</h2>
+            <div class="discount">
+                {{ bitbag_cms_render_content(media) }}
+            </div>
+        </div>
+    </div>
+    <div class="glider-contain">
+        <div class="glider">
+            {% for product in media.products %}
+                <div>{% include '@SyliusShop/Product/_box.html.twig' %}</div>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+    </div>
+    <script>
+        window.addEventListener('load', function(){
+            new Glider(document.querySelector('#packs .glider'), { 
+                slidesToShow: 2.25,
+                slidesToScroll: 1,
+                draggable: true,
+                scrollLock: true,
+                dots: '#packs .dots',
+                responsive: [
+                    {
+                        // screens greater than >= 1024px
+                        breakpoint: 1024,
+                        settings: {
+                            itemWidth:180,
+                            slidesToShow: 'auto',
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</div>
+{% endif %}

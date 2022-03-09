@@ -2,11 +2,10 @@
     <div class="autoMargin">
         <h2>Trouvez votre équipement</h2>
     </div>
+
     <div class="glider-contain">
         <div class="glider">
-            {% for i in 1..12 %}
-            <a href="#"><img src="//picsum.photos/150/230?random={{ i|number_format }}" alt=""></a>
-            {% endfor %}
+            {{ render(path('get_first_level_taxon')) }}
         </div>
         <div role="tablist" class="dots"></div>
     </div>

@@ -15,6 +15,7 @@ use App\Entity\Product\ProductAttributeValue;
 use App\Entity\Product\ProductOption;
 use App\Entity\Shipping\ShippingMethod;
 use App\Entity\Taxation\TaxCategory;
+use App\Entity\Taxonomy\Taxon;
 use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
@@ -261,6 +262,17 @@ final class DefaultController extends AbstractController
             echo "C ajouté !";*/
         }
         die;
+    }
+
+    /**
+     * @Route("/getunivers", name="get_first_level_taxon")
+     */
+    public function getUniversAction(Request $request)
+    {
+        $univers = $this->container->get('doctrine')->getRepository(Taxon::class)->findBy(['level' => 1], ['position' => 'ASC']);
+        return $this->render('@SyliusShop/Homepage/_univers_list.html.twig', [
+            'univers' => $univers
+        ]);
     }
 
     /**

@@ -267,8 +267,8 @@ header + .sylius-flash-message { margin-top:-1rem; }
 #insurance .inside ul img { border-radius:50%; }
 #insurance .inside + a { display:inline-block; }
 
-#packs .header { background-image:url(../img/bg-bundlist.jpg); }
-#packs .header .discount { background:url(../img/bg-promo.png) no-repeat; width:136px; height:143px; padding:50px 15px 0 15px; color:var(--bg0); font-family:var(--altFont); font-size:1.067em; line-height:1.25em; }
+/*#packs .header { background-image:url(../img/bg-bundlist.jpg); }*/
+#packs .header .discount { /*background:url(../img/bg-promo.png) no-repeat; width:136px; height:143px; padding:50px 15px 0 15px; color:var(--bg0);*/ font-family:var(--altFont); font-size:1.067em; line-height:1.25em; }
 
 #packs .glider-contain { text-align:center; }
 #packs .glider { padding:0 1em; }
@@ -336,7 +336,10 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #announces .glider .glider-slide img { width:320px; height:560px; }
 
 .home #sports h2 { padding:0 20px; }
-.home #sports .glider .glider-slide img { width:150px; height:230px; border-radius:5px; }
+.home #sports .glider .glider-slide { position:relative; }
+.home #sports .glider .glider-slide span { position:absolute; top:0; left:0; display:grid; place-items:end; width:150px; height:230px; padding:1em; border:1px solid var(--bg1); border-radius:5px; }
+.home #sports .glider .glider-slide.withBgImg span { color:var(--bg0); border:none; }
+.home #sports .glider img { display:block; width:150px; height:230px; object-fit:cover; border-radius:5px; }
 
 .home #topBrands { background:url(../img/bg-marques.jpg) no-repeat center center / cover; padding:30px 0; text-align:center; }
 .home #topBrands h2, .univers #topBrands h2, .category #topBrands h2 { padding:0 20px; text-align:initial; }
@@ -503,7 +506,7 @@ footer #ourAdventure picture { display:block; text-align:center; }
 .univers #categoryTop { padding-bottom:1em; }
 .univers #categoryTop #category { padding:0; }
 .univers #categoryTop .subcats .glider a { display:flex; flex-wrap:wrap; align-content:space-between; border-radius:5px; padding:1em; background:rgba(255,255,255,.8); width:150px; height:260px; text-align:center; font-family:var(--altFont); font-size:1.2em; font-weight:700; color:inherit; text-decoration:none; }
-.univers #categoryTop .subcats .glider a img { max-width:114px; border-radius:5px; }
+.univers #categoryTop .subcats .glider a img { width:114px; height:114px; object-fit:cover; border-radius:5px; }
 
 
 
