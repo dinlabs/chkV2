@@ -6,6 +6,10 @@ namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\Brand;
 use App\Entity\Product\Product;
+use App\Finder\ShopProductsFinder;
+use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\DataHandlerInterface;
+use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\PaginationDataHandlerInterface;
+use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\SortDataHandlerInterface;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,10 +27,28 @@ final class BrandController extends AbstractController
     /** @var Environment */
     private $twig;
 
-    public function __construct(ManagerRegistry $managerRegistry, Environment $twig)
+    /** @var DataHandlerInterface */
+    private $shopProductListDataHandler;
+
+    /** @var SortDataHandlerInterface */
+    private $shopProductsSortDataHandler;
+
+    /** @var PaginationDataHandlerInterface */
+    private $paginationDataHandler;
+
+    public function __construct(
+        ManagerRegistry $managerRegistry, 
+        Environment $twig, 
+        DataHandlerInterface $shopProductListDataHandler,
+        SortDataHandlerInterface $shopProductsSortDataHandler,
+        PaginationDataHandlerInterface $paginationDataHandler,
+    )
     {
         $this->managerRegistry = $managerRegistry;
         $this->twig = $twig;
+        $this->shopProductListDataHandler = $shopProductListDataHandler;
+        $this->shopProductsSortDataHandler = $shopProductsSortDataHandler;
+        $this->paginationDataHandler = $paginationDataHandler;
     }
 
     /**
@@ -83,45 +105,69 @@ final class BrandController extends AbstractController
      * has to be the last route!
      * @Route("/{code}", name="brand_view")
      */
-    public function viewAction(Request $request, FormFactoryInterface $formFactory): Response
+    public function viewAction(
+        Request $request, 
+        FormFactoryInterface $formFactory, 
+        ShopProductsFinder $shopProductsFinder
+    ): Response
     {
         $code = $request->get('code');
         $brand = $this->managerRegistry->getRepository(Brand::class)->findOneByCode($code);
 
-        //top prod
-        $topProduct = $this->managerRegistry->getRepository(Product::class)->find(1);
-
-        $products = $this->managerRegistry->getRepository(Product::class)->findBy(
-            ['brand' => $brand]
-        );
-
-        /*$form = $formFactory->create(ShopProductsFilterType::class);
+        // Filters
+        //$form = $formFactory->create(ShopProductsFilterType::class);
         //$form = $this->createForm(ShopProductsFilterType::class);
-        $form->handleRequest($request);
+        /*$form->handleRequest($request);
         $requestData = array_merge(
             $form->getData(),
             $request->query->all()
         );*/
+        $requestData = array_merge(
+            [
+                'name' => null, 
+                'price' => ['min_price' => null, 'max_price' => null],
+                'slug' => ''
+            ],
+            $request->query->all()
+        );
+
+        //dd($requestData);
 
         /*if (!$form->isValid()) {
             $requestData = $this->clearInvalidEntries($form, $requestData);
         }*/
 
-        /*$data = array_merge(
-            $this->shopProductListDataHandler->retrieveData($requestData),
-            $this->shopProductsSortDataHandler->retrieveData($requestData),
+        //default
+        $data = array_merge(
+            [
+                'name' => $requestData['name'],
+                'product_taxons' => '',
+                'sort' => [
+                    'price' => [
+                        'order' => 'asc',
+                        'unmapped_type' => 'keyword'
+                    ]
+                ]
+            ],
             $this->paginationDataHandler->retrieveData($requestData)
-        );*/
+        );
 
-        //$template = $request->get('template');
-        //$products = $this->shopProductsFinder->find($data);
+        if(isset($requestData['slug']) && !empty($requestData['slug']))
+        {
+            $data = array_merge(
+                $data,
+                $this->shopProductListDataHandler->retrieveData($requestData),
+                $this->shopProductsSortDataHandler->retrieveData($requestData),
+            );
+        }
 
+        //dd($data);
 
-
+        $data['brand'] = [ $brand->getEscode() ];
+        $products = $shopProductsFinder->find($data);
 
         return new Response($this->twig->render('chullanka/brand/view.html.twig', [
             'brand' => $brand,
-            'topproduct' => $topProduct,
             //'form' => $form->createView(),
             'products' => $products,
         ]));

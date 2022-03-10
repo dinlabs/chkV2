@@ -90,6 +90,10 @@ class BrandType extends AbstractResourceType
                 'label' => 'Tag Instagram',
                 'required' => false
             ])
+            ->add('top_products', ProductAutocompleteChoiceType::class, [
+                'label' => 'Produits "Nouveautés"',
+                'multiple' => true,
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
                 $entity = $event->getData();
                 if(!is_null($entity->getCode()))

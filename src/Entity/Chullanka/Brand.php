@@ -123,12 +123,19 @@ class Brand implements ResourceInterface, TranslatableInterface
      */
     private $taxa;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class)
+     * @ORM\JoinTable(name="nan_chk_brand_top_product")
+     */
+    private $top_products;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
         $this->setCurrentLocale('fr_FR');// hack de YL pour forcer la locale !
         $this->products = new ArrayCollection();
         $this->taxa = new ArrayCollection();
+        $this->top_products = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -465,6 +472,30 @@ class Brand implements ResourceInterface, TranslatableInterface
         if ($this->taxa->removeElement($taxon)) {
             $taxon->removeTopBrand($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getTopProducts(): Collection
+    {
+        return $this->top_products;
+    }
+
+    public function addTopProduct(Product $topProduct): self
+    {
+        if (!$this->top_products->contains($topProduct)) {
+            $this->top_products[] = $topProduct;
+        }
+
+        return $this;
+    }
+
+    public function removeTopProduct(Product $topProduct): self
+    {
+        $this->top_products->removeElement($topProduct);
 
         return $this;
     }

@@ -1,9 +1,21 @@
-{% extends '@SyliusShop/layout.html.twig' %}
+{#% extends '@SyliusShop/layout.html.twig' %#}
+{% extends app.request.xmlHttpRequest 
+     ? '@SyliusShop/layout_ajax.html.twig'
+     : '@SyliusShop/layout.html.twig' %}
+
+{% import '@SyliusUi/Macro/messages.html.twig' as messages %}
+{% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}
+
+{% set ajax_pagination = app.request.get('page') %}
 
 {% block title %}{{ brand.name }}{% endblock %}
 {% block bodyattr %}id="brand"{% endblock %}
 
 {% block content %}
+
+{% if app.request.xmlHttpRequest == false %}
+<div id="js-loader" class="ui form"></div>
+
 <div id="brandTop"{% if brand.background %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.background) }});"{% endif %}>
     <div class="autoMargin">
         <ul id="breadcrumb" class="autoMargin">
@@ -38,10 +50,13 @@
 </div>
 
 <div class="autoMargin">
-{{ bitbag_cms_render_block('un_code') }}
+{#{ bitbag_cms_render_block('un_code') }#}
     
     {#{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }#}
     <div id="searchWrapper">
+{% endif %}
+
+        {% if ajax_pagination == false %}
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
             {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
         </div>
@@ -63,12 +78,26 @@
                     {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 </div>
 
-                {#{ pagination.simple(products) }#}
+                {{ pagination.simple(products) }}
             {% endif %}
         </div>
+        {% else %}
+            {# pagination en AJAX #}
+                {% if products|length > 0 %}
+                {% set _count = 0 %}
+                {% for product in products %}
+                    {% include '@SyliusShop/Product/_box.html.twig' %}
+                    {% set _count = _count + 1 %}
+                {% endfor %}
+                {# Fake pour alignement Flex ! #}
+                {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
+                {% endif %}
+                {{ pagination.simple(products) }}
+            {% endif %}
+
+{% if app.request.xmlHttpRequest == false %}
     </div>
     {#{ form_end(form, {'render_rest': false}) }#}
-
 
     <div id="description" class="anchor">
         <div>{{ brand.description|raw }}</div>
@@ -77,4 +106,11 @@
 		</div>
 	</div>
 </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_js_pagination.html.twig' %}
 {% endblock %}
