@@ -41,7 +41,7 @@
             </div>
 
             {% if brand.TopProduct %}
-            <div class="topProduct"{% if brand.ProductBackground %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
+            <div class="topProduct big"{% if brand.ProductBackground %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
                 {% include '@SyliusShop/Product/_box.html.twig' with {'product': brand.TopProduct} %}
             </div>
             {% endif %}
@@ -60,8 +60,47 @@
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
             {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
         </div>
-        <div id="productList" class="prodList">
+        <div id="productList">
+            {% if brand.topProducts %}
+            <div id="news">
+                <h2>Voici les Nouveautés {{ brand.name }}</h2>
+                <div class="prodList">
+                    <div class="list big">
+                        {% for product in brand.topProducts %}
+                        <div>
+                            {% include '@SyliusShop/Product/_box.html.twig' %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div role="tablist" class="dots"></div>
+                    <script>
+                        window.addEventListener('load', function(){
+                            new Glider(document.querySelector('#news .list'), { 
+                                itemWidth: 325,
+                                slidesToShow: 1,
+                                slidesToScroll : 1,
+                                duration: 2,
+                                draggable: true,
+                                scrollLock: true,
+                                dots: '.dots',
+                                responsive: [
+                                    {
+                                        breakpoint: 1024,
+                                        settings: {
+                                            slidesToShow: 'auto'
+                                        }
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            {% endif %}
+
+
             {% if products|length > 0 %}
+            <div class="prodList">
                 <h2>Tous les produits {{ brand.name }}</h2>
                 <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
                     {% set _count = 0 %}
@@ -79,6 +118,7 @@
                 </div>
 
                 {{ pagination.simple(products) }}
+            </div>
             {% endif %}
         </div>
         {% else %}
