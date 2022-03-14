@@ -9,6 +9,7 @@ use App\Entity\Product\ProductAttribute;
 use App\Entity\Product\ProductAttributeValue;
 use App\Entity\Product\ProductImage;
 use App\Entity\Product\ProductOption;
+use App\Entity\Product\ProductOptionValue;
 use App\Entity\Product\ProductTranslation;
 use App\Entity\Taxation\TaxCategory;
 use App\Entity\Taxonomy\Taxon;
@@ -342,7 +343,11 @@ class ImportCatalogCommand extends Command
                                     if($optValue->getValue() == $artVal)
                                     {
                                         // ajoute l'option
-                                        $found->addOptionValue($optValue);
+                                        $optionValue = new ProductOptionValue();
+                                        $optionValue->setOption($option);
+                                        $optionValue->setValue($optValue);
+
+                                        $found->addOptionValue($optionValue);
                                     }
                                 }
                             }
