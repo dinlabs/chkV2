@@ -154,7 +154,7 @@ class ImportCatalogCommand extends Command
                 $art_uuid = $art['code'];
                 $found = $this->productVariantRepository->findOneByCode($art_uuid);
                 if(!$found)
-                {   
+                {
                     $name = $art['name'];
                     $parent_code = isset($art['parent_code']) ? $art['parent_code'] : '';
             
@@ -325,6 +325,35 @@ class ImportCatalogCommand extends Command
                         $mp->setSylius( $productVariant->getId() );
                         $this->manager->persist($mp);
                     }       
+                }
+                else
+                {
+                    // update options
+                    $productVariant = $found;
+                    // ajout option de variantes
+                    foreach($this->_options as $opt => $option)
+                    {
+                        if(isset($art[ $opt ]))
+                        {
+                            $optValues = $option->getValues();
+                            $artVals = explode('|', $art[ $opt ]);
+                            foreach($artVals as $artVal)
+                            {
+                                echo "artVal : $artVal\n";
+                                foreach($optValues as $optValue)
+                                {
+                                    echo "optVal : " . $optValue->getValue() . "\n";
+                                    if($optValue->getValue() == $artVal)
+                                    {
+                                        echo "ok\n";
+                                        // ajoute l'option
+                                        $productVariant->addOptionValue($optValue);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $this->manager->persist($productVariant);
                 }
             }
         }
