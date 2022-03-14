@@ -30,11 +30,18 @@ class Taxon extends BaseTaxon
      */
     private $top_products;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Taxon::class)
+     * @ORM\JoinTable(name="nan_chk_taxon_other_taxon")
+     */
+    private $other_taxons;
+
     public function __construct()
     {
         parent::__construct();
         $this->top_brands = new ArrayCollection();
         $this->top_products = new ArrayCollection();
+        $this->other_taxons = new ArrayCollection();
     }
 
     protected function createTranslation(): TaxonTranslationInterface
@@ -96,6 +103,30 @@ class Taxon extends BaseTaxon
     public function removeTopProduct(Product $topProduct): self
     {
         $this->top_products->removeElement($topProduct);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Taxon[]
+     */
+    public function getOtherTaxons(): Collection
+    {
+        return $this->other_taxons;
+    }
+
+    public function addOtherTaxon(Taxon $otherTaxon): self
+    {
+        if (!$this->other_taxons->contains($otherTaxon)) {
+            $this->other_taxons[] = $otherTaxon;
+        }
+
+        return $this;
+    }
+
+    public function removeOtherTaxon(Taxon $otherTaxon): self
+    {
+        $this->other_taxons->removeElement($otherTaxon);
 
         return $this;
     }

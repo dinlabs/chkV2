@@ -22,12 +22,15 @@
         "bitbag/elasticsearch-plugin": "^2.0",
         "bitbag/wishlist-plugin": "^1.9",
         "sensio/framework-extra-bundle": "^6.2",
+        "setono/sylius-feed-plugin": "^0.6.9",
         "sylius/invoicing-plugin": "^0.19.0",
         "sylius/paypal-plugin": "^1.1",
         "sylius/refund-plugin": "^1.0",
         "sylius/sylius": "~1.10.0",
         "symfony/dotenv": "^4.4 || ^5.2",
         "symfony/flex": "^1.11",
+        "symfony/mailchimp-mailer": "^6.0",
+        "symfony/mailer": "^6.0",
         "symfony/security-bundle": "5.3"
     },
     "require-dev": {
@@ -95,7 +98,13 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "symfony/flex": true,
+            "symfony/thanks": true
+        }
     },
     "extra": {
         "symfony": {

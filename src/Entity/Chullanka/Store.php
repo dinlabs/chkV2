@@ -103,6 +103,8 @@ class Store implements ResourceInterface, TranslatableInterface
      */
     private $chullis;
 
+    private $director;
+
     public function __construct()
     {
         $this->initializeTranslationsCollection();
@@ -435,5 +437,14 @@ class Store implements ResourceInterface, TranslatableInterface
         }
 
         return $this;
+    }
+
+    public function getDirector()
+    {
+        foreach($this->chullis as $chulli)
+        {
+            if($chulli->isLeader()) return $chulli;
+        }
+        return false;
     }
 }
