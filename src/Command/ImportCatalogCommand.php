@@ -343,16 +343,13 @@ class ImportCatalogCommand extends Command
                                     if($optValue->getValue() == $artVal)
                                     {
                                         // ajoute l'option
-                                        $optionValue = new ProductOptionValue();
-                                        $optionValue->setOption($option);
-                                        $optionValue->setValue($optValue);
-
-                                        $found->addOptionValue($optionValue);
+                                        $found->addOptionValue($optValue);
                                     }
                                 }
                             }
                         }
                     }
+                    $this->manager->persist($found);
                 }
             }
         }
