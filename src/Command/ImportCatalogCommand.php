@@ -328,8 +328,6 @@ class ImportCatalogCommand extends Command
                 }
                 else
                 {
-                    // update options
-                    $productVariant = $found;
                     // ajout option de variantes
                     foreach($this->_options as $opt => $option)
                     {
@@ -339,21 +337,17 @@ class ImportCatalogCommand extends Command
                             $artVals = explode('|', $art[ $opt ]);
                             foreach($artVals as $artVal)
                             {
-                                echo "artVal : $artVal\n";
                                 foreach($optValues as $optValue)
                                 {
-                                    echo "optVal : " . $optValue->getValue() . "\n";
                                     if($optValue->getValue() == $artVal)
                                     {
-                                        echo "ok\n";
                                         // ajoute l'option
-                                        $productVariant->addOptionValue($optValue);
+                                        $found->addOptionValue($optValue);
                                     }
                                 }
                             }
                         }
                     }
-                    $this->manager->persist($productVariant);
                 }
             }
         }
