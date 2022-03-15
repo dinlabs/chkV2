@@ -72,4 +72,7 @@ return [
     Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
     Sylius\InvoicingPlugin\SyliusInvoicingPlugin::class => ['all' => true],
     Sylius\RefundPlugin\SyliusRefundPlugin::class => ['all' => true],
+    Xynnn\GoogleTagManagerBundle\GoogleTagManagerBundle::class => ['all' => true],
+    GtmPlugin\GtmPlugin::class => ['all' => true],
+    StefanDoorn\SyliusGtmEnhancedEcommercePlugin\SyliusGtmEnhancedEcommercePlugin::class => ['all' => true],
 ];
