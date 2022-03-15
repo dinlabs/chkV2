@@ -166,24 +166,29 @@ class ImportCatalogCommand extends Command
                         // ajout option de variantes
                         foreach($this->_options as $opt => $option)
                         {
+                            echo "Opt : $opt\n";
                             if(isset($art[ $opt ]))
                             {
+                                echo "Val : ".$art[ $opt ]."\n";
                                 $optValues = $option->getValues();
                                 $artVals = explode('|', $art[ $opt ]);
                                 foreach($artVals as $artVal)
                                 {
                                     foreach($optValues as $optValue)
                                     {
+                                        echo "OptVal : ".$optValue->getValue()."\n";
                                         if($optValue->getValue() == $artVal)
                                         {
                                             // ajoute l'option
                                             $found->addOptionValue($optValue);
+                                            echo "trouvee !\n";
                                         }
                                     }
                                 }
                             }
-                        }    
+                        }
                     }
+                    echo "\n";
                 }
                 else
                 {
