@@ -276,6 +276,30 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/lastblogposts", name="chk_last_blog_posts")
+     */
+    public function getBlogFeedAction()
+    {
+        $url = 'https://blogchullankav2.dinlabs.fr/?feed=customfeed';
+        $rss = simplexml_load_file($url);
+
+        $limit = 10;
+        $blogposts = [];
+        for ($i=0; $i<$limit; $i++)
+        {
+            $item = $rss->channel->item[ $i ];
+            $date =  date_create_from_format(\DateTime::RSS, (string)$item->pubDate);
+            $item->dateTxt = $date->format('d/m/Y');
+            $blogposts[] = $item;
+        }
+
+        return $this->render('@SyliusShop/Layout/_lastnews.html.twig', [
+            'blogposts' => $blogposts
+        ]);
+    }
+
+
+    /**
      * @Route("/pagesbysection", name="get_pages_by_section")
      */
     public function getPagesBySection(Request $request)

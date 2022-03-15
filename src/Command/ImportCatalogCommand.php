@@ -153,11 +153,41 @@ class ImportCatalogCommand extends Command
             if(isset($art['code']))
             {
                 $art_uuid = $art['code'];
+                echo "art_uuid : $art_uuid\n\n";
+                
+                $parent_code = isset($art['parent_code']) ? $art['parent_code'] : '';
+                
                 $found = $this->productVariantRepository->findOneByCode($art_uuid);
-                if(!$found)
+                if($found)
+                {
+                    echo "Found : ".$found->getId() . "\n";
+                    if(!empty($parent_code))
+                    {
+                        // ajout option de variantes
+                        foreach($this->_options as $opt => $option)
+                        {
+                            if(isset($art[ $opt ]))
+                            {
+                                $optValues = $option->getValues();
+                                $artVals = explode('|', $art[ $opt ]);
+                                foreach($artVals as $artVal)
+                                {
+                                    foreach($optValues as $optValue)
+                                    {
+                                        if($optValue->getValue() == $artVal)
+                                        {
+                                            // ajoute l'option
+                                            $found->addOptionValue($optValue);
+                                        }
+                                    }
+                                }
+                            }
+                        }    
+                    }
+                }
+                else
                 {
                     $name = $art['name'];
-                    $parent_code = isset($art['parent_code']) ? $art['parent_code'] : '';
             
                     // Variante(s)
                     $this->output->writeln('On créé la variante');
@@ -326,30 +356,6 @@ class ImportCatalogCommand extends Command
                         $mp->setSylius( $productVariant->getId() );
                         $this->manager->persist($mp);
                     }       
-                }
-                else
-                {
-                    // ajout option de variantes
-                    foreach($this->_options as $opt => $option)
-                    {
-                        if(isset($art[ $opt ]))
-                        {
-                            $optValues = $option->getValues();
-                            $artVals = explode('|', $art[ $opt ]);
-                            foreach($artVals as $artVal)
-                            {
-                                foreach($optValues as $optValue)
-                                {
-                                    if($optValue->getValue() == $artVal)
-                                    {
-                                        // ajoute l'option
-                                        $found->addOptionValue($optValue);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    $this->manager->persist($found);
                 }
             }
         }

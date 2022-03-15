@@ -1,0 +1,50 @@
+{% if blogposts|length %}
+<div id="lastnews">
+    <div class="autoMargin">
+        {#{ dump(blogposts) }#}
+        <h2>Nos dernières actus</h2>
+        <div class="glider-contain">
+            <div class="glider">
+                {% for item in blogposts %}
+                <div class="item">
+                    <a href="{{ item.link }}" target="_blank">{% if item.thumbnail is defined %}<img src="{{ item.thumbnail }}" alt="">{% else %}<span class="fakeimg"></span>{% endif %}</a>
+                    <div class="inside">
+                        <a href="{{ item.link }}" target="_blank" class="name">{{ item.title }}</a>
+                        <div class="infos">
+                            {#<a href="#" class="tag">Trail / Running</a>#}
+                            {% for category in item.category %}
+                                {% if loop.index0 < 2 %}
+                                <span class="tag">{{ category }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            <span>Le {{ item.dateTxt }}{# &ndash; Publié par <a href="#">Fanny</a>#}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div role="tablist" class="dots"></div>
+        </div>
+        <script>
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#lastnews .glider'), { 
+                    itemWidth:315,
+                    slidesToShow: 1.125,
+                    slidesToScroll: 1,
+                    draggable: true,
+                    scrollLock: true,
+                    dots: '#lastnews .dots',
+                    responsive: [
+                        {
+                            breakpoint: 1024,
+                            settings: {
+                                slidesToShow: 3,
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+    </div>
+</div>
+{% endif %}
