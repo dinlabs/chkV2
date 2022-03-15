@@ -148,6 +148,7 @@ class ImportCatalogCommand extends Command
         //$arts = [86,87,88,89,90];
         //foreach($arts as $artId)
         //$art = $articles[ $artId ];
+        $i = 0;
         foreach($articles as $art)
         {
             if(isset($art['code']))
@@ -166,29 +167,25 @@ class ImportCatalogCommand extends Command
                         // ajout option de variantes
                         foreach($this->_options as $opt => $option)
                         {
-                            echo "Opt : $opt\n";
                             if(isset($art[ $opt ]))
                             {
-                                echo "Val : ".$art[ $opt ]."\n";
                                 $optValues = $option->getValues();
                                 $artVals = explode('|', $art[ $opt ]);
                                 foreach($artVals as $artVal)
                                 {
                                     foreach($optValues as $optValue)
                                     {
-                                        echo "OptVal : ".$optValue->getValue()."\n";
                                         if($optValue->getValue() == $artVal)
                                         {
                                             // ajoute l'option
                                             $found->addOptionValue($optValue);
-                                            echo "trouvee !\n";
+                                            echo "trouvee : $artVal\n";
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    echo "\n";
                 }
                 else
                 {
@@ -362,6 +359,13 @@ class ImportCatalogCommand extends Command
                         $this->manager->persist($mp);
                     }       
                 }
+            }
+            $i++;
+
+            // flush plus souvent
+            if(($i%100) == 0)
+            {
+                $this->manager->flush();
             }
         }
         
