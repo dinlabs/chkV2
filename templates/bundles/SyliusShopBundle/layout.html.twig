@@ -117,20 +117,6 @@
     </script>
 {% endblock %}
 
-
-{# gestion Cookie #}
-<script>
-window.axeptioSettings = {
-  clientId: "60409a7c515cfb2a3c3ddeef",
-};
-(function(d, s) {
-  var t = d.getElementsByTagName(s)[0], e = d.createElement(s);
-  e.async = true; e.src = "//static.axept.io/sdk.js";
-  t.parentNode.insertBefore(e, t);
-})(document, "script");
-</script>
-{# gestion Cookie #}
-
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}
 {{ sylius_template_event('sylius.shop.layout.after_body') }}
 </body>
