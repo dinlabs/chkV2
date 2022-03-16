@@ -1,4 +1,4 @@
-{% if customer.completedOrders %}
+{% if customer.completedOrders|length %}
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 <div id="lastorder" class="insert">
     <h2>Merci encore pour votre dernier achat !</h2>
