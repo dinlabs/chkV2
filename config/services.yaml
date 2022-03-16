@@ -204,6 +204,14 @@ services:
 
     
     #ndY: pour Elasticsearch
+    # app.elasticsearch:
+    #     class: App\Service\Elasticsearch
+    #     arguments:
+    #         - '@bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_product_list'
+    #         - '@bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_products_sort'
+    #         - '@bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.pagination'
+    #         - ''
+    #     public: true
     App\Controller\Chullanka\BrandController:
         class: App\Controller\Chullanka\BrandController
         arguments: 
@@ -218,3 +226,17 @@ services:
         arguments:
             - '@bitbag_sylius_elasticsearch_plugin.query_builder.shop_products'
             - '@fos_elastica.finder.bitbag_shop_product'
+
+
+    #ndY: override : Feed
+    setono_sylius_feed.feed_context.google.shopping.product_item:
+        class: App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping\ProductItemContext
+
+    # App\FeedType\FeedType:
+    #     class: App\FeedType\FeedType
+    #     arguments:
+    #         - 'google_shopping'
+    #         - 'feed.txt.twig'
+    #         - '@setono_sylius_feed.data_provider.product'
+    #         - '@setono_sylius_feed.feed_context.google.shopping'
+    #         - '@setono_sylius_feed.feed_context.google.shopping.product_item'
