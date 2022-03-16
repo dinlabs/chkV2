@@ -45291,9 +45291,38 @@
 
 	        return settings;
 	      },
-	      onSuccess: function onSuccess() {
+	      onSuccess: function onSuccess(response) {
 	        validationElement.addClass('hidden');
-	        window.location.href = redirectUrl;
+	        //window.location.href = redirectUrl;
+
+			// popin
+			var $pop = $('#panierPop');
+			var _url = $pop.data('url') + '?variant_id=' + response.variant_id + '&error=' + response.error;
+			$pop.find('.popinside .section').load(_url, function(responseTxt, statusTxt, jqXHR) {
+				var $_input = $pop.find('.section .sylius-quantity input');
+				$_input.attr('type', 'text');
+				var _max = $_input.data('max-available');
+	  
+				$pop.find('.updateQuantity.up').on('click', function(e) {
+				  e.preventDefault();
+				  var _val = $_input.val();
+				  _val++;
+				  if(_val > _max) _val = _max;
+				  $_input.val(_val);
+				});
+	  
+				$pop.find('.updateQuantity.down').on('click', function(e) {
+				  e.preventDefault();
+				  var _val = $_input.val();
+				  _val--;
+				  if(_val < 1) _val = 1;
+				  $_input.val(_val);
+				});
+	  
+				$pop.removeClass('hidden');
+				document.querySelector('body').classList.add('overflow');
+			});
+
 	      },
 	      onFailure: function onFailure(response) {
 	        validationElement.removeClass('hidden');
@@ -45681,7 +45710,7 @@
 	    throttle: 500
 	  });
 
-	  //jquery('#sylius-product-adding-to-cart').addToCart(); // commenté par Yannick
+	  jquery('#sylius-product-adding-to-cart').addToCart(); // commenté par Yannick
 
 	  jquery('#sylius-shipping-address').addressBook();
 	  jquery('#sylius-billing-address').addressBook();
