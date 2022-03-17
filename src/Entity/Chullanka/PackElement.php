@@ -22,7 +22,7 @@ class PackElement
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="packElement")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="packElements")
      * @ORM\JoinColumn(nullable=false)
      */
     private $parent;

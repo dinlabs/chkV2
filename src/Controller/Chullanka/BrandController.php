@@ -6,11 +6,14 @@ namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\Brand;
 use App\Entity\Product\Product;
-use App\Finder\ShopProductsFinder;
+use App\Entity\Product\ProductAttribute;
+#use App\Finder\ShopProductsFinder;
+use App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder;
+#use BitBag\SyliusElasticsearchPlugin\Finder\ShopProductsFinder;
 use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\DataHandlerInterface;
 use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\PaginationDataHandlerInterface;
 use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\SortDataHandlerInterface;
-use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
+use App\Overrides\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -57,6 +60,11 @@ final class BrandController extends AbstractController
     public function indexAction(): Response
     {
         $repo = $this->managerRegistry->getRepository(Brand::class);
+
+        /*$attr = $this->managerRegistry->getRepository(ProductAttribute::class)->findOneByCode('couleurs');
+        $results = $repo->getBrandsByAttributeViaProduct($attr);
+        dd($results);*/
+
         $topBrands = $repo->getTopBrands();
         $letters = $repo->getBrandsListByLetter();
         return new Response($this->twig->render('chullanka/brand/index.html.twig', [
@@ -115,60 +123,44 @@ final class BrandController extends AbstractController
         $brand = $this->managerRegistry->getRepository(Brand::class)->findOneByCode($code);
 
         // Filters
-        //$form = $formFactory->create(ShopProductsFilterType::class);
+        $form = $formFactory->create(ShopProductsFilterType::class);
         //$form = $this->createForm(ShopProductsFilterType::class);
-        /*$form->handleRequest($request);
+        $form->handleRequest($request);
         $requestData = array_merge(
             $form->getData(),
-            $request->query->all()
-        );*/
-        $requestData = array_merge(
-            [
-                'name' => null, 
-                'price' => ['min_price' => null, 'max_price' => null],
-                'slug' => ''
-            ],
-            $request->query->all()
+            $request->query->all(),
+            ['brand' => $brand->getEscode(), 'slug' => '', 'name' => null],
         );
-
-        //dd($requestData);
-
+        
         /*if (!$form->isValid()) {
             $requestData = $this->clearInvalidEntries($form, $requestData);
         }*/
 
         //default
-        $data = array_merge(
-            [
-                'name' => $requestData['name'],
-                'product_taxons' => '',
-                'sort' => [
-                    'price' => [
-                        'order' => 'asc',
-                        'unmapped_type' => 'keyword'
-                    ]
+        $data = [
+            'name' => $requestData['name'],
+            'product_taxons' => '',
+            'sort' => [
+                'price' => [
+                    'order' => 'asc',
+                    'unmapped_type' => 'keyword'
                 ]
-            ],
+            ]
+        ];
+
+        $data = array_merge(
+            $data,
+            $this->shopProductListDataHandler->retrieveData($requestData),
+            $this->shopProductsSortDataHandler->retrieveData($requestData),
             $this->paginationDataHandler->retrieveData($requestData)
         );
-
-        if(isset($requestData['slug']) && !empty($requestData['slug']))
-        {
-            $data = array_merge(
-                $data,
-                $this->shopProductListDataHandler->retrieveData($requestData),
-                $this->shopProductsSortDataHandler->retrieveData($requestData),
-            );
-        }
-
         //dd($data);
 
-        $data['brand'] = [ $brand->getEscode() ];
         $products = $shopProductsFinder->find($data);
 
         return new Response($this->twig->render('chullanka/brand/view.html.twig', [
             'brand' => $brand,
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             'products' => $products,
         ]));
     }

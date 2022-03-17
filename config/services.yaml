@@ -221,14 +221,61 @@ services:
             - '@bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_products_sort'
             - '@bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.pagination'
 
-    App\Finder\ShopProductsFinder:
-        class: App\Finder\ShopProductsFinder
+    # App\Finder\ShopProductsFinder:
+    #     class: App\Finder\ShopProductsFinder
+    #     arguments:
+    #         - '@bitbag_sylius_elasticsearch_plugin.query_builder.shop_products'
+    #         - '@fos_elastica.finder.bitbag_shop_product'
+
+
+
+    #ndY: Overrides
+
+    # BitBag\SyliusElasticsearchPlugin
+    BitBag\SyliusElasticsearchPlugin\Repository\TaxonRepositoryInterface: 
+        '@bitbag.sylius_elasticsearch_plugin.repository.taxon_repository'
+    bitbag_sylius_elasticsearch_plugin.property_builder.attribute_taxons:
+        class: App\Overrides\SyliusElasticsearchPlugin\PropertyBuilder\AttributeTaxonsBuilder
+
+    # bitbag_sylius_elasticsearch_plugin.form.type.shop_products_filter:
+    #     class: App\Overrides\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType
+    #     arguments: ['name']
+
+    FOS\ElasticaBundle\Finder\FinderInterface:
+        '@fos_elastica.finder.bitbag_attribute_taxons'
+    BitBag\SyliusElasticsearchPlugin\QueryBuilder\QueryBuilderInterface:
+        '@bitbag_sylius_elasticsearch_plugin.query_builder.product_attributes_by_taxon'
+    bitbag_sylius_elasticsearch_plugin.finder.product_attributes:
+        class: App\Overrides\SyliusElasticsearchPlugin\Finder\ProductAttributesFinder
+
+    App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder:
+        class: App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder
+        arguments:
+            - '@bitbag_sylius_elasticsearch_plugin.query_builder.shop_products'
+            - '@fos_elastica.finder.bitbag_shop_product'
+    bitbag_sylius_elasticsearch_plugin.finder.shop_products:
+        class: App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder
         arguments:
             - '@bitbag_sylius_elasticsearch_plugin.query_builder.shop_products'
             - '@fos_elastica.finder.bitbag_shop_product'
 
-
-    #ndY: override : Feed
+    BitBag\SyliusElasticsearchPlugin\Context\TaxonContextInterface:
+        '@bitbag.sylius_elasticsearch_plugin.context.taxon'
+    BitBag\SyliusElasticsearchPlugin\Finder\ProductAttributesFinderInterface:
+        '@bitbag_sylius_elasticsearch_plugin.finder.product_attributes'
+    bitbag.sylius_elasticsearch_plugin.context.product_attributes:
+        class: App\Overrides\SyliusElasticsearchPlugin\Context\ProductAttributesContext
+    
+    bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_product_list:
+        class: App\Overrides\SyliusElasticsearchPlugin\Controller\RequestDataHandler\ShopProductListDataHandler
+    
+    BitBag\SyliusElasticsearchPlugin\PropertyNameResolver\ConcatedNameResolverInterface:
+        '@bitbag_sylius_elasticsearch_plugin.property_name_resolver.channel_pricing'
+    bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_products_sort:
+        class: App\Overrides\SyliusElasticsearchPlugin\Controller\RequestDataHandler\ShopProductsSortDataHandler
+        
+    
+    # setono_sylius_feed
     setono_sylius_feed.feed_context.google.shopping.product_item:
         class: App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping\ProductItemContext
 

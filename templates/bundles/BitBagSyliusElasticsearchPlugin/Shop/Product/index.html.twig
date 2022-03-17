@@ -54,12 +54,12 @@
                 {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/Index/_pagination.html.twig' %#}
             </div>
             <div id="productList" class="prodList">
-                <div class="ui search" id="products-search" style="display:none;">
+                {#<div class="ui search" id="products-search" style="display:none;">
                     <div class="ui fluid large left icon input">
                         {{ form_widget(form.name, {'attr': {'placeholder': 'sylius.ui.search', 'class': 'prompt'}}) }}
                         <i class="search icon"></i>
                     </div>
-                </div>
+                </div>#}
 
                 {% if products|length > 0 %}
                     <h2>Tous nos produits {{ taxon.name }}</h2>

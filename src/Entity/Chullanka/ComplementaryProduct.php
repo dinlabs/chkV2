@@ -36,7 +36,7 @@ class ComplementaryProduct implements ResourceInterface, TranslatableInterface
     private $enabled;
 
     /**
-     * @ORM\OneToOne(targetEntity=Product::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Product::class, inversedBy="complementaryProduct", cascade={"persist", "remove"})
      */
     private $product;
 

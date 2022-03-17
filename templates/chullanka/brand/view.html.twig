@@ -6,6 +6,8 @@
 {% import '@SyliusUi/Macro/messages.html.twig' as messages %}
 {% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}
 
+{% form_theme form '@BitBagSyliusElasticsearchPlugin/Shop/Product/filter_theme.html.twig' %}
+
 {% set ajax_pagination = app.request.get('page') %}
 
 {% block title %}{{ brand.name }}{% endblock %}
@@ -52,16 +54,16 @@
 <div class="autoMargin">
 {#{ bitbag_cms_render_block('un_code') }#}
     
-    {#{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }#}
+    {{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }}
     <div id="searchWrapper">
 {% endif %}
 
         {% if ajax_pagination == false %}
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
-            {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
+            {% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %}
         </div>
         <div id="productList">
-            {% if brand.topProducts %}
+            {% if brand.topProducts|length %}
             <div id="news">
                 <h2>Voici les Nouveautés {{ brand.name }}</h2>
                 <div class="prodList">
@@ -137,7 +139,7 @@
 
 {% if app.request.xmlHttpRequest == false %}
     </div>
-    {#{ form_end(form, {'render_rest': false}) }#}
+    {{ form_end(form, {'render_rest': false}) }}
 
     <div id="description" class="anchor">
         <div>{{ brand.description|raw }}</div>

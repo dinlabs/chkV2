@@ -3,9 +3,12 @@
 namespace App\Repository\Chullanka;
 
 use App\Entity\Chullanka\Brand;
+use App\Entity\Product\Product;
+use App\Entity\Product\ProductAttributeValue;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
+use Sylius\Component\Attribute\Model\AttributeInterface;
 
 /**
  * @method Brand|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,6 +59,22 @@ class BrandRepository extends EntityRepository
             $brands[ strtoupper($firstLetter) ][] = $_brand;
         }
         return $brands;
+    }
+
+    
+    public function getBrandsByAttributeViaProduct(AttributeInterface $attribute): array
+    {
+        return $this
+            ->createQueryBuilder('b')
+            ->distinct(true)
+            ->select('b')
+            ->leftJoin(Product::class, 'p', Join::WITH, 'b=p.brand')
+            ->leftJoin(ProductAttributeValue::class, 'pav', Join::WITH, 'pav.subject = p.id')
+            ->where('pav.attribute = :attribute')
+            ->setParameter(':attribute', $attribute)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

@@ -3,7 +3,7 @@
 
 parameters:
     bitbag_es_excluded_filter_options: []
-    bitbag_es_excluded_filter_attributes: ['imported_data', 'ginkoia_class3']
+    bitbag_es_excluded_filter_attributes: ['code_ean','imported_data','ginkoia_class3','shoppingflux_product','supplier_ref','supplier_price','cycle_vie','typologie']
 
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
@@ -25,7 +25,7 @@ fos_elastica:
                     logger: true
                 elastica_to_model_transformer:
                     ignore_missing: true
-        
+    
         bitbag_shop_product:
             index_name: "bitbag_shop_products_%kernel.environment%"
             properties:
