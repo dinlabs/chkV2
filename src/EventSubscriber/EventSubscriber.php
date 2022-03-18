@@ -62,6 +62,9 @@ class EventSubscriber implements EventSubscriberInterface
             'app.chulli.pre_update' => 'onAppChulliPreCreUpdate',
             'app.store.pre_create' => 'onAppStorePreCreUpdate',
             'app.store.pre_update' => 'onAppStorePreCreUpdate',
+            'app.store_service.pre_create' => 'onAppStoreServicePreCreUpdate',
+            'app.store_service.pre_update' => 'onAppStoreServicePreCreUpdate',
+            'app.parameter.pre_create' => 'onAppParameterPreCreate',
 
             //'security.interactive_login' => 'onSecurityInteractiveLogin',
             SecurityEvents::INTERACTIVE_LOGIN => 'onSecurityInteractiveLogin',
@@ -414,6 +417,45 @@ class EventSubscriber implements EventSubscriberInterface
             $store->setBackground($newFilename);
         }
         $this->entityManager->persist($store);
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Gère l'upload du visuel du service
+     */
+    public function onAppStoreServicePreCreUpdate(GenericEvent $event): void
+    {
+        $storeService = $event->getSubject();
+        if($thumbnailFile = $storeService->getThumbnailFile())
+        {
+            $originalFilename = pathinfo($thumbnailFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$thumbnailFile->guessExtension());
+            $path = 'upload/store/services';
+            try {
+                $thumbnailFile->move($path, $newFilename);
+            } catch (FileException $e) {
+                error_log(print_r($e, true));
+            }
+            if(!empty($storeService->getThumbnail()))
+            {
+                @unlink( rtrim($path, '/\\').\DIRECTORY_SEPARATOR.$storeService->getThumbnail() );
+            }
+            $storeService->setThumbnail($newFilename);
+        }
+        $this->entityManager->persist($storeService);
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Gère le slug du parametre
+     */
+    public function onAppParameterPreCreate(GenericEvent $event): void
+    {
+        $parameter = $event->getSubject();
+        $name = $parameter->getName();
+        $slug = strtolower($this->slugger->slug($name));
+        $parameter->setSlug($slug);
+        $this->entityManager->persist($parameter);
         $this->entityManager->flush();
     }
     

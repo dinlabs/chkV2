@@ -1,3 +1,9 @@
+# app_product_index:
+#     path: /{_locale}/taxons/{slug}
+#     methods: [GET]
+#     defaults:
+#         _controller: sylius.controller.product::indexAction
+
 bitbag_sylius_elasticsearch_plugin:
     resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/routing.yml"
 
@@ -95,6 +101,21 @@ app_admin_store:
     type: sylius.resource
     prefix: /admin
 
+app_admin_store_service:
+    resource: |
+        alias: app.store_service
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_store_service
+        vars:
+            all:
+                subheader: 'Gestion des services en magasin'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
 app_admin_brand:
     resource: |
         alias: app.brand
@@ -169,6 +190,22 @@ app_admin_rma:
                 icon: 'file image outline'
     type: sylius.resource
     prefix: /admin
+
+app_admin_parameter:
+    resource: |
+        alias: app.parameter
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_parameter
+        vars:
+            all:
+                subheader: 'Paramètres de Chullanka'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
 
 # app_product_bundle:
 #     resource: |

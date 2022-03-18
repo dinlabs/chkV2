@@ -89,10 +89,12 @@
                 
                 <div class="body">{{ product.chulltest.description|raw }}</div>
 
-                {#<div class="sumup">
+                {% if product.chulltest.sumup %}
+                <div class="sumup">
                     <div class="title">Pour résumer :</div>
-                    <p>Cette Corde Apsus 7.9Mm De Chez Edelride A Plus D'un Tour Dans Son Sac. </p>
-                </div>#}
+                    <p>{{ product.chulltest.sumup }}</p>
+                </div>
+                {% endif %}
 
                 <div class="insert">
                     <div class="proCon">

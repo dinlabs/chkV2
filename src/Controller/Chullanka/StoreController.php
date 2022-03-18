@@ -117,27 +117,9 @@ final class StoreController extends AbstractController
     {
         $code = $request->get('code');
         $store = $this->managerRegistry->getRepository(Store::class)->findOneByCode($code);
-
-        // Elasticsearch
-        /*$form = $formFactory->create(ShopProductsFilterType::class);
-        $form->handleRequest($request);
-        $requestData = array_merge(
-            $form->getData(),
-            $request->query->all(),
-            ['slug' => $request->get('slug')]
-        );*/
-
-        //$products = $this->managerRegistry->getRepository(Product::class)->findAll();
-        $products = [];
-
-        /*if (!$form->isValid()) {
-            $requestData = $this->clearInvalidEntries($form, $requestData);
-        }*/
-
         return new Response($this->twig->render('chullanka/store/view.html.twig', [
             'store' => $store,
-            //'form' => $form->createView(),
-            'products' => $products,
+            'products' => [],
         ]));
     }
 }

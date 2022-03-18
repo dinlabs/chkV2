@@ -18,12 +18,12 @@
     </div>
     <script>
         window.addEventListener('load', function(){
-            new Glider(document.querySelector('#packs .glider'), { 
+            new Glider(document.querySelector('#{{ media.code }} .glider'), { 
                 slidesToShow: 2.25,
                 slidesToScroll: 1,
                 draggable: true,
                 scrollLock: true,
-                dots: '#packs .dots',
+                dots: '#{{ media.code }} .dots',
                 responsive: [
                     {
                         // screens greater than >= 1024px

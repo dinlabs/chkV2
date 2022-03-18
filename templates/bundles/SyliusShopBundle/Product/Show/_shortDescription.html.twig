@@ -1,0 +1,22 @@
+{% if product.chulltest %}
+<div class="tested">
+    {% if product.chulltest.chulli %}
+    {% set chulli = product.chulltest.chulli %}
+    <div class="pichulli">
+        <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
+        <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+    </div>
+    {% endif %}
+    <blockquote>{{ product.chulltest.headline }}</blockquote>
+    <div class="signature">
+        <a href="#productTest" class="pictoLink">Lire</a>
+        {% if chulli %}
+        <p><strong>{{ chulli ~ ', ' ~ chulli.expertise }}, l'a testé pour vous</strong></p>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="ui basic segment">
+    <p>{{ product.shortDescription }}</p>
+</div>
+{% endif %}

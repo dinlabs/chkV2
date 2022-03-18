@@ -109,7 +109,7 @@ class Store implements ResourceInterface, TranslatableInterface
     private $director;
 
     /**
-     * @ORM\ManyToMany(targetEntity=StoreService::class, mappedBy="store")
+     * @ORM\ManyToMany(targetEntity=StoreService::class, mappedBy="stores")
      * @ORM\JoinTable(name="nan_chk_store_to_service")
      */
     private $services;

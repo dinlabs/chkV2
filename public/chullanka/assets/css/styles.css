@@ -391,6 +391,7 @@ footer #ourAdventure picture { display:block; text-align:center; }
 
 #shopNews { background:url(../img/bg-news.jpg) no-repeat center top / cover; padding:20px; }
 #shopNews .wrapper { display:grid; grid-template-rows:1fr 2fr auto; width:240px; margin:auto; }
+#shopNews .wrapper .pict { width:240px; height:140px; object-fit:cover; background:var(--bg1); }
 #shopNews .btn { background:var(--primary); width:100%; }
 
 #plusChullanka { background:url(../img/bg-plus-chullanka.jpg) no-repeat center center / cover; margin:0 -1em 1em -1em; padding:30px; }
@@ -534,7 +535,7 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #productInfos .tested { position:relative; padding-bottom:2em; }
 #productInfos .tested::after { content:''; display:block; clear:both; }
 #productInfos .tested .pichulli { position:absolute; left:0; top:0; }
-#productInfos .tested blockquote { position:relative; margin-left:80px; margin-bottom:1em; padding-right:60px; }
+#productInfos .tested blockquote { display:grid; align-items:center; position:relative; min-height:65px; margin-left:80px; margin-bottom:1em; padding-right:60px; }
 #productInfos .tested blockquote::after { content:''; display:block; background:url(../img/ico-guillemets.svg) no-repeat right bottom; width:42px; height:38px; position:absolute; bottom:-.5em; right:20px; z-index: -1; }
 #productInfos .tested blockquote + p { font-weight:700; }
 #productInfos .tested .signature { overflow:hidden; }
@@ -917,7 +918,7 @@ body.customer { background:var(--bg1); }
 
 #store #content { text-align:initial; }
 #store #content > * { margin-bottom:2em; }
-#store #content h2 { font-size:1.2em !important; }
+/*#store #content h2 { font-size:1.2em !important; }*/
 #store .insert { background:var(--bg1); }
 #store .insert p { padding-bottom:1em; }
 #store .details { text-align:center; }
@@ -929,9 +930,14 @@ body.customer { background:var(--bg1); }
 #store .director { position:relative; padding-left:80px; padding-bottom:1em; }
 #store .director .pichulli { position:absolute; left:0; }
 #store .chullis { display:flex; gap:1em; }
-#store .chullis .chulli { background:var(--bg0); border-radius:5px; width:calc((100% / 3) - 1em); overflow:hidden; }
-#store .chullis .chulli .pict { width:100%; /*height:240px;*/ object-fit:cover; background:var(--bg1); }
+
+#store .chullis .chulli { background:var(--bg0); border-radius:5px; width:300px; }
+#store .chullis .chulli .pict { width:100%; height:250px; object-fit:cover; background:var(--bg1); }
 #store .chullis .chulli p { padding:.5em 1em; }
+
+#store #services .service { background:var(--bg0); border-radius:5px; padding:1em; width:300px; }
+#store #services .service h3 { padding-bottom:1em; font-size:1em; }
+#store #services .service .pict { width:270px; height:150px; object-fit:cover; background:var(--bg1); margin-bottom:1em; }
 
 
 /* MARQUES */

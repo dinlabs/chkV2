@@ -92,7 +92,7 @@
                     {{ store.description|raw }}
                 </div>
 
-                <div class="insert">
+                <div id="chullis" class="insert">
                     <h2>Votre équipe en magasin</h2>
                     <div class="director">
                         {% if store.director and store.director.avatar %}
@@ -104,25 +104,113 @@
                         <strong>Le mot du directeur</strong><br>
                         {{ store.directorNote }}
                     </div>
-                    <div class="chullis">
-                    {% for chulli in store.chullis %}
-                        {% if store.director and store.director == chulli %}
-                        {% else %}
-                        <div class="chulli">
-                            {% if chulli.avatar %}
-                            <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
-                            {% else %}
-                            <span class="pict"></span>
-                            {% endif %}
-                            <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
+
+                    <div class="glider-contain">
+                        <div class="glider">
+                        {% for chulli in store.chullis %}
+                            <div>
+                                {% if store.director and store.director == chulli %}
+                                {% else %}
+                                <div class="chulli">
+                                    {% if chulli.avatar %}
+                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                                    {% else %}
+                                    <span class="pict"></span>
+                                    {% endif %}
+                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if store.director and store.director == chulli %}
+                                {% else %}
+                                <div class="chulli">
+                                    {% if chulli.avatar %}
+                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                                    {% else %}
+                                    <span class="pict"></span>
+                                    {% endif %}
+                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if store.director and store.director == chulli %}
+                                {% else %}
+                                <div class="chulli">
+                                    {% if chulli.avatar %}
+                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                                    {% else %}
+                                    <span class="pict"></span>
+                                    {% endif %}
+                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                         </div>
-                        {% endif %}
-                    {% endfor %}
+                        <div role="tablist" class="dots"></div>
                     </div>
+                    <script>
+                        window.addEventListener('load', function(){
+                            new Glider(document.querySelector('#chullis .glider'), { 
+                                slidesToShow: 1,
+                                slidesToScroll : 1,
+                                duration: 2,
+                                draggable: true,
+                                scrollLock: true,
+                                dots: '#chullis .dots',
+                                responsive: [
+                                    { breakpoint:500, settings: { slidesToShow:2 } },
+                                    { breakpoint:1024, settings: { slidesToShow:2 } }
+                                ]
+                            });
+                        });
+                    </script>
                 </div>
 
-                {#<p>liste services en magasin</p>#}
+                {% if store.services|length %}
+                <div id="services" class="insert">
+                    <h2>Nos (supers) services en magasin</h2>
+                    <div class="glider-contain">
+                        <div class="glider">
+                            {% for service in store.services %}
+                            <div>
+                                <div class="service">
+                                    <h3>{{ service.title }}</h3>
 
+                                    {% if service.thumbnail %}
+                                    <img src="{{ asset('upload/store/services/' ~ service.thumbnail) }}" alt="" class="pict">
+                                    {% else %}
+                                    <span class="pict"></span>
+                                    {% endif %}
+
+                                    <div>{{ service.content|raw }}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div role="tablist" class="dots"></div>
+                    </div>
+                    <script>
+                        window.addEventListener('load', function(){
+                            new Glider(document.querySelector('#services .glider'), { 
+                                slidesToShow: 1,
+                                slidesToScroll : 1,
+                                duration: 2,
+                                draggable: true,
+                                scrollLock: true,
+                                dots: '#services .dots',
+                                responsive: [
+                                    { breakpoint:500, settings: { slidesToShow:2 } },
+                                    { breakpoint:1024, settings: { slidesToShow:2 } }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                {% endif %}
+                
                 {% if store.advertising %}
                 {{ store.advertising|raw }}
                 {% endif %}

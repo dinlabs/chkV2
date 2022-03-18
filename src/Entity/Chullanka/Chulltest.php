@@ -95,6 +95,18 @@ class Chulltest implements ResourceInterface, TranslatableInterface
         return $this;
     }
 
+    public function getHeadline(): ?string
+    {
+        return $this->getTranslation()->getHeadline();
+    }
+
+    public function setHeadline(string $headline): self
+    {
+        $this->getTranslation()->setHeadline($headline);
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->getTranslation()->getDescription();
@@ -103,6 +115,18 @@ class Chulltest implements ResourceInterface, TranslatableInterface
     public function setDescription(?string $description): self
     {
         $this->getTranslation()->setDescription($description);
+
+        return $this;
+    }
+
+    public function getSumup(): ?string
+    {
+        return $this->getTranslation()->getSumup();
+    }
+
+    public function setSumup(?string $sumup): self
+    {
+        $this->getTranslation()->setSumup($sumup);
 
         return $this;
     }

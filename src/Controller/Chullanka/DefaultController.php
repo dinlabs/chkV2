@@ -7,6 +7,7 @@ namespace App\Controller\Chullanka;
 use App\Entity\Chullanka\HistoricOrder;
 use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\RmaProduct;
+use App\Entity\Chullanka\StoreService;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Product\Product;
@@ -276,10 +277,27 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/homestoreservices", name="chk_home_store_services")
+     */
+    public function getHomeStoreServices(Request $request)
+    {
+        $services = $this->container->get('doctrine')->getRepository(StoreService::class)->findBy([
+            'enabled' => true,
+            'show_home' => true
+        ]);
+        return $this->render('@SyliusShop/Homepage/_shopNewsContent.html.twig', [
+            'services' => $services
+        ]);
+    }
+
+    /**
      * @Route("/lastblogposts", name="chk_last_blog_posts")
      */
     public function getBlogFeedAction()
     {
+        $catflux = 'https://blogchullankav2.dinlabs.fr/category/electronique/?feed=customfeed';
+
+
         $url = 'https://blogchullankav2.dinlabs.fr/?feed=customfeed';
         $rss = simplexml_load_file($url);
 
@@ -433,6 +451,8 @@ final class DefaultController extends AbstractController
 
         if($request->get('success'))
         {
+            $order = $this->cartContext->getCart();
+            
             error_log('SUCCESS !');
             if($infos = $upstreamPayWidget->getSessionInfos())
             {
@@ -461,7 +481,6 @@ final class DefaultController extends AbstractController
                  */
                 if($return->status && ($return->status->state == 'SUCCESS'))
                 {
-                    $order = $this->cartContext->getCart();
                     
                     $order->setNotes('Revenu avec succès de la plateforme de paiement : '.$return->method);
 

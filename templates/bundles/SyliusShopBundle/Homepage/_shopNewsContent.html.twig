@@ -1,0 +1,43 @@
+{% if services|length %}
+<div id="shopNews">
+    <div class="autoMargin insert">
+        <h2>En ce moment dans nos magasins Chullanka</h2>
+        <div class="glider-contain">
+            <div class="glider">
+                {% for service in services %}
+                <div>
+                    <div class="wrapper">
+                        <h3>{{ service.title }}</h3>
+                        
+                        {% if service.thumbnail %}
+                        <img src="{{ asset('upload/store/services/' ~ service.thumbnail) }}" alt="" class="pict">
+                        {% else %}
+                        <span class="pict"></span>
+                        {% endif %}
+
+                        {{ service.content|raw }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div role="tablist" class="dots"></div>
+        </div>
+        <script>
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#shopNews .glider'), { 
+                    slidesToShow: 1,
+                    slidesToScroll : 1,
+                    duration: 2,
+                    draggable: true,
+                    scrollLock: true,
+                    dots: '#shopNews .dots',
+                    responsive: [
+                        { breakpoint:500, settings: { slidesToShow:2 } },
+                        { breakpoint:1024, settings: { slidesToShow:4 } }
+                    ]
+                });
+            });
+        </script>
+    </div>
+</div>
+{% endif %}

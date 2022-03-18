@@ -21,9 +21,19 @@ class ChulltestTranslation extends AbstractTranslation implements ResourceInterf
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $headline;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sumup;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -40,6 +50,18 @@ class ChulltestTranslation extends AbstractTranslation implements ResourceInterf
         return $this->id;
     }
 
+    public function getHeadline(): ?string
+    {
+        return $this->headline;
+    }
+
+    public function setHeadline(string $headline): self
+    {
+        $this->headline = $headline;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -48,6 +70,18 @@ class ChulltestTranslation extends AbstractTranslation implements ResourceInterf
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSumup(): ?string
+    {
+        return $this->sumup;
+    }
+
+    public function setSumup(?string $sumup): self
+    {
+        $this->sumup = $sumup;
 
         return $this;
     }

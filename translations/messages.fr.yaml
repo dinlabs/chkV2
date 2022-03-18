@@ -2,12 +2,16 @@ chullanka_chullis:
   menu_item: 'Les Chullis'
 chullanka_stores:
   menu_item: 'Les Magasins'
+chullanka_store_services:
+  menu_item: 'Les Services en magasin'
 chullanka_brands:
   menu_item: 'Les Marques'
 chullanka_recalls:
   menu_item: 'Demandes de rappel'
 chullanka_rmas:
   menu_item: 'RMA'
+chullanka_parameters:
+  menu_item: 'Paramètres Chullanka'
 app:
   homepage:
     newsletter: 'Nos nouveautés, nos promos, nos activités avant tout le monde'
@@ -24,6 +28,10 @@ app:
     stores: 'Magasins'
     edit_store: 'Modifier le magasin'
     new_store: 'Nouveau magasin'
+    store_service: 'Service en Magasin'
+    store_services: 'Services en Magasin'
+    edit_store_service: 'Modifier le service'
+    new_store_service: 'Nouveau service'
     brand: 'Marque'
     brands: 'Marques'
     edit_brand: 'Modifier la marque'
@@ -37,6 +45,10 @@ app:
     edit_recall: 'Modifier cette demande'
     rma: 'RMA'
     rmas: 'RMAs'
+    parameter: 'Paramètre'
+    parameters: 'Paramètres'
+    edit_parameter: 'Modifier le paramètre'
+    new_parameter: 'Nouveau paramètre'
     product:
       admin:
         test:

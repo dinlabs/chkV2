@@ -37,29 +37,47 @@ final class AdminMenuListener
             ])
             ->setLabel('chullanka_chullis.menu_item')
             ->setLabelAttribute('icon', 'users');
+        
         $item
             ->addChild('brands', [
                 'route' => 'app_admin_brand_index',
             ])
             ->setLabel('chullanka_brands.menu_item')
             ->setLabelAttribute('icon', 'building');
+        
         $item
             ->addChild('stores', [
                 'route' => 'app_admin_store_index',
             ])
             ->setLabel('chullanka_stores.menu_item')
             ->setLabelAttribute('icon', 'map marker alternate');
+        
+        $item
+            ->addChild('store-services', [
+                'route' => 'app_admin_store_service_index',
+            ])
+            ->setLabel('chullanka_store_services.menu_item')
+            ->setLabelAttribute('icon', 'cubes');
+        
         $item
             ->addChild('recalls', [
                 'route' => 'app_admin_recall_index',
             ])
             ->setLabel('chullanka_recalls.menu_item')
             ->setLabelAttribute('icon', 'phone');
+        
         $item
             ->addChild('rmas', [
                 'route' => 'app_admin_rma_index',
             ])
             ->setLabel('chullanka_rmas.menu_item')
             ->setLabelAttribute('icon', 'exchange');
+
+        $item
+            ->addChild('parameters', [
+                'route' => 'app_admin_parameter_index',
+            ])
+            ->setLabel('chullanka_parameters.menu_item')
+            ->setLabelAttribute('icon', 'cog');
     }
 }
