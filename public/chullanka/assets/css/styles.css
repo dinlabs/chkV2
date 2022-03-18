@@ -905,8 +905,16 @@ body.customer { background:var(--bg1); }
 /* MAGASINS */
 #stores .framap { display:flex; justify-content:center; gap:2em; flex-wrap:wrap; }
 
+#store #storeTop { background:no-repeat center top / cover; min-height:200px; margin-top:-1rem; padding-top:1rem; }
 #store h1 { margin-bottom:.5em; font-family:var(--altFont); text-transform:uppercase; }
 #store .intro { padding-bottom:1em; }
+
+#store #exclusiveProducts { padding-top:2em; }
+#store #exclusiveProducts .prodList { margin:0; }
+#store #exclusiveProducts .prodList .list { padding:0; }
+
+#store #searchWrapper { padding:0; }
+
 #store #content { text-align:initial; }
 #store #content > * { margin-bottom:2em; }
 #store #content h2 { font-size:1.2em !important; }
@@ -920,7 +928,10 @@ body.customer { background:var(--bg1); }
 #store .alert { color:var(--primary); }
 #store .director { position:relative; padding-left:80px; padding-bottom:1em; }
 #store .director .pichulli { position:absolute; left:0; }
-#store .chullis {  }
+#store .chullis { display:flex; gap:1em; }
+#store .chullis .chulli { background:var(--bg0); border-radius:5px; width:calc((100% / 3) - 1em); overflow:hidden; }
+#store .chullis .chulli .pict { width:100%; /*height:240px;*/ object-fit:cover; background:var(--bg1); }
+#store .chullis .chulli p { padding:.5em 1em; }
 
 
 /* MARQUES */
@@ -947,12 +958,12 @@ body.customer { background:var(--bg1); }
 #brand #brandTop .socials a .icon { margin:0; font-size:2em; }
 
 
-/* CMS */
-.bitbag-page-content h2 { padding-bottom:1em; }
-.bitbag-page-content p { padding-bottom:1.5em; }
-.bitbag-page-content ul, .bitbag-page-content ol { padding:0 0 .5em .5em; }
-.bitbag-page-content li { position:relative; padding:0 0 .5em .75em; }
-.bitbag-page-content li::before { content:''; position:absolute; left:0; top:7px; display:block; background:var(--primary); width:5px; height:5px; border-radius:50%; }
+/* WYSIWYG */
+.wysiwyg h2 { padding-bottom:1em; }
+.wysiwyg p { padding-bottom:1.5em; }
+.wysiwyg ul, .wysiwyg ol { padding:0 0 .5em .5em; }
+.wysiwyg li { position:relative; padding:0 0 .5em .75em; }
+.wysiwyg li::before { content:''; position:absolute; left:0; top:7px; display:block; background:var(--primary); width:5px; height:5px; border-radius:50%; }
 
 
 /* MEDIA QUERIES */

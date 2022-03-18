@@ -3,8 +3,10 @@
 namespace App\Form\Type;
 
 use App\Entity\Chullanka\Store;
+use Sylius\Bundle\ProductBundle\Form\Type\ProductAutocompleteChoiceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
+use Sylius\Bundle\TaxonomyBundle\Form\Type\TaxonAutocompleteChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -64,6 +66,18 @@ class StoreType extends AbstractResourceType
             ])
             ->add('translations', ResourceTranslationsType::class, [
                 'entry_type' => StoreTranslationType::class,
+            ])
+            ->add('exclusive_products', ProductAutocompleteChoiceType::class, [
+                'label' => 'Produits en exclus',
+                'multiple' => true,
+            ])
+            ->add('other_products', ProductAutocompleteChoiceType::class, [
+                'label' => 'Les produits du magasin',
+                'multiple' => true,
+            ])
+            ->add('taxons', TaxonAutocompleteChoiceType::class, [
+                'label' => 'Catégories à afficher',
+                'multiple' => true
             ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
                 $entity = $event->getData();

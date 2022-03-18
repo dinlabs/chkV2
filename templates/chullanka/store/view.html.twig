@@ -4,36 +4,50 @@
 {% block bodyattr %}id="store"{% endblock %}
 
 {% block content %}
-<ul id="breadcrumb" class="autoMargin">
-    <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
-    <li><a href="{{ path('store_index') }}">{{ 'app.front.stores'|trans }}</a></li>
-    <li>{{ store.name }}</li>
-</ul>
+<div id="storeTop"{% if store.background %} style="background-image:url({{ asset('upload/store/backgrounds/' ~ store.background) }});"{% endif %}>
+    <div class="autoMargin">
+        <ul id="breadcrumb">
+            <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+            <li><a href="{{ path('store_index') }}">{{ 'app.front.stores'|trans }}</a></li>
+            <li>{{ store.name }}</li>
+        </ul>
+
+        <h1>Magasin {{ store.name }}</h1>
+
+        <div class="intro">
+            {{ store.introduction }}
+        </div>
+
+        {% if store.warning %}
+        <div class="insert alert">
+            {{ store.warning }}
+        </div>
+        {% endif %}
+    </div>
+    {{ include('chullanka/store/_exclusive_products.html.twig')}}
+</div>
 
 <div class="autoMargin">
-    <h1>Magasin {{ store.name }}</h1>
-
-    <div class="intro">
-        {{ store.introduction }}
-    </div>
-
-    {% if store.warning %}
-    <div class="insert alert">
-        {{ store.warning }}
-    </div>
-    {% endif %}
-
-    {#{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }#}
     <div id="searchWrapper">
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
-            {#% include '@BitBagSyliusElasticsearchPlugin/Shop/Product/_filterForm.html.twig' %#}
+            <h2>
+                <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
+                {{ 'app.front.category.filter.affiner'|trans }}
+            </h2>
+            {% if store.taxons|length %}
+            <ul class="subCats">
+                {% for child in store.taxons %}
+                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg> {{ child.name }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         <div id="productList" class="prodList">
-            {% if products|length > 0 %}
-                <h2>Tous nos produits</h2>
-                <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
+            {% if store.otherProducts|length > 0 %}
+                <h2>Produits du magasin {{ store.name }}</h2>
+                <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ store.otherProducts|length }}">
                     {% set _count = 0 %}
-                    {% for product in products %}
+                    {% for product in store.otherProducts %}
                         {% include '@SyliusShop/Product/_box.html.twig' %}
                         
                         {#% if _count == 1 %}
@@ -45,13 +59,11 @@
                     {# Fake pour alignement Flex ! #}
                     {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 </div>
-
-                {#{ pagination.simple(products) }#}
             {% endif %}
 
             <div id="content">
 
-                <div class="details" style="background-image:url(/chullanka/assets/img/bg-category.jpg)">
+                <div class="details" style="background-image:url({{ asset('chullanka/assets/img/bg-category.jpg') }})">
                     <div class="insert">
                         <h2>{{ store.name }}</h2>
                         
@@ -83,18 +95,28 @@
                 <div class="insert">
                     <h2>Votre équipe en magasin</h2>
                     <div class="director">
+                        {% if store.director and store.director.avatar %}
                         <div class="pichulli">
-                            <img src="/chullanka/assets/img/chulli.jpg" width="60" height="60" alt="Chulli">
-                            <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="/chullanka/assets/img/sprites.svg#over-chulli"/></svg>
+                            <img src="{{ asset('upload/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director }}">
+                            <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
                         </div>
+                        {% endif %}
                         <strong>Le mot du directeur</strong><br>
                         {{ store.directorNote }}
                     </div>
                     <div class="chullis">
                     {% for chulli in store.chullis %}
-                        <div>
-                            {{ chulli }}
+                        {% if store.director and store.director == chulli %}
+                        {% else %}
+                        <div class="chulli">
+                            {% if chulli.avatar %}
+                            <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                            {% else %}
+                            <span class="pict"></span>
+                            {% endif %}
+                            <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
                         </div>
+                        {% endif %}
                     {% endfor %}
                     </div>
                 </div>
@@ -107,6 +129,9 @@
             </div>
         </div>
     </div>
-    {#{ form_end(form, {'render_rest': false}) }#}
+
+    <div class="toAnchor">
+        <a href="#storeTop">{{ 'app.front.gototop'|trans }}</a>
+    </div>
 </div>
 {% endblock %}

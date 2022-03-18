@@ -30,7 +30,7 @@ class Recall implements ResourceInterface
     private $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="telephone")
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="recalls")
      */
     private $customer;
 

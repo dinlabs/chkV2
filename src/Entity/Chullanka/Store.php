@@ -3,11 +3,13 @@
 namespace App\Entity\Chullanka;
 
 use App\Entity\Customer\Customer;
+use App\Entity\Product\Product;
+use App\Entity\Taxonomy\Taxon;
 use App\Repository\Chullanka\StoreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Faker\Core\File;
+use Symfony\Component\HttpFoundation\File\File;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TranslatableInterface;
 use Sylius\Component\Resource\Model\TranslatableTrait;
@@ -103,7 +105,32 @@ class Store implements ResourceInterface, TranslatableInterface
      */
     private $chullis;
 
+    /** @var Chulli */
     private $director;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=StoreService::class, mappedBy="store")
+     * @ORM\JoinTable(name="nan_chk_store_to_service")
+     */
+    private $services;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class)
+     * @ORM\JoinTable(name="nan_chk_store_exclusive_product")
+     */
+    private $exclusive_products;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class)
+     * @ORM\JoinTable(name="nan_chk_store_other_product")
+     */
+    private $other_products;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Taxon::class)
+     * @ORM\JoinTable(name="nan_chk_store_taxon")
+     */
+    private $taxons;
 
     public function __construct()
     {
@@ -111,6 +138,10 @@ class Store implements ResourceInterface, TranslatableInterface
         $this->stocks = new ArrayCollection();
         $this->customers = new ArrayCollection();
         $this->chullis = new ArrayCollection();
+        $this->services = new ArrayCollection();
+        $this->exclusive_products = new ArrayCollection();
+        $this->other_products = new ArrayCollection();
+        $this->taxons = new ArrayCollection();
     }
 
     public function __toString()
@@ -446,5 +477,104 @@ class Store implements ResourceInterface, TranslatableInterface
             if($chulli->isLeader()) return $chulli;
         }
         return false;
+    }
+
+    /**
+     * @return Collection|StoreService[]
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(StoreService $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->addStore($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(StoreService $service): self
+    {
+        if ($this->services->removeElement($service)) {
+            $service->removeStore($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getExclusiveProducts(): Collection
+    {
+        return $this->exclusive_products;
+    }
+
+    public function addExclusiveProduct(Product $exclusiveProduct): self
+    {
+        if (!$this->exclusive_products->contains($exclusiveProduct)) {
+            $this->exclusive_products[] = $exclusiveProduct;
+        }
+
+        return $this;
+    }
+
+    public function removeExclusiveProduct(Product $exclusiveProduct): self
+    {
+        $this->exclusive_products->removeElement($exclusiveProduct);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getOtherProducts(): Collection
+    {
+        return $this->other_products;
+    }
+
+    public function addOtherProduct(Product $otherProduct): self
+    {
+        if (!$this->other_products->contains($otherProduct)) {
+            $this->other_products[] = $otherProduct;
+        }
+
+        return $this;
+    }
+
+    public function removeOtherProduct(Product $otherProduct): self
+    {
+        $this->other_products->removeElement($otherProduct);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Taxon[]
+     */
+    public function getTaxons(): Collection
+    {
+        return $this->taxons;
+    }
+
+    public function addTaxon(Taxon $taxon): self
+    {
+        if (!$this->taxons->contains($taxon)) {
+            $this->taxons[] = $taxon;
+        }
+
+        return $this;
+    }
+
+    public function removeTaxon(Taxon $taxon): self
+    {
+        $this->taxons->removeElement($taxon);
+
+        return $this;
     }
 }

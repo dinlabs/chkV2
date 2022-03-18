@@ -1,0 +1,36 @@
+{% if store.exclusiveProducts|length %}
+<div id="exclusiveProducts">
+    <h2 class="autoMargin">Les produits en Exclus</h2>
+    <div class="prodList">
+        <div class="list">
+            {% for product in store.exclusiveProducts %}
+            <div class="big">
+                {% include '@SyliusShop/Product/_box.html.twig' %}
+            </div>
+            {% endfor %}
+        </div>
+        <div role="tablist" class="dots"></div>
+        <script>
+            window.addEventListener('load', function(){
+                new Glider(document.querySelector('#exclusiveProducts .list'), { 
+                    itemWidth: 330,
+                    slidesToShow: 1,
+                    slidesToScroll : 1,
+                    duration: 2,
+                    draggable: true,
+                    scrollLock: true,
+                    dots: '#exclusiveProducts .dots',
+                    responsive: [
+                        {
+                            breakpoint: 1024,
+                            settings: {
+                                slidesToShow: 3
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+    </div>
+</div>
+{% endif %}

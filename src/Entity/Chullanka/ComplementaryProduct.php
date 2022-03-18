@@ -54,7 +54,7 @@ class ComplementaryProduct implements ResourceInterface, TranslatableInterface
     private $chulli;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, inversedBy="complementaryProducts")
+     * @ORM\ManyToMany(targetEntity=Product::class)
      * @ORM\JoinTable(name="nan_chk_complementary_product")
      */
     private $products;

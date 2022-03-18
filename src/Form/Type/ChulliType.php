@@ -33,6 +33,9 @@ class ChulliType extends AbstractType
                 'placeholder' => 'Choisir un magasin',
                 'required' => false
             ])
+            ->add('leader', CheckboxType::class, [
+                'label' => 'Responsable du magasin ?'
+            ])
             ->add('expertise', TextType::class, [
                 'label' => 'app.chulli.expertise',
                 'required' => false
