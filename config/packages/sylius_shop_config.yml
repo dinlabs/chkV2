@@ -579,12 +579,12 @@ sylius_ui:
                 latest_reviews:
                     template: "@SyliusShop/Product/Show/Tabs/Reviews/_latest.html.twig"
                     priority: 30
-                view_more:
-                    template: "@SyliusShop/Product/Show/Tabs/Reviews/_viewMore.html.twig"
-                    priority: 20
-                create:
-                    template: "@SyliusShop/Product/Show/Tabs/Reviews/_create.html.twig"
-                    priority: 10
+                # view_more:
+                #     template: "@SyliusShop/Product/Show/Tabs/Reviews/_viewMore.html.twig"
+                #     priority: 20
+                # create:
+                #     template: "@SyliusShop/Product/Show/Tabs/Reviews/_create.html.twig"
+                #     priority: 10
                     
         sylius.shop.product.show.tab_details:
             blocks:

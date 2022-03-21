@@ -87,7 +87,7 @@
                     {% endif %}
                 </div>
                 
-                <div class="body">{{ product.chulltest.description|raw }}</div>
+                <div class="body wysiwyg">{{ product.chulltest.description|raw }}</div>
 
                 {% if product.chulltest.sumup %}
                 <div class="sumup">
@@ -184,7 +184,6 @@
     </div>
     {% endif %}
 
-    {% if product.reviews|length > 0 %}
     <div id="reviews" class="frame">
         <h2 class="clientRating">
             <ul class="rating">
@@ -196,9 +195,10 @@
         <a href="#" class="pictoLink fold" data-on="Replier" data-off="{{ product.reviews|length }} avis">{{ product.reviews|length }} avis</a>
         <div class="foldable">
             {{ sylius_template_event('sylius.shop.product.show.tab_reviews', _context) }}
+
+            <a href="{{ path('sylius_shop_product_review_create', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn primary"><i class="icon plus"></i> {{ 'sylius.ui.add_your_review'|trans }}</a>
         </div>
     </div>
-    {% endif %}
 
     {{ sylius_template_event('sylius.shop.product.show.content', _context) }}
 </div>

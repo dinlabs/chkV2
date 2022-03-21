@@ -73,7 +73,7 @@ ul.list li::before { content:''; position:absolute; left:0; top:5px; background:
 .pictoLink { display:inline-block; background:url(../img/btn-fold.png) no-repeat right top; padding-right:37px; min-width:80px; height:33px; line-height:33px; text-align:right; color:var(--primary); font-size:15px; text-decoration:none; cursor:pointer; z-index:2; }
 .fold.on { background-position:right bottom; }
 .foldable { opacity:0; transition:all .25s; }
-.foldable:not(.shown) { height:0; }
+.foldable:not(.shown) { height:0; overflow:hidden; }
 .foldable.shown { opacity:1; padding-top:1em; margin-bottom:50px; }
 
 .lirePlus { display:/*inline-block*/none; padding-left:20px; padding-bottom:5px; margin-bottom:1em; margin-right:-20px; text-decoration:none; }

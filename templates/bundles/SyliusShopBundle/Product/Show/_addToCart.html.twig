@@ -15,6 +15,11 @@
 
     {% if not product.simple %}
         <div class="configurability">
+
+        {% if product.brand and product.brand.sizeGuide %}
+            <a href="#guideDesTailles">Guide des tailles</a>
+        {% endif %}
+
         {% if product.variantSelectionMethodChoice %}
             {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
         {% else %}
@@ -38,3 +43,32 @@
 
     {% endif %}
 </div>
+
+
+{#
+<a
+    href="{{ path('bitbag_sylius_wishlist_plugin_shop_wishlist_add_product', {'productId': product.id}) }}"
+    class="bitbag-add-to-wishlist ui icon labeled button blue"
+    data-product-name="{{ product.name }}"
+    {{ sylius_test_html_attribute('wishlist-add-product') }}
+>
+    <i class="icon heart"></i>
+    {{ 'bitbag_sylius_wishlist_plugin.ui.add_to_wishlist'|trans }}
+</a>
+<hr>
+<br>
+<a href="{{ path('bitbag_sylius_wishlist_plugin_shop_wishlist_list_products') }}" class="ui circular button">
+    <i class="icon heart"></i>
+    <span class="bitbag-wishlist-items-count" {{ sylius_test_html_attribute('wishlist-primary-items-count') }}>
+        Lien
+    </span>
+</a>
+#}
+
+{#
+<a href="{{ path('chk_wishlist_add_product', {'variant_id': 2}) }}" class="ui circular button">
+    <i class="icon heart"></i>
+        Ajout à une liste d'envie
+    </span>
+</a>
+#}

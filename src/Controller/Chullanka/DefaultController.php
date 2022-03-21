@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\HistoricOrder;
+use App\Entity\Chullanka\Parameter;
 use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\RmaProduct;
 use App\Entity\Chullanka\StoreService;
@@ -291,15 +292,34 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/productbox/{id}", name="chk_partial_product_box")
+     */
+    public function getProductBox(Request $request)
+    {
+        $id = $request->get('id');
+        $product = $this->container->get('doctrine')->getRepository(Product::class)->find($id);
+        return $this->render('@SyliusShop/Product/_box.html.twig', [
+            'product' => $product
+        ]);
+    }
+
+    /**
      * @Route("/lastblogposts", name="chk_last_blog_posts")
      */
-    public function getBlogFeedAction()
+    public function getBlogFeedAction(Request $request)
     {
-        $catflux = 'https://blogchullankav2.dinlabs.fr/category/electronique/?feed=customfeed';
+        $blogfeedurl = $this->chkParameter('blogfeedurl');
 
+        if($univers = $request->get('univers'))
+        {
+            $taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->find($univers);
+            if(($catfeedurl = $taxon->getBlogfeedurl()) && !empty($catfeedurl))
+            {
+                $blogfeedurl = $catfeedurl;
+            }
+        }
 
-        $url = 'https://blogchullankav2.dinlabs.fr/?feed=customfeed';
-        $rss = simplexml_load_file($url);
+        $rss = simplexml_load_file($blogfeedurl);
 
         $limit = 10;
         $blogposts = [];
@@ -773,5 +793,13 @@ final class DefaultController extends AbstractController
     private function getCurrentCustomer()
     {
         return (($user = $this->getUser()) && ($customer = $user->getCustomer())) ? $customer : null;
+    }
+
+    /**
+     * Return a parameter's value
+     */
+    private function chkParameter($slug)
+    {
+        return $this->container->get('doctrine')->getRepository(Parameter::class)->getValue($slug);
     }
 }

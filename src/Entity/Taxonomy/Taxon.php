@@ -36,6 +36,11 @@ class Taxon extends BaseTaxon
      */
     private $other_taxons;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $blogfeedurl;
+
     public function __construct()
     {
         parent::__construct();
@@ -127,6 +132,18 @@ class Taxon extends BaseTaxon
     public function removeOtherTaxon(Taxon $otherTaxon): self
     {
         $this->other_taxons->removeElement($otherTaxon);
+
+        return $this;
+    }
+
+    public function getBlogfeedurl(): ?string
+    {
+        return $this->blogfeedurl;
+    }
+
+    public function setBlogfeedurl(?string $blogfeedurl): self
+    {
+        $this->blogfeedurl = $blogfeedurl;
 
         return $this;
     }

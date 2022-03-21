@@ -8,6 +8,21 @@
 {% import '@SyliusUi/Macro/messages.html.twig' as messages %}
 {% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}
 
+{# Detect Univers #}
+{% set univers = null %}
+{% if taxon is defined %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+
+
 {% block stylesheets %}
     {{ parent() }}
 
@@ -20,19 +35,6 @@
 {% if taxon.level == 1 %}
     {% include '@SyliusShop/Taxon/_univers.html.twig' %}
 {% else %}
-    {% set univers = null %}
-    {% if taxon is defined %}
-        {% set ancestors = taxon.ancestors|reverse %}
-        {% for ancestor in ancestors %}
-            {% if not ancestor.isRoot() and univers is null %}
-                {% set univers = ancestor %}
-            {% endif %}
-        {% endfor %}
-        {% if univers is null %}
-            {% set univers = taxon %}
-        {% endif %}
-    {% endif %}
-
     {% set ajax_pagination = app.request.get('page') %}
 
     {% if app.request.xmlHttpRequest == false %}

@@ -20,6 +20,17 @@ class ParameterRepository extends EntityRepository
         parent::__construct($registry, Parameter::class);
     }*/
 
+    public function getValue($slug): ?string
+    {
+        $result = $this->createQueryBuilder('p')
+            ->andWhere('p.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+        return is_null($result) ? null : $result->getValue();
+    }
+
     // /**
     //  * @return Parameter[] Returns an array of Parameter objects
     //  */

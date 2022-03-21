@@ -92,6 +92,7 @@
                     {{ store.description|raw }}
                 </div>
 
+                {% if store.chullis|length %}
                 <div id="chullis" class="insert">
                     <h2>Votre équipe en magasin</h2>
                     <div class="director">
@@ -168,6 +169,7 @@
                         });
                     </script>
                 </div>
+                {% endif %}
 
                 {% if store.services|length %}
                 <div id="services" class="insert">

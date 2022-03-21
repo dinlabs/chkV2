@@ -2,9 +2,9 @@
 {% set variant = product|sylius_resolve_variant %}
 
 <div class="prodInList">
-    <svg class="svg-bg" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#bg-prodinlist') }}"/></svg>
-    <svg class="svg-picto" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#notation') }}"/></svg>
-    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="picture">
+    <svg class="svg-bg" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#bg-prodinlist')) }}"/></svg>
+    <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#notation')) }}"/></svg>
+    <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
         
         {#
@@ -16,13 +16,13 @@
     </a>
     <div class="infos">
         {% include '@SyliusShop/Product/_price.html.twig' %}
-        {% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
+        {% if product.brand %}<div class="brand"><a href="{{ absolute_url(path('brand_view', {'code': product.brand.code})) }}">{{ product.brand.name }}</a></div>{% endif %}
         <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</div>
         {% if product.averageRating %}
         <div class="clientRating">
             <ul class="rating">
                 {% for n in 1..5  %}
-                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-star') }}"/></svg></li>
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#ico-star')) }}"/></svg></li>
                 {% endfor %}
             </ul>
         </div>

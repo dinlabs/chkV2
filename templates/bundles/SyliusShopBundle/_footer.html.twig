@@ -3,8 +3,6 @@
 
 <br>
 
-
-
 <div id="socials">
     <div class="instag">
         <div class="autoMargin">
@@ -31,7 +29,11 @@
 
 {% include '@SyliusShop/Homepage/_newsletter.html.twig' %}
 
+{% if univers is defined and univers is not null %}
+{{ render(path('chk_last_blog_posts', {'univers': univers.id })) }}
+{% else %}
 {{ render(path('chk_last_blog_posts')) }}
+{% endif %}
 
 <footer id="footer">
     <div class="inside">
