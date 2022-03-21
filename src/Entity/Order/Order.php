@@ -106,11 +106,13 @@ class Order extends BaseOrder
 			if(!isset($dispoShops)) $dispoShops = $dispo;
 			$dispoShops = array_intersect_assoc($dispoShops, $dispo);
 		}
-
-        foreach($dispoShops as $s => $dispo)
-		{
-			if($dispo) $noShop = false;
-		}
+        if(isset($dispoShops))
+        {
+            foreach($dispoShops as $s => $dispo)
+            {
+                if($dispo) $noShop = false;
+            }
+        }
 		
 		// si c'est indispo en livraison et en magasin pour certains produits = panier mixte
 		if((count($this->getItems()) > 1) && $noShip && $noShop) 
