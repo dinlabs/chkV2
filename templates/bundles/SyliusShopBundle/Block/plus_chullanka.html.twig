@@ -1,0 +1,17 @@
+{% if block is defined or blocks is defined %}
+<div id="plusChullanka">
+    <div class="insert">
+        <strong>Les + Chullanka</strong>
+        <div>
+        {% if block is defined %}
+            {{ bitbag_cms_render_content(block) }}
+        {% endif %}
+        {% if blocks is defined %}
+            {% for block in blocks %}
+            {{ bitbag_cms_render_content(block) }}
+            {% endfor %}
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}

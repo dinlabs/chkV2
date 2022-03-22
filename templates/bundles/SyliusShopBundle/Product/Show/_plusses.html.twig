@@ -1,11 +1,15 @@
-<div id="plusChullanka">
-    <div class="insert">
-        <strong>Les + Chullanka</strong>
-        <ul>
-            <li><svg class="svg-icon" role="img" style="width:41.803px; height:42.24px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-upcycle"/></svg> 10 magasins & des passionnés à votre service</li>
-            <li><svg class="svg-icon" role="img" style="width:34.05px; height:45.199px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-coupe"/></svg> Livraison offerte dès 60€ d'achat</li>
-            <li><svg class="svg-icon" role="img" style="width:29.06px; height:52.909px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-paiement"/></svg> Paiement en 3x sans frais dès 50€</li>
-            <li><svg class="svg-icon" role="img" style="width:29.06px; height:52.909px"><use xlink:href="/chullanka/assets/img/sprites.svg#ico-paiement"/></svg> Retour possible sous 90 jours</li>
-        </ul>
-    </div>
-</div>
+{% if product.mainTaxon is not null %}
+    {% set taxon = product.mainTaxon %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+{% if univers is defined %}
+{{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'plus_chullanka', 'taxonCode': univers.code, 'template': '@SyliusShop/Block/plus_chullanka.html.twig'})) }}
+{% endif %}
