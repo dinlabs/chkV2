@@ -44,7 +44,13 @@
                 </div>
                 <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
             </div>
-            
+
+            {% if app.request.query.get('attributes') %}
+            <div class="deskReinit">
+                <a href="{{ app.request.pathInfo }}">Réinitialiser tous les filtres</a>
+            </div>
+            {% endif %}
+
             <h3>{{ 'app.front.category.filter.filtrer_par'|trans }}</h3>
             <ul class="filterList">
                 {#{ form_row(form.options) }#}

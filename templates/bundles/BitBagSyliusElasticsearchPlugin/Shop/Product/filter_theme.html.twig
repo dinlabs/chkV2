@@ -13,9 +13,15 @@
     {% endfor %}
 {% endblock %}
 {% block choice_row %}
+    {%- set _open = false %}
+    {%- for child in form %}
+        {%- if child.vars.checked %}
+        {%- set _open = true %}
+        {% endif -%}
+    {% endfor -%}
     <li class="{% if required %}required {% endif %}field{% if (not compound or force_error|default(false)) and not valid %} error{% endif %}">
-        <button class="pictoLink fold" data-on="{{ label }}" data-off="{{ label }}">{{ label }}</button>
-        <div class="foldable">
+        <button class="pictoLink fold{%- if _open %} on{% endif -%}" data-on="{{ label }}" data-off="{{ label }}">{{ label }}</button>
+        <div class="foldable{%- if _open %} shown{% endif -%}">
             {{- form_errors(form) -}}
             {{- form_widget(form) -}}
         </div>
