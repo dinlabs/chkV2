@@ -10,7 +10,10 @@
     </div>
 </div>
 
-{#todo: test if is delivery #}
-{#% if true %}
+
+{# test if is shipped #}
+{% set state = '' %}
+{% for shipment in order.shipments %}{% set state = shipment.state %}{% endfor %}
+{% if state and state == 'shipped' %}
 <p style="padding:2em; text-align:center;"><a href="{{ path('rma_ask_return', {'order_id': order.id}) }}">Retourner un article</a></p>
-{% endif %#}
+{% endif %}

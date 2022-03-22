@@ -358,9 +358,17 @@ class Product extends BaseProduct
         
         if($pictoEco = $this->getAttributeByCodeAndLocale('picto_eco'))
         {
-            $pictoEco = $pictoEco->getValue();
-
-            if($pictoEco == 3) $labels['eco'] = 'eco';
+            $value = $pictoEco->getValue();
+            $conf = $pictoEco->getAttribute()->getConfiguration();
+            $choices = $conf['choices'];
+            foreach($choices as $key => $choice)
+            {
+                if(in_array($key, $value) && ($choice['fr_FR'] == 3))
+                {
+                    $labels['eco'] = 'eco';
+                    break;
+                }
+            }
         }
 
         if($countryOfManufacture = $this->getAttributeByCodeAndLocale('country_of_manufacture'))
