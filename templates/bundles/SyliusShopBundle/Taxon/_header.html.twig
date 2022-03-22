@@ -15,7 +15,7 @@
 {% set _bgCat = null %}
 {% if univers and univers.images %}
     {% if univers.imagesByType('bg') is not empty %}
-    {% set _bgCat = univers.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+    {% set _bgCat = univers.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_univers')) %}
     {% else %}
     {% for image in univers.images %}
         {% if image.type == 'bg' %}

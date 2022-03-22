@@ -1,11 +1,11 @@
 {% set _bgCat = null %}
 {% if taxon and taxon.images %}
     {% if taxon.imagesByType('bg') is not empty %}
-    {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_category')) %}
+    {% set _bgCat = taxon.imagesByType('bg').first.path|imagine_filter(filter|default('chullanka_univers')) %}
     {% else %}
     {% for image in taxon.images %}
         {% if image.type == 'bg' %}
-        {% set _bgCat = image.path|imagine_filter(filter|default('sylius_shop_product_original')) %}
+        {% set _bgCat = image.path|imagine_filter(filter|default('chullanka_univers')) %}
         {% endif %}
     {% endfor %}
     {% endif %}
@@ -137,7 +137,7 @@
     {% endif %}
 
 
-    <div id="description" class="anchor">
+    <div id="description" class="anchor wysiwyg">
         {{ taxon.content|raw }}
         <div class="toAnchor">
             <a href="#categoryTop">{{ 'app.front.gototop'|trans }}</a>

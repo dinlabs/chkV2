@@ -9,7 +9,11 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [600, 90], mode: inset }
-        chullanka_category:
+        chullanka_univers:
             quality: 75
             filters:
                 thumbnail: { size: [1600, 900], mode: inset }
+        chullanka_category:
+            quality: 75
+            filters:
+                thumbnail: { size: [290, 450], mode: inset }

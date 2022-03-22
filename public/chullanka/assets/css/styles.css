@@ -340,8 +340,10 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #breadcrumb li a { color:inherit; }
 
 
+#announces .glider-slide > a, #promos .glider-slide > a, #guideList .glider-slide > a { display:block; }
+
+
 /* HomePage */
-#announces .glider .glider-slide a { display:block; }
 #announces .glider .glider-slide img { width:320px; height:560px; }
 
 .home #sports h2 { padding:0 20px; }
@@ -374,7 +376,6 @@ footer #ourAdventure picture { display:block; text-align:center; }
 .home #promos { text-align:center; padding:20px 0; }
 .home #promos h2 { padding:0 20px; text-align:initial; }
 .home #promos .glider .glider-slide { margin-right:1em; }
-.home #promos .glider .glider-slide a { display:block; }
 .home #promos .glider .glider-slide img { width:150px; height:315px; border-radius:5px; }
 .home #promos .glider .glider-slide img.big { width:330px; }
 
@@ -404,7 +405,7 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #plusChullanka .insert strong { display:block; text-align:center; font-family:var(--altFont); font-size:1.867em; text-transform:uppercase; }
 #plusChullanka .insert ul { padding:1em 1em 0 0; }
 #plusChullanka .insert ul li { display:flex; align-items:center; padding:.5em 0; line-height:1.4em; font-weight:700; }
-#plusChullanka .insert ul li .svg-icon { min-width:50px; margin-right:1em; }
+#plusChullanka .insert ul li .svg-icon, #plusChullanka .insert ul li img { min-width:50px; margin-right:1em; }
 
 
 /* Category Page */
