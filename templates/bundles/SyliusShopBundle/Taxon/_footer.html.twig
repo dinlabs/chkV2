@@ -4,6 +4,18 @@
 
 {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_promos', 'taxonCode': taxon.code, 'template': '@SyliusShop/Taxon/_promotions.html.twig'})) }}
 
+{% if taxon.otherTaxons|length %}
+<div id="checkThat">
+    <h2>Et si vous regardiez aussi</h2>
+    <ul>
+        {% for item in taxon.otherTaxons %}
+        <li><a href="{{ path('sylius_shop_product_index', {'slug': item.slug, '_locale': item.translation.locale}) }}">{{ item.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<br>
+{% endif %}
+
 <div id="description" class="anchor">
     {{ taxon.content|raw }}
     <div class="toAnchor">

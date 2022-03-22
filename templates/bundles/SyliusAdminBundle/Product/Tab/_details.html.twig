@@ -30,6 +30,11 @@
             </div>
             <div class="column">
                 {{ form_row(form.channels) }}
+                
+                <div class="ui segment">
+                    {{ form_row(form.new_from) }}
+                    {{ form_row(form.new_to) }}
+                </div>
             </div>
         </div>
         {% if product.simple %}

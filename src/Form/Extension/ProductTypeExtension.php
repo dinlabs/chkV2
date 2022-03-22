@@ -16,6 +16,7 @@ use Sylius\Bundle\ResourceBundle\Form\DataTransformer\ResourceToIdentifierTransf
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\ReversedTransformer;
 
@@ -59,6 +60,18 @@ class ProductTypeExtension extends AbstractTypeExtension
             },
             'required' => false,
         ]);
+
+        $builder->add('new_from', DateType::class, [
+            'widget' => 'single_text',
+            'label' => 'Produit "Nouveau" à partir du',
+            'required' => false
+            ])
+            ->add('new_to', DateType::class, [
+                'widget' => 'single_text',
+                'label' => 'Produit "Nouveau" jusqu\'au',
+                'required' => false
+            ])
+        ;
 
         $object = $builder->getData();
         $builder->add('chulltest', ChulltestType::class, [

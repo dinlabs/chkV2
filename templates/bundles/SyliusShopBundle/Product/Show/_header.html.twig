@@ -12,13 +12,19 @@
 
 {% set locale = configuration.request.locale %}
 {% set attribute = product.getAttributeByCodeAndLocale('label', locale) %}
-{% if attribute and attribute.value is not null %}
+{% if (attribute and attribute.value is not null) or product.tags|length %}
 <div class="tags">
-    {% set values = attribute.attribute.configuration.choices %}
-    {% for value in attribute.value %}
+    {% for value in product.tags %}
+        <span>{{ value }}</span>
+    {% endfor %}
+
+    {% if attribute and attribute.value is not null %}
+        {% set values = attribute.attribute.configuration.choices %}
+        {% for value in attribute.value %}
         {% if locale in values[value]|keys and values[value][locale] is not empty %}
         <span>{{ values[value][locale] }}</span>
         {% endif %}
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 </div>
 {% endif %}

@@ -51,4 +51,16 @@ class ChannelPricing extends BaseChannelPricing
     {
         $this->discountTo = $discountTo;
     }
+
+    public function getPercentage()
+    {
+        $price = $this->getPrice();
+        $orig = $this->getOriginalPrice();
+        if(!empty($price) && !empty($orig) && ($price != $orig)) 
+        {
+            $percent = 100 - round(($price / $orig) * 100);
+            return $percent;
+        }
+        return '';
+    }
 }

@@ -109,6 +109,8 @@
 {% include 'chullanka/brand/top_items.html.twig' with {'brands': taxon.topBrands, '_title': 'Nos Top Marques'} %}
 {% endif %}
 
+{{ bitbag_cms_render_media('selection_univ_' ~ taxon.slug, '@SyliusShop/Product/_packlist.html.twig') }}
+
 {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'univers_guides', 'taxonCode': taxon.code, 'template': '@SyliusShop/Block/univers_guides.html.twig'})) }}
 
 {{ render(path('chk_ajax_getadviceform')) }}
@@ -120,9 +122,20 @@
     </div>
     #}
 
-    {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'univers_guides', 'taxonCode': taxon.code, 'template': '@SyliusShop/Block/univers_guides.html.twig'})) }}
-    
     {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_promos', 'taxonCode': taxon.code, 'template': '@SyliusShop/Taxon/_promotions.html.twig'})) }}
+
+    {% if taxon.otherTaxons|length %}
+    <div id="checkThat">
+        <h2>Et si vous regardiez aussi</h2>
+        <ul>
+            {% for item in taxon.otherTaxons %}
+            <li><a href="{{ path('sylius_shop_product_index', {'slug': item.slug, '_locale': item.translation.locale}) }}">{{ item.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <br>
+    {% endif %}
+
 
     <div id="description" class="anchor">
         {{ taxon.content|raw }}

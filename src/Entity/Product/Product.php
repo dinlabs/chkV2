@@ -65,6 +65,16 @@ class Product extends BaseProduct
      */
     private $recalls;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $new_from;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $new_to;
+
     public function __construct()
     {
         parent::__construct();
@@ -287,5 +297,98 @@ class Product extends BaseProduct
         }
 
         return $this;
+    }
+
+    public function getNewFrom(): ?\DateTimeInterface
+    {
+        return $this->new_from;
+    }
+
+    public function setNewFrom(?\DateTimeInterface $new_from): self
+    {
+        $this->new_from = $new_from;
+
+        return $this;
+    }
+
+    public function getNewTo(): ?\DateTimeInterface
+    {
+        return $this->new_to;
+    }
+
+    public function setNewTo(?\DateTimeInterface $new_to): self
+    {
+        $this->new_to = $new_to;
+
+        return $this;
+    }
+
+    public function isNew(): ?bool
+    {
+        $now = new \DateTime();
+        return !is_null($this->new_from) 
+            && !is_null($this->new_to)
+            && ($now >= $this->new_from)
+            && ($now < $this->new_to)
+        ;
+    }
+
+
+    /** Twig */
+    public function getLabels()
+    {
+        $labels = [];
+
+        if($this->isNew())
+        {
+            $labels['new'] = 'new';
+        }
+
+        if($variant = $this->getVariants()->first())
+        {
+            if($channelPricing = $variant->getChannelPricings()->first())
+            {
+                $percent = $channelPricing->getPercentage();
+                if(!empty($percent))
+                {
+                    $labels['promo'] = '-' . (string)$percent . '%';
+                }
+            }
+        }
+        
+        if($pictoEco = $this->getAttributeByCodeAndLocale('picto_eco'))
+        {
+            $pictoEco = $pictoEco->getValue();
+
+            if($pictoEco == 3) $labels['eco'] = 'eco';
+        }
+
+        if($countryOfManufacture = $this->getAttributeByCodeAndLocale('country_of_manufacture'))
+        {
+            $country = $countryOfManufacture->getValue();
+            if(strtoupper($country) == 'FR') $labels['madeinfrance'] = 'Made in France';
+        }
+        
+        return $labels;
+    }
+
+    public function getTags()
+    {
+        $tags = [];
+
+        if($cycleVie = $this->getAttributeByCodeAndLocale('cycle_vie'))
+        {
+            $cycleVie = $cycleVie->getValue();
+            if($cycleVie == 3) $tags['ventesprivees'] = 'Ventes privées';
+            if($cycleVie == 4) $tags['soldes'] = 'Soldes';
+            if($cycleVie == 5) $tags['finserie'] = 'Fin de série';
+        }
+
+        if($this->getChulltest())
+        {
+            $tags['tested'] = 'Testé';
+        }
+
+        return $tags;
     }
 }

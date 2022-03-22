@@ -21,6 +21,7 @@
 <div id="productTop" class="autoMargin">
     <div id="illustration">
         <div class="stickIt">
+            {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
             {{ sylius_template_event('sylius.shop.product.show.left_sidebar', _context) }}
         </div>
     </div>
@@ -192,7 +193,7 @@
                 {% endfor %}
             </ul>
         </h2>
-        <a href="#" class="pictoLink fold" data-on="Replier" data-off="{{ product.reviews|length }} avis">{{ product.reviews|length }} avis</a>
+        <a href="#" class="pictoLink fold" data-on="Replier" data-off="{{ product.acceptedReviews|length }} avis">{{ product.acceptedReviews|length }} avis</a>
         <div class="foldable">
             {{ sylius_template_event('sylius.shop.product.show.tab_reviews', _context) }}
 

@@ -6,13 +6,7 @@
     <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#notation')) }}"/></svg>
     <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
-        
-        {#
-        <ul class="labels">
-            <li class="promo">-20%</li>
-            <li class="eco">eco</li>
-        </ul>
-        #}
+        {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
     </a>
     <div class="infos">
         {% include '@SyliusShop/Product/_price.html.twig' %}

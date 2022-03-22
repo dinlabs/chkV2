@@ -1,0 +1,6 @@
+{% set variant = product|sylius_resolve_variant %}
+<ul class="labels">
+    {% for key,val in product.labels %}
+    <li class="{{ key }}">{{ val }}</li>
+    {% endfor %}
+</ul>

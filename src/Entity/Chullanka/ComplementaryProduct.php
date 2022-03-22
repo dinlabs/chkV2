@@ -223,12 +223,13 @@ class ComplementaryProduct implements ResourceInterface, TranslatableInterface
 
     public function showCond(): ?bool
     {
+        $now = new \DateTime();
         return (is_null($this->show_from) && is_null($this->show_to)) 
             ? $this->enabled 
             : (
                 $this->enabled
-                && (time() >= $this->show_from)
-                && (time() < $this->show_to)
+                && ($now >= $this->show_from)
+                && ($now < $this->show_to)
             );
     }
 }
