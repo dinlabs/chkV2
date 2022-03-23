@@ -386,6 +386,17 @@ final class DefaultController extends AbstractController
             //->getOneOrNullResult()
             ->getResult()
         ;
+
+        // si vide, remonte d'un niveau
+        if(count($blocks) <= 0)
+        {
+            if($taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->findOneByCode($taxonCode))
+            {
+                $parent = $taxon->getParent();
+                //todo: test avec ce code et remonte jusqu'à l'univers
+            }
+        }
+
         return $this->render($template, [
             'blocks' => $blocks
         ]);
@@ -524,10 +535,6 @@ final class DefaultController extends AbstractController
                     $paymentStateMachine->apply('complete');
 
 
-                    // dispatch event
-                    $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
-
-
                     // EntityManager
                     $em = $this->container->get('doctrine')->getManager();
 
@@ -576,6 +583,8 @@ final class DefaultController extends AbstractController
                     $em->persist($order);
                     $em->flush();
                     
+                    // dispatch event
+                    $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
                 }
             }
             //return $this->redirectToRoute('sylius_shop_order_thank_you');
