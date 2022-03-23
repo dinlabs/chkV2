@@ -33,9 +33,10 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
@@ -50,11 +51,14 @@ final class DefaultController extends AbstractController
     /** @var GinkoiaCustomerWs */
     private $ginkoiaCustomerWs;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs)
+    private EventDispatcherInterface $eventDispatcher;
+
+    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher)
     {
         $this->cartContext = $cartContext;
         $this->twig = $twig;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -318,7 +322,7 @@ final class DefaultController extends AbstractController
                 $blogfeedurl = $catfeedurl;
             }
         }
-
+        
         $rss = simplexml_load_file($blogfeedurl);
 
         $limit = 10;
@@ -496,9 +500,9 @@ final class DefaultController extends AbstractController
                             [status] => 1000
                             [amount] => 16
                             [logs] => stdClass Object
-                                    [cardHolder] => payer@example.com
-                                    [status] => authorized
-                 */
+                            [cardHolder] => payer@example.com
+                            [status] => authorized
+                            */
                 if($return->status && ($return->status->state == 'SUCCESS'))
                 {
                     
@@ -509,15 +513,19 @@ final class DefaultController extends AbstractController
                     $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
                     //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
                     $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-                    //$em->persist($order);
+
                     
                     //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
                     $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
                     $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
-
+                    
                     $payment = $order->getPayments()->first();
                     $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
                     $paymentStateMachine->apply('complete');
+
+
+                    // dispatch event
+                    $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
 
 
                     // EntityManager
@@ -567,6 +575,7 @@ final class DefaultController extends AbstractController
                     
                     $em->persist($order);
                     $em->flush();
+                    
                 }
             }
             //return $this->redirectToRoute('sylius_shop_order_thank_you');
