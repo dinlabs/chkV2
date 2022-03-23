@@ -1,3 +1,16 @@
+{% set univers = null %}
+{% if taxon is defined %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() and univers is null %}
+            {% set univers = ancestor %}
+        {% endif %}
+    {% endfor %}
+    {% if univers is null %}
+        {% set univers = taxon %}
+    {% endif %}
+{% endif %}
+
 <div id="category">
     {% if taxon.parent is not empty and not taxon.parent.isRoot() and taxon.parent.enabled %}
         <a href="{{ path('sylius_shop_product_index', {'slug': taxon.parent.slug, '_locale': taxon.parent.translation.locale}) }}" class="btnRetour" {{ sylius_test_html_attribute('vertical-menu-go-level-up') }} title="{{ 'sylius.ui.go_level_up'|trans }}">
@@ -29,11 +42,13 @@
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             </div>
             {% endfor %}
+            {% if univers %}
             <div>
                 <div class="prodInList">
-                    <a href="#"><img src="//picsum.photos/330/467?random=44" alt="" class="round5 guide"></a>
+                    {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'univers_topguide', 'taxonCode': univers.code})) }}
                 </div>
             </div>
+            {% endif %}
         </div>
         <div role="tablist" class="dots"></div>
         <script>
