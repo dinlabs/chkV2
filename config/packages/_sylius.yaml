@@ -303,9 +303,6 @@ sylius_grid:
                 title:
                     type: string
                     label: 'Titre'
-                stores:
-                    type: string
-                    label: 'Magasins'
             actions:
                 main:
                     create:
@@ -468,3 +465,9 @@ sylius_grid:
                 item:
                     update:
                         type: update
+
+sylius_ui:
+    events:
+        sylius.admin.parameter.index:
+            blocks:
+                links: '@SyliusAdmin/Parameter/_links.html.twig'
