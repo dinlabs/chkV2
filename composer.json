@@ -119,6 +119,9 @@
             "dev-master": "1.9-dev"
         },
         "patches": {
+            "bitbag/cms-plugin": {
+              "Champs supplémentaires pour entité Block": "patches/sylius_cms.patch"
+            },
             "bitbag/elasticsearch-plugin": {
               "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch"
             }

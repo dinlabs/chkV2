@@ -1,0 +1,74 @@
+diff --git a/src/Entity/Block.php b/src/Entity/Block.php
+index 969b0b38..32c7e160 100755
+--- a/src/Entity/Block.php
++++ b/src/Entity/Block.php
+@@ -45,6 +45,9 @@ class Block implements BlockInterface
+     /** @var string|null */
+     protected $code;
+ 
++    /** @var bool */
++    protected $testblock = false;
++
+     public function getId(): ?int
+     {
+         return $this->id;
+@@ -60,6 +63,19 @@ class Block implements BlockInterface
+         $this->code = $code;
+     }
+ 
++    public function isTestblock(): bool
++    {
++        return $this->testblock;
++    }
++
++    /**
++     * @param bool $testblock
++     */
++    public function setTestblock(?bool $testblock): void
++    {
++        $this->testblock = (bool) $testblock;
++    }
++
+     public function getName(): ?string
+     {
+         /** @var BlockTranslationInterface $blockTranslationInterface */
+diff --git a/src/Form/Type/BlockType.php b/src/Form/Type/BlockType.php
+index 843e6215..fb85fcf8 100755
+--- a/src/Form/Type/BlockType.php
++++ b/src/Form/Type/BlockType.php
+@@ -41,6 +41,9 @@ final class BlockType extends AbstractResourceType
+             ->add('enabled', CheckboxType::class, [
+                 'label' => 'bitbag_sylius_cms_plugin.ui.enabled',
+             ])
++            ->add('testblock', CheckboxType::class, [
++                'label' => 'Bloc Test-produit',
++            ])
+             ->add('products', ProductAutocompleteChoiceType::class, [
+                 'label' => 'bitbag_sylius_cms_plugin.ui.products',
+                 'multiple' => true,
+diff --git a/src/Resources/config/doctrine/Block.orm.yml b/src/Resources/config/doctrine/Block.orm.yml
+index aa2af92f..7d5d4df1 100755
+--- a/src/Resources/config/doctrine/Block.orm.yml
++++ b/src/Resources/config/doctrine/Block.orm.yml
+@@ -16,6 +16,9 @@ BitBag\SyliusCmsPlugin\Entity\Block:
+         enabled:
+             column: enabled
+             type: boolean
++        testblock:
++            column: testblock
++            type: boolean
+     manyToMany:
+         sections:
+             targetEntity: BitBag\SyliusCmsPlugin\Entity\SectionInterface
+diff --git a/src/Resources/views/Block/Crud/_form.html.twig b/src/Resources/views/Block/Crud/_form.html.twig
+index 0af0ed0f..24f2a2de 100755
+--- a/src/Resources/views/Block/Crud/_form.html.twig
++++ b/src/Resources/views/Block/Crud/_form.html.twig
+@@ -9,6 +9,7 @@
+             {{ form_errors(form) }}
+             {{ form_row(form.code) }}
+             {{ form_row(form.enabled) }}
++            {{ form_row(form.testblock) }}
+             {{ form_row(form.products) }}
+             {{ form_row(form.taxons) }}
+             {{ form_row(form.sections) }}

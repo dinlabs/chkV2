@@ -1,9 +1,12 @@
 {% set _randId = random() %}
 <div id="promos_{{ _randId }}" class="promos glider-contain">
     <div class="glider">
+        {% if showCallback is defined and showCallback == true %}
+        <div>{{ render(path('chk_ajax_getadviceform')) }}</div>
+        {% endif %}
         {% for block in blocks %}
         <div>
-            {% if block.name == 'test' %}
+            {% if block.isTestblock %}
             {% include '@SyliusShop/Block/test_block.html.twig' %}
             {% else %}
                 {{ bitbag_cms_render_content(block) }}
