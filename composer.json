@@ -120,7 +120,7 @@
         },
         "patches": {
             "bitbag/elasticsearch-plugin": {
-              "Surcharges de SyliusElasticsearchPlugin": "patches/sylius_es.patch"
+              "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch"
             }
         }
     }

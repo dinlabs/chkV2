@@ -1,8 +1,17 @@
 diff --git a/src/Form/Type/ProductAttributesFilterType.php b/src/Form/Type/ProductAttributesFilterType.php
-index 193cab8..ed428f2 100644
+index 193cab8..e6a41dd 100644
 --- a/src/Form/Type/ProductAttributesFilterType.php
 +++ b/src/Form/Type/ProductAttributesFilterType.php
-@@ -59,6 +59,7 @@ final class ProductAttributesFilterType extends AbstractFilterType
+@@ -52,6 +52,8 @@ final class ProductAttributesFilterType extends AbstractFilterType
+             $name = $this->attributeNameResolver->resolvePropertyName($productAttribute->getCode());
+             $choices = $this->productAttributesMapper->mapToChoices($productAttribute);
+             $choices = array_unique($choices);
++            
++            if(empty($choices)) continue;//remove empty attributes
+ 
+             $builder->add($name, ChoiceType::class, [
+                 'label' => $productAttribute->getName(),
+@@ -59,6 +61,7 @@ final class ProductAttributesFilterType extends AbstractFilterType
                  'multiple' => true,
                  'expanded' => true,
                  'choices' => $choices,
