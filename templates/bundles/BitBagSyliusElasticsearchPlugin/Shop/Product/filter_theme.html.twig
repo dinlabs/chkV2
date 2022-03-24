@@ -14,6 +14,9 @@
 {% endblock %}
 {% block choice_row %}
     {%- set _open = false %}
+    {%- if form.vars.attr.preopened is defined and form.vars.attr.preopened == true %}
+        {%- set _open = true %}
+    {% endif -%}
     {%- for child in form %}
         {%- if child.vars.checked %}
         {%- set _open = true %}

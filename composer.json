@@ -21,6 +21,7 @@
         "bitbag/cms-plugin": "^3.0",
         "bitbag/elasticsearch-plugin": "^2.0",
         "bitbag/wishlist-plugin": "^1.9",
+        "cweagans/composer-patches": "^1.7",
         "sensio/framework-extra-bundle": "^6.2",
         "setono/sylius-feed-plugin": "^0.6.9",
         "stefandoorn/google-tag-manager-plugin": "^1.0",
@@ -106,7 +107,8 @@
             "phpstan/extension-installer": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "symfony/flex": true,
-            "symfony/thanks": true
+            "symfony/thanks": true,
+            "cweagans/composer-patches": true
         }
     },
     "extra": {
@@ -115,6 +117,11 @@
         },
         "branch-alias": {
             "dev-master": "1.9-dev"
+        },
+        "patches": {
+            "bitbag/elasticsearch-plugin": {
+              "Surcharges de SyliusElasticsearchPlugin": "patches/sylius_es.patch"
+            }
         }
     }
 }

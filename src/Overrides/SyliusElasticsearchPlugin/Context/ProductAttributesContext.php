@@ -46,6 +46,18 @@ final class ProductAttributesContext implements ProductAttributesContextInterfac
             $attributes = $this->attributesFinder->findByBrand($brandCode);
         }
 
+        // remove unwanted attributes
+        $keepAttributes = [];
+        for($a=0; $a<count($attributes); $a++)
+        {
+            $attr = $attributes[$a];
+            $conf = $attr->getConfiguration();
+            if(!$attr->getFilterable() || empty($conf['choices'])) continue;
+
+            $keepAttributes[] = $attr;
+        }
+        return $keepAttributes;
+
         return $attributes;
     }
 }

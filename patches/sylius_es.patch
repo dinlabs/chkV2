@@ -1,0 +1,12 @@
+diff --git a/src/Form/Type/ProductAttributesFilterType.php b/src/Form/Type/ProductAttributesFilterType.php
+index 193cab8..ed428f2 100644
+--- a/src/Form/Type/ProductAttributesFilterType.php
++++ b/src/Form/Type/ProductAttributesFilterType.php
+@@ -59,6 +59,7 @@ final class ProductAttributesFilterType extends AbstractFilterType
+                 'multiple' => true,
+                 'expanded' => true,
+                 'choices' => $choices,
++                'attr' => ['preopened' => $productAttribute->getPreopened()]
+             ]);
+         }
+     }

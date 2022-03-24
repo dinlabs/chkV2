@@ -237,10 +237,6 @@ services:
     bitbag_sylius_elasticsearch_plugin.property_builder.attribute_taxons:
         class: App\Overrides\SyliusElasticsearchPlugin\PropertyBuilder\AttributeTaxonsBuilder
 
-    # bitbag_sylius_elasticsearch_plugin.form.type.shop_products_filter:
-    #     class: App\Overrides\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType
-    #     arguments: ['name']
-
     FOS\ElasticaBundle\Finder\FinderInterface:
         '@fos_elastica.finder.bitbag_attribute_taxons'
     BitBag\SyliusElasticsearchPlugin\QueryBuilder\QueryBuilderInterface:
@@ -285,7 +281,7 @@ services:
         '@sylius.repository.product_attribute_value'
     bitbag.sylius_elasticsearch_plugin.repository.product_attribute_value_repository:
         class: App\Overrides\SyliusElasticsearchPlugin\Repository\ProductAttributeValueRepository
-
+        
 
     # setono_sylius_feed
     setono_sylius_feed.feed_context.google.shopping.product_item:
