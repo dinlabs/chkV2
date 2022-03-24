@@ -484,7 +484,7 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #searchWrapper #productList .promos a img { border-radius:5px; }
 #searchWrapper #productList .glider-contain { max-width:100%; }
 #searchWrapper #productList .promos .glider-slide > a img { border-radius:5px; }
-#searchWrapper #productList .promos .testBlock { width:330px; height:330px; }
+#searchWrapper #productList .promos .getAdvice, #searchWrapper #productList .promos .testBlock { width:330px; height:330px; }
 #searchWrapper #productList .promos .testBlock .inside .tested .head { width:initial; padding:initial; }
 #searchWrapper #productList .promos .testBlock .inside .tested .head img { margin:initial; }
 

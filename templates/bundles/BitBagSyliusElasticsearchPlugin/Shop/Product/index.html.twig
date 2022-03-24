@@ -72,7 +72,7 @@
                             {% include '@SyliusShop/Product/_box.html.twig' %}
                             
                             {% if _count == 7 %}
-                            {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_prodlist_1', 'taxonCode': taxon.code, 'template': '@SyliusShop/Block/promo_prodlist.html.twig'})) }}
+                            {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_prodlist_1', 'taxonCode': taxon.code, 'template': '@SyliusShop/Block/promo_prodlist.html.twig', 'showCallback': true })) }}
                             {% endif %}
 
                             {% if _count == 15 %}

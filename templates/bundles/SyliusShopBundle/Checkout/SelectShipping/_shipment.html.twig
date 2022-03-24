@@ -21,7 +21,8 @@
         {% include '@SyliusShop/Checkout/SelectShipping/_unavailable.html.twig' %}
     </div>
 {% endfor %}
-{% set choices = choices|merge({'home': home_choices})|merge({'pickup': pickup_choices}) %}
+{% if home_choices is not empty %}{% set choices = choices|merge({'home': home_choices}) %}{% endif %}
+{% if pickup_choices is not empty %}{% set choices = choices|merge({'pickup': pickup_choices}) %}{% endif %}
 
 {% if choices|length %}
     {% for where, choice_form in choices %}

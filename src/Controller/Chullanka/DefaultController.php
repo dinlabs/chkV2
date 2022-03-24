@@ -372,6 +372,7 @@ final class DefaultController extends AbstractController
         $template = $request->get('template') ?? '@SyliusShop/Block/simple_blocklist.html.twig';
         $sectionCode = $request->get('sectionCode');
         $taxonCode = $request->get('taxonCode');
+        $showCallback = $request->get('showCallback');
         
         $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
         $blocks = $blockRepo->createQueryBuilder('o')
@@ -398,7 +399,8 @@ final class DefaultController extends AbstractController
         }
 
         return $this->render($template, [
-            'blocks' => $blocks
+            'blocks' => $blocks,
+            'showCallback' => $showCallback
         ]);
     }
 

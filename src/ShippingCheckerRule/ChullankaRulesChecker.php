@@ -14,23 +14,47 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
     {
         if(!$subject instanceof ShipmentInterface) return false;
 
+        //dd($subject);
         $order = $subject->getOrder();
         if(null === $order) return false;
 
         $channel = $order->getChannel();
         if(null === $channel) return false;
 
-        //$method = $subject->getMethod()->getCode();//genre "home_standart"
+        $selectedMethod = $subject->getMethod()->getCode();// méthode sélectionnée pour la commande !
 
+        $method = $configuration['method'];
+        
+        $storeUnavailable = [];
+        $oneIsUnavailable = false;
         foreach($order->getItems() as $item)
         {
             $variant = $item->getVariant();
 
-            //test $variant->getOnHand() pour désactiver les méthodes de livraison si pas tous les produits dispo ?
+            if($method == 'store')
+            {
+                // test stock mag
+                foreach($variant->getStocks() as $vStock)
+                {
+                    //init
+                    if(!isset($storeUnavailable[ $vStock->getStore()->getId() ]))
+                    {
+                        $storeUnavailable[ $vStock->getStore()->getId() ] = false;
+                    }
+                    
+                    if($vStock->getOnHand() <= 0)
+                    {
+                        $storeUnavailable[ $vStock->getStore()->getId() ] = true;
+                        $oneIsUnavailable = true;
+                    }
+                }
+            }
+            else 
+            {
+                //test $variant->getOnHand() pour désactiver les méthodes de livraison si pas tous les produits dispo ?
+                if($variant->getOnHand() <= 0) $oneIsUnavailable = true;
+            }
 
-            // test stock mag
-            // todo: boucler sur les "store" pour voir ceux où tous les produits sont dispo
-            // peut-être créer une méthode pour chaque store (pour les grouper dans la section retrait-magasin) et désactiver celles qui n'ont pas tous les produits ? 
             
             // test override
             $product = $variant->getProduct();
@@ -40,6 +64,17 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
                 $oneIsOversize = true;
             }
         }
+
+        if($method == 'store')
+        {
+            // si au moins un magasin est à "false" pour les indispo, on affiche la méthode
+            for($s=1; $s<count($storeUnavailable); $s++)
+            {
+                if($storeUnavailable[ $s ] == false) return true;
+            }
+        }
+
+        if($oneIsUnavailable) return false;
 
         if($shipAddress = $order->getShippingAddress())
         {
