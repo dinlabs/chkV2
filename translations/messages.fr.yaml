@@ -6,6 +6,8 @@ chullanka_store_services:
   menu_item: 'Les Services en magasin'
 chullanka_brands:
   menu_item: 'Les Marques'
+chullanka_sports:
+  menu_item: 'Les Sports'
 chullanka_recalls:
   menu_item: 'Demandes de rappel'
 chullanka_rmas:
@@ -40,6 +42,10 @@ app:
     chullis: 'Chullis'
     edit_chulli: 'Modifier ce chulli'
     new_chulli: 'Nouveau chulli'
+    sport: 'Sport'
+    sports: 'Sports'
+    edit_sport: 'Modifier ce sport'
+    new_sport: 'Nouveau sport'
     recall: 'Demande de rappel'
     recalls: 'Demandes de rappel'
     edit_recall: 'Modifier cette demande'

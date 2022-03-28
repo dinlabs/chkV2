@@ -2,20 +2,22 @@
 
 {% block content %}
 <div class="autoMargin">
-    <h1>Vos magasins favoris</h1>
-    <p>Cliquez pour ajouter un ou plusieurs magasins en favoris. Promis, ça reste entre nous !</p>
+    <h1>Votre magasin favori</h1>
+    <p>Cliquez pour définir votre magasin favori. Promis, ça reste entre nous !</p>
 
     {{ form_start(form, {'attr': {'id': 'favorite_stores'}}) }}
     {{ form_errors(form) }}
     {% form_theme form _self %}
     {% block choice_widget %}
-        {% for child in form.favoriteStores %}
+        {% for child in form.store %}
         <div class="choice_store">
             {{ form_widget(child) }}
             <label for="{{ child.vars.id }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ child.vars.label }}</label>
         </div>
         {% endfor %}
     {% endblock choice_widget %}
+
+    {#{ form_widget(form.store) }#}
 
     <div class="formaction">
         <button type="submit" class="btn primary">Enregistrer</button>

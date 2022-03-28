@@ -27,6 +27,16 @@ class Customer extends BaseCustomer
     private $chullpoints;
 
     /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $notice;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Store::class)
+     */
+    private $store;
+
+    /**
      * @ORM\ManyToMany(targetEntity=Store::class, inversedBy="customers")
      * @ORM\JoinTable(name="nan_chk_customer_store")
      */
@@ -93,6 +103,30 @@ class Customer extends BaseCustomer
     {
         $this->chullpoints = $chullpoints;
         
+        return $this;
+    }
+
+    public function getNotice(): ?int
+    {
+        return $this->notice;
+    }
+
+    public function setNotice(?int $notice): self
+    {
+        $this->notice = $notice;
+
+        return $this;
+    }
+
+    public function getStore(): ?Store
+    {
+        return $this->store;
+    }
+
+    public function setStore(?Store $store): self
+    {
+        $this->store = $store;
+
         return $this;
     }
 

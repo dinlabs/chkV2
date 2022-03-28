@@ -337,24 +337,6 @@ sylius_grid:
                 name:
                     label: app.brand.name
                     type: string
-        # app_admin_bloc:
-        #     driver:
-        #         name: doctrine/orm
-        #         options:
-        #             class: App\Entity\Chullanka\Bloc
-        #     fields:
-        #         code:
-        #             type: string
-        #             label: 'Code'
-        #     actions:
-        #         main:
-        #             create:
-        #                 type: create
-        #         item:
-        #             update:
-        #                 type: update
-        #             #delete:
-        #             #    type: delete
         app_admin_chulli:
             driver:
                 name: doctrine/orm
@@ -446,6 +428,28 @@ sylius_grid:
                         type: update
                     #delete:
                     #    type: delete
+        app_admin_sport:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Sport
+            fields:
+                enabled:
+                    type: twig
+                    label: app.store.enabled
+                    sortable: ~
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
+                name:
+                    type: string
+                    label: 'Nom'
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
         app_admin_parameter:
             driver:
                 name: doctrine/orm

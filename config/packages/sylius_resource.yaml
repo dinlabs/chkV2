@@ -20,16 +20,6 @@ sylius_resource:
                 classes:
                     model: App\Entity\Chullanka\BrandTranslation
                     form: App\Form\Type\BrandTranslationType
-        # app.bloc:
-        #     driver: doctrine/orm
-        #     classes:
-        #         model: App\Entity\Chullanka\Bloc
-        #         form: App\Form\Type\BlocType
-        #         repository: App\Repository\Chullanka\BlocRepository
-        #     translation:
-        #         classes:
-        #             model: BitBag\SyliusCmsPlugin\Entity\BlockTranslation
-        #             form: BitBag\SyliusCmsPlugin\Form\Type\Translation\BlockTranslationType
         app.faq:
             driver: doctrine/orm
             classes:
@@ -82,6 +72,12 @@ sylius_resource:
                 model: App\Entity\Chullanka\StoreService
                 form: App\Form\Type\StoreServiceType
                 repository: App\Repository\Chullanka\StoreServiceRepository
+        app.sport:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Sport
+                form: App\Form\Type\SportType
+                repository: App\Repository\Chullanka\SportRepository
         app.parameter:
             driver: doctrine/orm
             classes:

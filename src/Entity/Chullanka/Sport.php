@@ -7,12 +7,13 @@ use App\Repository\Chullanka\SportRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Entity(repositoryClass=SportRepository::class)
  * @ORM\Table(name="nan_chk_sport")
  */
-class Sport
+class Sport implements ResourceInterface
 {
     /**
      * @ORM\Id

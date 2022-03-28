@@ -1,10 +1,38 @@
 <div id="favoriteStores" class="insert">
     <div class="entete">
-        <h2>Vos magasins favoris</h2>
+        <h2>Votre magasin favori</h2>
         <img src="{{ asset('chullanka/assets/img/ico-mag-chull.png') }}" alt="">
     </div>
 
-    {% if customer.favoriteStores|length == 0 %}
+    {% if customer.store %}
+        {% set store = customer.store %}
+        <ul>
+            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ store.name }}</li>
+        </ul>
+        <a href="{{ path('store_manage_favorites') }}" class="btn primary">Modifier</a>
+
+        <div class="infoStore">
+            <h3>Dans votre magasin {{ store.name }}</h3>
+            {% if store.openingHours %}{{ store.openingHours }}<br>{% endif %}
+            {{ store.street ~ ' ' ~ store.postcode ~ ' ' ~ store.city  }}
+            <br><strong>{{ store.phoneNumber }}</strong>
+        </div>
+
+        {% if store.services|length %}
+        <div class="services">
+            <h3>Tout sur votre magasin favoris</h3>
+            <ul>
+            {% for service in store.services %}
+                <li><a href="{{ path('store_view', {'code': store.code}) }}#services">{{ service.title }}</a></li>    
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% else %}
+        <a href="{{ path('store_manage_favorites') }}" class="btn primary">Commencer</a>
+    {% endif %}
+
+    {#% if customer.favoriteStores|length == 0 %}
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Commencer</a>
     {% else %}
         <ul>
@@ -13,5 +41,5 @@
         {% endfor %}
         </ul>
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>
-    {% endif %}
+    {% endif %#}
 </div>

@@ -131,21 +131,6 @@ app_admin_brand:
     type: sylius.resource
     prefix: /admin
 
-# app_admin_bloc:
-#     resource: |
-#         alias: app.bloc
-#         section: admin
-#         templates: "@SyliusAdmin\\Crud"
-#         redirect: update
-#         grid: app_admin_bloc
-#         vars:
-#             all:
-#                 subheader: 'Gestion des Blocs +'
-#             index:
-#                 icon: 'file image outline'
-#     type: sylius.resource
-#     prefix: /admin
-
 app_admin_chulli:
     resource: |
         alias: app.chulli
@@ -186,6 +171,21 @@ app_admin_rma:
         vars:
             all:
                 subheader: 'RMA'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
+app_admin_sport:
+    resource: |
+        alias: app.sport
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_sport
+        vars:
+            all:
+                subheader: 'Gestion des Sports'
             index:
                 icon: 'file image outline'
     type: sylius.resource

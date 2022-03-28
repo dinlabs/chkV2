@@ -60,6 +60,13 @@ final class AdminMenuListener
             ->setLabelAttribute('icon', 'cubes');
         
         $item
+            ->addChild('sports', [
+                'route' => 'app_admin_sport_index',
+            ])
+            ->setLabel('chullanka_sports.menu_item')
+            ->setLabelAttribute('icon', 'futbol');
+        
+        $item
             ->addChild('recalls', [
                 'route' => 'app_admin_recall_index',
             ])

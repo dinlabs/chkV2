@@ -14,11 +14,16 @@ class FavoriteStoreType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('favoriteStores', EntityType::class, [
+            ->add('store', EntityType::class, [
+                'class' => Store::class,
+                'multiple' => false,
+                'expanded' => true,
+            ])
+            /*->add('favoriteStores', EntityType::class, [
                 'class' => Store::class,
                 'multiple' => true,
                 'expanded' => true,
-            ])
+            ])*/
         ;
     }
 
