@@ -1,0 +1,23 @@
+{% if block is defined %}
+    {% if block.chullis %}
+    <div class="header">
+        <h3>Une équipe de Chullis Passionnés et expert de leurs disciplines</h3>
+        <div>
+            {% for chulli in block.chullis %}
+            <span class="pichulli">
+                <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="48" height="48" alt="Chulli - {{ chulli }}">
+                <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if block.taxons %}
+    <ul class="ctaCats">
+        {% for taxon in block.taxons %}
+        <li><a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">{{ taxon.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endif %}

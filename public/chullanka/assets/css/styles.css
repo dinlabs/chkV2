@@ -366,6 +366,11 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #testProducts .chullis .chulli:nth-child(4) { left:220px; top:140px; }
 #testProducts .chullis .chulli:nth-child(5) { left:250px; top:30px; }
 #testProducts .chullis .chulli img { border-radius:50%; }
+#testProducts .chullis .chulli:nth-child(1) img { width:334px; }
+#testProducts .chullis .chulli:nth-child(2) img { width:240px; }
+#testProducts .chullis .chulli:nth-child(3) img { width:154px; }
+#testProducts .chullis .chulli:nth-child(4) img { width:110px; }
+#testProducts .chullis .chulli:nth-child(5) img { width:102px; }
 #testProducts .chullis .chulli .info { display:none; }
 #testProducts .content { position:relative; text-align:initial; font-family:var(--altFont); padding:20px; }
 #testProducts .content p { font-size:1.2em; }

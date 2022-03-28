@@ -1,21 +1,89 @@
 diff --git a/src/Entity/Block.php b/src/Entity/Block.php
-index 969b0b38..32c7e160 100755
+index 969b0b38..3be80f3a 100755
 --- a/src/Entity/Block.php
 +++ b/src/Entity/Block.php
-@@ -45,6 +45,9 @@ class Block implements BlockInterface
+@@ -10,6 +10,12 @@ declare(strict_types=1);
+ 
+ namespace BitBag\SyliusCmsPlugin\Entity;
+ 
++use App\Entity\Chullanka\Brand;
++use App\Entity\Chullanka\Chulli;
++use App\Entity\Chullanka\Sport;
++use App\Entity\Chullanka\Store;
++use Doctrine\Common\Collections\ArrayCollection;
++use Doctrine\Common\Collections\Collection;
+ use Sylius\Component\Resource\Model\ToggleableTrait;
+ use Sylius\Component\Resource\Model\TranslatableTrait;
+ use Sylius\Component\Resource\Model\TranslationInterface;
+@@ -37,6 +43,10 @@ class Block implements BlockInterface
+         $this->initializeProductsCollection();
+         $this->initializeTaxonCollection();
+         $this->initializeChannelsCollection();
++        $this->initializeBrandsCollection();
++        $this->initializeChullisCollection();
++        $this->initializeSportsCollection();
++        $this->initializeStoresCollection();
+     }
+ 
+     /** @var int|null */
+@@ -45,6 +55,27 @@ class Block implements BlockInterface
      /** @var string|null */
      protected $code;
  
 +    /** @var bool */
 +    protected $testblock = false;
 +
++    /** @var datetime|null */
++    protected $datefrom;
++
++    /** @var datetime|null */
++    protected $dateto;
++
++    /** @var Collection|Brand[] */
++    protected $brands;
++
++    /** @var Collection|Chulli[] */
++    protected $chullis;
++
++    /** @var Collection|Sport[] */
++    protected $sports;
++
++    /** @var Collection|Store[] */
++    protected $stores;
++
      public function getId(): ?int
      {
          return $this->id;
-@@ -60,6 +63,19 @@ class Block implements BlockInterface
-         $this->code = $code;
+@@ -105,6 +136,21 @@ class Block implements BlockInterface
+         $blockTranslationInterface->setLink($link);
      }
  
++    public function getExtra(): ?string
++    {
++        /** @var BlockTranslationInterface $blockTranslationInterface */
++        $blockTranslationInterface = $this->getBlockTranslation();
++
++        return $blockTranslationInterface->getExtra();
++    }
++
++    public function setExtra(?string $extra): void
++    {
++        /** @var BlockTranslationInterface $blockTranslationInterface */
++        $blockTranslationInterface = $this->getBlockTranslation();
++        $blockTranslationInterface->setExtra($extra);
++    }
++
+     /**
+      * @return BlockTranslationInterface|TranslationInterface
+      */
+@@ -117,4 +163,160 @@ class Block implements BlockInterface
+     {
+         return new BlockTranslation();
+     }
++
++
++    /* Surcharges Chullanka */
++
 +    public function isTestblock(): bool
 +    {
 +        return $this->testblock;
@@ -29,46 +97,375 @@ index 969b0b38..32c7e160 100755
 +        $this->testblock = (bool) $testblock;
 +    }
 +
++    public function getDatefrom(): ?\DateTimeInterface
++    {
++        return $this->datefrom;
++    }
++
++    public function setDatefrom(?\DateTimeInterface $datefrom): self
++    {
++        $this->datefrom = $datefrom;
++
++        return $this;
++    }
++
++    public function getDateto(): ?\DateTimeInterface
++    {
++        return $this->dateto;
++    }
++
++    public function setDateto(?\DateTimeInterface $dateto): self
++    {
++        $this->dateto = $dateto;
++
++        return $this;
++    }
++
++    public function initializeBrandsCollection(): void
++    {
++        $this->brands = new ArrayCollection();
++    }
++
++    public function getBrands(): Collection
++    {
++        return $this->brands;
++    }
++
++    public function hasBrand(Brand $brand): bool
++    {
++        return $this->brands->contains($brand);
++    }
++
++    public function addBrand(Brand $brand): void
++    {
++        if (false === $this->hasBrand($brand)) {
++            $this->chullis->add($brand);
++        }
++    }
++
++    public function removeBrand(Brand $brand): void
++    {
++        if (true === $this->hasBrand($brand)) {
++            $this->brands->removeElement($brand);
++        }
++    }
++
++    public function initializeChullisCollection(): void
++    {
++        $this->chullis = new ArrayCollection();
++    }
++
++    public function getChullis(): Collection
++    {
++        return $this->chullis;
++    }
++
++    public function hasChulli(Chulli $chulli): bool
++    {
++        return $this->chullis->contains($chulli);
++    }
++
++    public function addChulli(Chulli $chulli): void
++    {
++        if (false === $this->hasChulli($chulli)) {
++            $this->chullis->add($chulli);
++        }
++    }
++
++    public function removeChulli(Chulli $chulli): void
++    {
++        if (true === $this->hasChulli($chulli)) {
++            $this->chullis->removeElement($chulli);
++        }
++    }
++
++    public function initializeSportsCollection(): void
++    {
++        $this->sports = new ArrayCollection();
++    }
++
++    public function getSports(): Collection
++    {
++        return $this->sports;
++    }
++
++    public function hasSport(Sport $sport): bool
++    {
++        return $this->sports->contains($sport);
++    }
++
++    public function addSport(Sport $sport): void
++    {
++        if (false === $this->hasSport($sport)) {
++            $this->sports->add($sport);
++        }
++    }
++
++    public function removeSport(Sport $sport): void
++    {
++        if (true === $this->hasSport($sport)) {
++            $this->sports->removeElement($sport);
++        }
++    }
++
++    public function initializeStoresCollection(): void
++    {
++        $this->stores = new ArrayCollection();
++    }
++
++    public function getStores(): Collection
++    {
++        return $this->stores;
++    }
++
++    public function hasStore(Store $store): bool
++    {
++        return $this->stores->contains($store);
++    }
++
++    public function addStore(Store $store): void
++    {
++        if (false === $this->hasStore($store)) {
++            $this->stores->add($store);
++        }
++    }
++
++    public function removeStore(Store $store): void
++    {
++        if (true === $this->hasStore($store)) {
++            $this->stores->removeElement($store);
++        }
++    }
+ }
+diff --git a/src/Entity/BlockTranslation.php b/src/Entity/BlockTranslation.php
+index 146a5b18..1f25d5e3 100755
+--- a/src/Entity/BlockTranslation.php
++++ b/src/Entity/BlockTranslation.php
+@@ -26,6 +26,9 @@ class BlockTranslation extends AbstractTranslation implements BlockTranslationIn
+     /** @var string|null */
+     protected $link;
+ 
++    /** @var string|null */
++    protected $extra;
++
      public function getName(): ?string
      {
-         /** @var BlockTranslationInterface $blockTranslationInterface */
+         return $this->name;
+@@ -60,4 +63,14 @@ class BlockTranslation extends AbstractTranslation implements BlockTranslationIn
+     {
+         $this->link = $link;
+     }
++
++    public function getExtra(): ?string
++    {
++        return $this->extra;
++    }
++
++    public function setExtra(?string $extra): void
++    {
++        $this->extra = $extra;
++    }
+ }
 diff --git a/src/Form/Type/BlockType.php b/src/Form/Type/BlockType.php
-index 843e6215..fb85fcf8 100755
+index 843e6215..a4e5945a 100755
 --- a/src/Form/Type/BlockType.php
 +++ b/src/Form/Type/BlockType.php
-@@ -41,6 +41,9 @@ final class BlockType extends AbstractResourceType
+@@ -10,6 +10,10 @@ declare(strict_types=1);
+ 
+ namespace BitBag\SyliusCmsPlugin\Form\Type;
+ 
++use App\Entity\Chullanka\Brand;
++use App\Entity\Chullanka\Chulli;
++use App\Entity\Chullanka\Sport;
++use App\Entity\Chullanka\Store;
+ use BitBag\SyliusCmsPlugin\Entity\BlockInterface;
+ use BitBag\SyliusCmsPlugin\Form\Type\Translation\BlockTranslationType;
+ use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
+@@ -17,7 +21,9 @@ use Sylius\Bundle\ProductBundle\Form\Type\ProductAutocompleteChoiceType;
+ use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
+ use Sylius\Bundle\ResourceBundle\Form\Type\ResourceTranslationsType;
+ use Sylius\Bundle\TaxonomyBundle\Form\Type\TaxonAutocompleteChoiceType;
++use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
++use Symfony\Component\Form\Extension\Core\Type\DateType;
+ use Symfony\Component\Form\Extension\Core\Type\TextType;
+ use Symfony\Component\Form\FormBuilderInterface;
+ use Symfony\Component\Validator\Constraints\Valid;
+@@ -41,6 +47,19 @@ final class BlockType extends AbstractResourceType
              ->add('enabled', CheckboxType::class, [
                  'label' => 'bitbag_sylius_cms_plugin.ui.enabled',
              ])
 +            ->add('testblock', CheckboxType::class, [
 +                'label' => 'Bloc Test-produit',
 +            ])
++            ->add('datefrom', DateType::class, [
++                'widget' => 'single_text',
++                'label' => 'Afficher du',
++                'required' => false
++            ])
++            ->add('dateto', DateType::class, [
++                'widget' => 'single_text',
++                'label' => 'Jusqu\'au',
++                'required' => false
++            ])
              ->add('products', ProductAutocompleteChoiceType::class, [
                  'label' => 'bitbag_sylius_cms_plugin.ui.products',
                  'multiple' => true,
+@@ -55,6 +74,30 @@ final class BlockType extends AbstractResourceType
+                 'multiple' => true,
+                 'expanded' => true,
+             ])
++            ->add('brands', EntityType::class, [
++                'class' => Brand::class,
++                'label' => 'Marques',
++                'required' => false,
++                'multiple' => true,
++            ])
++            ->add('chullis', EntityType::class, [
++                'class' => Chulli::class,
++                'label' => 'Chullis',
++                'required' => false,
++                'multiple' => true,
++            ])
++            ->add('sports', EntityType::class, [
++                'class' => Sport::class,
++                'label' => 'Sports',
++                'required' => false,
++                'multiple' => true,
++            ])
++            ->add('stores', EntityType::class, [
++                'class' => Store::class,
++                'label' => 'Magasins',
++                'required' => false,
++                'multiple' => true,
++            ])
+             ->add('translations', ResourceTranslationsType::class, [
+                 'label' => 'bitbag_sylius_cms_plugin.ui.contents',
+                 'entry_type' => BlockTranslationType::class,
+diff --git a/src/Form/Type/Translation/BlockTranslationType.php b/src/Form/Type/Translation/BlockTranslationType.php
+index 2c74b196..b7c1a74c 100644
+--- a/src/Form/Type/Translation/BlockTranslationType.php
++++ b/src/Form/Type/Translation/BlockTranslationType.php
+@@ -31,6 +31,10 @@ final class BlockTranslationType extends AbstractResourceType
+             ->add('content', WysiwygType::class, [
+                 'required' => false,
+             ])
++            ->add('extra', TextType::class, [
++                'label' => 'Extra',
++                'required' => false,
++            ])
+         ;
+     }
+ 
 diff --git a/src/Resources/config/doctrine/Block.orm.yml b/src/Resources/config/doctrine/Block.orm.yml
-index aa2af92f..7d5d4df1 100755
+index aa2af92f..9ca770ca 100755
 --- a/src/Resources/config/doctrine/Block.orm.yml
 +++ b/src/Resources/config/doctrine/Block.orm.yml
-@@ -16,6 +16,9 @@ BitBag\SyliusCmsPlugin\Entity\Block:
+@@ -16,6 +16,17 @@ BitBag\SyliusCmsPlugin\Entity\Block:
          enabled:
              column: enabled
              type: boolean
 +        testblock:
 +            column: testblock
 +            type: boolean
++        datefrom:
++            column: datefrom
++            type: datetime
++            nullable: true
++        dateto:
++            column: dateto
++            type: datetime
++            nullable: true
      manyToMany:
          sections:
              targetEntity: BitBag\SyliusCmsPlugin\Entity\SectionInterface
+@@ -68,3 +79,55 @@ BitBag\SyliusCmsPlugin\Entity\Block:
+                     channel_id:
+                         referencedColumnName: id
+                         onDelete: CASCADE
++
++        brands:
++            targetEntity: App\Entity\Chullanka\Brand
++            joinTable:
++                name: nan_chk_cms_block_brands
++                joinColumns:
++                    block_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++                inverseJoinColumns:
++                    brand_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++
++        chullis:
++            targetEntity: App\Entity\Chullanka\Chulli
++            joinTable:
++                name: nan_chk_cms_block_chullis
++                joinColumns:
++                    block_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++                inverseJoinColumns:
++                    chulli_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++
++        sports:
++            targetEntity: App\Entity\Chullanka\Sport
++            joinTable:
++                name: nan_chk_cms_block_sports
++                joinColumns:
++                    block_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++                inverseJoinColumns:
++                    sport_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++
++        stores:
++            targetEntity: App\Entity\Chullanka\Store
++            joinTable:
++                name: nan_chk_cms_block_stores
++                joinColumns:
++                    block_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
++                inverseJoinColumns:
++                    store_id:
++                        referencedColumnName: id
++                        onDelete: CASCADE
+diff --git a/src/Resources/config/doctrine/BlockTranslation.orm.yml b/src/Resources/config/doctrine/BlockTranslation.orm.yml
+index f42f6d7a..73d214a1 100755
+--- a/src/Resources/config/doctrine/BlockTranslation.orm.yml
++++ b/src/Resources/config/doctrine/BlockTranslation.orm.yml
+@@ -20,3 +20,7 @@ BitBag\SyliusCmsPlugin\Entity\BlockTranslation:
+             column: link
+             type: text
+             nullable: true
++        extra:
++            column: extra
++            type: string
++            nullable: true
 diff --git a/src/Resources/views/Block/Crud/_form.html.twig b/src/Resources/views/Block/Crud/_form.html.twig
-index 0af0ed0f..24f2a2de 100755
+index 0af0ed0f..d89f5f1a 100755
 --- a/src/Resources/views/Block/Crud/_form.html.twig
 +++ b/src/Resources/views/Block/Crud/_form.html.twig
-@@ -9,6 +9,7 @@
+@@ -9,10 +9,17 @@
              {{ form_errors(form) }}
              {{ form_row(form.code) }}
              {{ form_row(form.enabled) }}
 +            {{ form_row(form.testblock) }}
++            {{ form_row(form.datefrom) }}
++            {{ form_row(form.dateto) }}
              {{ form_row(form.products) }}
              {{ form_row(form.taxons) }}
              {{ form_row(form.sections) }}
+             {{ form_row(form.channels) }}
++            {{ form_row(form.chullis) }}
++            {{ form_row(form.stores) }}
++            {{ form_row(form.brands) }}
++            {{ form_row(form.sports) }}
+ 
+             <a 
+                 href="#" 

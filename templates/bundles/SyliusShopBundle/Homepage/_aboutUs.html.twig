@@ -10,43 +10,7 @@
             <img src="{{ asset('chullanka/assets/img/carte_france.png') }}" alt="">
         </div>
         <div class="team">
-            <div class="header">
-                <h3>Une équipe de Chullis Passionnés et expert de leurs disciplines</h3>
-                <div>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_1.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_2.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_3.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_4.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_5.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                    <span class="pichulli">
-                        <img src="{{ asset('chullanka/assets/img/chulli_6.jpg') }}" width="48" height="48" alt="Chulli">
-                        <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
-                    </span>
-                </div>
-            </div>
-            <ul class="ctaCats">
-                <li><a href="#">Randonnées et Bivouac</a></li>
-                <li><a href="#">Ski et Snowboard</a></li>
-                <li><a href="#">Escalade et Alpinisme</a></li>
-                <li><a href="#">Trail et Running</a></li>
-                <li><a href="#">Vélo</a></li>
-                <li><a href="#">Electronique et Optique</a></li>
-            </ul>
+            {{ render(path('bitbag_sylius_cms_plugin_shop_block_render', {'code' : 'home_chullanka_entreprise', 'template' : '@SyliusShop/Block/chullanka_entreprise.html.twig'})) }}
             <img src="{{ asset('chullanka/assets/img/equipe.jpg') }}" alt="Chullis">
         </div>
     </div>
