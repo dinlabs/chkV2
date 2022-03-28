@@ -984,6 +984,10 @@ body.customer { background:var(--bg1); }
 #brand #brandTop .socials a .icon { margin:0; font-size:2em; }
 
 
+/* REVIEWS */
+#reviews { padding-bottom:2em; }
+
+
 /* WYSIWYG */
 .wysiwyg h2 { padding-bottom:1em; }
 .wysiwyg p { padding-bottom:1.5em; }
