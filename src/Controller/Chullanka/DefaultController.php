@@ -371,32 +371,33 @@ final class DefaultController extends AbstractController
     {
         $template = $request->get('template') ?? '@SyliusShop/Block/simple_blocklist.html.twig';
         $sectionCode = $request->get('sectionCode');
-        $taxonCode = $request->get('taxonCode');
         $showCallback = $request->get('showCallback');
-        
-        $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
-        $blocks = $blockRepo->createQueryBuilder('o')
-            ->innerJoin('o.taxonomies', 'taxon')
-            ->innerJoin('o.sections', 'section')
-            ->where('o.enabled = true')
-            ->andWhere('section.code = :sectionCode')
-            ->andWhere('taxon.code = :taxonCode')
-            ->setParameter('sectionCode', $sectionCode)
-            ->setParameter('taxonCode', $taxonCode)
-            ->getQuery()
-            //->getOneOrNullResult()
-            ->getResult()
-        ;
+        $taxonCode = $request->get('taxonCode');
+        $taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->findOneByCode($taxonCode);
 
-        // si vide, remonte d'un niveau
-        if(count($blocks) <= 0)
-        {
-            if($taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->findOneByCode($taxonCode))
+        $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
+
+        do 
+        { 
+            $blocks = $blockRepo->createQueryBuilder('o')
+                                ->innerJoin('o.taxonomies', 'taxon')
+                                ->innerJoin('o.sections', 'section')
+                                ->where('o.enabled = true')
+                                ->andWhere('section.code = :sectionCode')
+                                ->andWhere('taxon.code = :taxonCode')
+                                ->setParameter('sectionCode', $sectionCode)
+                                ->setParameter('taxonCode', $taxonCode)
+                                ->getQuery()
+                                //->getOneOrNullResult()
+                                ->getResult()
+            ;
+
+            if($parent = $taxon->getParent())
             {
-                $parent = $taxon->getParent();
-                //todo: test avec ce code et remonte jusqu'à l'univers
+                $taxonCode = $parent->getCode();
             }
         }
+        while((count($blocks) <= 0) && $parent);
 
         return $this->render($template, [
             'blocks' => $blocks,
