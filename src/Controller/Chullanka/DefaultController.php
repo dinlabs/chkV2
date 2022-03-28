@@ -373,12 +373,10 @@ final class DefaultController extends AbstractController
         $sectionCode = $request->get('sectionCode');
         $showCallback = $request->get('showCallback');
         $taxonCode = $request->get('taxonCode');
-        $taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->findOneByCode($taxonCode);
 
         $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
-
         do 
-        { 
+        {
             $blocks = $blockRepo->createQueryBuilder('o')
                                 ->innerJoin('o.taxonomies', 'taxon')
                                 ->innerJoin('o.sections', 'section')
@@ -392,12 +390,18 @@ final class DefaultController extends AbstractController
                                 ->getResult()
             ;
 
-            if($parent = $taxon->getParent())
+            $parent = false;
+            if(count($blocks) <= 0)
             {
-                $taxonCode = $parent->getCode();
+                $taxon = $this->container->get('doctrine')->getRepository(Taxon::class)->findOneByCode($taxonCode);
+                if($taxon->getLevel() > 1)
+                {
+                    $parent = $taxon->getParent();
+                    $taxonCode = $parent->getCode();
+                }
             }
         }
-        while((count($blocks) <= 0) && $parent);
+        while((count($blocks) <= 0) && ($parent != false));
 
         return $this->render($template, [
             'blocks' => $blocks,
