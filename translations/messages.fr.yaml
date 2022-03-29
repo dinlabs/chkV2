@@ -114,6 +114,13 @@ sylius:
     your_shopping_cart: 'Mon panier'
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
     checkout: 'Valider mon panier'
+    onhold: "Problème de stock à l'entrepôt"
+    preparation: "Préparation en cours"
+    ready_to_ship: "Prêt pour expédition"
+    store_available: "Disponible en magasin"
+    store_trouble: "Problème de stock en magasin"
+    store_collected: "Récupérée en magasin"
+    store_sent: "Livrée (Click&Collect)"
 
 bitbag_sylius_elasticsearch_plugin:
   ui:

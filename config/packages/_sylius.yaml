@@ -475,3 +475,74 @@ sylius_ui:
         sylius.admin.parameter.index:
             blocks:
                 links: '@SyliusAdmin/Parameter/_links.html.twig'
+
+
+winzou_state_machine:
+    sylius_shipment:
+        states:
+            onhold: ~
+            preparation: ~
+            ready_to_ship: ~
+            store_available: ~
+            store_trouble: ~
+            store_collected: ~
+            store_sent: ~
+        transitions:
+            stock_trouble:
+                from: [ready,preparation,ready_to_ship]
+                to: onhold
+            in_preparation:
+                from: [ready,onhold]
+                to: preparation
+            before_ship:
+                from: [ready,onhold,preparation]
+                to: ready_to_ship
+            ship:
+                from: [preparation,ready_to_ship]
+                to: shipped
+            store_onhold:
+                from: [ready]
+                to: store_trouble
+            store_ready:
+                from: [ready]
+                to: store_available
+            store_pickup:
+                from: [ready,store_available]
+                to: store_collected
+            store_click_and_collect:
+                from: [ready,onhold,preparation,ready_to_ship]
+                to: store_sent
+    sylius_order_shipping:
+        states:
+            onhold: ~
+            preparation: ~
+            ready_to_ship: ~
+            store_available: ~
+            store_trouble: ~
+            store_collected: ~
+            store_sent: ~
+        transitions:
+            stock_trouble:
+                from: [ready,preparation,ready_to_ship]
+                to: onhold
+            in_preparation:
+                from: [ready,onhold]
+                to: preparation
+            before_ship:
+                from: [ready,onhold,preparation]
+                to: ready_to_ship
+            ship:
+                from: [preparation,ready_to_ship]
+                to: shipped
+            store_onhold:
+                from: [ready]
+                to: store_trouble
+            store_ready:
+                from: [ready]
+                to: store_available
+            store_pickup:
+                from: [ready,store_available]
+                to: store_collected
+            store_click_and_collect:
+                from: [ready,onhold,preparation,ready_to_ship]
+                to: store_sent

@@ -38,6 +38,11 @@ sylius_admin_product_create_pack:
 
 
 # Controllers perso pour Chullanka
+App\Controller\Chullanka\AdminController:
+    type: annotation
+    resource: App\Controller\Chullanka\AdminController
+    prefix: /admin/chullanka
+
 App\Controller\Chullanka\DefaultController:
     type: annotation
     resource: App\Controller\Chullanka\DefaultController
