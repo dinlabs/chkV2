@@ -82,9 +82,8 @@
     
     <button type="submit" id="next-step" form="{{ _context.form.vars.id }}" class="btn primary" {{ sylius_test_html_attribute('next-step') }}>Continuer</button>
 
-    <div class="ui center aligned basic segment">
-        <i class="large cc paypal card icon"></i>
-        <i class="large cc mastercard icon"></i>
-        <i class="large cc visa icon"></i>
+    <div class="pictosPaiement">
+        <img src="{{ asset('chullanka/assets/img/picto-3x.png') }}" alt="3x sans frais">
+        <img src="{{ asset('chullanka/assets/img/picto-cbs.png') }}" alt="CB Visa MasterCard">
     </div>
 </div>
