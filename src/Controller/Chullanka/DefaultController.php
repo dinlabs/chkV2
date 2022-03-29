@@ -521,8 +521,10 @@ final class DefaultController extends AbstractController
                             [cardHolder] => payer@example.com
                             [status] => authorized
                             */
-                if($return->status && ($return->status->state == 'SUCCESS'))
-                {
+                
+                // on commente temporairement pour les tests
+                /*if($return->status && ($return->status->state == 'SUCCESS'))
+                {*/
                     
                     $order->setNotes('Revenu avec succès de la plateforme de paiement : '.$return->method);
 
@@ -592,7 +594,7 @@ final class DefaultController extends AbstractController
                     
                     // dispatch event
                     $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
-                }
+                //}
             }
             //return $this->redirectToRoute('sylius_shop_order_thank_you');
             //==> quelque chose fait que le controller nous renvoie ensuite sur la home
