@@ -36,10 +36,15 @@
             var $_input = $(o).find('input');
             $_input.attr('type', 'text');
             var _max = $_input.data('max-available');
+            var $_error = $(o).next('.error');
             $(o).on('click', '.updateQuantity.up', function(e) {
                 var _val = $_input.val();
                 _val++;
-                if(_val > _max) _val = _max;
+                if(_val > _max) 
+                {
+                    _val = _max;
+                    $_error.removeClass('hidden');
+                }
                 $_input.val(_val);
             });
             $(o).on('click', '.updateQuantity.down', function(e) {

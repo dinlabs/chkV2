@@ -770,6 +770,7 @@ body.checkout { background:var(--bg1); }
 .checkout #cartProducts .cartItem .sylius-quantity { display:flex; }
 .checkout #cartProducts .cartItem .sylius-quantity input { border:none; padding:12px; text-align: center; width:60px; color:var(--primary); font-family:var(--altFont); font-size:1.2em; font-weight:700; outline:none; }
 .checkout #cartProducts .cartItem .sylius-quantity button { display:grid; place-items:center; background:var(--bg0); border:2px solid var(--default); border-radius:50%; width:43px; height:43px; font-family:var(--altFont); font-size:1.75em; cursor:pointer; }
+.checkout #cartProducts .cartItem .infos .quantity .error { color:var(--primary); }
 
 .checkout #cartProducts .cartItem .infos .sylius-total { font-weight:700; }
 
@@ -798,6 +799,8 @@ body.checkout { background:var(--bg1); }
 
 .checkout #sylius-cart-update { display:block; margin-left:auto; }
 .checkout #btnToCheckout { background:var(--primary); width:100%; }
+
+.checkout .pictosPaiement { display:flex; justify-content:space-between; padding-top:1em; }
 
 .checkout.cart .getAdvice .btnCall { background:var(--default); }
 

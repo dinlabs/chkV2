@@ -67,9 +67,14 @@
         </tbody>
     </table>
 
-    {% if cart.isPanierMixte == false %}
+    {% if cart.isPanierMixte == false and cart.overQuantities == false %}
     <a href="{{ path('sylius_shop_checkout_start') }}" id="btnToCheckout" class="btn">{{ 'sylius.ui.checkout'|trans }}</a>
     {% endif %}
+
+    <div class="pictosPaiement">
+        <img src="{{ asset('chullanka/assets/img/picto-3x.png') }}" alt="3x sans frais">
+        <img src="{{ asset('chullanka/assets/img/picto-cbs.png') }}" alt="CB Visa MasterCard">
+    </div>
 </div>
 
 {{ render(path('chk_ajax_getadviceform')) }}

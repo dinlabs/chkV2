@@ -168,6 +168,11 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $this->session->getFlashBag()->add('error', 'Panier mixte');
         }
+
+		if($order->overQuantities())
+        {
+            $this->session->getFlashBag()->add('error', 'Les quantités demandées ne sont pas disponibles, merci de rectifier votre panier.');
+        }
     }
 
     /**

@@ -21,7 +21,10 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
         $channel = $order->getChannel();
         if(null === $channel) return false;
 
-        $selectedMethod = $subject->getMethod()->getCode();// méthode sélectionnée pour la commande !
+        if($subject->getMethod())
+        {
+            $selectedMethod = $subject->getMethod()->getCode();// méthode sélectionnée pour la commande !
+        }
 
         $method = $configuration['method'];
         

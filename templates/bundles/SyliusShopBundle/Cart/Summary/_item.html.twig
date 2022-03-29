@@ -21,6 +21,7 @@
                     {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form, 'data-max-available': variant.maxQty}})) }}
                     <button class="updateQuantity down">-</button>
                 </div>
+                <strong class="error{% if item.quantity <= variant.maxQty %} hidden{% endif %}">Quantité maximum&nbsp;: {{ variant.maxQty }}</strong>
             </div>
             
             <div class="total">

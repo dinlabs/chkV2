@@ -61,6 +61,36 @@ class Order extends BaseOrder
     }
 
     /**
+     * @return Collection|Rma[]
+     */
+    public function getRmas(): Collection
+    {
+        return $this->rmas;
+    }
+
+    public function addRma(Rma $rma): self
+    {
+        if (!$this->rmas->contains($rma)) {
+            $this->rmas[] = $rma;
+            $rma->setRmaOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRma(Rma $rma): self
+    {
+        if ($this->rmas->removeElement($rma)) {
+            // set the owning side to null (unless already changed)
+            if ($rma->getRmaOrder() === $this) {
+                $rma->setRmaOrder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * for Twig templates
      */
     public function chullpoints()
@@ -124,32 +154,29 @@ class Order extends BaseOrder
     }
 
     /**
-     * @return Collection|Rma[]
+     * Test si quantités dépassées
      */
-    public function getRmas(): Collection
+    public function overQuantities()
     {
-        return $this->rmas;
-    }
+        $maxQtyByProducts = [];
+        $noShip = $noShop = false;
+		$inShop = [];
+        foreach($this->getItems() as $item)
+        {
+            $askQty = $item->getQuantity();
+            $variant = $item->getVariant();
 
-    public function addRma(Rma $rma): self
-    {
-        if (!$this->rmas->contains($rma)) {
-            $this->rmas[] = $rma;
-            $rma->setRmaOrder($this);
+            // test si quantité dispo
+            if($askQty > $variant->getMaxQty()) 
+                $maxQtyByProducts[ $item->getId() ] = $variant->getMaxQty();    
         }
 
-        return $this;
-    }
-
-    public function removeRma(Rma $rma): self
-    {
-        if ($this->rmas->removeElement($rma)) {
-            // set the owning side to null (unless already changed)
-            if ($rma->getRmaOrder() === $this) {
-                $rma->setRmaOrder(null);
-            }
+        // si des produits ne sont pas dispo en quantite demandee...
+        if(count($maxQtyByProducts) > 0)
+        {
+            return true;
         }
 
-        return $this;
+        return false;
     }
 }
