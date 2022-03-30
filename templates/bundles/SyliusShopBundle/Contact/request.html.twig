@@ -1,0 +1,111 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+{% block title %}{{ 'sylius.ui.contact_us'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui hidden divider"></div>
+    <div class="ui two column centered stackable autoMargin">
+        <div class="column">
+            <h1 class="ui header">
+                <i class="circular mail icon"></i>
+                <div class="content">
+                    {{ 'sylius.ui.contact_us'|trans }}
+                    <div class="sub header">{{ 'sylius.ui.use_the_contact_form_below_to_send_us_a_message'|trans }}</div>
+
+                    {{ sylius_template_event('sylius.shop.contact.request.after_content_header') }}
+                </div>
+            </h1>
+            <div class="ui segment">
+                {{ form_start(form, {'action': path('sylius_shop_contact_request'), 'attr': {'class': 'ui large loadable form', 'novalidate': 'novalidate', 'id': 'contact_form'}}) }}
+                {{ form_row(form.name, sylius_test_form_attribute('contact-name')) }}
+                {{ form_row(form.email, sylius_test_form_attribute('contact-email')) }}
+                {{ form_row(form.phone, sylius_test_form_attribute('contact-phone')) }}
+                {{ form_row(form.subject, sylius_test_form_attribute('contact-subject')) }}
+                <div id="sub-produits" class="field hidden">
+                    {{ form_row(form.producturl, sylius_test_form_attribute('contact-producturl')) }}
+                </div>
+                <div id="sub-sav" class="field hidden">
+                    {{ form_row(form.orderplace, sylius_test_form_attribute('contact-orderplace')) }}
+                    {{ form_row(form.number, sylius_test_form_attribute('contact-number')) }}
+                    {{ form_row(form.productname, sylius_test_form_attribute('contact-productname')) }}
+                </div>
+                <div id="sub-magasins" class="field hidden">
+                    {{ form_row(form.store, sylius_test_form_attribute('contact-store')) }}
+                </div>
+                <div id="sub-discount" class="field hidden">
+                    {{ form_row(form.subsubject, sylius_test_form_attribute('contact-subsubject')) }}
+                    <div id="subsub-code" class="hidden">
+                        {{ form_row(form.codepromo, sylius_test_form_attribute('contact-codepromo')) }}
+                    </div>
+                    <div id="subsub-partenaire" class="hidden">
+                        {{ form_row(form.storebis, sylius_test_form_attribute('contact-storebis')) }}
+                        {{ form_row(form.partenaire, sylius_test_form_attribute('contact-partenaire')) }}
+                    </div>
+                    <div id="subsub-devis" class="hidden">
+                        {{ form_row(form.storeter, sylius_test_form_attribute('contact-storeter')) }}
+                    </div>
+                </div>
+                {{ form_row(form.message, sylius_test_form_attribute('contact-message')) }}
+
+                {{ sylius_template_event('sylius.shop.contact.request.form', {'form': form}) }}
+
+                {{ form_row(form._token) }}
+                <button type="submit" class="ui fluid large primary submit button" {{ sylius_test_html_attribute('send-button') }}>{{ 'sylius.ui.send'|trans }}</button>
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+    var $contactMessage = $('#sylius_contact_message');
+
+    var _placeholder = {
+        'sav': 'Merci de détailler le défaut rencontré afin de nous permettre de vous apporter une réponse la plus précise possible.',
+        'magasins': 'Pour une réponse plus rapide nous vous invitons à nous contacter directement sur la page du magasin.',
+        'site': 'Si votre question concerne un produit ou une disponibilité, merci de choisir le sujet "nos produits"'
+    };
+
+    var manageOptions = function() {
+        $('#contact_form .hidden').hide();
+        var _val = $('#sylius_contact_subject').val();
+        var _target = '#sub-' + _val;
+        if($(_target).length)
+        {
+            $(_target).show('slow');
+        }
+        if(_placeholder[ _val ])
+        {
+            $contactMessage.attr('placeholder', _placeholder[ _val ]);
+        }
+        else $contactMessage.attr('placeholder', '');
+    };
+
+    var manageSubOptions = function() {
+        $('#sub-discount .hidden').hide();
+        var _val = $('#sylius_contact_subsubject').val();
+        if($('#subsub-' + _val).length)
+        {
+            $('#subsub-' + _val).show('slow');
+        }
+    }
+    
+    $(document).ready(function() {
+        manageOptions();
+        manageSubOptions();
+
+        $('#sylius_contact_subject').on('change', function(e) {
+            manageOptions();
+        });
+        $('#sylius_contact_subsubject').on('change', function(e) {
+            manageSubOptions();
+        });
+    });
+</script>
+{% endblock %}

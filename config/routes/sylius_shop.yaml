@@ -1,3 +1,9 @@
+redirect_bitbag_sylius_cms_plugin_shop_page_contact_show:
+    path: /{_locale}/page/contact
+    defaults:
+        _controller: sylius.controller.shop.contact:requestAction
+        permanent: true
+
 redirect_sylius_shop_product_index:
     path: /{_locale}/taxons/{slug}
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction

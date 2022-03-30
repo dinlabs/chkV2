@@ -42,6 +42,31 @@ services:
     # App\Controller\ProductController:
     #     autowire: false
 
+    #ndY: surcharge du controller de Contact
+    App\Controller\Shop\ContactController:
+        class: App\Controller\Shop\ContactController
+        tags: ['controller.service_arguments']
+        arguments: 
+            - '@router'
+            - '@form.factory'
+            - '@twig'
+            - '@sylius.context.channel'
+            - '@sylius.context.customer'
+            - '@sylius.context.locale'
+            - '@sylius.email_manager.contact'
+    sylius.controller.shop.contact:
+        class: App\Controller\Shop\ContactController
+        tags: ['controller.service_arguments']
+        arguments: 
+            - '@router'
+            - '@form.factory'
+            - '@twig'
+            - '@sylius.context.channel'
+            - '@sylius.context.customer'
+            - '@sylius.context.locale'
+            - '@sylius.email_manager.contact'
+
+    
     App\ShippingCalculator\ChullankaCalculator:
         tags:
             -  {

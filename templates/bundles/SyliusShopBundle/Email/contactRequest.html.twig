@@ -1,0 +1,131 @@
+{% extends '@SyliusShop/Email/layout.html.twig' %}
+
+{% block subject %}
+    {{ 'sylius.email.contact_request.subject'|trans({}, null, localeCode) }}
+{% endblock %}
+
+{% block content %}
+    <div style="text-align:left;">
+        <div style="color:#d82130;">
+            <strong>{{ 'sylius.email.contact_request.message_from'|trans({}, null, localeCode) }} :</strong>
+        </div>
+        <div style="margin-bottom:20px;">
+            {{ data.name }} {{ data.email }}
+            {% if data.phone %}<br>Tél : {{ data.phone }}{% endif %}
+        </div>
+        
+        {%
+            set subjects = {
+                produits: 'Nos produits (caractéristiques, tailles, disponibilités…)',
+                sav: 'Service après-vente',
+                magasins: 'Les magasins Chullanka',
+                site: 'Le site Internet chullanka.com',
+                sponsor: 'Partenariat / Sponsoring',
+                discount: 'Code promo / Remises club / devis',
+                autre: 'Autres'
+            }
+        %}
+        <div style="color:#d82130;">
+            <strong>Sujet :</strong>
+        </div>
+        <div style="margin-bottom:20px;">{{ subjects[ data.subject ] }}</div>
+
+        {% if data.subject == 'produits' and data.producturl %}
+        <div style="color:#d82130;">
+            <strong>Produit :</strong>
+        </div>
+        <div style="margin-bottom:20px;">{{ data.producturl }}</div>
+        {% endif %}
+        
+        {% if data.subject == 'sav' %}
+        <div style="margin-bottom:20px;">
+            {% if data.orderplace %}
+            <div style="color:#d82130;">
+                <strong>Lieu d'achat :</strong>
+            </div>
+            <div style="margin-bottom:10px;">{{ data.orderplace }}</div>
+            {% endif %}
+
+            {% if data.number %}
+            <div style="color:#d82130;">
+                <strong>N° de commande ou n° de ticket :</strong>
+            </div>
+            <div style="margin-bottom:10px;">{{ data.number }}</div>
+            {% endif %}
+
+            {% if data.productname %}
+            <div style="color:#d82130;">
+                <strong>Nom de votre produit :</strong>
+            </div>
+            <div style="margin-bottom:10px;">{{ data.productname }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if data.subject == 'magasins' %}
+        <div style="margin-bottom:20px;">
+            {% if data.store %}
+            <div style="color:#d82130;">
+                <strong>Votre magasin :</strong>
+            </div>
+            <div style="margin-bottom:10px;">{{ data.store }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if data.subject == 'discount' %}
+        <div style="color:#d82130;">
+            <strong>Sous sujet :</strong>
+        </div>
+        <div style="margin-bottom:20px;">
+            {% if data.subsubject == 'code' %}
+            <div style="margin-bottom:10px;">Code promo</div>
+            <div style="margin-bottom:20px;">
+                {% if data.codepromo %}
+                <div style="color:#d82130;">
+                    <strong>Code promo concerné :</strong>
+                </div>
+                <div style="margin-bottom:10px;">{{ data.codepromo }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if data.subsubject == 'partenaire' %}
+            <div style="margin-bottom:10px;">Remise partenaire</div>
+            <div style="margin-bottom:20px;">
+                {% if data.storebis %}
+                <div style="color:#d82130;">
+                    <strong>Magasin où vous avez votre remise :</strong>
+                </div>
+                <div style="margin-bottom:10px;">{{ data.storebis }}</div>
+                {% endif %}
+
+                {% if data.partenaire %}
+                <div style="color:#d82130;">
+                    <strong>Votre club partenaire / entreprise partenaire / métiers partenaire :</strong>
+                </div>
+                <div style="margin-bottom:10px;">{{ data.partenaire }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if data.subsubject == 'devis' %}
+            <div style="margin-bottom:10px;">Devis</div>
+            <div style="margin-bottom:20px;">
+                {% if data.storeter %}
+                <div style="color:#d82130;">
+                    <strong>Devis avec livraison ou retrait en magasin :</strong>
+                </div>
+                <div style="margin-bottom:10px;">{{ data.storeter }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div style="color:#d82130;">
+            <strong>{{ 'sylius.email.contact_request.content'|trans({}, null, localeCode) }} :</strong>
+        </div>
+        <div>{{ data.message|nl2br }}</div>
+    </div>
+{% endblock %}
