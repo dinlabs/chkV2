@@ -41,7 +41,7 @@ class Product extends BaseProduct
     private $mounting;
     
     /**
-     * @ORM\OneToMany(targetEntity=PackElement::class, mappedBy="parent", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=PackElement::class, mappedBy="parent", cascade={"persist"}, orphanRemoval=true)
      */
     private $packElements;
 
@@ -106,11 +106,12 @@ class Product extends BaseProduct
     
     public function getIsPack(): ?bool
     {
-        return $this->isPack;
+        return (bool)$this->isPack;
     }
 
-    public function setIsPack(bool $isPack): self
+    public function setIsPack($isPack): self
     {
+        if(is_null($isPack)) $isPack = false;
         $this->isPack = $isPack;
 
         return $this;

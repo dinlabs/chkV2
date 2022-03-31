@@ -18,7 +18,7 @@ sylius_paypal_webhook:
 
 #ndY: pour gérer les produits packagés
 sylius_admin_product_create_pack:
-    path: /products/new/pack
+    path: /admin/products/new/pack
     methods: [GET, POST]
     defaults:
         _controller: sylius.controller.product:createAction
@@ -34,7 +34,7 @@ sylius_admin_product_create_pack:
                 templates:
                     form: "@SyliusAdmin/Product/_form.html.twig"
                 route:
-                    name: sylius_admin_product_create_simple
+                    name: sylius_admin_product_create_pack
 
 
 # Controllers perso pour Chullanka
@@ -201,6 +201,7 @@ app_admin_parameter:
         alias: app.parameter
         section: admin
         templates: "@SyliusAdmin\\Crud"
+        except: ['index']
         redirect: update
         grid: app_admin_parameter
         vars:
@@ -210,6 +211,17 @@ app_admin_parameter:
                 icon: 'file image outline'
     type: sylius.resource
     prefix: /admin
+
+app_admin_parameter_index:
+    path: /admin/parameters/
+    methods: [GET]
+    defaults:
+        _controller: app.controller.parameter:indexAction
+        _sylius:
+            section: admin
+            permission: true
+            grid: app_admin_parameter
+            template: "@SyliusAdmin/Parameter/index.html.twig"
 
 
 # app_product_bundle:

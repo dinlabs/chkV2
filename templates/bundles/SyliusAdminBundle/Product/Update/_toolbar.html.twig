@@ -1,0 +1,8 @@
+<div class="ui right floated buttons">
+    {% if product.isPack == false %}
+        {% set menu = knp_menu_get('sylius.admin.product.update', [], {'product': product}) %}
+        {{ knp_menu_render(menu, {'template': '@SyliusUi/Menu/top.html.twig'}) }}
+    {% endif %}
+
+    {% include '@SyliusAdmin/Product/_showInShopButton.html.twig' %}
+</div>

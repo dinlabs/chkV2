@@ -10,6 +10,6 @@
         {% set univers = taxon %}
     {% endif %}
 {% endif %}
-{% if univers is defined %}
+{% if univers is defined and univers is not null %}
 {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'plus_chullanka', 'taxonCode': univers.code, 'template': '@SyliusShop/Block/plus_chullanka.html.twig'})) }}
 {% endif %}

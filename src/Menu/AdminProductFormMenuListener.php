@@ -13,14 +13,24 @@ final class AdminProductFormMenuListener
      */
     public function addItems(ProductMenuBuilderEvent $event): void
     {
+        $product = $event->getProduct();
         $menu = $event->getMenu();
         $children = $menu->getChildren();;
         $factory = $event->getFactory();
+        
+        // Pack
+        if($product->getIsPack())
+        {
+            $children[] = $factory  ->createItem('packs')
+                                    ->setLabel('Produits du pack')
+                                    ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_packs.html.twig')
+            ;
+        }
 
         // Chulltest
         $children[] = $factory  ->createItem('chull_test')
-        ->setLabel('Chull Test')
-        ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_chulltest.html.twig')
+                                ->setLabel('Chull Test')
+                                ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_chulltest.html.twig')
         ;
         
         // FAQs
@@ -31,8 +41,8 @@ final class AdminProductFormMenuListener
         
         // ComplementaryProduct
         $children[] = $factory  ->createItem('complementary_product')
-        ->setLabel('Produits complémentaires')
-        ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_complementary.html.twig')
+                                ->setLabel('Produits complémentaires')
+                                ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_complementary.html.twig')
         ;
         $menu->setChildren($children);
     }

@@ -1,0 +1,5 @@
+{% for item in data %}
+    {% set variant = item.orderItem.variant %}
+    {{ variant.code ~ ' - ' ~ item.quantity ~ 'x ' ~ variant.name }}
+
+{% endfor %}

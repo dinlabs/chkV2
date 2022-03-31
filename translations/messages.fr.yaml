@@ -111,6 +111,7 @@ app:
 
 sylius:
   ui:
+    pack_product: Produit packagé
     your_shopping_cart: 'Mon panier'
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
     checkout: 'Valider mon panier'
@@ -121,6 +122,7 @@ sylius:
     store_trouble: "Problème de stock en magasin"
     store_collected: "Récupérée en magasin"
     store_sent: "Livrée (Click&Collect)"
+    
 
 bitbag_sylius_elasticsearch_plugin:
   ui:
