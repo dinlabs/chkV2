@@ -51,6 +51,7 @@ app:
     edit_recall: 'Modifier cette demande'
     rma: 'RMA'
     rmas: 'RMAs'
+    edit_rma: 'Edition de RMA'
     parameter: 'Paramètre'
     parameters: 'Paramètres'
     edit_parameter: 'Modifier le paramètre'

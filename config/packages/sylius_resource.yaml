@@ -64,7 +64,7 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\Chullanka\Rma
-                form: App\Form\Type\RmaType
+                form: App\Form\Type\RmaAdminType
                 repository: App\Repository\Chullanka\RmaRepository
         app.store_service:
             driver: doctrine/orm

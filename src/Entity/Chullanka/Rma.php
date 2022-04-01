@@ -61,9 +61,29 @@ class Rma implements ResourceInterface
     private $customer_email;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=35)
      */
     private $state;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $reception_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $return_at;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $public_comment;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $private_comment;
 
     /**
      * @ORM\OneToMany(targetEntity=RmaProduct::class, mappedBy="rma", orphanRemoval=true)
@@ -165,6 +185,54 @@ class Rma implements ResourceInterface
     public function setState(string $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getReceptionAt(): ?\DateTimeInterface
+    {
+        return $this->reception_at;
+    }
+
+    public function setReceptionAt(?\DateTimeInterface $reception_at): self
+    {
+        $this->reception_at = $reception_at;
+
+        return $this;
+    }
+
+    public function getReturnAt(): ?\DateTimeInterface
+    {
+        return $this->return_at;
+    }
+
+    public function setReturnAt(?\DateTimeInterface $return_at): self
+    {
+        $this->return_at = $return_at;
+
+        return $this;
+    }
+
+    public function getPublicComment(): ?string
+    {
+        return $this->public_comment;
+    }
+
+    public function setPublicComment(?string $public_comment): self
+    {
+        $this->public_comment = $public_comment;
+
+        return $this;
+    }
+
+    public function getPrivateComment(): ?string
+    {
+        return $this->private_comment;
+    }
+
+    public function setPrivateComment(?string $private_comment): self
+    {
+        $this->private_comment = $private_comment;
 
         return $this;
     }

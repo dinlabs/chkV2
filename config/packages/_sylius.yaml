@@ -512,9 +512,14 @@ sylius_grid:
 
 sylius_ui:
     events:
-        sylius.admin.parameter.index:
+        app.admin.parameter.index:
             blocks:
                 links: '@SyliusAdmin/Parameter/_links.html.twig'
+        app.admin.rma.update:
+            blocks:
+                content:
+                    template: "@SyliusAdmin/Rma/Update/_content.html.twig"
+                    priority: 10
 
 
 winzou_state_machine:

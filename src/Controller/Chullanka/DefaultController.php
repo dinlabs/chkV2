@@ -21,6 +21,7 @@ use App\Entity\Taxonomy\Taxon;
 use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
+use App\Service\ChronolabelHelper;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use App\Service\UpstreamPayWidget;
@@ -31,7 +32,9 @@ use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Core\OrderShippingTransitions;
 use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Shipping\ShipmentTransitions;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -73,12 +76,47 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, ChronolabelHelper $chronolabelHelper)
     {
+        if($return = $chronolabelHelper->getTransportLabel())
+        {
+            $pdfContent = $return->pdfEtiquette;
+            if(strpos($pdfContent, '%PDF') !== 0) 
+            {
+                print('Missing the PDF file signature');
+            }
+            $filename = 'test.pdf';
+            //file_put_contents($filename, $pdfContent);
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename='.$filename);
+            echo $pdfContent;
+        }
+        die;
 
-        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(46);
+        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(48);
 
-        echo $order->isPanierMixte() ? "panier mixte" :" ok";
+        /*$stateMachine = $stateMachineFactory->get($order, OrderShippingTransitions::GRAPH);
+        //dd($stateMachine->getPossibleTransitions());
+        if($stateMachine->apply('in_preparation'))
+        {
+            $em = $this->container->get('doctrine')->getManager();
+            echo "Statut ajouté !";
+        }*/
+
+        foreach ($order->getShipments() as $shipment) 
+        {
+            $stateMachine = $stateMachineFactory->get($shipment, ShipmentTransitions::GRAPH);
+            $transition = 'in_preparation';
+            if($stateMachine->can($transition)) 
+            {
+                $stateMachine->apply($transition);
+                $em = $this->container->get('doctrine')->getManager();
+                echo "Statut ajouté !";
+            }
+        }
+
+        $em->flush();
+        
         die;
 
         $noShip = $noShop = false;

@@ -1,0 +1,105 @@
+{% set index_url = path(
+        configuration.vars.index.route.name|default(configuration.getRouteName('index')),
+        configuration.vars.index.route.parameters|default(configuration.vars.route.parameters|default({}))
+    )
+%}
+
+{% set rma = form.vars.value %}
+
+<div class="ui segment">
+    {{ form_start(form, {'action': path(configuration.getRouteName('update'), configuration.vars.route.parameters|default({ 'id': resource.id })), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+    <input type="hidden" name="_method" value="PUT" />
+    {% include '@SyliusAdmin/Crud/form_validation_errors_checker.html.twig' %}
+    {% if configuration.vars.templates.form is defined %}
+        {% include configuration.vars.templates.form %}
+        {% if not form._token.isRendered %}
+            {{ form_row(form._token) }}
+        {% endif %}
+    {% else %}
+        <h2>Général</h2>
+        <div class="ui two column stackable grid">
+            <div class="column">
+                {{ form_row(form.number) }}
+                <div class="field">
+                    <strong>Commande</strong> : <a href="path(sylius_admin_order_show, {'id': rma.order.id})">{{ rma.order.number }}</a>
+                </div>
+                <div class="field">
+                    <strong>Client</strong> : <a href="path(sylius_admin_customer_show, {'id': rma.customer.id})">{{ rma.customer }}</a>
+                </div>
+                {{ form_row(form.phone_number) }}
+                {{ form_row(form.customer_email) }}
+            </div>
+            <div class="column">
+                {{ form_row(form.state) }}
+                <div class="field">
+                    <strong>Créé le</strong> : {{ rma.createdAt|date('d/m/Y') }}
+                </div>
+                <div class="field">
+                    <strong>Mise à jour le</strong> : {{ rma.updatedAt|date('d/m/Y à H:i') }}
+                </div>
+                {{ form_row(form.reception_at) }}
+                {{ form_row(form.return_at) }}
+            </div>
+        </div>
+        <br>
+        {{ form_row(form.address) }}
+
+        <div style="padding:1em 0;">
+            <h2>Les produits</h2>
+            <table class="ui table">
+                <tr>
+                    <th>Image</th>
+                    <th>Réf.</th>
+                    <th>Produit</th>
+                    <th>Qté</th>
+                    <th style="min-width:40%;">Raison</th>
+                </tr>
+                {% for rmaProduct in rma.rmaProducts %}
+                {#% set orderItem = rmaProduct.vars.value.orderItem %#}
+                {% set orderItem = rmaProduct.orderItem %}
+                {% set product = orderItem.variant.product %}
+                <tr>
+                    <td>
+                        {% if product.imagesByType('thumbnail') is not empty %}
+                            {% set path = product.imagesByType('thumbnail').first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+                        {% elseif product.images.first %}
+                            {% set path = product.images.first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+                        {% else %}
+                            {% set path = '//placehold.it/200x200' %}
+                        {% endif %}
+                        <a href="{{ path('sylius_admin_product_show', {'id': product.id}) }}" target="_blank"><img src="{{ path }}" {{ sylius_test_html_attribute('main-image') }} alt="{{ product.name }}" class="ui bordered image" style="max-width:100px;" /></a>
+                    </td>
+                    <td>{{ orderItem.variant.code }}</td>
+                    <td>
+                        {% if orderItem.further|length and orderItem.further.pack is defined and orderItem.further.pack|length %}
+                            <h4>Pack : {{ product.name }}</h4>
+                            {% for variantId, variantPrice in orderItem.further.pack %}
+                                {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
+                            {% endfor %}
+                        {% else %}
+                        <a href="{{ path('sylius_admin_product_show', {'id': product.id}) }}" target="_blank">{{ product.name }}</a>
+                        <br>{{ orderItem.variantName ? orderItem.variantName : orderItem.variant.name }}
+                        {% endif %}
+                    </td>
+                    <td>{#{ form_row(rmaProduct.quantity) }#}{{ rmaProduct.quantity }}</td>
+                    <td>{#{ form_row(rmaProduct.reason) }#}{{ rmaProduct.reason|nl2br }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div style="padding:1em 0;">
+            <h2>Commentaires</h2>
+            {{ form_row(form.public_comment) }}
+            {{ form_row(form.private_comment) }}
+        </div>
+
+        {{ form_widget(form) }}
+    {% endif %}
+
+    {{ sylius_template_event([event_prefix ~ '.form', 'sylius.admin.update.form'], {'metadata': metadata, 'resource': resource, 'form': form}) }}
+
+    {% include '@SyliusUi/Form/Buttons/_update.html.twig' with {'paths': {'cancel': index_url}} %}
+
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
