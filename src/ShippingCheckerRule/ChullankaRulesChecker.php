@@ -2,6 +2,8 @@
 
 namespace App\ShippingCheckerRule;
 
+use App\Entity\Chullanka\Store;
+use Doctrine\Persistence\ManagerRegistry;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Shipping\Checker\Rule\RuleCheckerInterface;
 use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
@@ -9,6 +11,14 @@ use Sylius\Component\Shipping\Model\ShippingSubjectInterface;
 final class ChullankaRulesChecker implements RuleCheckerInterface
 {
     public const TYPE = 'chullanka_rules';
+
+    /** @var ManagerRegistry */
+    private $managerRegistry;
+
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
 
     public function isEligible(ShippingSubjectInterface $subject, array $configuration): bool
     {
@@ -27,6 +37,10 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
         }
 
         $method = $configuration['method'];
+        if($method == 'store')
+        {
+            $stores = $this->managerRegistry->getRepository(Store::class)->findAll();
+        }
         
         $storeUnavailable = [];
         $oneIsUnavailable = false;
@@ -37,17 +51,28 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
             if($method == 'store')
             {
                 // test stock mag
-                foreach($variant->getStocks() as $vStock)
+                foreach($stores as $store)
                 {
-                    //init
-                    if(!isset($storeUnavailable[ $vStock->getStore()->getId() ]))
+                    if($store->isWarehouse())
                     {
-                        $storeUnavailable[ $vStock->getStore()->getId() ] = false;
+                        $onHand = $variant->getOnHand();
                     }
-                    
-                    if($vStock->getOnHand() <= 0)
+                    else
                     {
-                        $storeUnavailable[ $vStock->getStore()->getId() ] = true;
+                        $stock = $variant->getStockByStore($store);
+                        if(!$stock) $onHand = false;
+                        else $onHand = $stock->getOnHand();
+                    }
+
+                    //init
+                    if(!isset($storeUnavailable[ $store->getId() ]))
+                    {
+                        $storeUnavailable[ $store->getId() ] = false;
+                    }
+
+                    if($onHand <= 0)
+                    {
+                        $storeUnavailable[ $store->getId() ] = true;
                         $oneIsUnavailable = true;
                     }
                 }
@@ -71,7 +96,7 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
         if($method == 'store')
         {
             // si au moins un magasin est à "false" pour les indispo, on affiche la méthode
-            for($s=1; $s<count($storeUnavailable); $s++)
+            for($s=1; $s<=count($storeUnavailable); $s++)
             {
                 if($storeUnavailable[ $s ] == false) return true;
             }

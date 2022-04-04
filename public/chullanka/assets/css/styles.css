@@ -742,6 +742,7 @@ body.checkout { background:var(--bg1); }
 
 .checkout .timeline { display:flex; }
 .checkout .timeline li { position:relative; display:block; min-width:120px; text-align:center; }
+.checkout .timeline li a { text-decoration:none; color:inherit; }
 .checkout .timeline li span { display:grid; place-items:center; width:44px; height:44px; background:var(--default); border-radius:50%; margin:auto auto .5em auto; color:var(--bg0)!important; font-weight:700; }
 .checkout .timeline li.active { color:var(--primary); }
 .checkout .timeline li.active span { background:var(--primary); }

@@ -24,6 +24,9 @@ class StoreType extends AbstractResourceType
             ->add('enabled', CheckboxType::class, [
                 'label' => 'app.store.enabled'
             ])
+            ->add('warehouse', CheckboxType::class, [
+                'label' => 'app.store.warehouse'
+            ])
             ->add('name', TextType::class, [
                 'label' => 'app.store.name'
             ])

@@ -88,8 +88,18 @@ final class StoreController extends AbstractController
             $store->dispo = true;
             foreach($product_stocks as $variant)
             {
-                $stock = $variant->getStockByStore($store);
-                if(!$stock || ($stock->getOnHand() <= 0))
+                if($store->isWarehouse())
+                {
+                    $onHand = $variant->getOnHand();
+                }
+                else
+                {
+                    $stock = $variant->getStockByStore($store);
+                    if(!$stock) $onHand = false;
+                    else $onHand = $stock->getOnHand();
+                }
+
+                if(!$onHand || ($onHand <= 0))
                 {
                     $store->dispo = false;
                 }

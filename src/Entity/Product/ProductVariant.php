@@ -75,6 +75,7 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
 
     public function getStockByStore(Store $store): ?Stock
     {
+        if($store->isWarehouse()) return false;
         foreach($this->stocks as $stock)
         {
             if($stock->getStore() === $store)
@@ -93,8 +94,8 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         $maxQty = (int)$this->getOnHand();
         foreach($this->getStocks() as $stock)
         {
-            if(((int)$stock->getOnHand()) > $maxQty)
-                $maxQty = (int)$stock->getOnHand();
+            $onHand = $stock->getStore()->isWarehouse() ? $this->onHand : (int)$stock->getOnHand();
+            if($onHand > $maxQty) $maxQty = $onHand;
         }
         return $maxQty;
     }

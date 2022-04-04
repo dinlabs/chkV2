@@ -38,6 +38,11 @@ class Store implements ResourceInterface, TranslatableInterface
     private $enabled;
 
     /**
+     * @ORM\Column(type="boolean", options={"default":"0"})
+     */
+    private $warehouse;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -162,6 +167,18 @@ class Store implements ResourceInterface, TranslatableInterface
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function isWarehouse(): ?bool
+    {
+        return $this->warehouse;
+    }
+
+    public function setWarehouse(bool $warehouse): self
+    {
+        $this->warehouse = $warehouse;
 
         return $this;
     }
