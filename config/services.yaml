@@ -310,11 +310,20 @@ services:
     setono_sylius_feed.feed_context.google.shopping.product_item:
         class: App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping\ProductItemContext
 
-    # App\FeedType\FeedType:
-    #     class: App\FeedType\FeedType
-    #     arguments:
-    #         - 'google_shopping'
-    #         - 'feed.txt.twig'
-    #         - '@setono_sylius_feed.data_provider.product'
-    #         - '@setono_sylius_feed.feed_context.google.shopping'
-    #         - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\Niveales:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'niveales'
+            - 'chullanka/feeds/niveales_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+
+    App\Overrides\SyliusFeedPlugin\FeedType\PriceAssistant:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'priceassistant'
+            - 'chullanka/feeds/priceassistant_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'

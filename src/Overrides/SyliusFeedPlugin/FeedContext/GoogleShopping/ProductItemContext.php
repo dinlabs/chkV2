@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping;
 
 use InvalidArgumentException;
+use App\Overrides\SyliusFeedPlugin\Model\Product;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Availability;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Condition;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Price;
-use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Product;
+#use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Product;
 use Setono\SyliusFeedPlugin\FeedContext\ContextList;
 use Setono\SyliusFeedPlugin\FeedContext\ContextListInterface;
 use Setono\SyliusFeedPlugin\FeedContext\ItemContextInterface;
@@ -83,9 +84,11 @@ class ProductItemContext extends BaseProductItemContext
             $data->setImageLink($this->getImageLink($product));
             $data->setAvailability($this->getAvailability($variant));
 
-            [$price, $salePrice] = $this->getPrices($variant, $channel);
+            [$price, $salePrice, $taxExclPrice, $taxPercent] = $this->getPrices($variant, $channel);
             $data->setPrice($price);
             $data->setSalePrice($salePrice);
+            $data->setTaxExclPrice((float)$taxExclPrice);
+            $data->setTaxPercent((string)($taxPercent * 100). '%');
 
             if (null !== $translation) {
                 $data->setTitle($translation->getName());
@@ -133,7 +136,7 @@ class ProductItemContext extends BaseProductItemContext
             }
             $data->setMpn($variant->getCode());
             //fin modif Yannick
-
+            
             if ($variant instanceof SizeAwareInterface && $variant->getSize() !== null) {
                 $data->setSize((string) $variant->getSize());
             } elseif ($product instanceof SizeAwareInterface && $product->getSize() !== null) {
@@ -145,6 +148,16 @@ class ProductItemContext extends BaseProductItemContext
             } elseif ($product instanceof ColorAwareInterface && $product->getColor() !== null) {
                 $data->setColor((string) $product->getColor());
             }
+
+            // ajout Yannick
+            $data->setCode($variant->getCode());
+
+            $data->setQty((string)$variant->getOnHand());
+
+            $data->setUnivers((string) $this->getUnivers($product));
+
+            
+            // ajout Yannick
 
             $contextList->add($data);
         }
@@ -199,27 +212,42 @@ class ProductItemContext extends BaseProductItemContext
     /**
      * Index 0 equals the price
      * Index 1 equals the sale price (if set)
+     * 
+     * Ajout Yannick
+     * Index 2 equals the tax-excl price 
+     * Index 3 equals the tax percent
      */
     private function getPrices(ProductVariantInterface $variant, ChannelInterface $channel): array
     {
         $channelPricing = $variant->getChannelPricingForChannel($channel);
 
         if (null === $channelPricing) {
-            return [null, null];
+            return [null, null, null, null];
         }
 
         $originalPrice = $channelPricing->getOriginalPrice();
         $price = $channelPricing->getPrice();
 
+        $taxAmount = 0;
+        if($tax = $variant->getTaxCategory())
+        {
+            $rate = $tax->getRates()->first();
+            $taxAmount = $rate->getAmount();
+        }
+
         if (null === $price) {
-            return [null, null];
+            return [null, null, null, null];
         }
 
+        $_price = $this->createPrice($price, $channel);
         if (null === $originalPrice) {
-            return [$this->createPrice($price, $channel), null];
+            $taxExclPrice = $price / 100 / ($taxAmount + 1);
+            return [$_price, null, $taxExclPrice, $taxAmount];
         }
 
-        return [$this->createPrice($originalPrice, $channel), $this->createPrice($price, $channel)];
+        $_originalPrice = $this->createPrice($originalPrice, $channel);
+        $taxExclPrice = $price / 100 / ($taxAmount + 1);
+        return [$_originalPrice, $_price, $taxExclPrice, $taxAmount];
     }
 
     private function getAvailability(ProductVariantInterface $product): Availability
@@ -267,5 +295,173 @@ class ProductItemContext extends BaseProductItemContext
             // Fallback to default locale
             return null !== $translation ? (string) $translation->getName() : (string) $breadcrumb->getName();
         }, $breadcrumbs));
+    }
+
+    private function getUnivers($product)
+    {
+        $productTaxons = $product->getProductTaxons();
+        foreach($productTaxons as $productTaxon)
+        {
+            if(($taxon = $productTaxon->getTaxon()) && ($taxon->getLevel() == 1)) return $taxon->getName();
+        }
+        return '';
+    }
+
+    private function getTrekmagType($product)
+    {
+        $types = array(
+            '130'   => 'wear-tech',
+            '274'   => 'wear-tech',
+            '264'   => 'ski',
+            '265'   => 'ski',
+            '299'   => 'snowboard',
+            '300'   => 'snowboard',
+            '304'   => 'fix-snow',
+            '277'   => 'chaussure-ski',
+            '303'   => 'boots-snow',
+            '584'   => 'boots-snow',
+            '583'   => 'ski-rando',
+            '285'   => 'ski-rando',
+            '287'   => 'fix-ski-rando',
+            '286'   => 'chaussure-ski-rando',
+            '292'   => 'peau-ski-rando',
+            '602'   => 'couteau-ski-rando',
+            '319'   => 'casque',
+            '15'    => 'casque',
+            '33'    => 'casque',
+            '484'   => 'casque',
+            '485'   => 'casque',
+            '533'   => 'baton',
+            '268'   => 'baton',
+            '291'   => 'baton',
+            '726'   => 'baton',
+            '59'    => 'piolet',
+            '57'    => 'crampon',
+            '10'    => 'harnais',
+            '51'    => 'harnais',
+            '53'    => 'harnais',
+            '80'    => 'harnais',
+            '81'    => 'harnais',
+            '82'    => 'harnais',
+            '34'    => 'harnais',
+            '26'    => 'harnais',
+            '42'    => 'harnais',
+            '329'   => 'dva',
+            '330'   => 'pelle',
+            '331'   => 'sonde',
+            '327'   => 'airbag',
+            '105'   => 'equipement-outdoor',
+            '491'   => 'equipement-outdoor',
+            '110'   => 'equipement-outdoor',
+            '111'   => 'equipement-outdoor',
+            '492'   => 'equipement-outdoor',
+            '493'   => 'equipement-outdoor',
+            '494'   => 'equipement-outdoor',
+            '128'   => 'equipement-outdoor',
+            '106'   => 'equipement-outdoor',
+            '107'   => 'equipement-outdoor',
+            '108'   => 'equipement-outdoor',
+            '109'   => 'equipement-outdoor',
+            '113'   => 'equipement-outdoor',
+            '114'   => 'equipement-outdoor',
+            '603'   => 'equipement-outdoor',
+            '115'   => 'equipement-outdoor',
+            '116'   => 'equipement-outdoor',
+            '435'   => 'equipement-outdoor',
+            '121'   => 'equipement-outdoor',
+            '123'   => 'equipement-outdoor',
+            '124'   => 'equipement-outdoor',
+            '122'   => 'equipement-outdoor',
+            '125'   => 'equipement-outdoor',
+            '496'   => 'equipement-outdoor',
+            '133'   => 'equipement-outdoor',
+            '132'   => 'equipement-outdoor',
+            '469'   => 'equipement-outdoor',
+            '193'   => 'equipement-outdoor',
+            '194'   => 'equipement-outdoor',
+            '196'   => 'equipement-outdoor',
+            '522'   => 'equipement-outdoor',
+            '523'   => 'equipement-outdoor',
+            '169'   => 'equipement-outdoor',
+            '165'   => 'equipement-outdoor',
+            '166'   => 'equipement-outdoor',
+            '167'   => 'equipement-outdoor',
+            '500'   => 'equipement-outdoor',
+            '504'   => 'equipement-outdoor',
+            '505'   => 'equipement-outdoor',
+            '649'   => 'equipement-outdoor',
+            '650'   => 'equipement-outdoor',
+            '651'   => 'equipement-outdoor',
+            '171'   => 'equipement-outdoor',
+            '172'   => 'equipement-outdoor',
+            '177'   => 'equipement-outdoor',
+            '174'   => 'equipement-outdoor',
+            '188'   => 'equipement-outdoor',
+            '205'   => 'equipement-outdoor',
+            '206'   => 'equipement-outdoor',
+            '207'   => 'equipement-outdoor',
+            '192'   => 'sac-dos',
+            '161'   => 'chaussure-rando',
+            '37'    => 'chausson',
+            '18'    => 'equipement-escalade',
+            '27'    => 'equipement-escalade',
+            '29'    => 'equipement-escalade',
+            '30'    => 'equipement-escalade',
+            '32'    => 'equipement-escalade',
+            '35'    => 'equipement-escalade',
+            '36'    => 'equipement-escalade',
+            '39'    => 'equipement-escalade',
+            '40'    => 'equipement-escalade',
+            '43'    => 'equipement-escalade',
+            '34'    => 'equipement-escalade',
+            '94'    => 'equipement-escalade',
+            '95'    => 'equipement-escalade',
+            '96'    => 'equipement-escalade',
+            '97'    => 'equipement-escalade',
+            '473'   => 'equipement-escalade',
+            '479'   => 'equipement-escalade',
+            '481'   => 'equipement-escalade',
+            '483'   => 'equipement-escalade',
+            '98'    => 'equipement-escalade',
+            '99'    => 'equipement-escalade',
+            '100'   => 'equipement-escalade',
+            '471'   => 'equipement-escalade',
+            '97'    => 'equipement-escalade',
+            '89'    => 'equipement-escalade',
+            '86'    => 'equipement-escalade',
+            '88'    => 'equipement-escalade',
+            '404'   => 'equipement-escalade',
+            '90'    => 'equipement-escalade',
+            '92'    => 'equipement-escalade',
+            '513'   => 'equipement-escalade',
+            '93'    => 'equipement-escalade',
+            '536'   => 'equipement-escalade',
+            '41'    => 'equipement-escalade',
+            '46'    => 'equipement-escalade',
+            '47'    => 'equipement-escalade',
+            '486'   => 'equipement-escalade',
+            '487'   => 'equipement-escalade',
+            '223'   => 'trail-running',
+            '227'   => 'trail-running',
+            '228'   => 'trail-running',
+            '229'   => 'trail-running',
+            '230'   => 'trail-running',
+            '337'   => 'vtt',
+            '353'   => 'pneu-vtt',
+            '354'   => 'roue-vtt',
+            '347'   => 'peripherique-vtt',
+            '421'   => 'equipement-vtt',
+            '320'   => 'optique',
+            '718'   => 'optique',
+            '752'   => 'optique'
+        );
+
+        foreach($prod->getCategoryIds() as $id)
+        {
+            if($types[$id])
+            {
+                return $types[$id];
+            }
+        }
     }
 }

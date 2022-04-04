@@ -1,0 +1,6 @@
+{% block extension %}csv{% endblock %}
+name;manufacturer;reference fournisseur;category;price supplier;price without vat;price special;promo;tva;currency;ean;reference;url;url images;Stock web
+{% block item -%}
+    {%- include 'chullanka/feeds/priceassistant_item.txt.twig' -%}
+
+{%- endblock %}
