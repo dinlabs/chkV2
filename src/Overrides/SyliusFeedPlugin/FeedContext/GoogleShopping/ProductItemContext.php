@@ -77,7 +77,12 @@ class ProductItemContext extends BaseProductItemContext
         /** @var ProductTranslationInterface|null $translation */
         $translation = $this->getTranslation($product, (string) $locale->getCode());
         $contextList = new ContextList();
+
+        if($product->isEnabled() == false) return $contextList;// ajout Yannick
+
         foreach ($product->getVariants() as $variant) {
+            if($variant->isEnabled() == false) continue;// ajout Yannick
+
             Assert::isInstanceOf($variant, ProductVariantInterface::class);
             $data = new Product();
             $data->setId((string)$variant->getId());
