@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Overrides\SyliusFeedPlugin\Model;
+
+use JsonSerializable;
+use Webmozart\Assert\Assert;
+
+final class Price implements JsonSerializable
+{
+    private int $amount;
+
+    private string $currency;
+
+    /**
+     * @param object|string $currency
+     */
+    public function __construct(int $amount, $currency)
+    {
+        Assert::greaterThanEq($amount, 0);
+
+        $this->amount = $amount;
+        $this->currency = (string) $currency;
+    }
+
+    public function __toString(): string
+    {
+        return (string)round($this->amount / 100, 2);
+        // modif Yannick
+        //return round($this->amount / 100, 2) . ' ' . $this->currency;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return (string) $this;
+    }
+}

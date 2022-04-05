@@ -1,0 +1,6 @@
+{% block extension %}csv{% endblock %}
+reference fournisseur;name;Description;manufacturer;category;price;sale price;ean;reference;url;url images;Stock web
+{% block item -%}
+    {%- include 'chullanka/feeds/google_local_magasin_item.txt.twig' -%}
+
+{%- endblock %}

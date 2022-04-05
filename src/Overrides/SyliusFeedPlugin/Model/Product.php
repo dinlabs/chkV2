@@ -7,7 +7,7 @@ namespace App\Overrides\SyliusFeedPlugin\Model;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Availability;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Condition;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\DateRange;
-use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Price;
+#use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Price;
 use Webmozart\Assert\Assert;
 
 final class Product
@@ -63,6 +63,12 @@ final class Product
     private ?string $qty = null;
 
     private ?string $univers = null;
+    private ?string $subCat1 = null;
+    private ?string $subCat2 = null;
+
+    private ?string $year = null;
+
+    private ?string $supplierRef = null;
 
     private array $customLabels = [];
 
@@ -334,6 +340,46 @@ final class Product
     public function setUnivers(?string $univers): void
     {
         $this->univers = $univers;
+    }
+
+    public function getSubCat1(): ?string
+    {
+        return $this->subCat1;
+    }
+
+    public function setSubCat1(?string $subCat1): void
+    {
+        $this->subCat1 = $subCat1;
+    }
+
+    public function getSubCat2(): ?string
+    {
+        return $this->subCat2;
+    }
+
+    public function setSubCat2(?string $subCat2): void
+    {
+        $this->subCat2 = $subCat2;
+    }
+
+    public function getYear(): ?string
+    {
+        return $this->year;
+    }
+
+    public function setYear(?string $year): void
+    {
+        $this->year = $year;
+    }
+
+    public function getSupplierRef(): ?string
+    {
+        return $this->supplierRef;
+    }
+
+    public function setSupplierRef(?string $supplierRef): void
+    {
+        $this->supplierRef = $supplierRef;
     }
 
     public function getCustomLabels(): array

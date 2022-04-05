@@ -157,3 +157,7 @@ setono_sylius_feed:
   feed_type:
     niveales: Niveales
     priceassistant: Price Assistant
+    comparide: Comparide
+    planetgrimpe: PlanetGrimpe
+    facebook_retargeting: Facebook Retargeting
+    google_local_magasin: Google local magasin

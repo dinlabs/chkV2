@@ -1,0 +1,17 @@
+<Product>
+{% apply spaceless %}
+    <Id><![CDATA[{{ item.code|e }}]]></Id>
+    <Type><![CDATA[{{ item.subCat2|e }}]]></Type>
+    <Brand><![CDATA[{{ item.brand|e }}]]></Brand>
+    <Name><![CDATA[{{ item.title|e }}]]></Name>
+    <Year><![CDATA[{{ item.year|e }}]]></Year>
+    <Title><![CDATA[{{ item.title|e }}]]></Title>
+    <Description><![CDATA[Livraison domicile et point relais GRATUITE dès 60€ – Retrait magasin 100% gratuit. Achetez en toute sécurité avec chullanka.com]]></Description>
+    <Image><![CDATA[{{ item.imageLink|e }}]]></Image>
+    <Url><![CDATA[{{ item.link|e }}]]></Url>
+    <InitialPrice><![CDATA[{{ item.price|e }}]]></InitialPrice>
+    <FinalPrice><![CDATA[{{ item.salePrice|e }}]]></FinalPrice>
+    <shipping><![CDATA[Gratuite dès 60€]]></shipping>
+    <delivery unit="hours"><![CDATA[48]]></delivery>
+{% endapply %}
+</Product>

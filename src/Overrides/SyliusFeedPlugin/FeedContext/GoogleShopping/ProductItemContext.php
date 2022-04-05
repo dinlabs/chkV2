@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping;
 
 use InvalidArgumentException;
+use App\Overrides\SyliusFeedPlugin\Model\Price;
 use App\Overrides\SyliusFeedPlugin\Model\Product;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Availability;
 use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Condition;
-use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Price;
+#use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Price;
 #use Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Product;
 use Setono\SyliusFeedPlugin\FeedContext\ContextList;
 use Setono\SyliusFeedPlugin\FeedContext\ContextListInterface;
@@ -79,7 +80,7 @@ class ProductItemContext extends BaseProductItemContext
         foreach ($product->getVariants() as $variant) {
             Assert::isInstanceOf($variant, ProductVariantInterface::class);
             $data = new Product();
-            $data->setId($variant->getCode());
+            $data->setId((string)$variant->getId());
             $data->setItemGroupId($product->getCode());
             $data->setImageLink($this->getImageLink($product));
             $data->setAvailability($this->getAvailability($variant));
@@ -154,12 +155,26 @@ class ProductItemContext extends BaseProductItemContext
 
             $data->setQty((string)$variant->getOnHand());
 
-            $data->setUnivers((string) $this->getUnivers($product));
+            [$univers, $subCat1, $subCat2] = $this->getUniversAndSubCats($product);
+            $data->setUnivers((string) $univers);
+            $data->setSubCat1((string) $subCat1);
+            $data->setSubCat2((string) $subCat2);
 
-            
-            // ajout Yannick
+            if($product->hasAttributeByCodeAndLocale('annee'))
+            {
+                $annee = $product->getAttributeByCodeAndLocale('annee');
+                $data->setYear((string)$annee->getValue());
+            }
 
-            $contextList->add($data);
+            if($product->hasAttributeByCodeAndLocale('supplier_ref'))
+            {
+                $supplierRef = $product->getAttributeByCodeAndLocale('supplier_ref');
+                $data->setSupplierRef((string)$supplierRef->getValue());
+            }
+            // fin ajout Yannick
+
+            if($variant->getOnHand() > 0) 
+                $contextList->add($data);
         }
 
         return $contextList;
@@ -239,12 +254,14 @@ class ProductItemContext extends BaseProductItemContext
             return [null, null, null, null];
         }
 
+        // modif Yannick
         $_price = $this->createPrice($price, $channel);
         if (null === $originalPrice) {
             $taxExclPrice = $price / 100 / ($taxAmount + 1);
-            return [$_price, null, $taxExclPrice, $taxAmount];
+            return [$_price, $_price, $taxExclPrice, $taxAmount];
         }
 
+        // modif Yannick
         $_originalPrice = $this->createPrice($originalPrice, $channel);
         $taxExclPrice = $price / 100 / ($taxAmount + 1);
         return [$_originalPrice, $_price, $taxExclPrice, $taxAmount];
@@ -297,14 +314,21 @@ class ProductItemContext extends BaseProductItemContext
         }, $breadcrumbs));
     }
 
-    private function getUnivers($product)
+    private function getUniversAndSubCats($product)
     {
+        $univers = $subCat1 = $subCat2 = '';
         $productTaxons = $product->getProductTaxons();
         foreach($productTaxons as $productTaxon)
         {
-            if(($taxon = $productTaxon->getTaxon()) && ($taxon->getLevel() == 1)) return $taxon->getName();
+            if($taxon = $productTaxon->getTaxon())
+            {
+                if($taxon->getLevel() == 1) $univers = $taxon->getName();
+                if($taxon->getLevel() == 2) $subCat1 = $taxon->getName();
+                if($taxon->getLevel() == 3) $subCat2 = $taxon->getName();
+            }
         }
-        return '';
+
+        return [$univers, $subCat1, $subCat2];
     }
 
     private function getTrekmagType($product)

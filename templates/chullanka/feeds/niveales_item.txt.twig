@@ -1,4 +1,3 @@
-{# @var item \Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Product #}
 <Product>
 {% apply spaceless %}
 {#% apply setono_sylius_feed_remove_empty_tags %#}
@@ -7,12 +6,12 @@
     <Type><![CDATA[trekmag_type]]></Type>
     <Brand><![CDATA[{{ item.brand|e }}]]></Brand>
     <Name><![CDATA[{{ item.title|e }}]]></Name>
-    <Year><![CDATA[annee]]></Year>
+    <Year><![CDATA[{{ item.year|e }}]]></Year>
     <Title><![CDATA[{{ item.title|e }}]]></Title>
     <Description><![CDATA[Livraison domicile et point relais gratuite dès 60€ - Achetez en toute sécurité avec chullanka.com]]></Description>
     <Image><![CDATA[{{ item.imageLink|e }}]]></Image>
     <Url><![CDATA[{{ item.link|e }}]]></Url>
-    <Price><![CDATA[{{ item.price|e }}]]></Price>
+    <Price><![CDATA[{{ item.salePrice|e }}]]></Price>
 {#% endapply %#}
 {% endapply %}
 </Product>

@@ -1,0 +1,17 @@
+<Product>
+{% apply spaceless %}
+    <Id><![CDATA[{{ item.code|e }}]]></Id>
+    <Type><![CDATA[{{ item.subCat2|e }}]]></Type>
+    <Brand><![CDATA[{{ item.brand|e }}]]></Brand>
+    <Name><![CDATA[{{ item.title|e }}]]></Name>
+    <Ean><![CDATA[{{ item.gtin|e }}]]></Ean>
+    <Refourn><![CDATA[{{ item.supplierRef|e }}]]></Refourn>
+    <Year><![CDATA[{{ item.year|e }}]]></Year>
+    <Title><![CDATA[{{ item.title|e }}]]></Title>
+    <Description><![CDATA[Livraison domicile et point relais GRATUITE dès 60€, à domicile ou point relais. Achetez en toute sécurité avec chullanka.com]]></Description>
+    <Image><![CDATA[{{ item.imageLink|e }}]]></Image>
+    <Url><![CDATA[{{ item.link|e }}]]></Url>
+    <Prixinitial><![CDATA[{{ item.price|e }}]]></Prixinitial>
+    <PrixFinal><![CDATA[{{ item.salePrice|e }}]]></PrixFinal>
+{% endapply %}
+</Product>

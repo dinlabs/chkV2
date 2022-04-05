@@ -1,0 +1,12 @@
+{% block extension %}xml{% endblock %}
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">  
+<channel>  
+    <title><![CDATA[Chullanka]]></title>
+    <link><![CDATA[http://www.chullanka.com]]></link>
+    <description><![CDATA[Flux produit Chullanka]]></description>
+    {% block item -%}
+        {%- include 'chullanka/feeds/facebook_retargeting_item.txt.twig' -%}
+    {%- endblock %}
+</channel>
+</rss>

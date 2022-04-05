@@ -309,7 +309,14 @@ services:
     # setono_sylius_feed
     setono_sylius_feed.feed_context.google.shopping.product_item:
         class: App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping\ProductItemContext
-
+    setono_sylius_feed.feed_type.google_shopping:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'google_shopping'
+            - 'chullanka/feeds/google_shopping_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
     App\Overrides\SyliusFeedPlugin\FeedType\Niveales:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -318,12 +325,43 @@ services:
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
             - '@setono_sylius_feed.feed_context.google.shopping.product_item'
-
     App\Overrides\SyliusFeedPlugin\FeedType\PriceAssistant:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
             - 'priceassistant'
             - 'chullanka/feeds/priceassistant_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\Comparide:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'comparide'
+            - 'chullanka/feeds/comparide_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\Planetgrimpe:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'planetgrimpe'
+            - 'chullanka/feeds/planetgrimpe_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\FacebookRetargeting:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'facebook_retargeting'
+            - 'chullanka/feeds/facebook_retargeting_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\GoogleLocalMagasin:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'google_local_magasin'
+            - 'chullanka/feeds/google_local_magasin_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
             - '@setono_sylius_feed.feed_context.google.shopping.product_item'
