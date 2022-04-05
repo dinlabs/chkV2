@@ -7,12 +7,16 @@ use App\Entity\Chullanka\HistoricOrder;
 use App\Entity\Chullanka\Store;
 use App\Entity\Payment\Payment;
 use App\Entity\Payment\PaymentMethod;
+use App\Entity\Product\Product;
+use App\Entity\Promotion\Promotion;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
 use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface as OrderItemFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -30,8 +34,10 @@ class EventSubscriber implements EventSubscriberInterface
     private $ginkoiaHelper;
     private $ginkoiaCustomerWs;
     private $stateMachineFactory;
+    private $orderItemFactory;
+    private $orderItemQuantityModifier;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory, OrderItemFactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
@@ -39,6 +45,8 @@ class EventSubscriber implements EventSubscriberInterface
         $this->ginkoiaHelper = $ginkoiaHelper;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->stateMachineFactory = $stateMachineFactory;
+        $this->orderItemFactory = $orderItemFactory;
+        $this->orderItemQuantityModifier = $orderItemQuantityModifier;
     }
 
     public static function getSubscribedEvents()
@@ -53,6 +61,7 @@ class EventSubscriber implements EventSubscriberInterface
             'sylius.product.pre_update' => 'onSyliusProductPreCreUpdate',
             'sylius.order.pre_update' => 'onSyliusOrderPreAdd',
             'sylius.order_item.post_add' => 'onSyliusOrderItemAddToCart',
+            'sylius.order_item.pre_remove' => 'onSyliusOrderItemRemove',
             'sylius.order.post_select_shipping' => 'onSyliusOrderPostSelectShipping',
             'sylius.order.post_complete' => 'onSyliusOrderPostComplete',
 
@@ -140,20 +149,125 @@ class EventSubscriber implements EventSubscriberInterface
         $data['variant_id'] = $variant->getId();
 
         $data['error'] = '';
-        if(($order = $orderItem->getOrder()) && $order->isPanierMixte())
+        if($order = $orderItem->getOrder())
         {
-            //todo; retirer le message "bien ajouté"!
-            $flash = $this->session->getFlashBag()->get('success');
-            
-            $this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
-            
-            $order->removeItem($orderItem);
-            $this->entityManager->persist($order);
-            $this->entityManager->flush();
-            
-            $data['error'] = 'paniermixte';
+            if($order->isPanierMixte())
+            {
+
+                //todo; retirer le message "bien ajouté"!
+                $flash = $this->session->getFlashBag()->get('success');
+                
+                $this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
+                
+                $order->removeItem($orderItem);
+                $this->entityManager->persist($order);
+                $this->entityManager->flush();
+                
+                $data['error'] = 'paniermixte';
+            }
+            else
+            {
+                $allItemVariantCodes = [];
+                foreach($order->getItems() as $item)
+                {
+                    $_variant = $item->getVariant();
+                    $allItemVariantCodes[] = $_variant->getCode();
+                }
+                $productCode = $variant->getProduct()->getCode();
+
+                $prodRepo = $this->entityManager->getRepository(Product::class);
+
+                // test si une règle de promo "cadeau offert existe"
+                $promotions = $this->entityManager->getRepository(Promotion::class)->findAll();
+                foreach($promotions as $promo)
+                {
+                    $valid = false;
+                    $rules = $promo->getRules();
+                    foreach($rules as $rule)
+                    {
+                        $confRule = $rule->getConfiguration();
+                        switch($rule->getType())
+                        {
+                            case 'contains_product':
+                                if($confRule['product_code'] == $productCode)
+                                    $valid = true;
+                                break;
+                        }
+                    }
+                    if($valid)
+                    {
+                        $actions = $promo->getActions();
+                        foreach($actions as $action)
+                        {
+                            $confAct = $action->getConfiguration();
+                            $confAct = array_shift($confAct);
+                            switch($action->getType())
+                            {
+                                case 'unit_percentage_discount':
+                                    if($confAct['filters'] && $confAct['filters']['products_filter'] && $confAct['filters']['products_filter']['products'] && isset($confAct['percentage']) && ($confAct['percentage'] == 1))
+                                    {
+                                        foreach($confAct['filters']['products_filter']['products'] as $_prodCode)
+                                        {
+                                            // ajouter au panier
+                                            if($_prod = $prodRepo->findOneByCode($_prodCode))
+                                            {
+                                                $_variant = $_prod->getVariants()->first();
+
+                                                //test si variant pas déjà dans le panier!
+                                                if(!in_array($_variant->getCode(), $allItemVariantCodes))
+                                                {
+                                                    $_variant->setShippingRequired(false); // utile ?
+
+                                                    $giftItem = $this->orderItemFactory->createNew();
+                                                    $giftItem->setVariant($_variant);
+
+                                                    $further = [
+                                                        'gift' => true,
+                                                        'linked_to_item' => $orderItem->getId()
+                                                    ];
+                                                    $giftItem->setFurther($further);
+                                                    
+                                                    $giftItem->setUnitPrice(0);
+                                                    $this->orderItemQuantityModifier->modify($giftItem, 1);
+                                                    $order->addItem($giftItem);
+                                                    $this->entityManager->persist($order);
+                                                    $this->entityManager->flush();
+                                                }
+                                            }
+                                        }
+                                    }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         $event->setResponse(new JsonResponse($data));
+    }
+
+    /**
+     * Suppression d'un item du panier
+     */
+    public function onSyliusOrderItemRemove(GenericEvent $event)
+    {
+        $orderItem = $event->getSubject();
+        $order = $orderItem->getOrder();
+        $orderItemId = $orderItem->getId();
+        foreach($order->getItems() as $item)
+        {
+            // suppression eventuel d'un item gratuit s'il est lié à l'item retiré
+            $further = $item->getFurther();
+            if($further && isset($further['gift']))
+            {
+                if($further['linked_to_item'] == $orderItemId)
+                {
+                    $order->removeItem($item);
+                }
+            }
+        }
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
     }
 
     /**

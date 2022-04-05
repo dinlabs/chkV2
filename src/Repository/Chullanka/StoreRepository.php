@@ -20,6 +20,18 @@ class StoreRepository extends EntityRepository
         parent::__construct($registry, Store::class);
     }*/
 
+    /**
+     * Ne retourne que les vrais magasins
+     */
+    public function getTrueStores()
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.warehouse = 0')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Store[] Returns an array of Store objects
     //  */

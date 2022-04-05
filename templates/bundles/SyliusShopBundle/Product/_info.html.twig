@@ -1,6 +1,7 @@
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 
 {% set product = variant.product %}
+{% set gift = ((item.further.gift is defined) and (item.further.gift == true)) %}
 
 {% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
 
@@ -9,6 +10,9 @@
     {#<span class="sub header sylius-product-variant-code" {{ sylius_test_html_attribute('product-variant-code') }}>{{ variant.code }}</span>#}
 </div>
 
+{% if gift %}
+<div><strong>Produit offert !</strong></div>
+{% else %}
 <small>{{ 'sylius.ui.unit_price'|trans }}</small>
 <div class="price">
     {% if item.unitPrice != item.discountedUnitPrice %}
@@ -41,6 +45,7 @@
             </div>
         </div>#}
     {% endif %}
+{% endif %}
 {% endif %}
 
 {% if item.further|length and item.further.mount is defined and item.further.mount|length %}

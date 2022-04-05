@@ -123,10 +123,15 @@ class Order extends BaseOrder
             $variant = $item->getVariant();
 
             if(!$variant->getOnHand() < $askQty) $noShip = true;
+            $s = 1;
             foreach($variant->getStocks() as $stock)
             {
                 $inShop[ $variant->getId() ][ $stock->getStore()->getId() ] = (bool)$stock->getOnHand();
+                $s++;
             }
+
+            // todo: Comptoir Pro // hack!
+            $inShop[ $variant->getId() ][ $s ] = (bool)$variant->getOnHand();
         }
         
         // test tous les produits par magasin

@@ -2,6 +2,7 @@
 
 {% set variant = item.variant %}
 {% set product = variant.product %}
+{% set gift = ((item.further.gift is defined) and (item.further.gift == true)) %}
 <div class="cartItem insert" {{ sylius_test_html_attribute('cart-product-row', item.productName) }}>
     <div class="inside">
         <div class="picture">
@@ -14,6 +15,7 @@
         <div class="infos">
             {% include '@SyliusShop/Product/_info.html.twig' with {'item': item, 'variant': variant} %}
 
+            {% if gift == false %}
             <div class="quantity">
                 <small>{{ 'sylius.ui.quantity'|trans }}</small>
                 <div class="sylius-quantity">
@@ -28,8 +30,10 @@
                 <small>{#{ 'sylius.ui.total'|trans }#}Prix total</small>
                 <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
             </div>
+            {% endif %}
         </div>
     </div>
+    {% if gift == false %}
     <div class="actions-line">
         <button type="submit" {{ sylius_test_html_attribute('cart-update-button') }} form="{{ main_form }}">Modifier</button>
         <form action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
@@ -38,4 +42,5 @@
             <button type="submit" class="sylius-cart-remove-button" {{ sylius_test_html_attribute('cart-remove-button', item.productName) }} >Supprimer</button>
         </form>
     </div>
+    {% endif %}
 </div>
