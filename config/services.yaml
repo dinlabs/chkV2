@@ -251,6 +251,18 @@ services:
     #         - '@fos_elastica.finder.bitbag_shop_product'
 
 
+    #ndY: Gestion "produit offert"
+    app.promotion_action.gift_product_discount:
+        class: App\Promotion\Action\GiftProductDiscountPromotionActionCommand
+        arguments: ['@sylius.factory.adjustment']
+        tags:
+            - { name: sylius.promotion_action, type: gift_product_discount, form_type: App\Form\Type\Action\GiftProductDiscountConfigurationType, label: Produit offert }
+    app.form.type.promotion_action.gift_product_discount_configuration:
+        class: App\Form\Type\Action\GiftProductDiscountConfigurationType
+        arguments: ['@sylius.repository.product']
+        tags:
+            - { name: form.type }
+
 
     #ndY: Overrides
 

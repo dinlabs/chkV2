@@ -12,11 +12,12 @@ use App\Entity\Promotion\Promotion;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
 use Doctrine\ORM\EntityManagerInterface;
-use SM\Factory\FactoryInterface;
+use SM\Factory\FactoryInterface as SMFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface as OrderItemFactoryInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -36,8 +37,9 @@ class EventSubscriber implements EventSubscriberInterface
     private $stateMachineFactory;
     private $orderItemFactory;
     private $orderItemQuantityModifier;
+    private $adjustmentFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $stateMachineFactory, OrderItemFactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
@@ -47,6 +49,7 @@ class EventSubscriber implements EventSubscriberInterface
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderItemFactory = $orderItemFactory;
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
+        $this->adjustmentFactory = $adjustmentFactory;
     }
 
     public static function getSubscribedEvents()
@@ -144,6 +147,7 @@ class EventSubscriber implements EventSubscriberInterface
         //error_log("onSyliusOrderItemAddToCart");
         $data = [];
         $orderItem = $event->getSubject();//OrderItem::class
+        $orderItemId = $orderItem->getId();
 
         $variant = $orderItem->getVariant();
         $data['variant_id'] = $variant->getId();
@@ -167,15 +171,29 @@ class EventSubscriber implements EventSubscriberInterface
             }
             else
             {
+                $channel = $order->getChannel();
+                $channelCode = $channel->getCode();
+
+                $product = $variant->getProduct();
+                $productCode = $product->getCode();
+
+                $totalPrice = 0;
                 $allItemVariantCodes = [];
                 foreach($order->getItems() as $item)
                 {
                     $_variant = $item->getVariant();
                     $allItemVariantCodes[] = $_variant->getCode();
-                }
-                $productCode = $variant->getProduct()->getCode();
 
-                $prodRepo = $this->entityManager->getRepository(Product::class);
+                    //$totalPrice += $item->getSubtotal();
+                    $totalPrice += $item->getTotal();
+                }
+
+                //get all product Taxons
+                $productTaxons = [];
+                foreach($product->getProductTaxons() as $prodTaxon)
+                {
+                    $productTaxons[] = $prodTaxon->getTaxon()->getCode();
+                }
 
                 // test si une règle de promo "cadeau offert existe"
                 $promotions = $this->entityManager->getRepository(Promotion::class)->findAll();
@@ -186,53 +204,85 @@ class EventSubscriber implements EventSubscriberInterface
                     foreach($rules as $rule)
                     {
                         $confRule = $rule->getConfiguration();
+                        error_log(print_r($confRule, true));
                         switch($rule->getType())
                         {
                             case 'contains_product':
-                                if($confRule['product_code'] == $productCode)
-                                    $valid = true;
+                                if($confRule['product_code'] == $productCode) $valid = true;
                                 break;
+
+                            case 'has_taxon':
+                                foreach($confRule['taxons'] as $taxonCode)
+                                {
+                                    if(in_array($taxonCode, $productTaxons)) $valid = true;
+                                }
+                            break;
+
+                            case 'item_total':
+                                if(isset($confRule[$channelCode]) && isset($confRule[$channelCode]['amount']))
+                                {
+                                    if($totalPrice >= $confRule[$channelCode]['amount']) 
+                                    {
+                                        $valid = true;
+                                        $orderItemId = null;
+                                    }
+                                }
+                            break;
                         }
                     }
                     if($valid)
                     {
+                        $prodRepo = $this->entityManager->getRepository(Product::class);
                         $actions = $promo->getActions();
                         foreach($actions as $action)
                         {
                             $confAct = $action->getConfiguration();
-                            $confAct = array_shift($confAct);
                             switch($action->getType())
                             {
-                                case 'unit_percentage_discount':
-                                    if($confAct['filters'] && $confAct['filters']['products_filter'] && $confAct['filters']['products_filter']['products'] && isset($confAct['percentage']) && ($confAct['percentage'] == 1))
+                                case 'gift_product_discount':
+                                    if(isset($confAct['product_code']))
                                     {
-                                        foreach($confAct['filters']['products_filter']['products'] as $_prodCode)
+                                        // ajouter au panier
+                                        if($_prod = $prodRepo->findOneByCode($confAct['product_code']))
                                         {
-                                            // ajouter au panier
-                                            if($_prod = $prodRepo->findOneByCode($_prodCode))
+                                            $_variant = $_prod->getVariants()->first();
+
+                                            //test si variant pas déjà dans le panier!
+                                            if(!in_array($_variant->getCode(), $allItemVariantCodes))
                                             {
-                                                $_variant = $_prod->getVariants()->first();
+                                                $_variant->setShippingRequired(false); // utile ?
 
-                                                //test si variant pas déjà dans le panier!
-                                                if(!in_array($_variant->getCode(), $allItemVariantCodes))
+                                                $giftItem = $this->orderItemFactory->createNew();
+                                                $giftItem->setVariant($_variant);
+
+                                                $further = [
+                                                    'promotion' => $promo->getId(),
+                                                    'gift' => true
+                                                ];
+                                                if($orderItemId)
                                                 {
-                                                    $_variant->setShippingRequired(false); // utile ?
-
-                                                    $giftItem = $this->orderItemFactory->createNew();
-                                                    $giftItem->setVariant($_variant);
-
-                                                    $further = [
-                                                        'gift' => true,
-                                                        'linked_to_item' => $orderItem->getId()
-                                                    ];
-                                                    $giftItem->setFurther($further);
-                                                    
-                                                    $giftItem->setUnitPrice(0);
-                                                    $this->orderItemQuantityModifier->modify($giftItem, 1);
-                                                    $order->addItem($giftItem);
-                                                    $this->entityManager->persist($order);
-                                                    $this->entityManager->flush();
+                                                    $further['linked_to_item'] = $orderItemId;
                                                 }
+                                                $giftItem->setFurther($further);
+
+                                                //$amount = $_variant->getChannelPricingForChannel($channel)->getPrice();
+                                                $amount = 0;
+                                                $giftItem->setUnitPrice($amount);
+                                                
+                                                $this->orderItemQuantityModifier->modify($giftItem, 1);
+                                                $order->addItem($giftItem);
+                                                $this->entityManager->persist($order);
+
+                                                /*foreach($giftItem->getUnits() as $unit) 
+                                                {
+                                                    $adjustment = $this->adjustmentFactory->createNew();
+                                                    $adjustment->setType(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
+                                                    $adjustment->setLabel($promo->getName());
+                                                    $adjustment->setOriginCode($promo->getCode());
+                                                    $adjustment->setAmount(-$amount);
+                                                    $unit->addAdjustment($adjustment);
+                                                }*/
+                                                $this->entityManager->flush();
                                             }
                                         }
                                     }
@@ -260,9 +310,14 @@ class EventSubscriber implements EventSubscriberInterface
             $further = $item->getFurther();
             if($further && isset($further['gift']))
             {
-                if($further['linked_to_item'] == $orderItemId)
+                if(isset($further['linked_to_item']) && ($further['linked_to_item'] == $orderItemId))
                 {
                     $order->removeItem($item);
+                }
+                else
+                {
+                    unset($further['gift']);
+                    $item->setFurther($further);
                 }
             }
         }
