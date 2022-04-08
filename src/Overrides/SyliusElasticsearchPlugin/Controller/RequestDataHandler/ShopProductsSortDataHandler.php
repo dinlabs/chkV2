@@ -54,20 +54,45 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
     {
         $data = [];
 
-        $orderBy = $requestData[self::ORDER_BY_INDEX] ?? $this->pricePropertyPrefix;
+        //$orderBy = $requestData[self::ORDER_BY_INDEX] ?? $this->pricePropertyPrefix;
+        $orderBy = '';
+        $sort = '';
         $availableSorters = [];
+
+        // sorting Target2Sell
+        //if(true)
+        if(isset($_COOKIE) && isset($_COOKIE['t2s-rank']))
+        {
+            $rank = $_COOKIE['t2s-rank'] ?: 'rank1';
+            //$orderBy = $rank;
+            $orderBy = 'attribute_' . $rank . '_fr_FR'; // hack!
+            for($r=1; $r<=6; $r++)
+            {
+                //$availableSorters[] = 'rank' . $r;
+                $availableSorters[] = 'attribute_rank' . $r . '_fr_FR';
+            }
+            $sort = self::SORT_DESC_INDEX;
+        }
+        // fin default
 
         if($requestData['slug'])
         {
             $positionSortingProperty = $this->getPositionSortingProperty();
             
-            $orderBy = $requestData[self::ORDER_BY_INDEX] ?? $positionSortingProperty;
+            //$orderBy = $requestData[self::ORDER_BY_INDEX] ?? $positionSortingProperty;
+            $orderBy = $requestData[self::ORDER_BY_INDEX] ?? ($orderBy ?: $positionSortingProperty);
             
             $availableSorters[] = $positionSortingProperty;
         }
         $availableSorters = array_merge($availableSorters, [$this->soldUnitsProperty, $this->createdAtProperty, $this->pricePropertyPrefix]);
 
-        $sort = $requestData[self::SORT_INDEX] ?? self::SORT_ASC_INDEX;
+        // au cas où...
+        $orderBy = $orderBy ?: $this->pricePropertyPrefix;
+
+        //error_log('ordreBy : '.$orderBy);
+
+        //$sort = $requestData[self::SORT_INDEX] ?? self::SORT_ASC_INDEX;
+        $sort = $requestData[self::SORT_INDEX] ?? ($sort ?: self::SORT_ASC_INDEX);
         $availableSorting = [self::SORT_ASC_INDEX, self::SORT_DESC_INDEX];
 
         if (!in_array($orderBy, $availableSorters) || !in_array($sort, $availableSorting)) {
@@ -81,6 +106,7 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
 
         $data['sort'] = [$orderBy => ['order' => strtolower($sort), 'unmapped_type' => 'keyword']];
 
+        //error_log(print_r($data,true));
         return $data;
     }
 

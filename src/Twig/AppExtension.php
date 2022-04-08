@@ -5,6 +5,7 @@ namespace App\Twig;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 class AppExtension extends AbstractExtension
 {
@@ -19,6 +20,13 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('excerpt', [$this, 'getExcerpt'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('t2sHash', [$this, 'hashEmail']),
         ];
     }
 
@@ -42,5 +50,11 @@ class AppExtension extends AbstractExtension
         }
 
         return "<p>$excerpt</p>";
+    }
+
+    /** pour Target2Sell */
+    public function hashEmail($string): string
+    {
+        return $string ? strtoupper(hash('SHA256', $string)) : '';
     }
 }

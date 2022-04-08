@@ -37,7 +37,8 @@
     {% set body_class = 'customer' %}
 {% endif %}
 
-<body {% block bodyattr %}{% endblock %}{% if body_class %} class="{{ body_class }}"{% endif %}>
+<body {% block bodyattr %}{% endblock %}{% if body_class %}class="{{ body_class }}"{% endif %}>
+{% include '@SyliusShop/Layout/_target2Sell.html.twig' %}
 {#{ dump(_where) }#}
 {{ sylius_template_event('sylius.shop.layout.before_body') }}
 {% block top %}

@@ -1,0 +1,114 @@
+{% set routeName = app.request.get('_route') %}
+{% set t2spID = '' %}
+{#{ dump(app.request.get('_route')) }#}
+{# SWITCH ROUTE NAME #}
+{% if routeName == 'sylius_shop_homepage' %}{% set t2spID = 1000 %}
+{% elseif routeName == 'sylius_shop_product_show' %}
+    {% set t2spID = 1200 %}
+    {% set t2siID = product.id %}
+{% elseif routeName == 'sylius_shop_product_index' or routeName == 'bitbag_sylius_elasticsearch_plugin_shop_list_products' %}
+    {% set t2spID = 1400 + taxon.level - 1 %}
+    {% set t2saID = taxon.id %}
+    {% if taxon.level > 1 and products|length > 0 %}
+        {% set t2siID = [] %}
+        {% set t2spageNbr = '' %}
+        {% set t2sdIS = '' %}{#_t2sparams.dIS = 'p=1&limit=24&order=t2s_sort&dir=asc';#}
+        {% for product in products|slice(0, 6) %}
+            {% set t2siID = t2siID|merge([product.id|trans]) %}
+        {% endfor %}
+        {% set t2siID = t2siID|join('|') %}
+    {% endif %}
+{% elseif routeName == 'sylius_shop_cart_summary' %}
+    {% set t2spID = 1600 %}
+    {% if cart.items|length %}
+        {% set t2siID = [] %}
+        {% set t2sqTE = [] %}
+        {% for item in cart.items %}
+            {% set t2siID = t2siID|merge([item.product.id|trans]) %}
+            {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
+        {% endfor %}
+        {% set t2siID = t2siID|join('|') %}
+        {% set t2sqTE = t2sqTE|join('|') %}
+        {% set t2sbS = cart.total / 100 %}
+    {% endif %}
+{% elseif routeName == 'bitbag_sylius_cms_plugin_shop_page_show' %}
+    {% set t2spID = 2200 %}
+{% elseif routeName == 'chk_upstream_payment_return' %}
+    {% set t2spID = 2400 %}
+    {#% set t2siID = '' %#}
+    {#% set t2sqTE = '' %#}
+    {#% set t2sbS = '' %#}
+    {#% set t2soID = order.id %#}
+    {#% set t2spriceL = '' %#}
+    {% if app.user and app.user.customer and app.user.customer.email %}
+        {% set t2suEM = t2sHash(app.user.customer.email) %}
+    {% endif %}
+{% elseif routeName == 'sylius_shop_checkout_address' %}
+    {% set t2spID = 3200 %}
+    {% if app.user and app.user.customer and app.user.customer.email %}
+        {% set t2suEM = t2sHash(app.user.customer.email) %}
+    {% endif %}
+{% elseif routeName == 'sylius_shop_checkout_select_shipping' or routeName == 'sylius_shop_checkout_select_payment' %}
+    {% set t2spID = 3200 %}
+{% elseif routeName == 'chk_ajax_popaddtocart' %}
+    {% set t2spID = 4000 %}
+    {% set t2siID = variant.product.id %}
+{% endif %}
+{#{ dump(t2spID) }#}
+
+{% if t2spID %}
+    <script>
+    //<![CDATA[
+        var _t2sparams = _t2sparams || {};
+        _t2sparams.eN = 'view';
+        _t2sparams.cID = '{{ t2scID }}';
+        _t2sparams.pID = '{{ t2spID }}';
+    {% if t2saID is defined %}
+        _t2sparams.aID = '{{ t2saID }}';
+    {% endif %}
+    {% if t2siID is defined %}
+        _t2sparams.iID = '{{ t2siID }}';
+    {% endif %}
+    {% if t2sqTE is defined %}
+        _t2sparams.qTE = '{{ t2sqTE }}';
+    {% endif %}
+    {% if t2sbS is defined %}
+        _t2sparams.bS = '{{ t2sbS }}';
+    {% endif %}
+    {% if t2suEM is defined %}
+        _t2sparams.uEM = '{{ t2suEM }}';
+    {% endif %}
+        _t2sparams.hasRankOption = true;
+
+        var loadT2sScriptAsync = function () {
+            return new Promise((resolve, reject) => {
+                var t2sScript = document.createElement('script');
+                t2sScript.type = 'text/javascript';
+                {#
+                //t2sScript.src = ('https:' === document.location.protocol ? 'https' : 'http') + '://static.target2sell.com/t2s.min.js';
+                #}
+                t2sScript.src = ('https:' == document.location.protocol ? 
+                    'https://static.target2sell.com/t2s.min.js' : 
+                    'http://s3.target2sell.com/t2s.min.js');
+                t2sScript.async = true;
+                t2sScript.onload = () => {
+                    resolve();
+                };
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(t2sScript, s);
+            });
+        };
+        
+        t2sScriptLoaded = loadT2sScriptAsync();
+        // Wait for t2s script to load and then directly call reco
+        t2sScriptLoaded.then(function () {
+            if (typeof (T2S) !== 'undefined') {
+                T2S.reco({}, function () {
+                    // Here we can put code to execute after reco response
+                    //console.log("chargé !");
+                });
+            }
+        });
+    //]]>
+    </script>
+{% endif %}

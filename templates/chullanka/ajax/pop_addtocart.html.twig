@@ -15,6 +15,7 @@
         {% endif %}
     </div>
 {% else %}
+    {% include '@SyliusShop/Layout/_target2Sell.html.twig' %}
     {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'loadable', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
     {{ form_errors(form) }}
     <input type="hidden" name="_method" value="PATCH"/>
@@ -22,8 +23,7 @@
 
 
     {% for key, item in cart.items %}
-        {% set variant = item.variant %}
-        {% if variant.id == variant_id %}
+        {% if item.variant == variant %}
         <div class="infos">
             {% set product = variant.product %}
             {% if product.hasOptions() %}
@@ -70,13 +70,15 @@
                 <span>{{ 'sylius.ui.add_to_cart'|trans }}</span>
                 {% include '@SyliusShop/Product/_price.html.twig' %}
             </button>
-
         </div>
 
-        <a href="{{ path('chk_wishlist_add_product', {'variant_id': variant_id}) }}">
-            <i class="icon heart"></i> Ajout à une liste d'envie
-        </a>
         {% endif %}
     {% endfor %}
     {{ form_end(form, {'render_rest': false}) }}
+
+    <a href="{{ path('chk_wishlist_add_product', {'variant_id': variant.id}) }}">
+        <i class="icon heart"></i> Ajout à une liste d'envie
+    </a>
+    
+    <div id="{{ t2scID }}-4000-8"></div>
 {% endif %}
