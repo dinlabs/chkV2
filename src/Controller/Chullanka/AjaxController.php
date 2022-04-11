@@ -198,6 +198,7 @@ class AjaxController extends AbstractController
     public function popAddToCartAction(Request $request): Response
     {
         $variant_id = $request->get('variant_id');
+        $variant = $this->productVariantRepository->find($variant_id);
         $error = $request->get('error');
         $cart = $this->cartContext->getCart();
         $form = $this->createForm(CartType::class, $cart);
@@ -205,6 +206,7 @@ class AjaxController extends AbstractController
             'form' => $form->createView(),
             'cart' => $cart,
             'variant_id' => $variant_id,
+            'variant' => $variant,
             'error' => $error,
         ]);
     }

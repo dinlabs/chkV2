@@ -33,13 +33,23 @@
     {% endif %}
 {% elseif routeName == 'bitbag_sylius_cms_plugin_shop_page_show' %}
     {% set t2spID = 2200 %}
-{% elseif routeName == 'chk_upstream_payment_return' %}
+{% elseif routeName == 'chk_upstream_payment_return' or routeName == 'sylius_shop_order_thank_you' %}
     {% set t2spID = 2400 %}
-    {#% set t2siID = '' %#}
-    {#% set t2sqTE = '' %#}
-    {#% set t2sbS = '' %#}
-    {#% set t2soID = order.id %#}
-    {#% set t2spriceL = '' %#}
+    {% set t2soID = order.id %}
+    {% if order.items|length %}
+        {% set t2siID = [] %}
+        {% set t2sqTE = [] %}
+        {% set t2spriceL = [] %}
+        {% for item in order.items %}
+            {% set t2siID = t2siID|merge([item.product.id|trans]) %}
+            {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
+            {% set t2spriceL = t2spriceL|merge([item.total / 100]) %}
+        {% endfor %}
+        {% set t2siID = t2siID|join('|') %}
+        {% set t2sqTE = t2sqTE|join('|') %}
+        {% set t2sbS = order.total / 100 %}
+        {% set t2spriceL = t2spriceL|join('|') %}
+    {% endif %}
     {% if app.user and app.user.customer and app.user.customer.email %}
         {% set t2suEM = t2sHash(app.user.customer.email) %}
     {% endif %}
@@ -66,6 +76,9 @@
     {% if t2saID is defined %}
         _t2sparams.aID = '{{ t2saID }}';
     {% endif %}
+    {% if t2soID is defined %}
+        _t2sparams.oID = '{{ t2soID }}';
+    {% endif %}
     {% if t2siID is defined %}
         _t2sparams.iID = '{{ t2siID }}';
     {% endif %}
@@ -74,6 +87,9 @@
     {% endif %}
     {% if t2sbS is defined %}
         _t2sparams.bS = '{{ t2sbS }}';
+    {% endif %}
+    {% if t2spriceL is defined %}
+        _t2sparams.priceL = '{{ t2spriceL }}';
     {% endif %}
     {% if t2suEM is defined %}
         _t2sparams.uEM = '{{ t2suEM }}';

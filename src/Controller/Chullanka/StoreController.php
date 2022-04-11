@@ -126,10 +126,13 @@ final class StoreController extends AbstractController
     public function viewAction(Request $request, FormFactoryInterface $formFactory): Response
     {
         $code = $request->get('code');
-        $store = $this->managerRegistry->getRepository(Store::class)->findOneByCode($code);
-        return new Response($this->twig->render('chullanka/store/view.html.twig', [
-            'store' => $store,
-            'products' => [],
-        ]));
+        if($store = $this->managerRegistry->getRepository(Store::class)->findOneByCode($code))
+        {
+            return new Response($this->twig->render('chullanka/store/view.html.twig', [
+                'store' => $store,
+                'products' => [],
+            ]));
+        }
+        else throw $this->createNotFoundException();
     }
 }

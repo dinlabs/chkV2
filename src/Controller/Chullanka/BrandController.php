@@ -120,48 +120,50 @@ final class BrandController extends AbstractController
     ): Response
     {
         $code = $request->get('code');
-        $brand = $this->managerRegistry->getRepository(Brand::class)->findOneByCode($code);
+        if($brand = $this->managerRegistry->getRepository(Brand::class)->findOneByCode($code))
+        {
+            // Filters
+            $form = $formFactory->create(ShopProductsFilterType::class);
+            //$form = $this->createForm(ShopProductsFilterType::class);
+            $form->handleRequest($request);
+            $requestData = array_merge(
+                $form->getData(),
+                $request->query->all(),
+                ['brand' => $brand->getEscode(), 'slug' => '', 'name' => null],
+            );
+            
+            /*if (!$form->isValid()) {
+                $requestData = $this->clearInvalidEntries($form, $requestData);
+            }*/
 
-        // Filters
-        $form = $formFactory->create(ShopProductsFilterType::class);
-        //$form = $this->createForm(ShopProductsFilterType::class);
-        $form->handleRequest($request);
-        $requestData = array_merge(
-            $form->getData(),
-            $request->query->all(),
-            ['brand' => $brand->getEscode(), 'slug' => '', 'name' => null],
-        );
-        
-        /*if (!$form->isValid()) {
-            $requestData = $this->clearInvalidEntries($form, $requestData);
-        }*/
-
-        //default
-        $data = [
-            'name' => $requestData['name'],
-            'product_taxons' => '',
-            'sort' => [
-                'price' => [
-                    'order' => 'asc',
-                    'unmapped_type' => 'keyword'
+            //default
+            $data = [
+                'name' => $requestData['name'],
+                'product_taxons' => '',
+                'sort' => [
+                    'price' => [
+                        'order' => 'asc',
+                        'unmapped_type' => 'keyword'
+                    ]
                 ]
-            ]
-        ];
+            ];
 
-        $data = array_merge(
-            $data,
-            $this->shopProductListDataHandler->retrieveData($requestData),
-            $this->shopProductsSortDataHandler->retrieveData($requestData),
-            $this->paginationDataHandler->retrieveData($requestData)
-        );
-        //dd($data);
+            $data = array_merge(
+                $data,
+                $this->shopProductListDataHandler->retrieveData($requestData),
+                $this->shopProductsSortDataHandler->retrieveData($requestData),
+                $this->paginationDataHandler->retrieveData($requestData)
+            );
+            //dd($data);
 
-        $products = $shopProductsFinder->find($data);
+            $products = $shopProductsFinder->find($data);
 
-        return new Response($this->twig->render('chullanka/brand/view.html.twig', [
-            'brand' => $brand,
-            'form' => $form->createView(),
-            'products' => $products,
-        ]));
+            return new Response($this->twig->render('chullanka/brand/view.html.twig', [
+                'brand' => $brand,
+                'form' => $form->createView(),
+                'products' => $products,
+            ]));
+        }
+        else throw $this->createNotFoundException();
     }
 }
