@@ -30,10 +30,10 @@
     {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'bundles/bitbagsyliuselasticsearchplugin/css/bitbag-autocomplete-search.css'} %}
 {% endblock %}
 
-{% block bodyattr %}class="{% if taxon.level == 1 %}univers{% else %}category{% endif %}"{% endblock %}
+{% block bodyattr %}class="{% if taxon.isUnivers %}univers{% else %}category{% endif %}"{% endblock %}
 
 {% block content %}
-{% if taxon.level == 1 %}
+{% if taxon.isUnivers %}
     {% include '@SyliusShop/Taxon/_univers.html.twig' %}
 {% else %}
     {% set ajax_pagination = app.request.get('page') %}
@@ -121,7 +121,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% if taxon.level > 1 %}
+    {% if taxon.isUnivers == false %}
         {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliuselasticsearchplugin/js/bitbag-autocomplete-search.js'} %}
         <script type="application/javascript">
             $(document).autocompleteSearch('#products-search', '{{ url('bitbag_sylius_elasticsearch_plugin_shop_auto_complete_product_name') }}?query={query}')

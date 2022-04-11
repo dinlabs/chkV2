@@ -9,7 +9,7 @@
 {% elseif routeName == 'sylius_shop_product_index' or routeName == 'bitbag_sylius_elasticsearch_plugin_shop_list_products' %}
     {% set t2spID = 1400 + taxon.level - 1 %}
     {% set t2saID = taxon.id %}
-    {% if taxon.level > 1 and products|length > 0 %}
+    {% if taxon.isUnivers == false and products|length > 0 %}
         {% set t2siID = [] %}
         {% set t2spageNbr = '' %}
         {% set t2sdIS = '' %}{#_t2sparams.dIS = 'p=1&limit=24&order=t2s_sort&dir=asc';#}

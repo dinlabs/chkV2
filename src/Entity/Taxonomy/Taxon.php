@@ -41,6 +41,11 @@ class Taxon extends BaseTaxon
      */
     private $blogfeedurl;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $univers;
+
     public function __construct()
     {
         parent::__construct();
@@ -144,6 +149,18 @@ class Taxon extends BaseTaxon
     public function setBlogfeedurl(?string $blogfeedurl): self
     {
         $this->blogfeedurl = $blogfeedurl;
+
+        return $this;
+    }
+
+    public function isUnivers(): ?bool
+    {
+        return $this->univers;
+    }
+
+    public function setUnivers(bool $univers): self
+    {
+        $this->univers = $univers;
 
         return $this;
     }

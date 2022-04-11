@@ -8,6 +8,7 @@ use Sylius\Bundle\ProductBundle\Form\Type\ProductAutocompleteChoiceType;
 use Sylius\Bundle\TaxonomyBundle\Form\Type\TaxonAutocompleteChoiceType;
 use Sylius\Bundle\TaxonomyBundle\Form\Type\TaxonType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -18,6 +19,9 @@ class TaxonTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $builder->add('univers', CheckboxType::class, [
+            'label' => 'Page Univers'
+        ]);
         $builder->add('top_brands');
         $builder->add('top_products', ProductAutocompleteChoiceType::class, [
             'label' => 'Top Produits',
