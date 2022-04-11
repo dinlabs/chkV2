@@ -60,6 +60,8 @@
     {% endif %}
 {% elseif routeName == 'sylius_shop_checkout_select_shipping' or routeName == 'sylius_shop_checkout_select_payment' %}
     {% set t2spID = 3200 %}
+{% elseif page404 is defined %}
+    {% set t2spID = 3600 %}
 {% elseif routeName == 'chk_ajax_popaddtocart' %}
     {% set t2spID = 4000 %}
     {% set t2siID = variant.product.id %}
