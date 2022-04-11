@@ -1,14 +1,15 @@
 <div id="favoriteSports" class="insert">
     <h2>Vos Sports favoris</h2>
-
-    {% if customer.favoriteSports|length == 0 %}
-        <a href="{{ path('sport_manage_favorites') }}" class="btn primary">Commencer</a>
-    {% else %}
-        <ul>
-        {% for sport in customer.favoriteSports %}
-            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ sport.name }}</li>
-        {% endfor %}
-        </ul>
-        <a href="{{ path('sport_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>
-    {% endif %}
+    {{ render(path('sport_manage_favorites')) }}
 </div>
+
+{#% if customer.favoriteSports|length == 0 %}
+{% else %}
+    <ul>
+    {% for sport in customer.favoriteSports %}
+        
+    {% endfor %}
+{% endif %#}
+{#<div class="" style="height:330px">
+    encart pub
+</#div>#}

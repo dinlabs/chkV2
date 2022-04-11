@@ -838,7 +838,10 @@ final class DefaultController extends AbstractController
     {
         if($customer = $this->getCurrentCustomer())
         {
-            $form = $this->createForm(FavoriteSportType::class, $customer);
+            $form = $this->createForm(FavoriteSportType::class, $customer, [
+                'action' => $this->generateUrl('sport_manage_favorites')
+            ]);
+
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid())
             {
