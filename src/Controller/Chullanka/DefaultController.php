@@ -24,6 +24,7 @@ use App\Form\Type\RmaType;
 use App\Service\ChronolabelHelper;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
+use App\Service\Target2SellHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
 use BitBag\SyliusCmsPlugin\Entity\Page;
@@ -76,8 +77,13 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, ChronolabelHelper $chronolabelHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, ChronolabelHelper $chronolabelHelper, Target2SellHelper $target2SellHelper)
     {
+        //$target2SellHelper->exportCatalog();
+        //$target2SellHelper->updateProductRanks();
+
+
+        die("Fin");
         if($return = $chronolabelHelper->getTransportLabel())
         {
             $pdfContent = $return->pdfEtiquette;
@@ -313,7 +319,7 @@ final class DefaultController extends AbstractController
      */
     public function getUniversAction(Request $request)
     {
-        $univers = $this->container->get('doctrine')->getRepository(Taxon::class)->findBy(['level' => 1], ['position' => 'ASC']);
+        $univers = $this->container->get('doctrine')->getRepository(Taxon::class)->findBy(['univers' => true], ['position' => 'ASC']);
         return $this->render('@SyliusShop/Homepage/_univers_list.html.twig', [
             'univers' => $univers
         ]);
