@@ -1,0 +1,20 @@
+{% set gift = product|getGift %}
+{% if gift %}
+{% set giftVariant = gift.variants.first %}
+<div class="insert giftProduct">
+    <p><strong>Comme on vous aime, on vous offre des cadeaux !</strong></p>
+    <div class="inside">
+        <div class="picture">
+            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': gift, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+        </div>
+        <div class="infos">
+            {% if gift.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': gift.brand.code}) }}">{{ gift.brand.name }}</a></div>{% endif %}
+            <div class="sylius-product-name">
+                <a href="{{ path('sylius_shop_product_show', {'slug': gift.slug}) }}">{{ gift.name }}</a>
+            </div>
+            <div class="notabene">Offert en achetant ce produit</div>
+        </div>
+        <img src="{{ asset('chullanka/assets/img/ico-gift.png')}}" alt="" class="picto">
+    </div>
+</div>
+{% endif %}

@@ -3,7 +3,13 @@
 {% set variant = item.variant %}
 {% set product = variant.product %}
 {% set gift = ((item.further.gift is defined) and (item.further.gift == true)) %}
-<div class="cartItem insert" {{ sylius_test_html_attribute('cart-product-row', item.productName) }}>
+<div class="cartItem insert{% if gift %} gift{% endif %}" {{ sylius_test_html_attribute('cart-product-row', item.productName) }}>
+    {% if gift %}
+    <div class="header">
+        <p><strong>Comme on vous aime, on vous offre des cadeaux !</strong></p>
+        <img src="{{ asset('chullanka/assets/img/ico-gift.png')}}" alt="" class="picto">
+    </div>
+    {% endif %}
     <div class="inside">
         <div class="picture">
             {% if variant.hasImages %}

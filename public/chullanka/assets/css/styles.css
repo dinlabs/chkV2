@@ -593,6 +593,12 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #productInfos #dispoMagPop ul li .infos .warning strong { color:var(--warning); }
 #productInfos #dispoMagPop ul li .infos .infosup { color:var(--warning); }
 
+#productInfos .giftProduct { padding-bottom:2em; }
+#productInfos .giftProduct a { color:initial; }
+#productInfos .giftProduct .inside { display:flex; justify-content:space-between; align-items:center; }
+#productInfos .giftProduct .notabene { padding-top:1em; color:var(--primary); font-weight:700; }
+#productInfos .giftProduct .picto { align-self:start; height:100%; margin-bottom:5em; }
+
 #productInfos #chullPoints { background:url(../img/bg-chullpoints.jpg) no-repeat center center / cover; margin:0 -1em 1em -1em; padding:30px; }
 #productInfos #chullPoints .insert .fold { float:right; margin-top:2em; }
 #productInfos #chullPoints .insert p { margin-top:1em; }
@@ -777,6 +783,10 @@ body.checkout { background:var(--bg1); }
 
 .checkout #cartProducts .cartItem .actions-line { display:flex; justify-content:space-between; margin-top:1em; border-top:2px dashed var(--default); padding-top:.5em; }
 .checkout #cartProducts .cartItem .actions-line button { background:none; color:var(--primary); font-weight:700; text-decoration:underline; cursor:pointer; }
+
+.checkout #cartProducts .cartItem.gift .header { display:grid; grid-template-columns:auto 60px; }
+.checkout #cartProducts .cartItem.gift .header p { font-size:1.2em; text-transform:capitalize; }
+.checkout #cartProducts .cartItem.gift .inside p strong { color:var(--primary); }
 
 .checkout .free-delivery { display:grid; grid-template-columns:60px auto; gap:.5em; }
 

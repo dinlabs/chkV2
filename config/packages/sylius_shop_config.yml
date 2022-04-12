@@ -1132,15 +1132,18 @@ sylius_ui:
                 availabilities:
                     template: "@SyliusShop/Product/Show/_availabilities.html.twig"
                     priority: 8
+                gift_product:
+                    template: "@SyliusShop/Product/Show/_hasgift.html.twig"
+                    priority: 6
                 plusses:
                     template: "@SyliusShop/Product/Show/_plusses.html.twig"
-                    priority: 7
+                    priority: 5
                 chullpoints:
                     template: "@SyliusShop/Product/Show/_chullPoints.html.twig"
-                    priority: 6
+                    priority: 4
                 _ask_answer_intro:
                     template: "@SyliusShop/Product/Show/_askAnswerIntro.html.twig"
-                    priority: 5
+                    priority: 3
 
 
         sylius.shop.product.show.content:

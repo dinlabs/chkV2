@@ -2,6 +2,9 @@
 
 namespace App\Twig;
 
+use App\Entity\Product\Product;
+use App\Entity\Promotion\PromotionAction;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -10,16 +13,19 @@ use Twig\TwigFunction;
 class AppExtension extends AbstractExtension
 {
     private $translator;
+    private $managerRegistry;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ManagerRegistry $managerRegistry)
     {
         $this->translator = $translator;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function getFilters()
     {
         return [
             new TwigFilter('excerpt', [$this, 'getExcerpt'], ['is_safe' => ['html']]),
+            new TwigFilter('getGift', [$this, 'getGift'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -50,6 +56,56 @@ class AppExtension extends AbstractExtension
         }
 
         return "<p>$excerpt</p>";
+    }
+
+    public function getGift($product)
+    {
+        if($promoActions = $this->managerRegistry->getRepository(PromotionAction::class)->findByType('gift_product_discount'))
+        {
+            $productCode = $product->getCode();
+
+            //get all product Taxons
+            $productTaxons = [];
+            foreach($product->getProductTaxons() as $prodTaxon)
+            {
+                $productTaxons[] = $prodTaxon->getTaxon()->getCode();
+            }
+
+            foreach($promoActions as $action)
+            {
+                $promo = $action->getPromotion();
+                $valid = false;
+                foreach($promo->getRules() as $rule)
+                {
+                    $confRule = $rule->getConfiguration();
+                    switch($rule->getType())
+                    {
+                        case 'contains_product':
+                            if($confRule['product_code'] == $productCode) $valid = true;
+                            break;
+
+                        case 'has_taxon':
+                            foreach($confRule['taxons'] as $taxonCode)
+                            {
+                                if(in_array($taxonCode, $productTaxons)) $valid = true;
+                            }
+                        break;
+                    }
+                }
+                if($valid)
+                {
+                    $confAct = $action->getConfiguration();
+                    if(isset($confAct['product_code']))
+                    {
+                        if($giftProduct = $this->managerRegistry->getRepository(Product::class)->findOneByCode($confAct['product_code']))
+                        {
+                            return $giftProduct;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /** pour Target2Sell */
