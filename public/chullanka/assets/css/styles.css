@@ -41,7 +41,7 @@ ul.list li::before { content:''; position:absolute; left:0; top:5px; background:
 /* Common */
 .loading { position:relative; }
 .loading::before { content:''; position:absolute; top:0; left:0; background:rgba(255,255,255,.8); width:100%; height:100%;z-index:100; }
-.loading::after { content:''; position:absolute; top:50%; left:50%; margin:-1.5em 0 0 -1.5em; width:80px; height:79px;animation:rolling_spinner .6s linear infinite; border-radius:50%; border:3px solid var(--default); border-top-color:var(--primary); opacity:.5; z-index:101; }
+.loading::after { content:''; position:absolute; top:50%; left:50%; /*margin:-1.5em 0 0 -1.5em; */width:80px; height:79px;animation:rolling_spinner .6s linear infinite; border-radius:50%; border:3px solid var(--default); border-top-color:var(--primary); opacity:.5; z-index:101; }
 @keyframes rolling_spinner { from{ transform:translate(-50%,-50%) rotate(0); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
 #js-loader { display:none; position:fixed; top:0; left:0; bottom:0; right:0; width:100vw; height:100vh; z-index:-1; }
 #js-loader.loading { display:initial; z-index:9999; }

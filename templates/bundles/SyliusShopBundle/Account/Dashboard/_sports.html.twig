@@ -3,13 +3,4 @@
     {{ render(path('sport_manage_favorites')) }}
 </div>
 
-{#% if customer.favoriteSports|length == 0 %}
-{% else %}
-    <ul>
-    {% for sport in customer.favoriteSports %}
-        
-    {% endfor %}
-{% endif %#}
-{#<div class="" style="height:330px">
-    encart pub
-</#div>#}
+{{ render(path('get_sport_block_for_customer')) }}

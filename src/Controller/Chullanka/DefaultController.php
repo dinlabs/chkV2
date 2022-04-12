@@ -82,7 +82,6 @@ final class DefaultController extends AbstractController
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
 
-
         die("Fin");
         if($return = $chronolabelHelper->getTransportLabel())
         {
@@ -450,6 +449,44 @@ final class DefaultController extends AbstractController
         return $this->render($template, [
             'blocks' => $blocks,
             'showCallback' => $showCallback
+        ]);
+    }
+
+    
+    /**
+     * @Route("/sportblock", name="get_sport_block_for_customer")
+     */
+    public function getSportBlockForCustomer(Request $request)
+    {
+        $sectionCode = 'customer_dashboard';
+
+        $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
+        $blocks = $blockRepo->createQueryBuilder('o')
+                            ->leftJoin('o.sections', 'section')
+                            ->leftJoin('o.sports', 'sport')
+                            ->where('o.enabled = true')
+                            ->andWhere('section.code = :sectionCode')
+                            ->setParameter('sectionCode', $sectionCode)
+        ;
+
+        $default = true;
+        if($customer = $this->getCurrentCustomer())
+        {
+            $sports = $customer->getFavoriteSports();
+            if(count($sports))
+            {
+                $sports = $sports->toArray();
+                $sport_id = array_rand($sports, 1); // 1 au hasard
+                $sport = $sports[$sport_id];
+                $blocks = $blocks->andWhere('sport IN (:sport)')->setParameter('sport', $sport);
+                $default = false;
+            }
+        }
+        if($default) $blocks = $blocks->andWhere('sport.id IS NULL');
+
+        $blocks = $blocks->getQuery()->setMaxResults(1)->getResult();
+        return $this->render('@SyliusShop/Block/simple_blocklist.html.twig', [
+            'blocks' => $blocks
         ]);
     }
 
