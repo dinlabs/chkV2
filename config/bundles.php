@@ -75,4 +75,5 @@ return [
     Xynnn\GoogleTagManagerBundle\GoogleTagManagerBundle::class => ['all' => true],
     GtmPlugin\GtmPlugin::class => ['all' => true],
     StefanDoorn\SyliusGtmEnhancedEcommercePlugin\SyliusGtmEnhancedEcommercePlugin::class => ['all' => true],
+    BitBag\SyliusMailChimpPlugin\BitBagSyliusMailChimpPlugin::class => ['all' => true],
 ];

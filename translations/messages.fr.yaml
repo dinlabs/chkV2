@@ -153,6 +153,11 @@ bitbag_sylius_elasticsearch_plugin:
       taxon:
         label: Catégorie
 
+bitbag_sylius_mailchimp_plugin:
+  ui:
+    your_email_address: Votre adresse e-mail
+    subscribe: Je m'abonne
+
 setono_sylius_feed:
   feed_type:
     niveales: Niveales

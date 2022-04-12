@@ -1,11 +1,7 @@
 <div id="newsletter">
     <div class="inside">
         <h2>{{ 'app.homepage.newsletter'|trans }}</h2>
-        <form action="post">
-            <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-newsletter') }}"/></svg>
-            <input type="email" name="email" placeholder="Votre adresse e-mail">
-            <button type="submit" class="btn">Je m'abonne</button>
-        </form>
+        {% include '@BitBagSyliusMailChimpPlugin/_subscribe.html.twig' %}
         <p>
             {{ 'app.homepage.newsletter_description'|trans }}
             <span class="pichulli">

@@ -16,9 +16,6 @@ parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
     bitbag_es_pagination_available_page_limits: [16, 24, 32]
     bitbag_es_pagination_default_limit: 24
-    mailchimp.api_key: '123'
-    mailchimp.list_id: '1'
-    mailchimp.webhook_secret: '456'
     
 
 sylius_addressing:

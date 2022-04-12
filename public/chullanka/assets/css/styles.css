@@ -901,6 +901,9 @@ body.customer { background:var(--bg1); }
 .customer .dashboard #advantages .chullpts { display:flex; gap:1em; align-items:center; padding-bottom:1em; }
 .customer .dashboard #advantages .text-right { padding-bottom:1em; text-align:right; }
 
+.customer .dashboard #advantages .infoLicence { padding-top:1em; }
+.customer .dashboard #advantages .infoLicence p { padding:1em 0; }
+
 .customer .dashboard #wishlists .intro { position:relative; padding:1em 0 1em 80px; }
 .customer .dashboard #wishlists .pichulli { position:absolute; left:0; }
 .customer .dashboard #wishlists .wishlist { display:block; margin:1em; border-radius:5px; border:2px solid var(--bg1); padding:1em; color:inherit; text-decoration:none; }

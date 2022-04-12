@@ -20,6 +20,7 @@
         "php": "^7.3 || ^8.0",
         "bitbag/cms-plugin": "^3.0",
         "bitbag/elasticsearch-plugin": "^2.0",
+        "bitbag/mailchimp-plugin": "^1.2",
         "bitbag/wishlist-plugin": "^1.9",
         "cweagans/composer-patches": "^1.7",
         "sensio/framework-extra-bundle": "^6.2",

@@ -78,6 +78,7 @@
     {#{ sylius_template_event('sylius.shop.layout.javascripts') }#}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %}
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliusmailchimpplugin/bitbag-mailchimp-plugin-newsletter.js'} %}
 
     {#
     <script>
@@ -114,6 +115,11 @@
             /*.fail(function(data){
             });*/
         });
+
+        if($('#footer-newsletter-form').length)
+        {
+            $('#footer-newsletter-form').joinNewsletter();
+        }
     });
     </script>
 {% endblock %}

@@ -97,6 +97,10 @@
     }
     
     $(document).ready(function() {
+        {% if app.request.get('club') is defined %}
+        $('#sylius_contact_subject').val('discount');
+        {% endif %}
+
         manageOptions();
         manageSubOptions();
 
