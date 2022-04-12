@@ -1,0 +1,16 @@
+{% if data == 0 %}
+<span class="ui blue label">
+    <i class="inbox icon"></i>
+    Nouveau
+</span>
+{% elseif data == 1 %}
+<span class="ui green label">
+    <i class="clock icon"></i>
+    En cours
+</span>
+{% elseif data == 2 %}
+<span class="ui red label">
+    <i class="check icon"></i>
+    Clôturé
+</span>
+{% endif %}

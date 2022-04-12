@@ -1,0 +1,6 @@
+{% if data %}
+<a href="{{ path('sylius_admin_customer_show', {'id': data.id }) }}"><strong>{{ data.firstName }} {{ data.lastName }}</strong></a>
+<p>{{ data.email }}</p>
+{% else %}
+&ndash;
+{% endif %}

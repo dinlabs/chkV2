@@ -63,6 +63,8 @@ app:
   brand:
     name: 'Nom'
     code: 'Code'
+  recall:
+    state: Etat
   chull_test:
     date: 'Date du test'
     description: 'Description longue des tests'

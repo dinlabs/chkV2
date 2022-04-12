@@ -1,0 +1,1 @@
+{% if data %}<a href="{{ path('sylius_shop_product_show', {'slug': data.slug, '_locale': data.translation.locale}) }}">{{ data.name }}</a>{% else %}&ndash;{% endif %}

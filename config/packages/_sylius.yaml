@@ -404,14 +404,31 @@ sylius_grid:
             fields:
                 createdAt:
                     type: datetime
-                    sortable: ~
                     label: 'Date de demande'
+                    sortable: ~
+                    options:
+                        format: 'd/m/Y à H:i'
                 phone_number:
                     type: string
                     label: 'Numéro de téléphone'
+                customer:
+                    type: twig
+                    label: sylius.ui.customer
+                    sortable: customer.lastName
+                    options:
+                        template: "chullanka/grid_customer.html.twig"
+                product:
+                    type: twig
+                    label: 'Produit'
+                    sortable: ~
+                    options:
+                        template: "chullanka/recall/grid_product.html.twig"
                 state:
-                    type: string
-                    label: 'Statut'
+                    type: twig
+                    label: sylius.ui.state
+                    sortable: ~
+                    options:
+                        template: "chullanka/recall/grid_state.html.twig"
             actions:
                 item:
                     # show:
@@ -444,7 +461,8 @@ sylius_grid:
                     label: sylius.ui.customer
                     sortable: customer.lastName
                     options:
-                        template: "@SyliusAdmin/Order/Grid/Field/customer.html.twig"
+                        #template: "@SyliusAdmin/Order/Grid/Field/customer.html.twig"
+                        template: "chullanka/grid_customer.html.twig"
                 state:
                     type: twig
                     label: sylius.ui.state
