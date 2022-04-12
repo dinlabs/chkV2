@@ -19,12 +19,15 @@
     {% else %}
     {% for image in univers.images %}
         {% if image.type == 'bg' %}
-        {% set _bgCat = image.path|imagine_filter(filter|default('sylius_shop_product_original')) %}
+        {% set _bgCat = image.path|imagine_filter(filter|default('chullanka_univers')) %}
         {% endif %}
     {% endfor %}
     {% endif %}
 {% endif %}
 
+{% if taxon.isUnivers == false and taxon.topProducts|length == 0 %}
+{% set _bgCat = null %}
+{% endif %}
 
 <div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
     <div class="autoMargin">
