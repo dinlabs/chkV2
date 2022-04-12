@@ -124,6 +124,9 @@ sylius_ui:
                 plus_chullanka:
                     template: "@SyliusShop/Homepage/_plusChullanka.html.twig"
                     priority: 15
+                trust_pilot:
+                    template: "@SyliusShop/Homepage/_trustpilot.html.twig"
+                    priority: 14
                 # for_you:
                 #     template: "@SyliusShop/Homepage/_forYou.html.twig"
                 #     priority: 10

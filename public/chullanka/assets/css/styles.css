@@ -269,7 +269,7 @@ header + .sylius-flash-message { margin-top:-1rem; }
 .sylius-flash-message .content { padding:1.5em; text-align:center; font-size:.8em; font-weight:700; }
 
 
-#insurance { background:url(../img/bg-insurance.jpg) no-repeat center top / cover; padding:50px 30px; }
+#insurance { background:url(../img/bg-trustpilot.jpg) no-repeat center top / cover; padding:50px 30px; }
 #insurance .inside { background:var(--bg0); border-radius:10px; max-width:320px; margin:auto; padding:20px;; text-align:center; }
 #insurance .inside ul { display:grid; grid-template-columns:1fr 1fr; gap:20px; padding-bottom:2em; margin:auto; text-align:left; }
 #insurance .inside ul li { margin:auto; padding-top:2em; }
