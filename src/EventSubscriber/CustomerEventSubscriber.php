@@ -46,9 +46,6 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         $connectedUser = $event->getAuthenticationToken()->getUser();
         if($connectedUser && method_exists($connectedUser, 'getCustomer') && ($customer = $connectedUser->getCustomer()))
         {
-            // reinit notif
-            $customer->setNotice(0);
-
             $webserv = $this->ginkoiaCustomerWs;
 
             // Todo:On interroge le WS pour mettre à jour les infos du client sur le site
@@ -117,11 +114,12 @@ class CustomerEventSubscriber implements EventSubscriberInterface
     public function onCustomerDashboardShow(ResourceControllerEvent $event)
     {
         $customer = $event->getSubject();
-        $customer->setNotice(0);
-        $this->entityManager->persist($customer);
-        $this->entityManager->flush();
-
-        return $this->onSyliusCustomerPostSave($event);
+        if($customer->getNotice() > 0)
+        {
+            $customer->setNotice(0);
+            $this->entityManager->persist($customer);
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -134,7 +132,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         $this->entityManager->persist($customer);
         $this->entityManager->flush();
 
-        return $this->onSyliusCustomerPostSave($event);
+        $this->onSyliusCustomerPostSave($event);
     }
 
     /**
