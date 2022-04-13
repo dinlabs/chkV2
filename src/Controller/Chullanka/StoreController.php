@@ -109,6 +109,35 @@ final class StoreController extends AbstractController
             'stores' => $stores,
         ]));
     }
+    
+    /**
+     * @Route("/blocksbysectionstore", name="get_blocks_by_section_store")
+     */
+    public function getBlocksBySectionAndStoreAction(Request $request)
+    {
+        $template = '@SyliusShop/Block/simple_blocklist.html.twig';
+        $sectionCode = $request->get('sectionCode');
+        $storeCode = $request->get('storeCode');
+
+        $blockRepo = $this->container->get('doctrine')->getRepository(Block::class);
+        $blocks = $blockRepo->createQueryBuilder('o')
+                            ->innerJoin('o.sections', 'section')
+                            ->innerJoin('o.stores', 'store')
+                            ->where('o.enabled = true')
+                            ->andWhere('section.code = :sectionCode')
+                            ->andWhere('store.code = :storeCode')
+                            ->setParameter('sectionCode', $sectionCode)
+                            ->setParameter('storeCode', $storeCode)
+                            ->getQuery()
+                            //->getOneOrNullResult()
+                            ->getResult()
+        ;
+
+        return $this->render($template, [
+            'blocks' => $blocks
+        ]);
+    }
+
 
     /**
      * @Route("/name/{id}", name="store_name")

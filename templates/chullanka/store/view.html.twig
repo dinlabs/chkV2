@@ -40,7 +40,12 @@
                 <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg> {{ child.name }}</a></li>
                 {% endfor %}
             </ul>
+            <br>
             {% endif %}
+
+            <div class="push_univers">
+                {{ render(path('get_blocks_by_section_store', {'sectionCode': 'cat_filters', 'storeCode': store.code})) }}
+            </div>
         </div>
         <div id="productList" class="prodList">
             {% if store.otherProducts|length > 0 %}
@@ -109,9 +114,9 @@
                     <div class="glider-contain">
                         <div class="glider">
                         {% for chulli in store.chullis %}
+                            {% if store.director and store.director == chulli %}
+                            {% else %}
                             <div>
-                                {% if store.director and store.director == chulli %}
-                                {% else %}
                                 <div class="chulli">
                                     {% if chulli.avatar %}
                                     <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
@@ -120,34 +125,8 @@
                                     {% endif %}
                                     <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
                                 </div>
-                                {% endif %}
                             </div>
-                            <div>
-                                {% if store.director and store.director == chulli %}
-                                {% else %}
-                                <div class="chulli">
-                                    {% if chulli.avatar %}
-                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
-                                    {% else %}
-                                    <span class="pict"></span>
-                                    {% endif %}
-                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div>
-                                {% if store.director and store.director == chulli %}
-                                {% else %}
-                                <div class="chulli">
-                                    {% if chulli.avatar %}
-                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
-                                    {% else %}
-                                    <span class="pict"></span>
-                                    {% endif %}
-                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
+                            {% endif %}
                         {% endfor %}
                         </div>
                         <div role="tablist" class="dots"></div>
@@ -168,6 +147,10 @@
                             });
                         });
                     </script>
+
+                    <div class="rendezVous">
+                        <a href="{{ path('sylius_shop_contact_request', {'store': store.code}) }}" class="btn primary">Prendre rendez-vous avec eux</a>
+                    </div>
                 </div>
                 {% endif %}
 

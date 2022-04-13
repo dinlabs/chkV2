@@ -8,6 +8,11 @@
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             </div>
             {% endfor %}
+            <div>
+                <div class="prodInList">
+                    {{ render(path('get_blocks_by_section_store', {'sectionCode': 'univers_topguide', 'storeCode': store.code})) }}
+                </div>
+            </div>
         </div>
         <div role="tablist" class="dots"></div>
         <script>

@@ -97,8 +97,13 @@
     }
     
     $(document).ready(function() {
-        {% if app.request.get('club') is defined %}
+        {% if app.request.get('club') is defined and app.request.get('club') == true %}
         $('#sylius_contact_subject').val('discount');
+        {% endif %}
+
+        {% if app.request.get('store') is defined and app.request.get('store') != '' %}
+            $('#sylius_contact_subject').val('magasins');
+            $('#sylius_contact_store').val('{{ app.request.get('store') }}');
         {% endif %}
 
         manageOptions();
