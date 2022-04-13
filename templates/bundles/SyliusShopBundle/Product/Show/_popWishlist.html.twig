@@ -1,0 +1,8 @@
+<div id="wishPop" class="popin hidden">
+    <div class="popinside">
+        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg></button>
+
+        {% set variant = product.variants.first %}
+        {{ render(path('chk_wishlist_add_product', {'variant_id': variant.id})) }}
+    </div>
+</div>

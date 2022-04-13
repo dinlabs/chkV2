@@ -18,6 +18,7 @@ use App\Entity\Product\ProductOption;
 use App\Entity\Shipping\ShippingMethod;
 use App\Entity\Taxation\TaxCategory;
 use App\Entity\Taxonomy\Taxon;
+use App\Form\Type\AskPhoneNumberType;
 use App\Form\Type\FavoriteSportType;
 use App\Form\Type\FavoriteStoreType;
 use App\Form\Type\RmaType;
@@ -532,6 +533,32 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/askphone", name="chk_ask_phone_number")
+     */
+    public function askPhoneNumber(Request $request)
+    {
+        $customer = $this->getCurrentCustomer();
+
+        $form = $this->createForm(AskPhoneNumberType::class, $customer, [
+            'action' => $this->generateUrl('chk_ask_phone_number')
+        ]);
+        $form->handleRequest($request);
+        if($form->isSubmitted())
+        {
+            if($form->isValid())
+            {
+                $em = $this->container->get('doctrine')->getManager();
+                $em->persist($customer);
+                $em->flush();
+            }
+            return $this->redirectToRoute('sylius_shop_account_dashboard');
+        }
+        return $this->render('@SyliusShop/Account/Dashboard/_ask_phone_num.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * @Route("/upstreampaywidget", name="chk_upstream_payment_widget")
      */
     public function UpstreamPayWidgetAction(Request $request, UpstreamPayWidget $upstreamPayWidget)
@@ -625,6 +652,11 @@ final class DefaultController extends AbstractController
                     $paymentStateMachine->apply('complete');
 
 
+                    // update notification
+                    $customer = $order->getCustomer();
+                    $customer->setNotice(1);
+
+
                     // EntityManager
                     $em = $this->container->get('doctrine')->getManager();
 
@@ -643,23 +675,19 @@ final class DefaultController extends AbstractController
                     }
                     if($fidelityUsed)
                     {
-                        if($customer = $order->getCustomer())
+                        $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                        $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+                        $points = ($nbrReduc * 500);// on déduit le nombre de points
+                        
+                        //on met à jour sur le WS
+                        $webserv = $this->ginkoiaCustomerWs;
+                        $email = $customer->getEmail();
+                        if($webserv->usePoints($points, $email))
                         {
-                            $chullz = $customer->getChullpoints(); //nbr de points sur le site
-                            $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
-                            $points = ($nbrReduc * 500);// on déduit le nombre de points
-                            
-                            
-                            //on met à jour sur le WS
-                            $webserv = $this->ginkoiaCustomerWs;
-                            $email = $customer->getEmail();
-                            if($webserv->usePoints($points, $email))
-                            {
-                                // on met à jour sur le site
-                                $chullz -= $points;
-                                $customer->setChullpoints($chullz);
-                                $em->persist($customer);
-                            }
+                            // on met à jour sur le site
+                            $chullz -= $points;
+                            $customer->setChullpoints($chullz);
+                            $em->persist($customer);
                         }
                     }
 

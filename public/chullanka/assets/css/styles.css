@@ -593,6 +593,11 @@ footer #ourAdventure picture { display:block; text-align:center; }
 #productInfos #dispoMagPop ul li .infos .warning strong { color:var(--warning); }
 #productInfos #dispoMagPop ul li .infos .infosup { color:var(--warning); }
 
+#productInfos .sectionAddToWish { padding-bottom:1em; text-align:center; }
+#productInfos .sectionAddToWish a.topopin { text-decoration:none; font-size:1.2em; }
+#productInfos .sectionAddToWish a.topopin span { text-decoration:underline; }
+.popin#wishPop:not(.hidden) { z-index:10000; }
+
 #productInfos .giftProduct { padding-bottom:2em; }
 #productInfos .giftProduct a { color:initial; }
 #productInfos .giftProduct .inside { display:flex; justify-content:space-between; align-items:center; }
@@ -873,6 +878,13 @@ body.customer { background:var(--bg1); }
 
 .customer .dashboard #welcome h1 { font-family:var(--altFont); font-size:1.867em; }
 .customer .dashboard #welcome .entete { padding-bottom:1em; }
+
+.customer .dashboard #welcome .askPhoneNumber { margin:1em 0; }
+.customer .dashboard #welcome .askPhoneNumber .header { position:relative; padding:1em 0 2em 80px; }
+.customer .dashboard #welcome .askPhoneNumber .header .pichulli { position:absolute; left:0; }
+.customer .dashboard #welcome .askPhoneNumber form input { width:100%; }
+.customer .dashboard #welcome .askPhoneNumber .formaction { background:url(../img/ico-portable.png) no-repeat 100px 1em / 40%; padding:1em 0; height:70px; }
+
 .customer .dashboard #welcome .preferences { margin-top:1em; border-top:2px dashed var(--default); padding-top:1em; }
 .customer .dashboard #welcome .preferences h3 { padding-bottom:1em; font-size:.95em; }
 .customer .dashboard #welcome .preferences .links { margin-bottom:1em; }

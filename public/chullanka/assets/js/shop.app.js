@@ -45318,6 +45318,8 @@
 				  if(_val < 1) _val = 1;
 				  $_input.val(_val);
 				});
+
+				funcScrollTo();
 	  
 				$pop.removeClass('hidden');
 				document.querySelector('body').classList.add('overflow');

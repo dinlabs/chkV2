@@ -1,0 +1,17 @@
+<div class="askPhoneNumber">
+    <div class="header">
+        <div class="pichulli">
+            <img src="{{ asset('chullanka/assets/img/chulli_4.jpg') }}" width="60" height="60" alt="Chulli">
+            <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+        </div>
+        <h3>Mon conseil du jour</h3>
+        <p>Ajouter votre numéro de téléphone pour un suivi de vos commandes à la cool par SMS 😉</p>
+    </div>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.phoneNumber) }}
+        <div class="formaction">
+            <button type="submit" class="btn primary">Ajouter</button>
+        </div>
+{{ form_end(form) }}
+</div>

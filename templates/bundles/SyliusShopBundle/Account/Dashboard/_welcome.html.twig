@@ -12,6 +12,10 @@
 
     {{ sylius_template_event('sylius.shop.account.dashboard.after_information', {'customer': customer}) }}
 
+    {% if customer.phoneNumber == '' %}
+        {{ render(path('chk_ask_phone_number')) }}
+    {% endif %}
+
     <div class="preferences">
         <h3>Vos préférences</h3>
         <ul class="links">

@@ -89,6 +89,8 @@ class WishlistController extends AbstractController
                 $em->persist($wishlistProduct);
                 $em->persist($wishlist);
                 $em->flush();
+
+                return $this->redirectToRoute('sylius_shop_account_dashboard');
             }
 
             $wishlists = $customer->getWishlists();

@@ -76,7 +76,8 @@
     {% endfor %}
     {{ form_end(form, {'render_rest': false}) }}
 
-    <a href="{{ path('chk_wishlist_add_product', {'variant_id': variant.id}) }}">
+    {#<a href="{{ path('chk_wishlist_add_product', {'variant_id': variant.id}) }}">#}
+    <a href="#wishPop" class="topopin">
         <i class="icon heart"></i> Ajout à une liste d'envie
     </a>
     
