@@ -8,6 +8,7 @@ use App\Entity\Chullanka\Store;
 use App\Entity\Order\Order;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductVariant;
+use BitBag\SyliusCmsPlugin\Entity\Block;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -109,7 +110,7 @@ final class StoreController extends AbstractController
             'stores' => $stores,
         ]));
     }
-    
+
     /**
      * @Route("/blocksbysectionstore", name="get_blocks_by_section_store")
      */
