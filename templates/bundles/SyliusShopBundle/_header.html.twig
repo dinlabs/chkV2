@@ -20,11 +20,12 @@
     <div id="shopLinks">
         <a href="{{ path('store_index') }}" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-geoloc') }}"/></svg>Trouver un magasin</a>
 
-        {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg><span style="display:none;">1</span></a>
+        <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg><span></span></a>
+        {#% if is_granted('ROLE_USER') %}
         {% else %}
             <a href="{{ path('sylius_shop_login') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg></a>
-        {% endif %}
-        {{ render(url('sylius_shop_partial_cart_summary', {'template': '@SyliusShop/Cart/_widget.html.twig'})) }}
+        {% endif %#}
+        {#{ render(url('sylius_shop_partial_cart_summary', {'template': '@SyliusShop/Cart/_widget.html.twig'})) }#}
+        <a href="{{ path('sylius_shop_cart_summary') }}" id="cartLink" class="forNotice"><svg class="svg-icon" role="img" style="width:28.569px; height:24.87px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-panier') }}"/></svg><span></span></a>
     </div>
 </div>

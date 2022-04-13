@@ -103,6 +103,25 @@
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %}
     <script>
     $(document).ready(function() {
+        jQuery.ajax({
+            url: '{{ path('chk_ajax_profilinfos') }}',
+            dataType: 'json',
+        }).done(function(data) {
+            if(data)
+            {
+                var _customerLink = document.querySelector('#customerLink span');
+                _customerLink.innerText = data.notifications;
+                _customerLink.style.opacity = (data.notifications > 0) ? 1 : 0;
+                var _customerLinkMob = document.querySelector('#navBottom .forNotice span');
+                _customerLinkMob.innerText = data.notifications;
+                _customerLinkMob.style.opacity = (data.notifications > 0) ? 1 : 0;
+
+                var _cartLink = document.querySelector('#cartLink span');
+                _cartLink.innerText = data.cart_items;
+                _cartLink.style.opacity = (data.cart_items > 0) ? 1 : 0;
+            }
+        });
+
         $('body').on('submit', '.getAdvice form', function (e) {
             e.preventDefault();
             var $form = $(this);

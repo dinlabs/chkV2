@@ -72,6 +72,23 @@ class AjaxController extends AbstractController
     {
         return new Response('AJAX', 200, ['Content-Type' => 'text/html']);
     }
+    
+    /**
+     * @Route("/profilinfos", name="chk_ajax_profilinfos")
+     */
+    public function getProfilInfos(Request $request): JsonResponse
+    {
+        $data = ['cart_items' => 0, 'notifications' => 0]; // default
+
+        $cart = $this->cartContext->getCart();
+        $data['cart_items'] = $cart->getItems()->count();
+        
+        if($customer = $this->getCurrentCustomer())
+        {
+            $data['notifications'] = $customer->getNotice();
+        }
+        return new JsonResponse($data);
+    }
 
     /**
      * @Route("/getadvice", name="chk_ajax_getadviceform")

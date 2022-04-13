@@ -90,7 +90,7 @@
     <div id="navBottom">
         <a href="{{ is_granted('ROLE_USER') ? path('sylius_shop_account_dashboard') : path('sylius_shop_login') }}" class="forNotice">
             <svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg>
-            <!--span>1</span-->
+            <span></span>
             Mon compte
         </a>
         <a href="{{ path('store_index') }}">

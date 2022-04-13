@@ -82,7 +82,7 @@ class EventSubscriber implements EventSubscriberInterface
             SecurityEvents::INTERACTIVE_LOGIN => 'onSecurityInteractiveLogin',
 
             // call Ginkoia WS
-            'sylius.customer.post_register' => 'onSyliusCustomerPostSave',
+            'sylius.customer.post_register' => 'onSyliusCustomerPostCreate',
             'sylius.customer.post_update' => 'onSyliusCustomerPostSave',
             'sylius.address.post_register' => 'onSyliusCustomerPostSave',
             'sylius.address.post_update' => 'onSyliusCustomerPostSave',
@@ -204,7 +204,7 @@ class EventSubscriber implements EventSubscriberInterface
                     foreach($rules as $rule)
                     {
                         $confRule = $rule->getConfiguration();
-                        error_log(print_r($confRule, true));
+                        //error_log(print_r($confRule, true));
                         switch($rule->getType())
                         {
                             case 'contains_product':
@@ -634,11 +634,17 @@ class EventSubscriber implements EventSubscriberInterface
     }
     
 
+    /**
+     * Lors de la connexion du User
+     */
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $connectedUser = $event->getAuthenticationToken()->getUser();
         if($connectedUser && method_exists($connectedUser, 'getCustomer') && ($customer = $connectedUser->getCustomer()))
         {
+            // reinit notif
+            $customer->setNotice(0);
+
             $webserv = $this->ginkoiaCustomerWs;
 
             // Todo:On interroge le WS pour mettre à jour les infos du client sur le site
@@ -699,9 +705,22 @@ class EventSubscriber implements EventSubscriberInterface
                         $this->entityManager->persist($historic);
                     }
                 }
-                $this->entityManager->flush();
             }
+            $this->entityManager->flush();
         }
+    }
+
+    /**
+     * Création de compte - ajout notification
+     */
+    public function onSyliusCustomerPostCreate(ResourceControllerEvent $event)
+    {
+        $customer = $event->getSubject();
+        $customer->setNotice(1);
+        $this->entityManager->persist($customer);
+        $this->entityManager->flush();
+
+        return $this->onSyliusCustomerPostSave($event);
     }
 
     /**

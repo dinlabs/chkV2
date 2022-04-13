@@ -226,13 +226,13 @@ header nav #navBlock strong.name { display:block; width:100%; text-align:center;
 header nav #navBottom { position:absolute; bottom:0; height:var(--navBottomHeight); background:var(--line); display:grid; grid-template-columns:1fr 1fr; gap:2px; width:100%; box-shadow:0px -10px 20px -20px; }
 header nav #navBottom a { display:block; position:relative; background:var(--bg0); padding-top:1em; text-align:center; color:inherit; }
 header nav #navBottom a .svg-icon { display:block; margin:auto; }
-header nav #navBottom .forNotice span { position:absolute; right:calc(50% - 2em); top:.5em; display:inline-block; border:2px solid var(--primary); border-radius:50%; background:var(--bg0); width:22px; height:22px; text-align:center; font-weight:700; font-size:.867em; color:var(--primary); }
+header nav #navBottom .forNotice span { position:absolute; right:calc(50% - 2em); top:.5em; display:inline-block; border:2px solid var(--primary); border-radius:50%; background:var(--bg0); width:22px; height:22px; text-align:center; font-weight:700; font-size:.867em; color:var(--primary); opacity:0; }
 
 
 header .inside { display:flex; align-items:center; justify-content:space-between; padding:0 1em; }
 header .inside #openMainMenu { background:none; cursor:pointer; }
 header .inside .forNotice { position:relative; }
-header .inside .forNotice span { position:absolute; right:-.7em; top:-.7em; display:inline-block; border:2px solid var(--primary); border-radius:50%; background:var(--bg0); width:22px; height:22px; text-align:center; font-weight:700; font-size:.867em; }
+header .inside .forNotice span { position:absolute; right:-.7em; top:-.7em; display:inline-block; border:2px solid var(--primary); border-radius:50%; background:var(--bg0); width:22px; height:22px; text-align:center; font-weight:700; font-size:.867em; opacity:0; transition:opacity .25s; }
 header .inside #logo { font-size:1em; font-weight:400; }
 header .inside #logo img { width:152px; }
 header .inside #logo span { display:none; }
