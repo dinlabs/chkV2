@@ -988,9 +988,11 @@ body.customer { background:var(--bg1); }
 #store .director .pichulli { position:absolute; left:0; }
 #store .chullis { display:flex; gap:1em; }
 
-#store .chullis .chulli { background:var(--bg0); border-radius:5px; width:300px; }
-#store .chullis .chulli .pict { width:100%; height:250px; object-fit:cover; background:var(--bg1); }
-#store .chullis .chulli p { padding:.5em 1em; }
+#store #chullis .chulli { background:var(--bg0); border-radius:5px; width:300px; }
+#store #chullis .chulli .pict { width:100%; height:250px; object-fit:cover; background:var(--bg1); border-radius:5px; }
+#store #chullis .chulli p { padding:.5em 1em; }
+
+#store #chullis .rendezVous { text-align:center; }
 
 #store #services .service { background:var(--bg0); border-radius:5px; padding:1em; width:300px; }
 #store #services .service h3 { padding-bottom:1em; font-size:1em; }
