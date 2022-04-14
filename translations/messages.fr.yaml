@@ -127,6 +127,12 @@ sylius:
     store_collected: "Récupérée en magasin"
     store_sent: "Livrée (Click&Collect)"
     
+sylius_invoicing_plugin:
+  ui:
+    net_value: 'Prix HT'
+    net_total: 'Total HT'
+    gross_value: 'Prix TTC'
+    unit_net_price: 'Prix HT unitaire'
 
 bitbag_sylius_elasticsearch_plugin:
   ui:

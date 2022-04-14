@@ -13,4 +13,10 @@ use Sylius\Component\Core\Model\Adjustment as BaseAdjustment;
  */
 class Adjustment extends BaseAdjustment
 {
+    public function getLabel(): ?string
+    {
+        if($this->getShipment()) return 'Livraison : ' . $this->label;
+        
+        return $this->label;
+    }
 }

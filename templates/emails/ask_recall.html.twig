@@ -1,0 +1,17 @@
+{% extends '@SyliusShop/Email/layout.html.twig' %}
+
+{% block subject %}
+    Demande de rappel depuis le site
+{% endblock %}
+
+{% block heademail %}
+    Demande de rappel
+{% endblock %}
+
+{% block content %}
+    <p>Une nouvelle demande de rappel a été faite sur le site.</p>
+    <p><strong>Numéro de téléphone :</strong> {{ recall.phoneNumber }}</p>
+    {% if recall.customer %}
+    <p><strong>Client : </strong> {{ recall.customer }}</p>
+    {% endif %}
+{% endblock %}

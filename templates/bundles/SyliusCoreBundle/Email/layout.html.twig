@@ -1,27 +1,70 @@
 {% block body %}
     {% autoescape false %}
-        {% set logo = channel.hostname is not null ? 'http://' ~ channel.hostname ~ asset('assets/shop/img/logo.png') : absolute_url(asset('assets/shop/img/logo.png')) %}
+        <div style="font-family: sans-serif; background: #fbfbfb; font-size: 16px; color: #333; line-height: 1.5">
+            <div style="width: 622px; margin: 0 auto; background: #fff;">
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td>
+                            <table cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/header_blank.png')) }}" alt=""></td>
+                                    <td><a href="https://www.chullanka.com" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/header_logo.png')) }}" alt="Chullanka"></a></td>
+                                    <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/header_blank.png')) }}" alt=""></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/header_top.png')) }}" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="f47a61" style="padding:10px; text-align:center; font-size:32px;"><font size="4" color="#fff">{% block heademail %}{% endblock %}</font></td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/header_bottom.png')) }}" alt=""></td>
+                    </tr>
+                </table>
 
-        <div style="font-family: sans-serif; background: #eee; padding-top: 30px; padding-bottom: 30px; font-size: 16px; color: #333; line-height: 1.5">
-            <div style="max-width: 600px; margin: 20px auto;">
-                <div style="margin-bottom: 30px; text-align: center;">
-                    {% if sylius_bundle_loaded_checker('SyliusShopBundle') %}
-                        {% set url = channel.hostname is not null ? 'http://' ~ channel.hostname ~ path('sylius_shop_homepage', {'_locale': localeCode}) : url('sylius_shop_homepage', {'_locale': localeCode}) %}
-                        <a href="{{ url|raw }}">
-                            <img src="{{ logo }}" alt="Chullanka" style="width: 170px">
-                        </a>
-                    {% else %}
-                        <img src="{{ logo }}" alt="Chullanka" style="width: 170px">
-                    {% endif %}
-                </div>
-
-                <div style="background: #fff; padding: 40px 30px;">
+                <div style="padding:10px 30px;">
                     {% block content %}{% endblock %}
                 </div>
 
-                <div style="text-align: center; padding: 20px 0;">
-                    <a href="https://www.chullanka.com" target="_blank" style="color:#d82130c; text-decoration: none;">chullanka.com</a>
-                </div>
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_title.png')) }}" alt="On se retrouve sur les réseaux ?"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_blank1.png')) }}" alt=""></td>
+                                    <td><a href="https://www.instagram.com/chullanka_outdoor_sports/" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_instagram.png')) }}" alt="Instagram"></a></td>
+                                    <td><a href="https://www.facebook.com/chullanka/" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_facebook.png')) }}" alt="Facebook"></a></td>
+                                    <td><a href="https://www.youtube.com/channel/UCpADapQaa50CV83lV6gLsQw" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_youtube.png')) }}" alt="Youtube"></a></td>
+                                    <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_blank2.png')) }}" alt=""></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_toplinks.png')) }}" alt=""></a></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td><a href="https://www.chullanka.com/fr_FR/account/dashboard" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_link1.png')) }}" alt="Compte client"></a></td>
+                                    <td><a href="https://www.chullanka.com/nos-magasins.html" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_link2.png')) }}" alt="Nos magasins"></a></td>
+                                    <td><a href="https://www.chullanka.com/fr_FR/contact/" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_link3.png')) }}" alt="Nous contacter"></a></td>
+                                    <td><a href="https://www.chullanka.com/blog/" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_link4.png')) }}" alt="Le blog des Chullis"></a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="https://www.chullanka.com" target="_blank"><img src="{{ absolute_url(asset('chullanka/assets/img/emails/footer_bottom.png')) }}" alt="Chullanka - Copyright 2022"></a></td>
+                    </tr>
+                </table>
             </div>
         </div>
     {% endautoescape %}

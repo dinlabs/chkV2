@@ -10,9 +10,11 @@ use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Bundle\OrderBundle\Form\Type\CartItemType;
 use Sylius\Bundle\OrderBundle\Form\Type\CartType;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductVariantRepositoryInterface;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
@@ -46,6 +48,12 @@ class AjaxController extends AbstractController
     /** @var GinkoiaCustomerWs */
     private $ginkoiaCustomerWs;
 
+    /** @var ChannelContextInterface */
+    private $channelContext;
+
+    /** @var SenderInterface */
+    private $emailSender;
+
     public function __construct(
         ProductRepositoryInterface $productRepository, 
         ProductVariantRepositoryInterface $productVariantRepository, 
@@ -53,7 +61,9 @@ class AjaxController extends AbstractController
         OrderItemQuantityModifierInterface $orderItemQuantityModifier,
         CartContextInterface $cartContext,
         EntityManagerInterface $entityManager,
-        GinkoiaCustomerWs $ginkoiaCustomerWs
+        GinkoiaCustomerWs $ginkoiaCustomerWs,
+        ChannelContextInterface $channelContext,
+        SenderInterface $emailSender
     )
     {
         $this->productRepository = $productRepository;
@@ -63,6 +73,8 @@ class AjaxController extends AbstractController
         $this->cartContext = $cartContext;
         $this->entityManager = $entityManager;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
+        $this->channelContext = $channelContext;
+        $this->emailSender = $emailSender;
     }
 
     /**
@@ -120,6 +132,15 @@ class AjaxController extends AbstractController
             $em->persist($recall);
             $em->flush();
             $allIsGood = true;
+
+            // send email
+            $channel = $this->channelContext->getChannel();
+            $recipients = [$channel->getContactEmail()];
+            if(($recallCustomer = $recall->getCustomer()) && ($customerEmail = $recallCustomer->getEmail()))
+            {
+                $recipients[] = $customerEmail;
+            }
+            $this->emailSender->send('ask_recall', $recipients, ['recall' => $recall]);
         }
         return $this->render($template, [
             'title' => $title,

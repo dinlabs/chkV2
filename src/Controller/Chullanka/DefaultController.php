@@ -35,6 +35,7 @@ use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Core\OrderShippingTransitions;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Shipping\ShipmentTransitions;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,12 +59,16 @@ final class DefaultController extends AbstractController
 
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher)
+    /** @var SenderInterface */
+    private $emailSender;
+
+    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender)
     {
         $this->cartContext = $cartContext;
         $this->twig = $twig;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->eventDispatcher = $eventDispatcher;
+        $this->emailSender = $emailSender;
     }
 
     /**
@@ -80,6 +85,9 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, ChronolabelHelper $chronolabelHelper, Target2SellHelper $target2SellHelper)
     {
+
+        
+
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
 
@@ -838,6 +846,11 @@ final class DefaultController extends AbstractController
                     $rma->setState('new');
                     $em->persist($rma);
                     $em->flush();
+
+                    // send email
+                    $channel = $order->getChannel();
+                    $recipients = [$channel->getContactEmail(), $customer->getEmail()];
+                    $this->emailSender->send('ask_return_product', $recipients, ['rma' => $rma]);
                 }
                 return $this->redirectToRoute('rma_request_list');
             }

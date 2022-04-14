@@ -1,0 +1,11 @@
+sylius_mailer:
+    sender:
+        name: Dinlabs
+        address: no-reply@dinlabs.fr
+    emails:
+        ask_recall:
+            subject: "Demande de rappel"
+            template: "emails/ask_recall.html.twig"
+        ask_return_product:
+            subject: "Demande de retour produit"
+            template: "emails/ask_return_product.html.twig"
