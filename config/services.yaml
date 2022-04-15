@@ -114,6 +114,7 @@ services:
 
     app.ginkoiaws:
         class: App\Service\GinkoiaCustomerWs
+        public: true
     app.security.success_handler:
         class: App\Security\AuthenticationSuccessHandler
         parent: security.authentication.success_handler

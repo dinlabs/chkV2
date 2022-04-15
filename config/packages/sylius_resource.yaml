@@ -1,3 +1,10 @@
+sylius_user:
+    resources:
+        shop:
+            user:
+                classes:
+                    controller: App\Controller\Shop\UserController
+
 sylius_resource:
     resources:
         app.store:

@@ -7,7 +7,9 @@ use App\Entity\Chullanka\HistoricOrder;
 use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
@@ -15,11 +17,13 @@ class CustomerEventSubscriber implements EventSubscriberInterface
 {
     private $entityManager;
     private $ginkoiaCustomerWs;
+    protected $addressFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, GinkoiaCustomerWs $ginkoiaCustomerWs)
+    public function __construct(EntityManagerInterface $entityManager, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $addressFactory)
     {
         $this->entityManager = $entityManager;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
+        $this->addressFactory = $addressFactory;
     }
 
     public static function getSubscribedEvents()
@@ -47,67 +51,158 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         if($connectedUser && method_exists($connectedUser, 'getCustomer') && ($customer = $connectedUser->getCustomer()))
         {
             $webserv = $this->ginkoiaCustomerWs;
+            $email = $customer->getEmail();
 
-            // Todo:On interroge le WS pour mettre à jour les infos du client sur le site
-            
-
-            // On interroge le WS pour récupérer ses commandes en magasin via son email
-            if($orders = $webserv->getCustomerShopOrders($customer->getEmail()))
+            // On interroge le WS pour mettre à jour les infos du client sur le site
+            if($return = $webserv->getCustomerInfos($email))
             {
-                foreach($orders as $order)
+                if(isset($return['ResultCode']))
                 {
-                    $receiptId = $order['ReceiptID'];
-
-                    // On cherche si ce order a deja ete importé
-                    if($this->entityManager->getRepository(HistoricOrder::class)->findOneBy([
-                        'customer' => $customer,
-                        'order_id' => $receiptId
-                    ])) continue;// si oui, on ne fait rien et on passe au suivant
-
-                    //toujours là, on va créer une entrée;
-                    if($orderItems = $webserv->getCustomerReceiptDetail($receiptId))
+                    if($return['ResultCode'] == '-5')
                     {
-                        $items = [];
-                        foreach($orderItems as $orderItem)
+                        throw new CustomUserMessageAuthenticationException("Comptes clients multiples pour cet email, merci de nous contacter par email à contact@chullanka.com ou par téléphone au 04 89 03 22 75 (du lundi au vendredi, de 9h30 à 13h et de 14h à 18H00, prix d'un appel local)");
+                    }
+                    if($return['ResultCode'] == '-6')
+                    {
+                        throw new CustomUserMessageAuthenticationException("Compte client inconnu ou supprimé, veuillez en créer un nouveau. En cas de problème, n'hésitez pas à nous contacter par email à contact@chullanka.com ou par téléphone au 04 89 03 22 75 (du lundi au vendredi, de 9h30 à 13h et de 14h à 18H00, prix d'un appel local)");
+                    }
+                    return false;
+                }
+                elseif(isset($return['ID']))
+                {
+                    $_user = $return;
+                    if(isset($_user['Nom']) && ($nom = trim($_user['Nom'])) && !empty($nom))
+                    {
+                        $customer->setLastname($nom);
+                    }
+                    if(isset($_user['Prenom']) && ($prenom = trim($_user['Prenom'])) && !empty($prenom))
+                    {
+                        $customer->setFirstname($prenom);
+                    }
+                    if(isset($_user['DateAnniversaire']) && ($dob = trim($_user['DateAnniversaire'])) && !empty($dob))
+                    {
+                        //$aDob = explode('\/', $dob);
+                        //$dob = new \Datetime($aDob[2] . '-' . $aDob[1] . '-' . $aDob[0]);
+
+                        $dob = str_replace('////','|', $dob);
+                        $dob = str_replace('/','|', $dob);
+                        $aDob = explode('|', $dob);
+                        //$dob = new \Datetime(implode('-', [ $aDob[2], $aDob[1], $aDob[0] ] ));
+                        $dob = new \Datetime(implode('-', array_reverse($aDob)));
+                        $customer->setBirthday($dob);
+                    }
+
+                    if(isset($_user['Adresse']))
+                    {
+                        $defaultAddress = $customer->getDefaultAddress();
+                        if(!$defaultAddress)
                         {
-                            $items[] = [
-                                'name' => $orderItem['Name'] . ' - ' . $orderItem['Brand'],
-                                'reference' => $orderItem['Reference'],
-                                'code_chono' => $orderItem['Chrono'],
-                                'quantity' => $orderItem['Quantity'],
-                                'price' => (float)$orderItem['UnitNetPrice'] * 100,
-                            ];
+                            error_log("on va créer");
+                            /** @var AddressInterface $address */
+                            $defaultAddress = $this->addressFactory->createNew();
+                            $customer->setDefaultAddress($defaultAddress);
                         }
 
-                        $_date = $order['ReceiptDate'];// au format ==> 01//06//2021 (voire 01////06////2021 !)
-                        while(strpos($_date, '//') > -1)
-                        {
-                            $_date = str_replace('//', '/', $_date);
-                        }
-                        $_tmp = explode('/', $_date);// transformation en tableau
-                        rsort($_tmp);// inverse l'ordre
-                        $_date = new \Datetime( implode('-', $_tmp));// récupération au format ==> 2021-06-01
+                        $defaultAddress->setFirstName( $customer->getFirstname() );
+                        $defaultAddress->setLastName( $customer->getLastname() );
 
-                        $historic = new HistoricOrder();
-                        $historic   ->setCustomer($customer)
-                                    ->setOrigin('magasin')
-                                    ->setOrderId($receiptId)
-                                    ->setSku($order['ReceiptNumber'])
-                                    ->setOrderDate($_date)
-                                    ->setItems($items)
-                                    ->setAddress('')
-                                    ->setShipment($order['ReceiptShop'])
-                                    ->setShipmentPrice(0)
-                                    ->setShipmentDate($_date)
-                                    ->setTotal( (float)$order['ReceiptAmount'] * 100)
-                                    ->setPaymethod($order['Payments'][0]['PaymentName'])
-                                    ->setInvoice('')
-                        ;
-                        $this->entityManager->persist($historic);
+                        if(isset($_user['Adresse']['Mobile']) && ($value = trim($_user['Adresse']['Mobile'])) && !empty($value))
+                        {
+                            $customer->setPhoneNumber($value);
+                        }
+                        if(isset($_user['Adresse']['Telephone']) && ($value = trim($_user['Adresse']['Telephone'])) && !empty($value))
+                        {
+                            $defaultAddress->setPhoneNumber($value);
+                        }
+                        if(isset($_user['Adresse']['Ligne']) && ($value = trim($_user['Adresse']['Ligne'])) && !empty($value))
+                        {
+                            $value = is_array($value) ? implode("\n", $value) : $value;
+                            $defaultAddress->setStreet($value);
+                        }
+                        if(isset($_user['Adresse']['Code']) && ($value = trim($_user['Adresse']['Code'])) && !empty($value))
+                        {
+                            $value = (strlen($value) < 5) ? '0' . $value : $value;
+                            $defaultAddress->setPostcode($value);
+                        }
+                        if(isset($_user['Adresse']['Ville']) && ($value = trim($_user['Adresse']['Ville'])) && !empty($value))
+                        {
+                            $defaultAddress->setCity($value);
+                        }
+                        if(isset($_user['Adresse']['CodePays']) && ($value = trim($_user['Adresse']['CodePays'])) && !empty($value))
+                        {
+                            $defaultAddress->setCountryCode($value);
+                        }
+                    }
+
+                    // fidélité
+                    /*if(($loyalties = $webserv->getCustomerLoyalties($email)) && isset($loyalties['loyalty_total_points']))
+                    {
+                        $chullz = $loyalties['loyalty_total_points'];// on récupère le nbre de points à jour sur le WS
+                        $customer->setChullpoints($chullz);
+                    }*/
+
+                    $this->entityManager->persist($customer);
+
+                    
+                    // On interroge le WS pour récupérer ses commandes en magasin via son email
+                    if($orders = $webserv->getCustomerShopOrders($email))
+                    {
+                        foreach($orders as $order)
+                        {
+                            $receiptId = $order['ReceiptID'];
+        
+                            // On cherche si ce order a deja ete importé
+                            if($this->entityManager->getRepository(HistoricOrder::class)->findOneBy([
+                                'customer' => $customer,
+                                'order_id' => $receiptId
+                            ])) continue;// si oui, on ne fait rien et on passe au suivant
+        
+                            //toujours là, on va créer une entrée;
+                            if($orderItems = $webserv->getCustomerReceiptDetail($receiptId))
+                            {
+                                $items = [];
+                                foreach($orderItems as $orderItem)
+                                {
+                                    $items[] = [
+                                        'name' => $orderItem['Name'] . ' - ' . $orderItem['Brand'],
+                                        'reference' => $orderItem['Reference'],
+                                        'code_chono' => $orderItem['Chrono'],
+                                        'quantity' => $orderItem['Quantity'],
+                                        'price' => (float)$orderItem['UnitNetPrice'] * 100,
+                                    ];
+                                }
+        
+                                $_date = $order['ReceiptDate'];// au format ==> 01//06//2021 (voire 01////06////2021 !)
+                                while(strpos($_date, '//') > -1)
+                                {
+                                    $_date = str_replace('//', '/', $_date);
+                                }
+                                $_tmp = explode('/', $_date);// transformation en tableau
+                                rsort($_tmp);// inverse l'ordre
+                                $_date = new \Datetime( implode('-', $_tmp));// récupération au format ==> 2021-06-01
+        
+                                $historic = new HistoricOrder();
+                                $historic   ->setCustomer($customer)
+                                            ->setOrigin('magasin')
+                                            ->setOrderId($receiptId)
+                                            ->setSku($order['ReceiptNumber'])
+                                            ->setOrderDate($_date)
+                                            ->setItems($items)
+                                            ->setAddress('')
+                                            ->setShipment($order['ReceiptShop'])
+                                            ->setShipmentPrice(0)
+                                            ->setShipmentDate($_date)
+                                            ->setTotal( (float)$order['ReceiptAmount'] * 100)
+                                            ->setPaymethod($order['Payments'][0]['PaymentName'])
+                                            ->setInvoice('')
+                                ;
+                                $this->entityManager->persist($historic);
+                            }
+                        }
                     }
                 }
+                $this->entityManager->flush();
             }
-            $this->entityManager->flush();
         }
     }
 
