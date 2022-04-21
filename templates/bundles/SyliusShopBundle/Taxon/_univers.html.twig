@@ -13,58 +13,60 @@
 
 <div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
     {% if _bgCat %}<img src="{{ asset('build/chullanka/images/mask_taxon_top.png', 'chullanka') }}" alt="" class="mask">{% endif %}
-    <div class="autoMargin">
-        <ul id="breadcrumb">
-            <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
-            <li>{{ taxon.name }}</li>
-        </ul>
-        <div id="category">
-            <h1>{{ taxon.name }}</h1>
-            {% if taxon.description %}
-            {{ taxon.description|excerpt(50, '#description') }}
-            {% endif %}
-        </div>
-    </div>
-
-    {% if taxon is defined and taxon.enabledChildren %}
-    <div class="subcats">
-        <div class="glider-contain">
-            <div class="glider">
-                {% for child in taxon.enabledChildren %}
-                <div>
-                    <a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}">
-                    {% if child.images and child.images|length %}<img src="{{ child.images.first.path|imagine_filter(filter|default('chullanka_category')) }}" alt="{{ child.name }}">{% endif %}
-                    {{ child.name }}
-                    </a>
-                </div>
-                {% endfor %}
+    <div class="inner">
+        <div class="autoMargin">
+            <ul id="breadcrumb">
+                <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+                <li>{{ taxon.name }}</li>
+            </ul>
+            <div id="category">
+                <h1>{{ taxon.name }}</h1>
+                {% if taxon.description %}
+                {{ taxon.description|excerpt(50, '#description') }}
+                {% endif %}
             </div>
-            <div role="tablist" class="dots"></div>
         </div>
-        <script>
-            window.addEventListener('load', function(){
-                new Glider(document.querySelector('#categoryTop .subcats .glider'), { 
-                    slidesToShow: 5,
-                    slidesToScroll: 1,
-                    draggable: true,
-                    scrollLock: true,
-                    dots: '#categoryTop .subcats .dots',
-                    responsive: [
-                        {
-                            breakpoint: 1024,
-                            settings: {
-                                slidesToShow: 'auto',
-                                itemWidth: 180,
-                                exactWidth: 150,
+
+        {% if taxon is defined and taxon.enabledChildren %}
+        <div class="subcats">
+            <div class="glider-contain">
+                <div class="glider">
+                    {% for child in taxon.enabledChildren %}
+                    <div>
+                        <a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}">
+                        {% if child.images and child.images|length %}<img src="{{ child.images.first.path|imagine_filter(filter|default('chullanka_category')) }}" alt="{{ child.name }}">{% endif %}
+                        {{ child.name }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div role="tablist" class="dots"></div>
+            </div>
+            <script>
+                window.addEventListener('load', function(){
+                    new Glider(document.querySelector('#categoryTop .subcats .glider'), { 
+                        slidesToShow: 5,
+                        slidesToScroll: 1,
+                        draggable: true,
+                        scrollLock: true,
+                        dots: '#categoryTop .subcats .dots',
+                        responsive: [
+                            {
+                                breakpoint: 1024,
+                                settings: {
+                                    slidesToShow: 'auto',
+                                    itemWidth: 180,
+                                    exactWidth: 150,
+                                }
                             }
-                        }
-                    ]
+                        ]
+                    });
                 });
-            });
-        </script>
-        
+            </script>
+            
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 
 {% if taxon.topProducts %}
