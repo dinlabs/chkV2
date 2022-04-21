@@ -30,6 +30,7 @@
 {% endif %}
 
 <div id="categoryTop"{% if _bgCat %} style="background-image:url({{ _bgCat }});"{% endif %}>
+    {% if _bgCat %}<img src="{{ asset('build/chullanka/images/mask_taxon_top.png', 'chullanka') }}" alt="" class="mask">{% endif %}
     <div class="autoMargin">
         {{ sylius_template_event('sylius.shop.taxon.header', {'taxon': taxon}) }}
     </div>

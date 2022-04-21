@@ -36,6 +36,7 @@ import './img/logo_french_ent.png';
 import './img/logo-chullanka.png';
 import './img/logo-chullanka.svg';
 import './img/mask_prodlist.png';
+import './img/mask_taxon_top.png';
 import './img/notre-aventure.png';
 import './img/notre-aventure-mb.png';
 import './img/picto-3x.png';
