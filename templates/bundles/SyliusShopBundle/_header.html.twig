@@ -1,31 +1,31 @@
 {{ render(url('sylius_shop_partial_channel_menu_taxon_index', {'template': '@SyliusShop/Layout/_navigation.html.twig'})) }}
 <div class="autoMargin inside">
-    <button id="openMainMenu"><svg class="svg-icon" role="img" style="width:29px; height:30px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-menuburger') }}"/></svg></button>
+    <button id="openMainMenu"><svg class="svg-icon" role="img" style="width:29px; height:30px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-menuburger"/></svg></button>
 
 
 {% if app.request.get('_route') == 'sylius_shop_homepage' %}
     <h1 id="logo">
-        <img src="{{ asset('chullanka/assets/img/logo-chullanka.svg') }}" alt="Logo Chullanka">
+        <img src="{{ asset('build/chullanka/images/logo-chullanka.svg', 'chullanka') }}" alt="Logo Chullanka">
         <span>Matériel de sport outdoor</span>
     </h1>
 {% else %}
     <a href="{{ path('sylius_shop_homepage') }}" id="logo">
-        <img src="{{ asset('chullanka/assets/img/logo-chullanka.svg') }}" alt="Logo Chullanka">
+        <img src="{{ asset('build/chullanka/images/logo-chullanka.svg', 'chullanka') }}" alt="Logo Chullanka">
     </a>
 {% endif %}
     <form id="searchBox">
-        <label for="searchField"><svg class="svg-icon" role="img" style="width:27px; height:27px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-rechercher') }}"/></svg><svg class="svg-icon-close" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close') }}"/></svg></label>
+        <label for="searchField"><svg class="svg-icon" role="img" style="width:27px; height:27px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-rechercher"/></svg><svg class="svg-icon-close" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close"/></svg></label>
         <input type="text" id="searchField" placeholder="Recherchez un sport, un produit, un service...">
     </form>
     <div id="shopLinks">
-        <a href="{{ path('store_index') }}" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-geoloc') }}"/></svg>Trouver un magasin</a>
+        <a href="{{ path('store_index') }}" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-geoloc"/></svg>Trouver un magasin</a>
 
-        <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg><span></span></a>
+        <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-moncompte"/></svg><span></span></a>
         {#% if is_granted('ROLE_USER') %}
         {% else %}
-            <a href="{{ path('sylius_shop_login') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-moncompte') }}"/></svg></a>
+            <a href="{{ path('sylius_shop_login') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-moncompte"/></svg></a>
         {% endif %#}
         {#{ render(url('sylius_shop_partial_cart_summary', {'template': '@SyliusShop/Cart/_widget.html.twig'})) }#}
-        <a href="{{ path('sylius_shop_cart_summary') }}" id="cartLink" class="forNotice"><svg class="svg-icon" role="img" style="width:28.569px; height:24.87px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-panier') }}"/></svg><span></span></a>
+        <a href="{{ path('sylius_shop_cart_summary') }}" id="cartLink" class="forNotice"><svg class="svg-icon" role="img" style="width:28.569px; height:24.87px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-panier"/></svg><span></span></a>
     </div>
 </div>

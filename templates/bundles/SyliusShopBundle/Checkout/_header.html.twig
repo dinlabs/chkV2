@@ -1,14 +1,14 @@
 <header>
     <div class="autoMargin">
         <a href="{{ path('sylius_shop_homepage') }}" id="logo">
-            <img src="{{ asset('chullanka/assets/img/logo-chullanka.svg') }}" alt="Logo Chullanka">
+            <img src="{{ asset('build/chullanka/images/logo-chullanka.svg', 'chullanka') }}" alt="Logo Chullanka">
         </a>
         
         {#
         {% if app.request.get('_route') == 'sylius_shop_cart_summary' %}
-        <a href="{{ path('sylius_shop_homepage') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche-back') }}"/></svg> <span>Continuer mes achats</span></a>
+        <a href="{{ path('sylius_shop_homepage') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-fleche-back"/></svg> <span>Continuer mes achats</span></a>
         {% else %}
-        <a href="{{ path('sylius_shop_cart_summary') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-fleche-back') }}"/></svg> <span>Récapitulatif de mon panier</span></a>
+        <a href="{{ path('sylius_shop_cart_summary') }}" class="btnRetour"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-fleche-back"/></svg> <span>Récapitulatif de mon panier</span></a>
         {% endif %}
 
         {% if cart is defined %}{% set order = cart %}{% endif %}

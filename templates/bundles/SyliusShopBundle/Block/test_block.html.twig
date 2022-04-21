@@ -10,9 +10,9 @@
             <div class="head">
                 <div class="pichulli">
                     <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="60" height="60" alt="Chulli">
-                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
                 </div>
-                <img src="{{ asset('chullanka/assets/img/ico-guillemets.svg') }}" style="width:42px; height:38px">
+                <img src="{{ asset('build/chullanka/images/ico-guillemets.svg', 'chullanka') }}" style="width:42px; height:38px">
             </div>
             {{ bitbag_cms_render_content(block) }}
             <div class="signature">

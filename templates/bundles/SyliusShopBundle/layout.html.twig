@@ -14,9 +14,10 @@
 
     {% block stylesheets %}
         {#{ sylius_template_event('sylius.shop.layout.stylesheets') }#}
-        {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/shop.style.css'} %}
+        {#% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/shop.style.css'} %}
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/glider.min.css'} %}
-        {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/styles.css'} %}
+        {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'chullanka/assets/css/styles.css'} %#}
+        {{ encore_entry_link_tags('chullanka-entry', null, 'chullanka') }}
     {% endblock %}
 
     <!-- TrustBox script -->
@@ -80,8 +81,10 @@
 
 {% block javascripts %}
     {#{ sylius_template_event('sylius.shop.layout.javascripts') }#}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %}
+    {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %#}
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': asset('build/chullanka/chullanka-entry.js', 'chullanka')} %}
+    {#{ encore_entry_script_tags('chullanka-entry', null, 'chullanka') }#}
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliusmailchimpplugin/bitbag-mailchimp-plugin-newsletter.js'} %}
 
     {#
@@ -100,27 +103,39 @@
     </script>
     #}
 
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %}
+    {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %#}
     <script>
     $(document).ready(function() {
-        jQuery.ajax({
-            url: '{{ path('chk_ajax_profilinfos') }}',
-            dataType: 'json',
-        }).done(function(data) {
-            if(data)
-            {
-                var _customerLink = document.querySelector('#customerLink span');
-                _customerLink.innerText = data.notifications;
-                _customerLink.style.opacity = (data.notifications > 0) ? 1 : 0;
-                var _customerLinkMob = document.querySelector('#navBottom .forNotice span');
-                _customerLinkMob.innerText = data.notifications;
-                _customerLinkMob.style.opacity = (data.notifications > 0) ? 1 : 0;
+        if(document.querySelector('#cartLink'))
+        {
+            jQuery.ajax({
+                url: '{{ path('chk_ajax_profilinfos') }}',
+                dataType: 'json',
+            }).done(function(data) {
+                if(data)
+                {
+                    var _customerLink = document.querySelector('#customerLink span');
+                    if(_customerLink)
+                    {
+                        _customerLink.innerText = data.notifications;
+                        _customerLink.style.opacity = (data.notifications > 0) ? 1 : 0;
+                    }
+                    var _customerLinkMob = document.querySelector('#navBottom .forNotice span');
+                    if(_customerLinkMob)
+                    {
+                        _customerLinkMob.innerText = data.notifications;
+                        _customerLinkMob.style.opacity = (data.notifications > 0) ? 1 : 0;
+                    }
 
-                var _cartLink = document.querySelector('#cartLink span');
-                _cartLink.innerText = data.cart_items;
-                _cartLink.style.opacity = (data.cart_items > 0) ? 1 : 0;
-            }
-        });
+                    var _cartLink = document.querySelector('#cartLink span');
+                    if(_cartLink)
+                    {
+                        _cartLink.innerText = data.cart_items;
+                        _cartLink.style.opacity = (data.cart_items > 0) ? 1 : 0;
+                    }
+                }
+            });
+        }
 
         $('body').on('submit', '.getAdvice form', function (e) {
             e.preventDefault();

@@ -8,7 +8,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link rel="stylesheet" type="text/css" href="https://widget.upstreampay.com/2.0.2/configs/default.css">
+<link rel="stylesheet" type="text/css" href="https://widget.upstreampay.com/2.4.0/configs/default.css">
 {% endblock %}
 
 {% block content %}
@@ -42,6 +42,7 @@
         {{ form_end(form, {'render_rest': false}) }}
 
         {% if paymethod == 'UPSTREAM_PAY' %}
+            <br>
             {{ render(url('chk_upstream_payment_widget')) }}
         {% endif %}
     </div>

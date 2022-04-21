@@ -35,7 +35,7 @@
 <div id="otherProducts" class="prodList">
     <div class="background"{% if complementary.background %} style="background-image:url({{ asset('upload/complementary/backgrounds/' ~ complementary.background) }});"{% endif %}>
         <div class="autoMargin">
-            <img src="{{ asset('chullanka/assets/img/mask_prodlist.png') }}" alt="">
+            <img src="{{ asset('build/chullanka/images/mask_prodlist.png', 'chullanka') }}" alt="">
         </div>
     </div>
     <div class="autoMargin">
@@ -69,7 +69,7 @@
         {% set chulli = product.chulltest.chulli %}
         <div class="pichulli">
             <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
-            <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+            <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
         </div>
         {% endif %}
         <h2>Découvrez le test complet</h2>
@@ -125,7 +125,7 @@
                         <span>Rapport qualité prix</span>
                         <ul>
                             {% for n in 1..5  %}
-                            <li class="{{ (n <= product.chulltest.note) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#notation') }}"/></svg></li>
+                            <li class="{{ (n <= product.chulltest.note) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg></li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -175,7 +175,7 @@
             <ul class="faqs">
                 {% for faq in product.enabledFaqs|slice(0, 2) %}
                 <li>
-                    <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-question') }}"/></svg>
+                    <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-question"/></svg>
                     <strong>{{ faq.question }}</strong>
                     <div>{{ faq.answer }}</div>
                 </li>
@@ -189,7 +189,7 @@
         <h2 class="clientRating">
             <ul class="rating">
                 {% for n in 1..5  %}
-                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-star') }}"/></svg></li>
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-star"/></svg></li>
                 {% endfor %}
             </ul>
         </h2>
@@ -207,7 +207,7 @@
 
 <div id="panierPop" class="popin hidden" data-url="{{ path('chk_ajax_popaddtocart') }}">
     <div class="popinside">
-        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg></button>
+        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg></button>
         <h2 class="popin-title">Ajouter au panier</h2>
         <div class="section"></div>
     </div>
@@ -217,8 +217,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('chullanka/assets/js/availabilities.js') }}"></script>
-
 <script type="text/javascript">
     lightbox.option({
         'albumLabel': '{{ 'sylius.lightbox.image_album_label'|trans|escape('js') }}'

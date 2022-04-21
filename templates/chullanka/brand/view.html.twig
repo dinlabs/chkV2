@@ -20,7 +20,7 @@
 
 <div id="brandTop"{% if brand.background %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.background) }});"{% endif %}>
     <div class="autoMargin">
-        <ul id="breadcrumb" class="autoMargin">
+        <ul id="breadcrumb">
             <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
             <li><a href="{{ path('brand_index') }}">{{ 'app.front.brands'|trans }}</a></li>
             <li>{{ brand.name }}</li>
@@ -115,8 +115,6 @@
                         
                         {% set _count = _count + 1 %}
                     {% endfor %}
-                    {# Fake pour alignement Flex ! #}
-                    {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 </div>
 
                 {{ pagination.simple(products) }}
@@ -125,17 +123,11 @@
         </div>
         {% else %}
             {# pagination en AJAX #}
-                {% if products|length > 0 %}
-                {% set _count = 0 %}
-                {% for product in products %}
-                    {% include '@SyliusShop/Product/_box.html.twig' %}
-                    {% set _count = _count + 1 %}
-                {% endfor %}
-                {# Fake pour alignement Flex ! #}
-                {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
-                {% endif %}
-                {{ pagination.simple(products) }}
-            {% endif %}
+            {% for product in products %}
+                {% include '@SyliusShop/Product/_box.html.twig' %}
+            {% endfor %}
+            {{ pagination.simple(products) }}
+        {% endif %}
 
 {% if app.request.xmlHttpRequest == false %}
     </div>

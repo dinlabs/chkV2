@@ -44,4 +44,32 @@ adminConfig.resolve.alias['sylius/bundle'] = syliusBundles;
 adminConfig.externals = Object.assign({}, adminConfig.externals, { window: 'window', document: 'document' });
 adminConfig.name = 'admin';
 
-module.exports = [shopConfig, adminConfig];
+//module.exports = [shopConfig, adminConfig];
+
+
+Encore.reset();
+
+// Chullanka config
+Encore
+  .setOutputPath('public/build/chullanka/')
+  .setPublicPath('/build/chullanka')
+  .addEntry('chullanka-entry', './assets/chullanka/entry.js')
+  .copyFiles({
+    from: './assets/chullanka/img/emails',
+    // optional target path, relative to the output dir
+    to: 'images/emails/[path][name].[ext]',
+  })
+  .disableSingleRuntimeChunk()
+  .cleanupOutputBeforeBuild()
+  .enableVersioning(Encore.isProduction())
+
+const chullankaConfig = Encore.getWebpackConfig();
+chullankaConfig.resolve.alias['sylius/ui'] = uiBundleScripts;
+chullankaConfig.resolve.alias['sylius/ui-resources'] = uiBundleResources;
+chullankaConfig.resolve.alias['sylius/bundle'] = syliusBundles;
+//chullankaConfig.externals = Object.assign({}, chullankaConfig.externals, { window: 'window', document: 'document' });
+chullankaConfig.name = 'chullanka';
+
+module.exports = [shopConfig, adminConfig, chullankaConfig];
+
+//run: yarn encore dev

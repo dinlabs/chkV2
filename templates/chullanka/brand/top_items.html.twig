@@ -1,8 +1,6 @@
 {% if brands|length %}
 <div id="topBrands">
-    <div class="autoMargin">
-        <h2>{{ _title is defined ? _title : 'Nos marques au top' }}</h2>
-    </div>
+    <h2 class="autoMargin">{{ _title is defined ? _title : 'Nos marques au top' }}</h2>
     <div class="glider-contain">
         <div class="glider">
             {% for brand in brands %}

@@ -3,9 +3,13 @@
     <h2 class="autoMargin">D'autres vont aussi voir</h2>
     <div class="glider-contain">
         <div class="glider">
-            {% for block in blocks %}
+            <div><a href="#"><img alt="" src="https://chullankav2.dinlabs.fr/media/image/e5/57/00378e2c5afc4337f553915b9e69.png" style="width: 350px; height: 352px;" /></a></div>
+            <div><img alt="" src="https://chullankav2.dinlabs.fr/media/image/a2/03/7957f1969379596461010337335b.png" style="width: 353px; height: 352px;" /></div>
+            <div><img alt="" src="https://chullankav2.dinlabs.fr/media/image/a2/03/7957f1969379596461010337335b.png" style="width: 353px; height: 352px;" /></div>
+            <div><img alt="" src="https://chullankav2.dinlabs.fr/media/image/67/2e/86409148a8db6491301e00a31d04.png" style="width: 169px; height: 352px;" /></div>
+            {#% for block in blocks %}
                 {{ bitbag_cms_render_content(block) }}
-            {% endfor %}
+            {% endfor %#}
         </div>
         <div role="tablist" class="dots"></div>
     </div>
@@ -33,7 +37,7 @@
                 ]
             });
         });
-        var _specialGlider = function(glider) {
+        /*var _specialGlider = function(glider) {
             var _elmtWidth = _totalWidth = 0;
             glider.track.childNodes.forEach(function(gliderSlide) {
                 _elmtWidth = gliderSlide.querySelector('.big') ? 360 : 180;
@@ -42,7 +46,7 @@
             });
             glider.track.style.width = _totalWidth + 'px';
             glider.trackWidth = _totalWidth;
-        }
+        }*/
     </script>
 </div>
 {% endif %}

@@ -18,9 +18,6 @@
                         $('#js-loader').removeClass('loading');
                     },
                     success(response) {
-                        $('.fakeProduct').each(function(i,o) {
-                            $(o).remove();
-                        })
                         $('#products').append(response);
 
                         // màj lien "voir plus"

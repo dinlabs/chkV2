@@ -19,11 +19,11 @@
     <div class="autoMargin">
         <h2>On se retrouve sur les réseaux ?</h2>
         <ul class="links">
-            <li><a href="https://www.instagram.com/chullanka_outdoor_sports/" target="_blank" title="Instagram"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-instagram') }}"/></svg></a></li>
-            <li><a href="https://twitter.com/chullanka" target="_blank" title="Twitter"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-twitter') }}"/></svg></a></li>
-            <li><a href="https://www.facebook.com/chullanka" target="_blank" title="Facebook"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-facebook') }}"/></svg></a></li>
-            <li><a href="https://www.youtube.com/c/CHULLANKATV" target="_blank" title="YouTube"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-youtube') }}"/></svg></a></li>
-            <li><a href="https://www.linkedin.com/company/chullanka/" target="_blank" title="LinkedIn"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-linkedin') }}"/></svg></a></li>
+            <li><a href="https://www.instagram.com/chullanka_outdoor_sports/" target="_blank" title="Instagram"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-instagram"/></svg></a></li>
+            <li><a href="https://twitter.com/chullanka" target="_blank" title="Twitter"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-twitter"/></svg></a></li>
+            <li><a href="https://www.facebook.com/chullanka" target="_blank" title="Facebook"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-facebook"/></svg></a></li>
+            <li><a href="https://www.youtube.com/c/CHULLANKATV" target="_blank" title="YouTube"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-youtube"/></svg></a></li>
+            <li><a href="https://www.linkedin.com/company/chullanka/" target="_blank" title="LinkedIn"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-linkedin"/></svg></a></li>
         </ul>
     </div>
 </div>
@@ -45,16 +45,16 @@
 
     <div id="ourAdventure">
         <picture>
-            <source media="(max-width: 944px)" srcset="{{ asset('chullanka/assets/img/notre-aventure-mb.png') }}">
-            <source media="(min-width: 945px)" srcset="{{ asset('chullanka/assets/img/notre-aventure.png') }}">
-            <img src="{{ asset('chullanka/assets/img/notre-aventure.png') }}" alt="Notre aventure">
+            <source media="(max-width: 944px)" srcset="{{ asset('build/chullanka/images/notre-aventure-mb.png', 'chullanka') }}">
+            <source media="(min-width: 945px)" srcset="{{ asset('build/chullanka/images/notre-aventure.png', 'chullanka') }}">
+            <img src="{{ asset('build/chullanka/images/notre-aventure.png', 'chullanka') }}" alt="Notre aventure">
         </picture>
     </div>
     {#{ sylius_template_event('sylius.shop.layout.footer') }#}
 </footer>
 
 <div id="feedback">
-    <img src="{{ asset('chullanka/assets/img/chulli_1.jpg') }}" alt="">
+    <img src="{{ asset('build/chullanka/images/chulli_1.jpg', 'chullanka') }}" alt="">
     <h2>Et cette page, elle vous plaît ?</h2>
     <p>Faites comme si vous étiez en magasin :)</p>
     <a href="#">Dites-nous franchement ce qui cloche</a>

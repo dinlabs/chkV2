@@ -31,13 +31,13 @@
     <div id="searchWrapper">
         <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
             <h2>
-                <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
+                <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-affiner"/></svg>
                 {{ 'app.front.category.filter.affiner'|trans }}
             </h2>
             {% if store.taxons|length %}
             <ul class="subCats">
                 {% for child in store.taxons %}
-                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg> {{ child.name }}</a></li>
+                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
                 {% endfor %}
             </ul>
             <br>
@@ -51,24 +51,15 @@
             {% if store.otherProducts|length > 0 %}
                 <h2>Produits du magasin {{ store.name }}</h2>
                 <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ store.otherProducts|length }}">
-                    {% set _count = 0 %}
                     {% for product in store.otherProducts %}
                         {% include '@SyliusShop/Product/_box.html.twig' %}
-                        
-                        {#% if _count == 1 %}
-                        {% include 'prodlist/encartPromo.html.twig' %}
-                        {% endif %#}
-                        
-                        {% set _count = _count + 1 %}
                     {% endfor %}
-                    {# Fake pour alignement Flex ! #}
-                    {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 </div>
             {% endif %}
 
             <div id="content">
 
-                <div class="details" style="background-image:url({{ asset('chullanka/assets/img/bg-category.jpg') }})">
+                <div class="details" style="background-image:url({{ asset('build/chullanka/images/bg-category.jpg', 'chullanka') }})">
                     <div class="insert">
                         <h2>{{ store.name }}</h2>
                         
@@ -104,7 +95,7 @@
                         {% if store.director and store.director.avatar %}
                         <div class="pichulli">
                             <img src="{{ asset('upload/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director }}">
-                            <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                            <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
                         </div>
                         {% endif %}
                         <strong>Le mot du directeur</strong><br>

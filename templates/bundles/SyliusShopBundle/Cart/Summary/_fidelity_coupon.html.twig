@@ -8,7 +8,7 @@
             <p><strong>Avec vos {{ customer.chullpoints }} Chullpoints</strong></p>
             <div class="inner">
                 <div class="chullpts">
-                    <svg class="svg-icon" role="img" style="width:87.333px; height:36.958px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#chullpoints') }}"/></svg>
+                    <svg class="svg-icon" role="img" style="width:87.333px; height:36.958px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#chullpoints"/></svg>
                     <span>{{ customer.reduction ~ '€' }}</span>
                 </div>
                 <a href="{{ path('chk_ajax_chullpoints') }}">{% if cart.chullpoints %}Ne plus utiliser mes points{% else %}Utiliser mes points pour ce panier{% endif %}</a>

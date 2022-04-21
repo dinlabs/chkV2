@@ -4,7 +4,7 @@
     <ul class="faqs">
         {% for faq in product.enabledFaqs|slice(0, 2) %}
         <li>
-            <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-question') }}"/></svg>
+            <svg class="svg-icon" role="img" style="width:18.461px; height:31.623px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-question"/></svg>
             <strong>{{ faq.question }}</strong>
             <div>{{ faq.answer }}</div>
         </li>

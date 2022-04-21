@@ -2,23 +2,23 @@
 
 <div class="openFilters">
     <div class="pichulli">
-        <img src="{{ asset('chullanka/assets/img/chulli_4.jpg') }}" width="60" height="60" alt="Chulli">
-        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+        <img src="{{ asset('build/chullanka/images/chulli_4.jpg', 'chullanka') }}" width="60" height="60" alt="Chulli">
+        <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
     </div>
     <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
-    <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
+    <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-affiner"/></svg>
 </div>
 <div class="mobileFilters hidden">
     <h2>
-        <svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-affiner') }}"/></svg>
+        <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-affiner"/></svg>
         {{ 'app.front.category.filter.affiner'|trans }}
-        <svg class="svg-icon-close" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-close-alt') }}"/></svg>
+        <svg class="svg-icon-close" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg>
     </h2>
     <div class="scroller">
         {% if taxon.enabledChildren %}
         <ul class="subCats">
             {% for child in taxon.enabledChildren %}
-            <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-caret-right') }}"/></svg> {{ child.name }}</a></li>
+            <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
             {% endfor %}
         </ul>
         {% endif %}
@@ -26,8 +26,8 @@
         <div class="filterWrapper">
             <div class="filterInfo">
                 <div class="pichulli">
-                    <img src="{{ asset('chullanka/assets/img/chulli_4.jpg') }}" width="60" height="60" alt="Chulli">
-                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                    <img src="{{ asset('build/chullanka/images/chulli_4.jpg', 'chullanka') }}" width="60" height="60" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:60px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
                 </div>
                 <p><strong>{{ 'app.front.category.filter.affiner_recherche'|trans }}</strong> {{ 'app.front.category.filter.affiner_recherche_suite'|trans }}</p>
             </div>

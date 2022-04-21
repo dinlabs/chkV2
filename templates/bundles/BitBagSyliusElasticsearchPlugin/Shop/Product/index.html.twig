@@ -81,8 +81,6 @@
                             
                             {% set _count = _count + 1 %}
                         {% endfor %}
-                        {# Fake pour alignement Flex ! #}
-                        {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                     </div>
 
                     {{ pagination.simple(products) }}
@@ -98,8 +96,6 @@
                     {% include '@SyliusShop/Product/_box.html.twig' %}
                     {% set _count = _count + 1 %}
                 {% endfor %}
-                {# Fake pour alignement Flex ! #}
-                {% for r in 1..(4 - (_count % 4)) %}<span class="fakeProduct" style="width:155px;"></span>{% endfor %}
                 {% endif %}
                 {{ pagination.simple(products) }}
             {% endif %}

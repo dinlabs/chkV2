@@ -9,18 +9,12 @@
 
 {% if resources.data|length > 0 %}
     <div class="list" id="products" {{ sylius_test_html_attribute('products') }}>
-        {% set _count = 0 %}
         {% for product in resources.data %}
             {% include '@SyliusShop/Product/_box.html.twig' %}
-
             {#% if _count == 1 %}
             {% include 'prodlist/encartPromo.html.twig' %}
             {% endif %#}
-            
-            {% set _count = _count + 1 %}
         {% endfor %}
-        {# Fake pour alignement Flex ! #}
-        {% for r in 1..(4 - (_count % 4)) %}<span style="width:155px;"></span>{% endfor %}
     </div>
     
     {{ sylius_template_event('sylius.shop.product.index.before_pagination', {'products': resources.data}) }}

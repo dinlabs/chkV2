@@ -2,8 +2,7 @@
 {% set variant = product|sylius_resolve_variant %}
 
 <div class="prodInList">
-    <svg class="svg-bg" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#bg-prodinlist')) }}"/></svg>
-    <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#notation')) }}"/></svg>
+    <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#notation"/></svg>
     <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
         {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
@@ -16,7 +15,7 @@
         <div class="clientRating">
             <ul class="rating">
                 {% for n in 1..5  %}
-                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ absolute_url(asset('chullanka/assets/img/sprites.svg#ico-star')) }}"/></svg></li>
+                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#ico-star"/></svg></li>
                 {% endfor %}
             </ul>
         </div>

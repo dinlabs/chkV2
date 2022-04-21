@@ -1,13 +1,13 @@
 <div id="favoriteStores" class="insert">
     <div class="entete">
         <h2>Votre magasin favori</h2>
-        <img src="{{ asset('chullanka/assets/img/ico-mag-chull.png') }}" alt="">
+        <img src="{{ asset('build/chullanka/images/ico-mag-chull.png', 'chullanka') }}" alt="">
     </div>
 
     {% if customer.store %}
         {% set store = customer.store %}
         <ul>
-            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ store.name }}</li>
+            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-love"/></svg> {{ store.name }}</li>
         </ul>
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Modifier</a>
 
@@ -37,7 +37,7 @@
     {% else %}
         <ul>
         {% for store in customer.favoriteStores %}
-            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#ico-love') }}"/></svg> {{ store.name }}</li>
+            <li><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-love"/></svg> {{ store.name }}</li>
         {% endfor %}
         </ul>
         <a href="{{ path('store_manage_favorites') }}" class="btn primary">Ajouter/Modifier</a>

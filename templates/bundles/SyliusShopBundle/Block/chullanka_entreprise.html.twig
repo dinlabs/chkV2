@@ -6,7 +6,7 @@
             {% for chulli in block.chullis %}
             <span class="pichulli">
                 <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="48" height="48" alt="Chulli - {{ chulli }}">
-                <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('chullanka/assets/img/sprites.svg#over-chulli') }}"/></svg>
+                <svg class="svg-icon" role="img" style="width:48px; height:48px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
             </span>
             {% endfor %}
         </div>
