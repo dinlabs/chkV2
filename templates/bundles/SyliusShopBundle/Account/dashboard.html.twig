@@ -91,21 +91,19 @@
 {% block javascripts %}
 {{ parent() }}
 <script>
-    window.addEventListener('load', function(){
-        new Glider(document.querySelector('#welcomePop .glider'), { 
-            itemWidth: 340,
-            slidesToShow: 1,
-            slidesToScroll : 1,
-            duration: 2,
-            draggable: true,
-            scrollLock: true,
-            dots: '#welcomePop .dots',
-        });
-    });
-
     $(document).ready(function() {
         if($('#welcomePop').length)
         {
+            new Glider(document.querySelector('#welcomePop .glider'), { 
+                itemWidth: 340,
+                slidesToShow: 1,
+                slidesToScroll : 1,
+                duration: 2,
+                draggable: true,
+                scrollLock: true,
+                dots: '#welcomePop .dots',
+            });
+
             $('#welcomePop').removeClass('hidden');
 
             $('.actionBtns .closePop').on('click', function(e) {
