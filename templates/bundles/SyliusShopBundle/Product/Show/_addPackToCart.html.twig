@@ -44,7 +44,7 @@
                                         <svg class="svg-picto" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg>
                                         <div class="insert">
                                             <div class="picture">
-                                                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
+                                                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': choice} %}
                                             </div>
                                             <div class="infos">
                                                 <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>

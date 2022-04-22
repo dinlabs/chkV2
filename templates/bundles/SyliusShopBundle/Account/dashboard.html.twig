@@ -23,4 +23,103 @@
     </div>
     {% endblock %}
 </div>
+
+{% if true %}
+<div id="welcomePop" class="popin hidden">
+    <div class="popinside">
+        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg></button>
+        <h2 class="popin-title">Bienvenue</h2>
+        <div class="section">
+            <div class="entete">
+                <strong>{{ customer.fullName }},</strong>
+                <img src="{{ asset('build/chullanka/images/ico-montagne-chull.png', 'chullanka') }}" alt="">
+            </div>
+            <div class="intro">
+                <div class="pichulli">
+                    <img src="{{ asset('build/chullanka/images/chulli_4.jpg', 'chullanka') }}" width="80" height="80" alt="Chulli">
+                    <svg class="svg-icon" role="img" style="width:80px; height:80px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
+                </div>
+                <p><strong>Ici c'est votre espace personnel. On vous fait le tour du propriétaire ?</strong></p>
+            </div>
+
+            <div class="glider-contain">
+                <div class="glider">
+                    <section>
+                        <div class="inside">
+                            <strong>Vous pouvez définir votre magasin favori</strong>
+                            <p>Pour profiter de toutes ses exclusivités et notamment ses ventes privées, ses journées de démo, ou les rencontres avec les associations !</p>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="inside">
+                            <strong>Vous pouvez définir vos sports favoris</strong>
+                            <p>Pour profiter des conseils de nos experts sur vos sports favoris avec un contact direct !</p>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="inside">
+                            <strong>Vos points et avantages</strong>
+                            <p>Pour les transformer en cadeaux ou en réduction sur tous vos achats.</p>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="inside">
+                            <strong>Vos produits favoris</strong>
+                            <p>Pour oragnaniser vos listes d'achats partagées (pour organiser un trail, une rando, etc.) ou pour un achat partagé (en cadeau d'anniv, de Noël).</p>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="inside">
+                            <strong>Retrouves tous tes achats</strong>
+                            <p>Et profite des services liés aux produits, suivis de commandes, factures, retours produit, réparation et bien plus...</p>
+                        </div
+                    </section>
+                </div>
+                <div role="tablist" class="dots"></div>
+            </div>
+
+            <div class="actionBtns">
+                <button class="closePop">Passer</button>
+                <button class="btn primary continue">Continuer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    window.addEventListener('load', function(){
+        new Glider(document.querySelector('#welcomePop .glider'), { 
+            itemWidth: 340,
+            slidesToShow: 1,
+            slidesToScroll : 1,
+            duration: 2,
+            draggable: true,
+            scrollLock: true,
+            dots: '#welcomePop .dots',
+        });
+    });
+
+    $(document).ready(function() {
+        if($('#welcomePop').length)
+        {
+            $('#welcomePop').removeClass('hidden');
+
+            $('.actionBtns .closePop').on('click', function(e) {
+                e.preventDefault();
+                //$('#welcomePop .closePopin').trigger('click');
+                $('#welcomePop').addClass('hidden');
+            });
+            $('.actionBtns .continue').on('click', function(e) {
+                e.preventDefault();
+                var $next = $('#welcomePop .dots .active').next();
+                if($next.hasClass('glider-dot')) $next.trigger('click');
+                else $('#welcomePop').addClass('hidden');
+            });
+        }
+    });
+</script>
 {% endblock %}
