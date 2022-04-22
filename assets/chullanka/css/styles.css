@@ -1203,7 +1203,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #shopNews .insert { width:80vw; margin:auto; }
     #shopNews ul { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; }
     
-    #categoryTop #category, #caregoryTop ul.ctaCats { max-width:50%; }
+    #categoryTop #category, #categoryTop ul.ctaCats { max-width:50%; }
 
     #categoryTop .ctaCats { margin:20px -10px 30px; }
 
