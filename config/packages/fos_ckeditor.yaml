@@ -5,9 +5,18 @@ twig:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
 
 fos_ck_editor:
+    configs:
+        bitbag_sylius_cms_plugin:
+            extraPlugins:
+                - 'emoji'
+    plugins:
+        emoji:
+            path: '/bundles/fosckeditor/plugins/emoji/'
+            filename: 'plugin.js'
     toolbars:
         configs:
             bitbag_sylius_cms_plugin:
                 - '@full.colors'
         items:
+            standard.insert: [ 'Smiley', 'EmojiPanel' ]
             full.colors: [ 'TextColor' ]

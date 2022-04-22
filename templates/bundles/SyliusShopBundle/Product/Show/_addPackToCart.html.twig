@@ -42,45 +42,47 @@
                                     {% set choiceVariant = choice|sylius_resolve_variant %}
                                     <label for="choice_{{ choice.id }}" class="prodInList">
                                         <svg class="svg-picto" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg>
-                                        <div class="picture">
-                                            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
-                                        </div>
-                                        <div class="infos">
-                                            <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
-                                            {% if choice.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
-                                            <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
-                                            {% if choice.averageRating %}
-                                            <div class="clientRating">
-                                                <ul class="rating">
-                                                    {% for n in 1..5  %}
-                                                    <li class="{{ (n <= choice.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-star"/></svg></li>
-                                                    {% endfor %}
-                                                </ul>
+                                        <div class="insert">
+                                            <div class="picture">
+                                                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
+                                            </div>
+                                            <div class="infos">
+                                                <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
+                                                {% if choice.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
+                                                <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
+                                                {% if choice.averageRating %}
+                                                <div class="clientRating">
+                                                    <ul class="rating">
+                                                        {% for n in 1..5  %}
+                                                        <li class="{{ (n <= choice.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-star"/></svg></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            {% if choice.simple %}
+                                            <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
+                                            {% else %}
+                                            <div class="product-option-data hidden">
+                                                <div class="pack-conf-products">
+                                                    <label>Titre de l'option</label>
+                                                    <select data-name="sylius_add_to_cart[packItem][{{ _countElement }}]">
+                                                        <option value="">Choisir</option>
+                                                        {% for choiceVariant in choice.variants %}
+                                                        {% set _label = choiceVariant.name %}
+                                                        {% if choiceVariant.optionValues %}
+                                                            {% for option in choiceVariant.optionValues %}
+                                                            {% set _label = option.value %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
                                             </div>
                                             {% endif %}
                                         </div>
-
-                                        {% if choice.simple %}
-                                        <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
-                                        {% else %}
-                                        <div class="product-option-data hidden">
-                                            <div class="pack-conf-products">
-                                                <label>Titre de l'option</label>
-                                                <select data-name="sylius_add_to_cart[packItem][{{ _countElement }}]">
-                                                    <option value="">Choisir</option>
-                                                    {% for choiceVariant in choice.variants %}
-                                                    {% set _label = choiceVariant.name %}
-                                                    {% if choiceVariant.optionValues %}
-                                                        {% for option in choiceVariant.optionValues %}
-                                                        {% set _label = option.value %}
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                    <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        {% endif %}
                                     </label>
                                 </div>
                             {% endfor %}

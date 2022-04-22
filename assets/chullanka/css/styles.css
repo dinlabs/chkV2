@@ -98,7 +98,7 @@ ul.list li::before { content:''; position:absolute; left:0; top:5px; background:
 .getAdvice .btnCall { width:calc(100% - 20px); margin-bottom:2em; }
 .getAdvice .btnCall + p { font-size:.733em; }
 
-ul.ctaCats { display:flex; }
+ul.ctaCats { display:flex; flex-wrap:wrap; }
 ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); background:var(--bg0); border-radius:5px; margin:10px; padding:.5em; color:inherit; font-weight:700; text-decoration:none; }
 
 .price del { display:block; }
@@ -122,11 +122,12 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodList h2 { width:75%; text-align:initial; }
 .prodList .list { display:grid; grid-template-columns:1fr 1fr; text-align:initial; padding-top:90px; }
 .prodList .list .header { grid-column:1 / span 2; width:335px; padding-top:80px; color:var(--bg0); }
-.prodInList:not(.noBg) { position:relative; background:url(../img/bg-prodinlist.png) no-repeat center 14px / cover; width:155px; min-height:327px; margin-bottom:30px; padding:17px 2px 0; }
+.prodInList:not(.noBg) { position:relative; display:grid; background:url(../img/bg-prodinlist.svg) no-repeat center 6px / cover; width:155px; min-height:327px; margin-bottom:30px; padding:16px 3px 0; }
 /*.prodInList .svg-bg { position:absolute; left:0; top:0; width:100%; min-height:327px; stroke:var(--primary); fill:var(--primary); z-index:0; }*/
 .prodInList .svg-picto { position:absolute; top:0; right:8px; width:40px; height:20px; stroke:var(--primary); fill:var(--primary); z-index:2; }
+.prodInList .insert { padding:0; height:100%; border-radius:5px 5px 0 0; }
 .prodInList .picture { position:relative; display:block; z-index:1; color:inherit; }
-.prodInList .picture img { display:block; width:100%; }
+.prodInList .picture img { display:block; width:100%; border-radius:5px 5px 0 0; }
 
 .prodInList .infos { position:relative; padding:.5em; text-align:initial; z-index:1; }
 .prodInList .price { text-align:right; }
@@ -415,8 +416,6 @@ header + #breadcrumb { padding-top:0; }
 
 
 /* Category Page */
-#categoryTop #news, #catBrands, #checkThat, .autoMargin #description { padding:0 20px; }
-
 #categoryTop { position:relative; background:no-repeat center top / cover; min-height:200px; margin-top:-1rem; padding-top:1rem; }
 #categoryTop .mask { position:absolute; top:0; left:0; width:100%; z-index:0; }
 #categoryTop .inner { position:relative; z-index:1; }
@@ -532,8 +531,6 @@ header + #breadcrumb { padding-top:0; }
 /* Product page */
 /*#productTop { }*/
 #illustration { max-width:100%; padding-bottom:2em; }
-
-#productInfos { padding:1em; }
 
 #productInfos .clientRating { padding:0 0 1em 0; }
 
@@ -700,10 +697,10 @@ header + #breadcrumb { padding-top:0; }
 #packElements .elementTitle::before { counter-increment:pack-option; content:counter(pack-option); display:inline-block; text-align:center; border-radius:50%; width:20px; height:20px; line-height:20px; background:var(--default); margin-right:.5em; color:var(--bg0); font-weight:700; }
 #packElements .packElement .prodList { margin:0; padding:0; }
 #packElements .packElement .prodList .list { display:initial; padding:1em 0; }
-#packElements .packElement .prodList .prodInList { display:inline-block; background-image:url(../img/bg-prodinlist-off.png); width:155px; padding:17px 2px 0 2px; cursor:pointer; }
-/*#packElements .packElement .prodList .prodInList:not(.selected) { background-image:url(../img/bg-prodinlist-off.png); }*/
-#packElements .packElement .prodList .prodInList.selected, #packElements .packElement .prodList .prodInList:hover { background-image:url(../img/bg-prodinlist.png); }
-#packElements .packElement .prodList .prodInList:not(.selected) .svg-picto { stroke:var(--default); fill:var(--default); }
+#packElements .packElement .prodList .prodInList { background:url(../img/bg-prodinlist-off.svg) no-repeat center 6px / cover; width:155px; padding:16px 3px 0 3px; cursor:pointer; }
+/*#packElements .packElement .prodList .prodInList:not(.selected) { background-image:url(../img/bg-prodinlist-off.svg); }*/
+#packElements .packElement .prodList .prodInList.selected, #packElements .packElement .prodList .prodInList:hover { background-image:url(../img/bg-prodinlist.svg); }
+#packElements .packElement .prodList .prodInList:not(.selected) .svg-picto { right:8px; width:40px; stroke:var(--default); fill:var(--default); }
 #packElements .packElement .prodList .prodInList:hover .svg-picto { stroke:var(--primary); fill:var(--primary); }
 #packElements .packElement .prodList .glider-dots { padding:0; }
 
@@ -1073,7 +1070,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     header nav #navBottom { display:none; }
     header .inside #logo img { width:auto; }
     header .inside #searchBox { display:initial; }
-    header .inside #searchBox input { position:static; width:760px; transform:none; opacity:1; }
+    header .inside #searchBox input { position:static; transform:none; opacity:1; }
     header .inside #shopLinks { width:256px; }
     header .inside #shopLinks a + a::before { content:''; position:absolute; top:-5px; left:-60%; border-left:1px solid var(--line); height:35px; }
  
@@ -1132,7 +1129,6 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #illustration .thumbnails { display:flex; justify-content:space-between; }
     #illustration .thumbnails li img { display:block; border-radius:5px; }
     
-    #productInfos { padding:0; }
     #productInfos .tested blockquote { padding-right:130px; }
     #productInfos .tested blockquote::after { right:70px; }
 
@@ -1207,7 +1203,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #shopNews .insert { width:80vw; margin:auto; }
     #shopNews ul { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; }
     
-    #categoryTop #news, #catBrands, #checkThat, .autoMargin #description { padding:0; }
+    #categoryTop #category, #caregoryTop ul.ctaCats { max-width:50%; }
 
     #categoryTop .ctaCats { margin:20px -10px 30px; }
 
@@ -1225,8 +1221,9 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     .customer .dashboard { column-count:3; }
 }
 @media screen and (min-width:1250px) {
+    header .inside #searchBox input { width:700px; }
     .prodList .list .header { width:auto; }
-    .prodList .list .prodInList { width:90%; padding:18px 5px 0 5px; }
+    .prodList .list .prodInList { width:90%; padding:18px 5px 0 5px; background-position:center top; }
     .prodList .list .prodInList .svg-picto { width:60px; right:10px; }
     #searchWrapper #productList .list  .prodInList { width:auto; }
 }

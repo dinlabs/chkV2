@@ -59,6 +59,11 @@ Encore
     // optional target path, relative to the output dir
     to: 'images/emails/[path][name].[ext]',
   })
+  .copyFiles({
+    // ckeditor Enhanced Image Plugin
+    from: './assets/ckeditor',
+    to: '../..//bundles/fosckeditor/plugins/[path][name].[ext]'
+  })
   .disableSingleRuntimeChunk()
   .cleanupOutputBeforeBuild()
   .enableVersioning(Encore.isProduction())

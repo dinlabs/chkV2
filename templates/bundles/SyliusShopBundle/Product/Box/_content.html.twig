@@ -3,22 +3,24 @@
 
 <div class="prodInList">
     <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#notation"/></svg>
-    <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
-        {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
-        {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
-    </a>
-    <div class="infos">
-        {% include '@SyliusShop/Product/_price.html.twig' %}
-        {% if product.brand %}<div class="brand"><a href="{{ absolute_url(path('brand_view', {'code': product.brand.code})) }}">{{ product.brand.name }}</a></div>{% endif %}
-        <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</div>
-        {% if product.averageRating %}
-        <div class="clientRating">
-            <ul class="rating">
-                {% for n in 1..5  %}
-                <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#ico-star"/></svg></li>
-                {% endfor %}
-            </ul>
+    <div class="insert">
+        <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
+            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
+            {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
+        </a>
+        <div class="infos">
+            {% include '@SyliusShop/Product/_price.html.twig' %}
+            {% if product.brand %}<div class="brand"><a href="{{ absolute_url(path('brand_view', {'code': product.brand.code})) }}">{{ product.brand.name }}</a></div>{% endif %}
+            <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}>{{ product.name }}</div>
+            {% if product.averageRating %}
+            <div class="clientRating">
+                <ul class="rating">
+                    {% for n in 1..5  %}
+                    <li class="{{ (n <= product.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#ico-star"/></svg></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 </div>
