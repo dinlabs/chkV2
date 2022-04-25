@@ -50,12 +50,10 @@ class RmaAdminType extends AbstractType
                 'label' => 'Statut',
                 'choices' => array_flip([
                     'new' => 'Nouvelle demande',
+                    'product_received' => 'Produits reçus',
+                    'expertise_product' => 'Produits en expertise',
                     'product_return_accepted' => 'Retour produit accepté',
                     'product_return_refused' => 'Retour produit refusé',
-                    'product_received' => 'Produits reçus',
-                    'product_received_but_refused' => 'Produits reçus mais refusés',
-                    'expertise_product' => 'Produits en expertise',
-                    'waiting_for_supplier' => 'Attente fournisseur',
                     'complete' => 'Terminé',
                     'expired' => 'Expiré'
                 ])

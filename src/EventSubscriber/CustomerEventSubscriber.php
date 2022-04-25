@@ -7,6 +7,7 @@ use App\Entity\Chullanka\HistoricOrder;
 use App\Service\GinkoiaCustomerWs;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Bundle\ResourceBundle\Event\ResourceControllerEvent;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -16,12 +17,14 @@ use Symfony\Component\Security\Http\SecurityEvents;
 class CustomerEventSubscriber implements EventSubscriberInterface
 {
     private $entityManager;
+    private $emailSender;
     private $ginkoiaCustomerWs;
     protected $addressFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $addressFactory)
+    public function __construct(EntityManagerInterface $entityManager, SenderInterface $emailSender, GinkoiaCustomerWs $ginkoiaCustomerWs, FactoryInterface $addressFactory)
     {
         $this->entityManager = $entityManager;
+        $this->emailSender = $emailSender;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->addressFactory = $addressFactory;
     }
@@ -39,6 +42,8 @@ class CustomerEventSubscriber implements EventSubscriberInterface
             'sylius.customer.post_update' => 'onSyliusCustomerPostSave',
             'sylius.address.post_register' => 'onSyliusCustomerPostSave',
             'sylius.address.post_update' => 'onSyliusCustomerPostSave',
+
+            'app.rma.pre_update' => 'onAppRmaPreUpdate',
         ];
     }
 
@@ -311,5 +316,23 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         {
             error_log('Ginkoia obs::customerSaved : impossible de mettre à jour le WS pour : '.$email);
         }
+    }
+
+    
+    /**
+     * Màj du statut RMA
+     */
+    public function onAppRmaPreUpdate(ResourceControllerEvent $event)
+    {
+        $rma = $event->getSubject();
+
+        //'Retour produit accepté'
+        if($rma->getState() == 'product_return_accepted')
+        {
+            $rma->setReturnSlip(true);
+        }
+
+        // send email
+        $this->emailSender->send('rma_change_state', [$rma->getCustomer()->getEmail()], ['rma' => $rma]);
     }
 }

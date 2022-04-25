@@ -416,7 +416,7 @@ header + #breadcrumb { padding-top:0; }
 
 
 /* Category Page */
-#categoryTop { position:relative; background:no-repeat center top / cover; min-height:200px; margin-top:-1rem; padding-top:1rem; }
+#categoryTop { position:relative; background:no-repeat center top / cover; min-height:200px; margin-top:-1rem; padding-top:1rem; overflow:hidden; }
 #categoryTop .mask { position:absolute; top:0; left:0; width:100%; z-index:0; }
 #categoryTop .inner { position:relative; z-index:1; }
 

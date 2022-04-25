@@ -364,7 +364,7 @@ class Product extends BaseProduct
             $choices = $conf['choices'];
             foreach($choices as $key => $choice)
             {
-                if(in_array($key, $value) && ($choice['fr_FR'] == 3))
+                if(is_array($value) && in_array($key, $value) && ($choice['fr_FR'] == 3))
                 {
                     $labels['eco'] = 'eco';
                     break;

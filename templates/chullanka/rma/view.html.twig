@@ -23,7 +23,12 @@
 <h2>Information du contact</h2>
 <dl class="datas">
     <dt>Statut</dt>
-    <dd>{{ rma.state }}</dd>
+    <dd>
+        {% include 'chullanka/rma/grid_state.html.twig' with {'data': rma.state} %}
+        {% if rma.returnSlip %}
+        &ndash; <a href="{{ path('rma_return_slip', {'id': rma.id}) }}">Télécharger le bordereau de retour produit</a>
+        {% endif %}
+    </dd>
 
     <dt>Téléphone</dt>
     <dd>{{ rma.phoneNumber }}</dd>

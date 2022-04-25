@@ -86,6 +86,11 @@ class Rma implements ResourceInterface
     private $private_comment;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $return_slip;
+
+    /**
      * @ORM\OneToMany(targetEntity=RmaProduct::class, mappedBy="rma", orphanRemoval=true)
      */
     private $rmaProducts;
@@ -233,6 +238,18 @@ class Rma implements ResourceInterface
     public function setPrivateComment(?string $private_comment): self
     {
         $this->private_comment = $private_comment;
+
+        return $this;
+    }
+
+    public function getReturnSlip(): ?bool
+    {
+        return $this->return_slip;
+    }
+
+    public function setReturnSlip(?bool $return_slip): self
+    {
+        $this->return_slip = $return_slip;
 
         return $this;
     }

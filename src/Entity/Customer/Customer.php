@@ -27,6 +27,11 @@ class Customer extends BaseCustomer
     private $chullpoints;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $connections;
+
+    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $notice;
@@ -103,6 +108,18 @@ class Customer extends BaseCustomer
     {
         $this->chullpoints = $chullpoints;
         
+        return $this;
+    }
+
+    public function getConnections(): ?int
+    {
+        return $this->connections;
+    }
+
+    public function setConnections(?int $connections): self
+    {
+        $this->connections = $connections;
+
         return $this;
     }
 

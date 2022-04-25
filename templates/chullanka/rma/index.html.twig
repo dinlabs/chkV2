@@ -38,7 +38,7 @@
             <td>{{ rma.number }}</td>
             <td>{{ rma.createdAt|format_date('medium') }}</td>
             <td>{{ rma.order.number }}</td>
-            <td>{{ rma.state }}</td>
+            <td>{% include 'chullanka/rma/grid_state.html.twig' with {'data': rma.state} %}</td>
             <td><a href="{{ path('rma_request_view', {'id': rma.id}) }}">Voir</a></td>
         </tr>
         {% endfor %}

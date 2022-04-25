@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Chullanka\Rma;
+
 class ChronolabelHelper
 {
-    public function getTransportLabel()
+    public function getTransportLabel(Rma $rma)
 	{
         /*if(!isset($data['address']))
         {
@@ -72,20 +74,24 @@ class ChronolabelHelper
                 'subAccount' => 0
             ];
 
+            // coordonnées du client qui renvoie
+            $customer = $rma->getCustomer();
+            $civility = $customer->isMale() ? 'M' : ($customer->isFemale() ? 'E' : ' ');
+            $address = $rma->getAddress();
             $shipperValue = [
                 'shipperType' => 2,
-                'shipperName' => 'SENDER NAME 1',
-                'shipperName2' => 'SENDER NAME 2',
-                'shipperCivility' => 'M',
+                'shipperName' => trim(sprintf('%s %s', $address->getFirstName(), $address->getLastName())),
+                'shipperName2' => '',
+                'shipperCivility' => $civility,
                 'shipperContactName' => '',
-                'shipperAdress1' => 'SENDER ADDRESS 1',
-                'shipperAdress2' => 'SENDER ADDRESS 2',
-                'shipperZipCode' => '94000',
-                'shipperCity' => 'SENDER CITY',
-                'shipperCountry' => 'FR',
-                'shipperCountryName' => 'FRANCE',
-                'shipperEmail' => 'sender@provider.com',
-                'shipperPhone' => '0102030405',
+                'shipperAdress1' => $address->getStreet(),
+                'shipperAdress2' => '',
+                'shipperZipCode' => $address->getPostcode(),
+                'shipperCity' => $address->getCity(),
+                'shipperCountry' => $address->getCountryCode(),
+                'shipperCountryName' => '',
+                'shipperEmail' => $customer->getEmail(),
+                'shipperPhone' => $address->getPhoneNumber(),
                 'shipperMobilePhone' => '',
                 'shipperPreAlert' => 0
             ];
@@ -93,7 +99,7 @@ class ChronolabelHelper
             $customerValue = [
                 'customerName' => 'Chullanka.com',
                 'customerName2' => '',
-                'customerCivility' => '',
+                'customerCivility' => ' ',
                 'customerContactName' => '',
                 'customerAdress1' => '2222 route de Grasse',
                 'customerAdress2' => '',
@@ -109,11 +115,11 @@ class ChronolabelHelper
             ];
 
             $recipientValue = [
-                'recipientName' => 'Chullanka Retour Web',
-                'recipientName2' => '',
-                'recipientCivility' => '',
+                'recipientName' => 'Chullanka',
+                'recipientName2' => 'Retour Web',
+                'recipientCivility' => ' ',
                 'recipientContactName' => '',
-                'recipientAdress1' => '1 chemin de la coume',
+                'recipientAdress1' => '1 chemin de la combe',
                 'recipientAdress2' => '',
                 'recipientZipCode' => '09300',
                 'recipientCity' => 'LAVELANET',
@@ -128,8 +134,8 @@ class ChronolabelHelper
             $refValue = [
                 'customerSkybillNumber' => '',
                 'PCardTransactionNumber' => '',
-                'recipientRef' => 'CONSIGNEE CODE',
-                'shipperRef' => 'SHIPPER REFRENCE',
+                'recipientRef' => '',
+                'shipperRef' => $rma->getNumber(),
                 'idRelais' => '',
             ];
 
@@ -197,6 +203,7 @@ class ChronolabelHelper
                 //'customsValue'          => '',
             ];
             $webservbt = $client->shippingMultiParcelV3($params);
+            //dd($webservbt);
 
             if($webservbt->return->errorCode == 0)
             {

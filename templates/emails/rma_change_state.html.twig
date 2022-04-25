@@ -1,15 +1,14 @@
 {% extends '@SyliusShop/Email/layout.html.twig' %}
 
 {% block subject %}
-    Demande de retour produit
+    Votre demande de retour produit
 {% endblock %}
 
 {% block heademail %}
-    Demande de retour produit
+    {% include 'chullanka/rma/grid_state.html.twig' with {'data': rma.state} %}
 {% endblock %}
 
 {% block content %}
-    <p>Une nouvelle demande de retour produit a été faite sur le site.</p>
     <p><strong>Numéro de la demande :</strong> {{ rma.number }}</p>
     {% if rma.customer %}
     <p><strong>Client : </strong> {{ rma.customer }}</p>
@@ -24,5 +23,9 @@
         {{ rmaProduct.orderItem.variantName }}<br>
     {% endfor %}
     </p>
+    {% endif %}
+
+    {% if rma.returnSlip %}
+        <p><a href="{{ absolute_url(path('rma_return_slip', {'id': rma.id})) }}">Télécharger le bordereau de retour produit</a></p>
     {% endif %}
 {% endblock %}
