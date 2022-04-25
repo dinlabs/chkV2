@@ -968,6 +968,7 @@ body.customer { background:var(--bg1); }
 .customer #welcomePop .intro .pichulli { position:absolute; left:0; }
 .customer #welcomePop .glider section { width:315px; }
 .customer #welcomePop .glider section .inside { padding:1em 2em; text-align:center; }
+.customer #welcomePop .glider section .inside img { display:block; margin:0 auto 1em auto; }
 .customer #welcomePop .actionBtns { display:flex; justify-content:space-between; align-items:center; padding-top:3em; }
 .customer #welcomePop .actionBtns .closePop { background:none; color:var(--primary); font-weight:700; text-decoration:underline; cursor:pointer; }
 .customer #welcomePop .actionBtns .btn { padding:1em 2.5em; }

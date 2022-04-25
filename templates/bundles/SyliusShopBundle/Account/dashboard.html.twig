@@ -24,6 +24,7 @@
     {% endblock %}
 </div>
 
+{#% if customer.user.lastLogin is null %#}
 {% if true %}
 <div id="welcomePop" class="popin hidden">
     <div class="popinside">
@@ -46,30 +47,35 @@
                 <div class="glider">
                     <section>
                         <div class="inside">
+                            <img src="{{ asset('build/chullanka/images/onboard-1.png', 'chullanka') }}" alt="">
                             <strong>Vous pouvez définir votre magasin favori</strong>
                             <p>Pour profiter de toutes ses exclusivités et notamment ses ventes privées, ses journées de démo, ou les rencontres avec les associations !</p>
                         </div>
                     </section>
                     <section>
                         <div class="inside">
+                            <img src="{{ asset('build/chullanka/images/onboard-2.jpg', 'chullanka') }}" alt="">
                             <strong>Vous pouvez définir vos sports favoris</strong>
                             <p>Pour profiter des conseils de nos experts sur vos sports favoris avec un contact direct !</p>
                         </div>
                     </section>
                     <section>
                         <div class="inside">
+                            <img src="{{ asset('build/chullanka/images/onboard-3.jpg', 'chullanka') }}" alt="">
                             <strong>Vos points et avantages</strong>
                             <p>Pour les transformer en cadeaux ou en réduction sur tous vos achats.</p>
                         </div>
                     </section>
                     <section>
                         <div class="inside">
+                            <img src="{{ asset('build/chullanka/images/onboard-3.jpg', 'chullanka') }}" alt="">
                             <strong>Vos produits favoris</strong>
                             <p>Pour oragnaniser vos listes d'achats partagées (pour organiser un trail, une rando, etc.) ou pour un achat partagé (en cadeau d'anniv, de Noël).</p>
                         </div>
                     </section>
                     <section>
                         <div class="inside">
+                            <img src="{{ asset('build/chullanka/images/onboard-3.jpg', 'chullanka') }}" alt="">
                             <strong>Retrouves tous tes achats</strong>
                             <p>Et profite des services liés aux produits, suivis de commandes, factures, retours produit, réparation et bien plus...</p>
                         </div
