@@ -4,12 +4,25 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Chullanka\Parameter;
+use Doctrine\ORM\EntityManagerInterface;
+
 class GinkoiaCustomerWs
 {
-    const WS_URL = 'http://10.9.0.6:8083/database1/v1/customer';
     const WS_GCF_ID = '102375';
     const POINTS_4_COUPON = 500;
     const COUPON_DISCOUNT = 10;
+    
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+    private function chkParameter($slug)
+    {
+        return $this->entityManager->getRepository(Parameter::class)->getValue($slug);
+    }
 
     /**
      * Envoie la requête au WS
@@ -19,13 +32,16 @@ class GinkoiaCustomerWs
      */
     private function _callWS($data, $type = 'GET')
     {
-        $wsUrl = 'http://www.chullanka2.git.yl/fakeginkows.php?/customer';
-        $wsUser = '';
-        $wsPwd = '';
-        
-        $wsUrl = !empty($wsUrl) ? $wsUrl : self::WS_URL;
-        $data['user'] = !empty($wsUser) ? $wsUser : 'Chullweb';
-        $data['pwd'] = !empty($wsPwd) ? $wsPwd : 'A45FR8DC4R7ke35lmT4r';
+        $wsUrl = $this->chkParameter('ginkoia-ws-url');
+        $wsUser = $this->chkParameter('ginkoia-ws-user');
+        $wsPwd = $this->chkParameter('ginkoia-ws-pass');
+        if(empty($wsUrl) || empty($wsUser) || empty($wsPwd))
+        {
+            return 'Ginkoia Ws:: URL, User ou Pass manquant.';
+        }
+
+        $data['user'] = $wsUser;
+        $data['pwd'] = $wsPwd;
         
         // if Loyalty sub-service...
         if(isset($data['loyalty_id']))

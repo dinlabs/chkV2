@@ -83,29 +83,11 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, ChronolabelHelper $chronolabelHelper, Target2SellHelper $target2SellHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Target2SellHelper $target2SellHelper)
     {
-
-        
-
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
-
         die("Fin");
-        if($return = $chronolabelHelper->getTransportLabel())
-        {
-            $pdfContent = $return->pdfEtiquette;
-            if(strpos($pdfContent, '%PDF') !== 0) 
-            {
-                print('Missing the PDF file signature');
-            }
-            $filename = 'test.pdf';
-            //file_put_contents($filename, $pdfContent);
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: attachment; filename='.$filename);
-            echo $pdfContent;
-        }
-        die;
 
         $order = $this->container->get('doctrine')->getRepository(Order::class)->find(48);
 
@@ -880,6 +862,33 @@ final class DefaultController extends AbstractController
             }
         }
         return $this->redirectToRoute('rma_request_list');
+    }
+
+    /**
+     * @Route("/rma/returnslip/{id}", name="rma_return_slip")
+     */
+    public function rmaGetReturnSlip(string $id, ChronolabelHelper $chronolabelHelper)
+    {
+        $rma = $this->container->get('doctrine')->getRepository(Rma::class)->find($id);
+        if($rma->getReturnSlip())
+        {
+            if($return = $chronolabelHelper->getTransportLabel($rma))
+            {
+                $pdfContent = $return->pdfEtiquette;
+                if(strpos($pdfContent, '%PDF') !== 0) 
+                {
+                    print('Missing the PDF file signature');
+                }
+                $filename = $rma->getNumber() . '.pdf';
+                //file_put_contents($filename, $pdfContent);
+                header('Content-Type: application/pdf');
+                header('Content-Disposition: attachment; filename='.$filename);
+                echo $pdfContent;
+            }
+        }
+        
+        //else 
+        return $this->redirectToRoute('rma_request_view', ['id' => $id]);
     }
 
 
