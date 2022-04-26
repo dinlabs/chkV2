@@ -517,6 +517,9 @@ sylius_grid:
                 slug:
                     type: string
                     label: 'Identifiant'
+                value:
+                    type: string
+                    label: 'Valeur'
             actions:
                 main:
                     create:

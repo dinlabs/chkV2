@@ -5,7 +5,7 @@ parameters:
     mailchimp.api_key: '%env(resolve:MAIL_CHIMP_API_KEY)%'
     mailchimp.list_id: '%env(resolve:MAIL_CHIMP_LIST_ID)%'
     mailchimp.webhook_secret: '%env(resolve:MAIL_CHIMP_WEBHOOK_SECRET)%'
-    sylius.invoicing.template.logo_file: '%kernel.project_dir%/public/chullanka/assets/img/logo-chullanka.png'
+    sylius.invoicing.template.logo_file: '%kernel.project_dir%/assets/chullanka/img/logo-chullanka.png'
 
 services:
     # Default configuration for services in *this* file

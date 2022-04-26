@@ -2,7 +2,11 @@
 
 namespace App\Controller\Chullanka;
 
+use App\Entity\Chullanka\Parameter;
 use App\Entity\Shipping\Shipment;
+use Cloudflare\API\Auth\APIKey as CFAPIKey;
+use Cloudflare\API\Adapter\Guzzle as CFGuzzle;
+use Cloudflare\API\Endpoints\Zones as CFZones;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderShippingTransitions;
 use Sylius\Component\Shipping\ShipmentTransitions;
@@ -17,6 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
+
+
+
     /**
      * @Route("/ordershipstate/{id}", name="chk_admin_change_order_ship_state")
      */
@@ -50,37 +57,73 @@ class AdminController extends AbstractController
 
     }
 
-    public function flushCloudflare()
+    /**
+     *
+     * @Route("/cloudflare/flush", name="cloudflare_flush")
+     */
+    public function flushCloudflare(Request $request)
     {
-        /*
-        $key = new Cloudflare\API\Auth\APIKey('yannick.lepetit@gmail.com', '1fcfb3079338c456a9df9e61c569bd119a12f');
-	    $adapter = new Cloudflare\API\Adapter\Guzzle($key);
-	    $zones = new Cloudflare\API\Endpoints\Zones($adapter);
-	    $zoneId = $zones->getZoneId('chullanka.com');
-	    
-	    $zones->cachePurgeEverything($zoneId)
-	       ? $this->_getSession ()->addSuccess ('Le cache de Cloudflare a été vidé.')
-           : $this->_getSession ()->addError ('Un problème s\'est produit avec l\'API de Cloudflare pour vider le cache.')
-        ;
-        */
+        /** @var FlashBagInterface $flashBag */
+        $flashBag = $request->getSession()->getBag('flashes');
+
+        $email = $this->chkParameter('cloudflare-email');//'yannick.lepetit@gmail.com'
+        $apiKey = $this->chkParameter('cloudflare-api-key');//'1fcfb3079338c456a9df9e61c569bd119a12f'
+        $zoneName = $this->chkParameter('cloudflare-zone-name');//'dinlabs.com'
+
+        if(empty($email) || empty($apiKey) || empty($zoneName))
+        {
+            $flashBag->add('error', 'Veuillez renseigner les informations de l\'API Cloudflare.');
+        }
+        else
+        {
+            // Cloudflare API
+            $key = new CFAPIKey($email, $apiKey);
+            $adapter = new CFGuzzle($key);
+            $zones = new CFZones($adapter);
+            $zoneId = $zones->getZoneId($zoneName);
+            $zones->cachePurgeEverything($zoneId)
+                ? $flashBag->add('success', 'Le cache de Cloudflare de la zone "' . $zoneName . '" a été vidé.')
+                : $flashBag->add('error', 'Un problème s\'est produit avec l\'API de Cloudflare pour vider le cache.')
+            ;
+        }
+        
+        // retour à la page
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
     }
 
     /**
      *
      * @Route("/command/cache/clear", name="command_cache_clear")
      */
-    public function command_cache_clear(KernelInterface $kernel)
+    public function command_cache_clear(Request $request, KernelInterface $kernel)
     {
-        return $this->do_command($kernel, 'cache:clear');
+        $return = $this->do_command($kernel, 'cache:clear');
+
+        /** @var FlashBagInterface $flashBag */
+        $flashBag = $request->getSession()->getBag('flashes');
+        $flashBag->add('success', $return);
+
+        // retour à la page
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
     }
 
     /**
      *
      * @Route("/command/cache/warmup", name="command_cache_warmup")
      */
-    public function command_cache_warmup(KernelInterface $kernel)
+    public function command_cache_warmup(Request $request, KernelInterface $kernel)
     {
-        return $this->do_command($kernel, 'cache:warmup');
+        $return = $this->do_command($kernel, 'cache:warmup');
+
+        /** @var FlashBagInterface $flashBag */
+        $flashBag = $request->getSession()->getBag('flashes');
+        $flashBag->add('success', $return);
+
+        // retour à la page
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
     }
 
     private function do_command($kernel, $command)
@@ -100,6 +143,15 @@ class AdminController extends AbstractController
         
         $content = $output->fetch();
         
-        return new Response($content);
+        return $content;
+        //return new Response($content);
+    }
+
+    /**
+     * Return a parameter's value
+     */
+    private function chkParameter($slug)
+    {
+        return $this->container->get('doctrine')->getRepository(Parameter::class)->getValue($slug);
     }
 }
