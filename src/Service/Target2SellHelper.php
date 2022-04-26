@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Chullanka\Parameter;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductAttribute;
 use App\Entity\Product\ProductAttributeValue;
@@ -16,7 +17,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Target2SellHelper
 {
-    private $customerId = 'JINRXA62YWCZ2V';
     private $entityManager;
     private $router;
     private $cacheManager;
@@ -31,6 +31,10 @@ class Target2SellHelper
         $this->cacheManager = $cacheManager;
         $this->projectDir = $projectDir;
         $this->exportDir = $this->projectDir . '/var/exports/';
+    }
+    private function chkParameter($slug)
+    {
+        return $this->entityManager->getRepository(Parameter::class)->getValue($slug);
     }
 
     /**
@@ -320,14 +324,15 @@ class Target2SellHelper
         $filePath = $this->projectDir . '/var/imports/' . $filename;
         if(!is_file($filePath))
         {
-            $serverUrl = 'https://api.target2sell.com/catalog/indexes/';
+            $serverUrl = $this->chkParameter('t2s-server-url');//'https://api.target2sell.com/catalog/indexes/';
+            $customerId = $this->chkParameter('t2s-customer-id');//'JINRXA62YWCZ2V';
 
             // WS
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $serverUrl);//set URL and other appropriate options
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//make curl follow a location
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("t2s-customer-id: {$this->customerId}"));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array("t2s-customer-id: $customerId"));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             
             $response = curl_exec($ch);
