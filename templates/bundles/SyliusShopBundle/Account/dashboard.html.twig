@@ -24,8 +24,7 @@
     {% endblock %}
 </div>
 
-{#% if customer.user.lastLogin is null %#}
-{% if true %}
+{% if customer.connections <= 0 %}
 <div id="welcomePop" class="popin hidden">
     <div class="popinside">
         <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg></button>
@@ -85,7 +84,7 @@
             </div>
 
             <div class="actionBtns">
-                <button class="closePop">Passer</button>
+                <a href="{{ path('chk_ajax_hideonboard') }}" class="closePop">Passer</a>
                 <button class="btn primary continue">Continuer</button>
             </div>
         </div>
@@ -96,6 +95,8 @@
 
 {% block javascripts %}
 {{ parent() }}
+
+{% if customer.connections <= 0 %}
 <script>
     $(document).ready(function() {
         if($('#welcomePop').length)
@@ -110,11 +111,17 @@
                 dots: '#welcomePop .dots',
             });
 
-            $('#welcomePop').removeClass('hidden');
+            $('#welcomePop').removeClass('hidden');//show pop
 
             $('.actionBtns .closePop').on('click', function(e) {
                 e.preventDefault();
-                //$('#welcomePop .closePopin').trigger('click');
+
+                var _ajaxCall = $(this).attr('href');
+                $.ajax({
+                    type: 'GET',
+                    url: _ajaxCall,
+                    success(response) { console.log(response); },
+                });
                 $('#welcomePop').addClass('hidden');
             });
             $('.actionBtns .continue').on('click', function(e) {
@@ -126,4 +133,5 @@
         }
     });
 </script>
+{% endif %}
 {% endblock %}

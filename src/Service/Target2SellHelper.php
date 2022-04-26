@@ -30,7 +30,7 @@ class Target2SellHelper
         $this->router = $router;
         $this->cacheManager = $cacheManager;
         $this->projectDir = $projectDir;
-        $this->exportDir = $this->projectDir . '/var/exports/';
+        $this->exportDir = $this->projectDir . '/public/exports/';
     }
     private function chkParameter($slug)
     {

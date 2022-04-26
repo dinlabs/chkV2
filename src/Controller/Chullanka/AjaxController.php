@@ -103,6 +103,21 @@ class AjaxController extends AbstractController
     }
 
     /**
+     * @Route("/hideonboard", name="chk_ajax_hideonboard")
+     */
+    public function hideOnBoard(): JsonResponse
+    {
+        if($customer = $this->getCurrentCustomer())
+        {
+            $customer->setConnections(1);
+            $em = $this->container->get('doctrine')->getManager();
+            $em->persist($customer);
+            $em->flush();
+        }
+        return new JsonResponse(['return' => 'OK']);
+    }
+
+    /**
      * @Route("/getadvice", name="chk_ajax_getadviceform")
      */
     public function getAdviceFormAction(Request $request): Response

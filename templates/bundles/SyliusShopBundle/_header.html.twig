@@ -20,7 +20,7 @@
     <div id="shopLinks">
         <a href="{{ path('store_index') }}" id="findStore" class="deskOnly"><svg class="svg-icon" role="img" style="width:24px; height:32px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-geoloc"/></svg>Trouver un magasin</a>
 
-        <a href="{{ path('sylius_shop_account_dashboard') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-moncompte"/></svg><span></span></a>
+        <a href="{{ path('sylius_shop_account_root') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-moncompte"/></svg><span></span></a>
         {#% if is_granted('ROLE_USER') %}
         {% else %}
             <a href="{{ path('sylius_shop_login') }}" id="customerLink" class="forNotice deskOnly"><svg class="svg-icon" role="img" style="width:28.544px; height:28.545px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-moncompte"/></svg></a>
