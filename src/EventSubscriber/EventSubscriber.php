@@ -6,6 +6,7 @@ use App\Entity\Chullanka\Store;
 use App\Entity\Product\Product;
 use App\Entity\Promotion\Promotion;
 use App\Service\GinkoiaHelper;
+use App\Service\IzyproHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface as SMFactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
@@ -24,17 +25,19 @@ class EventSubscriber implements EventSubscriberInterface
     private $session;
     private $slugger;
     private $ginkoiaHelper;
+    private $izyproHelper;
     private $stateMachineFactory;
     private $orderItemFactory;
     private $orderItemQuantityModifier;
     private $adjustmentFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->slugger = $slugger;
         $this->ginkoiaHelper = $ginkoiaHelper;
+        $this->izyproHelper = $izyproHelper;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderItemFactory = $orderItemFactory;
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
@@ -457,6 +460,7 @@ class EventSubscriber implements EventSubscriberInterface
     {
         $order = $event->getSubject();
         error_log($this->ginkoiaHelper->export($order));
+        error_log($this->izyproHelper->export($order));
     }
 
 
