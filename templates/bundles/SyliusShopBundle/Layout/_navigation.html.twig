@@ -27,7 +27,11 @@
             {% if taxon.enabledChildren|length > 0 %}
             <ul>
                 {% for childTaxon in taxon.enabledChildren %}
-                {{ macros.item(childTaxon) }}
+                  {% if taxon.enabledChildren|length == 1 %}
+                    {{ macros.itemsimple(childTaxon.name, path('sylius_shop_product_index', {'slug': childTaxon.slug, '_locale': childTaxon.translation.locale})) }}
+                  {% else %}
+                    {{ macros.item(childTaxon) }}
+                  {% endif %}
                 {% endfor %}
             </ul>
             {% else %}
@@ -68,7 +72,9 @@
             {{ macros.item(taxon) }}
         {% endfor %}
 
-        {{ render(url('brand_menu_list')) }}
+        {#{ render(url('brand_menu_list')) }#}
+        {{ macros.itemsimple('app.front.brands'|trans, path('brand_index')) }}
+
         {{ render(url('store_index', {'template': 'chullanka/store/menu_items.html.twig'})) }}
 
         {% set others = [] %}
