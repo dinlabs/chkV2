@@ -22,6 +22,7 @@
         "bitbag/elasticsearch-plugin": "^2.0",
         "bitbag/mailchimp-plugin": "^1.2",
         "bitbag/wishlist-plugin": "^1.9",
+        "cloudflare/sdk": "1.1.6",
         "cweagans/composer-patches": "^1.7",
         "sensio/framework-extra-bundle": "^6.2",
         "setono/sylius-feed-plugin": "^0.6.9",

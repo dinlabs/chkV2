@@ -9,7 +9,7 @@ doctrine:
     dbal:
         driver: 'pdo_mysql'
         server_version: '5.7'
-        charset: UTF8
+        charset: UTF8MB4
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:

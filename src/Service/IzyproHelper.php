@@ -14,14 +14,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use SFTPConnection;
 use SM\Factory\FactoryInterface;
+use Sylius\Bundle\ApiBundle\Command\SendShipmentConfirmationEmail;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\OrderShippingTransitions;
 use Sylius\Component\Shipping\ShipmentTransitions;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 
 class IzyproHelper
 {
     private $entityManager;
     private $stateMachineFactory;
+    private $eventBus;
     private $projectDir;
     private $tmpDir;
     private $exportDir;
@@ -33,10 +37,11 @@ class IzyproHelper
     private $dpdfrrelais = false;
     private $totaux;
 
-    public function __construct(EntityManagerInterface $entityManager, FactoryInterface $stateMachineFactory, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, FactoryInterface $stateMachineFactory, MessageBusInterface $eventBus, string $projectDir)
     {
         $this->entityManager = $entityManager;
         $this->stateMachineFactory = $stateMachineFactory;
+        $this->eventBus = $eventBus;
         $this->projectDir = $projectDir;
         $this->tmpDir = $this->projectDir . '/var/tmp/izypro/';
         $this->exportDir = $this->projectDir . '/var/exports/';
@@ -103,8 +108,8 @@ class IzyproHelper
 
     public function updateOrderStates()
     {
-        return $this->doSftp('status');
-        //$this->treatFiles(); // traitement sur le serveur du site
+        //return $this->doSftp('status');
+        $this->treatFiles(); // traitement sur le serveur du site
     }
 
     /**
@@ -232,12 +237,12 @@ class IzyproHelper
             while(!feof($fp))
             {
                 $line = fgets($fp, 4096);
-                if(strlen($line))
-                    if($prefix != 'IS_PRZ')
-                        $return = $this->statusUpdateFunc($line);
+                if(strlen($line) && ($prefix != 'IS_PRZ'))
+                    $return = $this->statusUpdateFunc($line);
             }
             fclose($fp);
 
+            /*
             if($return == true)
             {
                 // We move the tmp file in a logfiles dir
@@ -252,21 +257,62 @@ class IzyproHelper
                 error_log('Izypro :: le fichier '.$files[$i].' n\'a pas été traité correctement');
                 //$this->reportMsg[] = 'Izypro :: le fichier '.$files[$i].' n\'a pas été traité correctement';
             }
+            */
         }
     }
 
     private function statusUpdateFunc($line)
     {
         $data = explode(';', $line);
-    
-        $incrementId = (count($data)>1) ? $data[1] : '';
-        if(!empty($incrementId))
+
+        $number = (count($data)>1) ? $data[1] : '';
+        if(!empty($number))
         {
-            $statusCol = $data[2];
-            //$status = Mage::getStoreConfig('nanbeelog/status/status_'.$statusCol);
-            //Mage::log('Beelog :: Status pour produit '.$incrementId.' : '.$status, null, 'chullanka.log');
+            //get Order
+            if(($order = $this->entityManager->getRepository(Order::class)->findOneByNumber($number)) && $order->hasShipments())
+            {
+                $shipment = $order->getShipments()->first();
+                $shipmentId = $shipment->getId();
+                
+                $statusCol = $data[2];
+                switch($statusCol)
+                {
+                    case 1:
+                        $this->changeOrderInStoreState($shipmentId, 'stock_trouble');
+                        break;
+
+                    case 7:
+                        $this->changeOrderInStoreState($shipmentId, 'in_preparation');
+                        break;
+                    
+                    case 8:
+                        $this->changeOrderInStoreState($shipmentId, 'before_ship');
+                        break;
+                        
+                    case 9:
+                        $this->changeOrderInStoreState($shipmentId, 'ship');
+                        
+                        //$shipment->addComment($comment, true, true);
+                        if(!empty($trackNum = $data[3]))
+                        {
+                            $shipment->setTracking($trackNum);
+                            $this->entityManager->flush();
+                        }
+
+                        // email de confirmation d'envoi
+                        $this->eventBus->dispatch(new SendShipmentConfirmationEmail($shipmentId), [new DispatchAfterCurrentBusStamp()]);
+                        break;
+                        
+                        case 2:
+                        case 120:
+                        case 150:
+                        case 200:
+                            break;
+                    }
+                    
+                return true;
+            }           
         }
-    
         return;
     }
     
