@@ -87,10 +87,11 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
         $availableSorters = array_merge($availableSorters, [$this->soldUnitsProperty, $this->createdAtProperty, $this->pricePropertyPrefix]);
 
         // au cas où...
-        $orderBy = !empty($orderBy) ? $orderBy : $this->pricePropertyPrefix;
-
-        //error_log('ordreBy : '.$orderBy);
-
+        if(!in_array($orderBy, $availableSorters))
+        {
+            $orderBy = $this->pricePropertyPrefix;
+        }
+        
         //$sort = $requestData[self::SORT_INDEX] ?? self::SORT_ASC_INDEX;
         $sort = $requestData[self::SORT_INDEX] ?? ($sort ?: self::SORT_ASC_INDEX);
         $availableSorting = [self::SORT_ASC_INDEX, self::SORT_DESC_INDEX];
