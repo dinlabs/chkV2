@@ -127,7 +127,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodInList .svg-picto { position:absolute; top:0; right:8px; width:40px; height:20px; stroke:var(--primary); fill:var(--primary); z-index:2; }
 .prodInList .insert { padding:0; height:100%; border-radius:5px 5px 0 0; }
 .prodInList .picture { position:relative; display:block; z-index:1; color:inherit; }
-.prodInList .picture img { display:block; width:100%; border-radius:5px 5px 0 0; }
+.prodInList .picture img { display:block; /*width:100%;*/ border-radius:5px 5px 0 0; }
 
 .prodInList .infos { position:relative; padding:.5em; text-align:initial; z-index:1; }
 .prodInList .price { text-align:right; }
@@ -945,9 +945,9 @@ body.customer { background:var(--bg1); }
 #favorite_stores .choice_store input[type='checkbox'],
 #favorite_sports .choice_sport input[type='checkbox'] { display:none; }
 #favorite_stores .choice_store label,
-#favorite_sports .choice_sport label { display:flex; align-items:center; height:40px; cursor:pointer; }
+#favorite_sports .choice_sport label { /*display:flex; align-items:center;*/ display:inline-block; height:40px; cursor:pointer; }
 #favorite_stores .choice_store label .svg-icon,
-#favorite_sports .choice_sport label .svg-icon { margin-right:.5em; width:30px; height:28px; fill:none; cursor:pointer; }
+#favorite_sports .choice_sport label .svg-icon { margin-right:.5em; width:30px; height:28px; fill:none; cursor:pointer; vertical-align:middle; }
 #favorite_stores .choice_store input[type='radio']:checked + label .svg-icon,
 #favorite_stores .choice_store input[type='checkbox']:checked + label .svg-icon,
 #favorite_sports .choice_sport input[type='checkbox']:checked + label .svg-icon { fill:var(--primary); }
