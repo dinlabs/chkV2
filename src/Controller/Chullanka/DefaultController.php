@@ -25,6 +25,7 @@ use App\Form\Type\RmaType;
 use App\Service\ChronolabelHelper;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
+use App\Service\IzyproHelper;
 use App\Service\Target2SellHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
@@ -83,8 +84,11 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Target2SellHelper $target2SellHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper)
     {
+
+        //$izyproHelper->updateOrderStates();
+
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
         die("Fin");
@@ -393,7 +397,34 @@ final class DefaultController extends AbstractController
             //->getOneOrNullResult()
             ->getResult()
         ;
+        // à remplacer par ->findBySectionCode(string $sectionCode, ?string $localeCode) ?
         return $this->render($template, [
+            'pages' => $pages
+        ]);
+    }
+
+    /**
+     * @Route("/pagesmenulist", name="pages_menu_list")
+     */
+    public function getPagesMenuList(Request $request)
+    {
+        $cart = $this->cartContext->getCart();
+        $localeCode = $cart->getLocaleCode();
+
+        $slugs = $request->get('slugs');
+
+        $pageRepo = $this->container->get('doctrine')->getRepository(Page::class);
+        $pages = $pageRepo->createQueryBuilder('o')
+            ->leftJoin('o.translations', 'translation')
+            ->where('translation.locale = :localeCode')
+            ->andWhere('o.enabled = true')
+            ->andWhere('translation.slug IN (:slugs)')
+            ->setParameter('localeCode', $localeCode)
+            ->setParameter('slugs', $slugs)
+            ->getQuery()
+            ->getResult()
+        ;
+        return $this->render('@SyliusShop/Layout/_menu_pages_links.html.twig', [
             'pages' => $pages
         ]);
     }
