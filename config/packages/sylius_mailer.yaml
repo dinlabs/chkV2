@@ -1,7 +1,7 @@
 sylius_mailer:
     sender:
-        name: Dinlabs
-        address: no-reply@dinlabs.fr
+        name: '%env(resolve:MAILER_SENDER_NAME)%'
+        address: '%env(resolve:MAILER_SENDER_EMAIL)%'
     emails:
         ask_recall:
             subject: "Demande de rappel"
