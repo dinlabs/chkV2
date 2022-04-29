@@ -108,8 +108,9 @@ class IzyproHelper
 
     public function updateOrderStates()
     {
-        //return $this->doSftp('status');
-        $this->treatFiles(); // traitement sur le serveur du site
+        //return 
+        $this->doSftp('status');
+        //$this->treatFiles(); // traitement sur le serveur du site
     }
 
     /**
@@ -122,9 +123,8 @@ class IzyproHelper
         $ftp_port = $this->chkParameter('izypro-sftp-port');//'222';
         $user = $this->chkParameter('izypro-sftp-user');//'ftpuser';
         $passwd = $this->chkParameter('izypro-sftp-pass');//'XqUSRSgv88jkxpvPINNw';
-
-        $importDir = '/WMS_TO_MGNT/';
-        $exportDir = '/MGNT_TO_WMS/';
+        $importDir = $this->chkParameter('izypro-import-directory');//'/WMS_TO_MGNT/';
+        $exportDir = $this->chkParameter('izypro-export-directory');//'/MGNT_TO_WMS/';
         
         if(empty($ftp_server) || empty($user) || empty($passwd))
             return false;
@@ -154,6 +154,15 @@ class IzyproHelper
             {
                 $files = $sftp->scanFilesystem($importDir);// liste des fichiers
                 sort($files);
+
+                // test 
+                echo "<pre>";
+                print_r($files);
+                echo "</pre>";
+                return;
+                // test 
+
+
                 if(count($files)>0)
                 {
                     // PROCESS FILE BY FILE
