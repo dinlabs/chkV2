@@ -84,9 +84,20 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
     {
+        echo "<h2>Test Izypro</h2>";
+        echo "<h3>Liste de fichiers du SFTP</h3>";
         $izyproHelper->updateOrderStates();
+
+        echo "<hr>";
+        $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
+        echo "<h2>Test WS Ginkoia</h2>";
+        echo "<h3>Email : $email</h3>";
+        $return = $ginkoiaCustomerWs->getCustomerInfos($email);
+        echo "<pre>";
+        print_r($return);
+        echo "</pre>";
 
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
