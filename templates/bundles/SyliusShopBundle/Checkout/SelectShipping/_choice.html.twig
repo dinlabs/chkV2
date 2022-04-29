@@ -1,6 +1,6 @@
 {% import '@SyliusShop/Common/Macro/money.html.twig' as money %}
 
-<div class="item" {{ sylius_test_html_attribute('shipping-item') }}>
+<div class="item" {{ sylius_test_html_attribute('shipping-item') }} data-price="{{ fee }}">
     {{ form_widget(form, sylius_test_form_attribute('shipping-method-select')) }}
     {{ form_label(form) }}
 

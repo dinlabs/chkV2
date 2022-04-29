@@ -856,14 +856,17 @@ body.checkout { background:var(--bg1); }
 
 .checkout #getPickups #pickupList { padding:1em 0; }
 .checkout #getPickups #pickupList .pickupElement { position:relative; margin-bottom:1em; }
-.checkout #getPickups #pickupList .pickupElement .head { margin-top:-1em; padding-bottom:1em; }
+.checkout #getPickups #pickupList .pickupElement .head { position:relative; margin-top:-1em; padding-bottom:1em; }
+.checkout #sylius-shipping-methods .pickupElement .head input[type='radio'] + label { position:absolute; right:0; top:0; }
+.checkout #sylius-shipping-methods .pickupElement .head input[type='radio']:checked + label.btn { background:var(--primary); }
+
 .checkout #getPickups #pickupList .pickupElement .fold { position:absolute; right:30px; bottom:30px; }
 .checkout #getPickups #pickupList .pickupElement .shown { margin:0; padding:0; }
 .checkout #getPickups #pickupList .pickupElement .shown .relayDetails { display:block; clear:both; }
 .checkout #getPickups #pickupList .pickupElement .relayDetails { display:none; }
 .checkout #getPickups #pickupList .pickupElement .relayDetails .boxhoraires { margin:2em 0; }
 
-.checkout #sylius-shipping-methods .pickupElement .relayDetails input[type='radio']:checked + label.btn { background:var(--primary); }
+
 
 
 .checkout #sylius-shipping-methods .storelist { padding-left:50px; }

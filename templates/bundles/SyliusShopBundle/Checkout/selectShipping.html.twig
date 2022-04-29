@@ -41,9 +41,73 @@
 {{ parent() }}
 
 <script type="text/javascript">
+    
+
     $(document).ready(function() {
+        var $formSubmitBtn = $('#next-step');
+        var _testDisable = function(_value)
+        {
+            var _disable = true;
+            switch(_value)
+            {
+                case 'home_standart':
+                case 'home_express':
+                    _disable = false;
+                    break;
+                
+                case 'pickup_standart':
+                case 'pickup_express':
+                    if($('[name="pickup_point"]:checked').length)
+                    {
+                        _disable = false;
+                    }
+                    break;
+                
+                case 'store':
+                    if($('[name="ship_in_store"]:checked').length)
+                    {
+                        _disable = false;
+                    }
+                    break;
+                default:
+                    _disable = true;
+            }
+            $formSubmitBtn.prop('disabled', _disable);
+        }
+        _testDisable($('#sylius_checkout_select_shipping [name="sylius_checkout_select_shipping[shipments][0][method]"]').val());
+
+        $('#sylius_checkout_select_shipping').on('change', '[name="sylius_checkout_select_shipping[shipments][0][method]"]', function(e) {
+            var _shipmethod = $(this).val();
+            _testDisable(_shipmethod);
+
+            // update Price
+            var $shipPrice = $('#sylius-summary-shipping-total');
+            var _shipPrice = $shipPrice.data('price');
+            var $taxPrice = $('#sylius-summary-tax-included');
+            var _taxPrice = $taxPrice.data('price');
+            var $totalPrice = $('#sylius-summary-grand-total');
+            var _totalPrice = $totalPrice.data('price');
+
+            // soustract current shipping price
+            _taxPrice -= (_shipPrice - (_shipPrice / 1.2));
+            _totalPrice -= _shipPrice;
+
+            // new price
+            _shipPrice = $(this).parent().data('price');
+            _taxPrice += (_shipPrice - (_shipPrice / 1.2));
+            _totalPrice += _shipPrice;
+
+            var _locale = '{{ sylius.localeCode|replace({'_': '-'}) }}';
+            var _currency = { style: 'currency', currency: '{{ sylius.currencyCode }}' };
+            
+            $shipPrice.attr('data-price', _shipPrice).html((_shipPrice/100).toLocaleString(_locale, _currency));
+            $taxPrice.attr('data-price', _taxPrice).html((_taxPrice/100).toLocaleString(_locale, _currency));
+            $totalPrice.attr('data-price', _totalPrice).html((_totalPrice/100).toLocaleString(_locale, _currency));
+        });
+
         $('.storelist [name="ship_in_store"]').on('change', function(e) {
             $('input[value="store"]').prop('checked', true);
+            _testDisable('store');
         });
 
         $('#findPickups').on('click', function(e) {

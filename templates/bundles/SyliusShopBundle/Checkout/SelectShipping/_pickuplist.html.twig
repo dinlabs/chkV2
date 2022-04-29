@@ -2,6 +2,8 @@
     {% for pickup in pickups %}
     <div class="frame pickupElement">
         <div class="head">
+            <input type="radio" id="pickup_point{{ loop.index }}" name="pickup_point" value="{{ pickup.inputValue }}">
+            <label class="btn" for="pickup_point{{ loop.index }}">Choisir ce point relais</label>
             <strong>A {{ pickup.distance|number_format(3, ',') }} km</strong>
         </div>
 
@@ -25,9 +27,6 @@
                     <p>Samedi&nbsp;: {{ pickup.horairesOuvertureSamedi }}</p>
                     <p>Dimanche&nbsp;: {{ pickup.horairesOuvertureDimanche }}</p>
                 </div>
-
-                <input type="radio" id="pickup_point{{ loop.index }}" name="pickup_point" value="{{ pickup.inputValue }}">
-                <label class="btn" for="pickup_point{{ loop.index }}">Choisir ce point relais</label>
             </div>
         </div>
     </div>
