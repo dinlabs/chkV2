@@ -1,6 +1,6 @@
 google_tag_manager:
     enabled: true
-    id: "GTM-PDG7C32"
+    id: '%env(resolve:GOOGLE_TAG_MANAGER_ID)%'
     autoAppend: false
 
 gtm:
