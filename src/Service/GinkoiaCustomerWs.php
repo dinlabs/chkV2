@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Chullanka\Parameter;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class GinkoiaCustomerWs
 {
@@ -14,10 +15,12 @@ class GinkoiaCustomerWs
     const COUPON_DISCOUNT = 10;
     
     private $entityManager;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
     private function chkParameter($slug)
     {
@@ -67,8 +70,7 @@ class GinkoiaCustomerWs
         {
             $wsUrl = str_replace('/customer', '', $wsUrl) . '/ReceiptDetail';
         }
-        
-        error_log('Ginkoia Ws::URL : '.$wsUrl.' | DATA : '.json_encode($data));
+        $this->logger->info('Ginkoia Ws::URL : '.$wsUrl.' | DATA : '.json_encode($data));
         
         // init cURL
         $ch = curl_init($wsUrl);
@@ -86,7 +88,7 @@ class GinkoiaCustomerWs
         
         if($http_code != 200) 
         {
-            error_log('Ginkoia Ws:: Pb pour accéder au WS avec code de retour HTTP : '.$http_code);
+            $this->logger->info('Ginkoia Ws:: Pb pour accéder au WS avec code de retour HTTP : '.$http_code);
             return $json_response;
             return 'Ginkoia Ws:: Pb pour accéder au WS avec code de retour HTTP : '.$http_code;
         }
