@@ -86,8 +86,7 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper)
     {
-
-        //$izyproHelper->updateOrderStates();
+        $izyproHelper->updateOrderStates();
 
         //$target2SellHelper->exportCatalog();
         //$target2SellHelper->updateProductRanks();
