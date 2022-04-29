@@ -41,8 +41,6 @@
 {{ parent() }}
 
 <script type="text/javascript">
-    
-
     $(document).ready(function() {
         var $formSubmitBtn = $('#next-step');
         var _testDisable = function(_value)
@@ -57,6 +55,7 @@
                 
                 case 'pickup_standart':
                 case 'pickup_express':
+                case 'pickup':
                     if($('[name="pickup_point"]:checked').length)
                     {
                         _disable = false;
@@ -76,8 +75,17 @@
         }
         _testDisable($('#sylius_checkout_select_shipping [name="sylius_checkout_select_shipping[shipments][0][method]"]').val());
 
+        var _shipmethod = $('#sylius_checkout_select_shipping [name="sylius_checkout_select_shipping[shipments][0][method]"]:checked').val();
         $('#sylius_checkout_select_shipping').on('change', '[name="sylius_checkout_select_shipping[shipments][0][method]"]', function(e) {
-            var _shipmethod = $(this).val();
+
+            // test la méthode précédente et la nouvelle
+            if((_shipmethod.indexOf('pickup') > -1) && ($(this).val().indexOf('pickup') > -1))
+            {
+                $('#pickupList').html('');// on vide
+                _testDisable();//on désactive le bouton submit
+            }
+            _shipmethod = $(this).val();
+
             _testDisable(_shipmethod);
 
             // update Price
@@ -121,6 +129,7 @@
             var _city = $('#pickup_city').val();
 
             $('#pickupList').html('');// on vide
+            _testDisable();//on désactive le bouton submit
             
             $pickupBox.addClass('loading');
             $.ajax({
@@ -134,6 +143,9 @@
                 success(response) {
                     $('#pickupList').html(response);
 
+                    $('#pickupList [name="pickup_point"]').on('change', function(e) {
+                        _testDisable('pickup');
+                    });
                     funcFoldable();
                     $pickupBox.removeClass('loading');
                 },
