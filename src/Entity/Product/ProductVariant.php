@@ -99,4 +99,24 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         }
         return $maxQty;
     }
+
+    /**
+     * Test si un produit n'est dispo qu'en (vrai) magasin
+     */
+    public function getStoreStockOnly():Bool
+    {
+        // si dispo web, pas exclusif en mag!
+        if($this->getOnHand()) return false;
+
+        foreach($this->stocks as $stock)
+        {
+            $store = $stock->getStore();
+            // on ne prend pas en compte l'entrepot (= stock web)
+            if($store->isWarehouse()) continue;
+
+            // un seul suffit pour être excluMag
+            if($stock->getOnHand()) return true;
+        }
+        return false;
+    }
 }

@@ -15,12 +15,20 @@
 {% else %}
 <small>{{ 'sylius.ui.unit_price'|trans }}</small>
 <div class="price">
-    {% if item.unitPrice != item.discountedUnitPrice %}
-        <del class="sylius-regular-unit-price" {{ sylius_test_html_attribute('cart-product-regular-unit-price') }}>
-            <span class="old-price">{{ money.convertAndFormat(item.unitPrice) }}</span>
-        </del>
-    {% endif %}
     <strong class="sylius-unit-price" {{ sylius_test_html_attribute('cart-product-unit-price', item.productName) }}>{{ money.convertAndFormat(item.discountedUnitPrice) }}</strong>
+    
+    <div class="promo">
+        {% for key,val in product.labels if key == 'promo' %}
+            <span>{{ val }}</span>
+        {% endfor %}
+        {% if item.unitPrice != item.discountedUnitPrice %}
+            <del class="sylius-regular-unit-price" {{ sylius_test_html_attribute('cart-product-regular-unit-price') }}>
+                <span class="old-price">{{ money.convertAndFormat(item.unitPrice) }}</span>
+            </del>
+        {% elseif variant|sylius_has_discount({'channel': sylius.channel}) %}
+        <del {{ sylius_test_html_attribute('product-original-price', money.calculateOriginalPrice(variant)) }}>{{ money.calculateOriginalPrice(variant) }}</del>
+        {% endif %}
+    </div>
 </div>
 
 {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}

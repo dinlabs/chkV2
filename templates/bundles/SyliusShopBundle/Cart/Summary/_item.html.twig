@@ -34,7 +34,13 @@
             
             <div class="total">
                 <small>{#{ 'sylius.ui.total'|trans }#}Prix total</small>
-                <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
+                <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>
+                    {{ money.convertAndFormat(item.subtotal) }}
+                
+                    {% if variant.storeStockOnly %}
+                    <span class="excluMag">cet article est <strong>uniquement disponible en magasin</strong></span>
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
         </div>
