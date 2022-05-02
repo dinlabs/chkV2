@@ -409,6 +409,7 @@ final class DefaultController extends AbstractController
         ;
         // à remplacer par ->findBySectionCode(string $sectionCode, ?string $localeCode) ?
         return $this->render($template, [
+            'sectionCode' => $sectionCode,
             'pages' => $pages
         ]);
     }

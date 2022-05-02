@@ -6,6 +6,9 @@
         {% for page in pages %}
         <li><a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': page.slug }) }}">{{ page.name }}</a></li>
         {% endfor %}
+        {% if sectionCode == 'footer_links_3' %}
+        <li><a href="javascript:openAxeptioCookies()">Gestion des Cookies</a></li>
+        {% endif %}
     </ul>
 </div>
 {% endif %}
