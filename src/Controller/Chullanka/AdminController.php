@@ -126,6 +126,23 @@ class AdminController extends AbstractController
         return $this->redirect($referer);
     }
 
+    /**
+     *
+     * @Route("/command/elastica/populate", name="command_elastica_populate")
+     */
+    public function command_elastica_populate(Request $request, KernelInterface $kernel)
+    {
+        $return = $this->do_command($kernel, 'fos:elastica:populate');
+
+        /** @var FlashBagInterface $flashBag */
+        $flashBag = $request->getSession()->getBag('flashes');
+        $flashBag->add('success', $return);
+
+        // retour à la page
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
+    }
+
     private function do_command($kernel, $command)
     {
         $env = $kernel->getEnvironment();

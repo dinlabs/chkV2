@@ -1,5 +1,6 @@
 <ul style="margin-top:2em; border-top:2px dashed; padding-top:2em">
-    <li><a href="{{ path('command_cache_clear') }}">Vider le cache de Sylius</a></li>
-    <li><a href="{{ path('command_cache_warmup') }}">Chauffer le cache de Sylius</a></li>
     <li><a href="{{ path('cloudflare_flush') }}">Vider le cache de Cloudflare</a></li>
+    <li><a href="{{ path('command_cache_clear') }}">Vider le cache de Sylius</a></li>
+    {#<li><a href="{{ path('command_cache_warmup') }}">Chauffer le cache de Sylius</a></li>#}
+    <li><a href="{{ path('command_elastica_populate') }}">Reconstruire l'index Elasticsearch</a></li>
 </ul>
