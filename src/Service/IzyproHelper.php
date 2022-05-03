@@ -244,7 +244,7 @@ class IzyproHelper
             while(!feof($fp))
             {
                 $line = fgets($fp, 4096);
-                if(strlen($line) && ($prefix != 'IS_PRZ'))
+                if(!empty($line) && strlen($line) && ($prefix != 'IS_PRZ'))
                     $return = $this->statusUpdateFunc($line);
             }
             fclose($fp);
