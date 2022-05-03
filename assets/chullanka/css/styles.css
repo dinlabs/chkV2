@@ -109,7 +109,10 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .labels .promo { background:#FFFD6B; }
 .labels .eco { background:#00C728; color:#fff; }
 .labels .new { background:var(--primary); color:#fff; }
-.labels .madeinfrance { background:blue; color:#fff; font-size:9px; line-height:1.03rem; }
+.labels .madeinfrance { position:relative; background:#002153; color:#fff; font-size:9px; line-height:1.03rem; text-indent:-9999px; }
+.labels .madeinfrance::before, .labels .madeinfrance::after { content:''; display:block; position:absolute; top:0; height:100%; width:calc(100% / 3); }
+.labels .madeinfrance::before { background:#fff; left:calc(100% / 3); }
+.labels .madeinfrance::after { background:#ce1126; right:0; }
 
 /* ProdList */
 .prodList { position:relative; margin-top:30px; padding:20px 0; text-align:center; }
@@ -530,7 +533,7 @@ header + #breadcrumb { padding-top:0; }
 
 /* Product page */
 /*#productTop { }*/
-#illustration { max-width:100%; padding-bottom:2em; }
+#illustration { position:relative; max-width:100%; padding-bottom:2em; }
 
 #productInfos .clientRating { padding:0 0 1em 0; }
 
@@ -1093,6 +1096,8 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     header .inside #shopLinks a + a::before { content:''; position:absolute; top:-5px; left:-60%; border-left:1px solid var(--line); height:35px; }
  
     footer { background:var(--bg2); }
+
+    .labels li { font-size:1em; }
      
     #newsletter h2 { padding:0; font-size:1.867em; }
     #newsletter form .svg-icon { top:-60px; left:-100px; }
