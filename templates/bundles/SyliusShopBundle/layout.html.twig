@@ -106,6 +106,10 @@
     {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %#}
     <script>
     $(document).ready(function() {
+        $(window).on('popstate', function() {
+            $('.loadable').removeClass('loading');//dans le cas où il y a un retour en arrière du navigateur
+        });
+
         if(document.querySelector('#cartLink'))
         {
             jQuery.ajax({
