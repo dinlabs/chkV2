@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Taxonomy;
 
 use App\Entity\Chullanka\Brand;
+use App\Entity\Chullanka\Link;
 use App\Entity\Product\Product;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -46,12 +47,23 @@ class Taxon extends BaseTaxon
      */
     private $univers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Taxon::class)
+     */
+    private $redirection;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Link::class, mappedBy="taxon", orphanRemoval=true)
+     */
+    private $sub_links;
+
     public function __construct()
     {
         parent::__construct();
         $this->top_brands = new ArrayCollection();
         $this->top_products = new ArrayCollection();
         $this->other_taxons = new ArrayCollection();
+        $this->sub_links = new ArrayCollection();
     }
 
     protected function createTranslation(): TaxonTranslationInterface
@@ -161,6 +173,48 @@ class Taxon extends BaseTaxon
     public function setUnivers(bool $univers): self
     {
         $this->univers = $univers;
+
+        return $this;
+    }
+
+    public function getRedirection(): ?self
+    {
+        return $this->redirection;
+    }
+
+    public function setRedirection(?self $redirection): self
+    {
+        $this->redirection = $redirection;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Link[]
+     */
+    public function getSubLinks(): Collection
+    {
+        return $this->sub_links;
+    }
+
+    public function addSubLink(Link $subLink): self
+    {
+        if (!$this->sub_links->contains($subLink)) {
+            $this->sub_links[] = $subLink;
+            $subLink->setTaxon($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubLink(Link $subLink): self
+    {
+        if ($this->sub_links->removeElement($subLink)) {
+            // set the owning side to null (unless already changed)
+            if ($subLink->getTaxon() === $this) {
+                $subLink->setTaxon(null);
+            }
+        }
 
         return $this;
     }

@@ -29,7 +29,7 @@ class GinkoiaHelper
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->projectDir = $projectDir;
-        $this->tmpDir = $this->projectDir . '/var/tmp/ginkoia';
+        $this->tmpDir = $this->projectDir . '/var/tmp/ginkoia/';
         if(!is_dir($this->tmpDir)) mkdir($this->tmpDir);
         $this->logfilesDir = $this->projectDir . '/var/ginkoiafiles/';
         if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
@@ -50,7 +50,7 @@ class GinkoiaHelper
         $this->doc = $this->xmlOrder($order);
         
         $filename = 'GINK_' . $order->getCheckoutCompletedAt()->format('YmdHis') . '.xml';
-        $file = $this->tmpDir . $filename;
+        $file = $this->tmpDir . DIRECTORY_SEPARATOR . $filename;
         if (file_exists($file)) { unlink ($file); }
 
         if(file_put_contents($file, $this->doc->saveXML(), FILE_APPEND))

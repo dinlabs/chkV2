@@ -11,6 +11,8 @@
         {{ form_row(form.univers) }}
     </div>
 
+    <div style="border:2px dashed; padding:.5em; margin-bottom:1em;">{{ form_row(form.redirection) }}</div>
+
     {{ form_row(form.top_products) }}
     
     {{ form_row(form.top_brands) }}
@@ -19,6 +21,9 @@
 
     {{ form_row(form.blogfeedurl) }}
 </div>
+{#<div class="ui segment">
+    {{ form_row(form.sub_links) }}
+</div>#}
 {{ translationFormWithSlug(form.translations, '@SyliusAdmin/Taxon/_slugField.html.twig', taxon) }}
 
 {% include '@SyliusAdmin/Taxon/_media.html.twig' %}
