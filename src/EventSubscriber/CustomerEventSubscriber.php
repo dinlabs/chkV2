@@ -89,7 +89,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                         //$aDob = explode('\/', $dob);
                         //$dob = new \Datetime($aDob[2] . '-' . $aDob[1] . '-' . $aDob[0]);
 
-                        $dob = str_replace('////','|', $dob);
+                        $dob = str_replace('//','|', $dob);
                         $dob = str_replace('/','|', $dob);
                         $aDob = explode('|', $dob);
                         //$dob = new \Datetime(implode('-', [ $aDob[2], $aDob[1], $aDob[0] ] ));
