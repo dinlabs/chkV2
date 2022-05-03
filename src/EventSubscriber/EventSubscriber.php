@@ -335,12 +335,15 @@ class EventSubscriber implements EventSubscriberInterface
         $order = $event->getSubject();
         if($shipment = $order->getShipments())
         {
+            $nextOrderState = OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT;
+
             $shippingAddress = $order->getShippingAddress();
             $further = $order->getFurther();
 
             $shipping_method = $shipment->first()->getMethod()->getCode();
             $split_ship = explode('_', $shipping_method);
             $shipping_method_type = $split_ship[0];
+
 
             if($shipping_method_type == 'pickup')
             {
@@ -415,7 +418,8 @@ class EventSubscriber implements EventSubscriberInterface
                         $shippingAddress->setPhoneNumber( $billingAddress->getPhoneNumber() );
     
                         // en changeant $order->setCheckoutState pour remmetre à "cart" afin de forcer à rechoisir l'adresse ?
-                        $order->setCheckoutState('cart');
+                        //$order->setCheckoutState('cart');
+                        $nextOrderState = OrderCheckoutTransitions::TRANSITION_ADDRESS;
                     }
                 }
             }
@@ -446,7 +450,7 @@ class EventSubscriber implements EventSubscriberInterface
 
             // changer le state
             $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+            $stateMachine->apply($nextOrderState);
 
             $this->entityManager->flush();
         }
