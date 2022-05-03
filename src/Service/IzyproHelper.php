@@ -13,6 +13,7 @@ use App\Entity\Shipping\Shipment;
 use App\Service\SFTPConnection as ServiceSFTPConnection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use SFTPConnection;
 use SM\Factory\FactoryInterface;
 use Sylius\Bundle\ApiBundle\Command\SendShipmentConfirmationEmail;
@@ -25,11 +26,12 @@ use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 class IzyproHelper
 {
     private $entityManager;
+    private $logger;
     private $stateMachineFactory;
     private $eventBus;
     private $projectDir;
     private $tmpDir;
-    private $exportDir;
+    private $logfilesDir;
     private $channel;
     private $doc;
     private $commentaires;
@@ -38,14 +40,16 @@ class IzyproHelper
     private $dpdfrrelais = false;
     private $totaux;
 
-    public function __construct(EntityManagerInterface $entityManager, FactoryInterface $stateMachineFactory, MessageBusInterface $eventBus, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, FactoryInterface $stateMachineFactory, MessageBusInterface $eventBus, string $projectDir)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->eventBus = $eventBus;
         $this->projectDir = $projectDir;
         $this->tmpDir = $this->projectDir . '/var/tmp/izypro/';
-        $this->exportDir = $this->projectDir . '/var/exports/';
+        $this->logfilesDir = $this->projectDir . '/var/izyprofiles/';
+        if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
         $this->totaux = [];
     }
     private function chkParameter($slug)
@@ -67,16 +71,17 @@ class IzyproHelper
         $this->doc = $this->xmlOrder($order);
         
         $filename = 'PRZ_CC_IN_10_' . $order->getCheckoutCompletedAt()->format('YmdHis') . '_' . $order_id . '.xml';
-        $file = $this->exportDir . $filename;
+        $file = $this->tmpDir . $filename;
         if(file_exists($file)) { unlink ($file); }
 
         if(file_put_contents($file, $this->doc->saveXML(), FILE_APPEND))
         {
-            //todo: envoyer le XML par FTP
+            $this->logger->info("XML bien généré : ".$filename);
 
-            return  "XML bien généré : ".$filename;
+            //envoyer le XML par FTP
+            $this->doSftp('sendxml', $file);
         }
-        else return "Pb pour générer le fichier $filename";
+        else $this->logger->error("Pb pour générer le fichier $filename");
     }
 
 
@@ -111,7 +116,7 @@ class IzyproHelper
     {
         //return 
         $this->doSftp('status');
-        //$this->treatFiles(); // traitement sur le serveur du site
+        $this->treatFiles(); // traitement sur le serveur du site
     }
 
     /**
@@ -141,12 +146,12 @@ class IzyproHelper
                 $remote_file = $exportDir . $tmpFile;
                 if($sftp->uploadFile($file, $remote_file))
                 {
-                    error_log('SFTP :: fichier '.$file.' écrit avec succès');
+                    $this->logger->info('SFTP :: fichier '.$file.' écrit avec succès');
                     //$this->reportMsg[] = 'SFTP :: fichier '.$file.' écrit avec succès';
                     // We move the tmp file in a logfiles dir
                     if(!rename($file, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($file)))
                     {
-                        error_log('SFTP :: fichier '.$file.' non déplacé dans izyprofiles');
+                        $this->logger->error('SFTP :: fichier '.$file.' non déplacé dans izyprofiles');
                         //$this->reportMsg[] = 'SFTP :: fichier '.$file.' non déplacé dans izyprofiles';
                     }
                 }
@@ -156,14 +161,6 @@ class IzyproHelper
                 $files = $sftp->scanFilesystem($importDir);// liste des fichiers
                 sort($files);
 
-                // test 
-                echo "<pre>";
-                print_r($files);
-                echo "</pre>";
-                return;
-                // test 
-
-
                 if(count($files)>0)
                 {
                     // PROCESS FILE BY FILE
@@ -171,34 +168,34 @@ class IzyproHelper
                     {
                         if(strpos($files[$i], 'ARCHIVE') > -1) continue;
                         
-                        error_log('SFTP :: Fichier courant : '.$files[$i]);
+                        $this->logger->info('SFTP :: Fichier courant : '.$files[$i]);
                         //$this->reportMsg[] = 'SFTP :: Fichier courant : '.$files[$i];
                         
-                        if(file_exists($this->logfilesDir . '/' . basename($files[$i])))
+                        if(file_exists($this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                         {
                             // If process was ok, delete the distant file
-                            if($sftp->deleteFile($importDir . '/' . $files[$i]))
+                            if($sftp->deleteFile($importDir . DIRECTORY_SEPARATOR . $files[$i]))
                             {
-                                error_log('SFTP :: fichier distant '.$files[$i].' supprimé du serveur');
+                                $this->logger->info('SFTP :: fichier distant '.$files[$i].' supprimé du serveur');
                                 //$this->reportMsg[] = 'SFTP :: fichier distant '.$files[$i].' supprimé du serveur';
                             }
                             else
                             {
-                                error_log('SFTP :: ERREUR : le fichier '.$files[$i].' n\'a pu être supprimé du serveur distant');
+                                $this->logger->error('SFTP :: ERREUR : le fichier '.$files[$i].' n\'a pu être supprimé du serveur distant');
                                 //$this->reportMsg[] = 'SFTP :: ERREUR : le fichier '.$files[$i].' n\'a pu être supprimé du serveur distant';
                             }
                         }
                         else
                         {
-                            $tmpFile = $this->tmpDir . '/' . basename($files[$i]);
-                            if($sftp->receiveFile($importDir . '/' . $files[$i], $tmpFile))
+                            $tmpFile = $this->tmpDir . DIRECTORY_SEPARATOR . basename($files[$i]);
+                            if($sftp->receiveFile($importDir . DIRECTORY_SEPARATOR . $files[$i], $tmpFile))
                             {
-                                error_log('SFTP :: fichier '.$files[$i].' téléchargé');
+                                $this->logger->info('SFTP :: fichier '.$files[$i].' téléchargé');
                                 //$this->reportMsg[] = 'SFTP :: fichier '.$files[$i].' téléchargé';
                             }
                             else
                             {
-                                error_log('SFTP :: le fichier '.$files[$i].' n\'a pas été téléchargé dans '.$tmpFile);
+                                $this->logger->error('SFTP :: le fichier '.$files[$i].' n\'a pas été téléchargé dans '.$tmpFile);
                                 //$this->reportMsg[] = 'SFTP :: le fichier '.$files[$i].' n\'a pas été téléchargé dans '.$tmpFile;
                             }
                         }
@@ -209,7 +206,7 @@ class IzyproHelper
         catch (\Exception $e)
         {
             echo $e->getMessage() . "\n";
-            error_log('SFTP :: Erreur : '.$e->getMessage());
+            $this->logger->error('SFTP :: Erreur : '.$e->getMessage());
             //$this->reportMsg[] = 'SFTP :: Erreur : '.$e->getMessage();
         }
     }
@@ -223,7 +220,7 @@ class IzyproHelper
         sort($files);
         if(!count($files))
         {
-            error_log('Izypro :: Aucun fichier dans '.$this->tmpDir);
+            $this->logger->info('Izypro :: Aucun fichier dans '.$this->tmpDir);
             //$this->reportMsg[] = 'Izypro :: Aucun fichier dans '.$this->tmpDir;
         }
         
@@ -252,22 +249,20 @@ class IzyproHelper
             }
             fclose($fp);
 
-            /*
             if($return == true)
             {
                 // We move the tmp file in a logfiles dir
-                if(!rename($tmpFile, $this->logfilesDir . '/' . basename($files[$i])))
+                if(!rename($tmpFile, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                 {
-                    error_log('Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles');
+                    $this->logger->error('Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles');
                     //$this->reportMsg[] = 'Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles';
                 }
             }
             else
             {
-                error_log('Izypro :: le fichier '.$files[$i].' n\'a pas été traité correctement');
+                $this->logger->error('Izypro :: le fichier '.$files[$i].' n\'a pas été traité correctement');
                 //$this->reportMsg[] = 'Izypro :: le fichier '.$files[$i].' n\'a pas été traité correctement';
             }
-            */
         }
     }
 
@@ -743,7 +738,7 @@ class IzyproHelper
         }
                         
         if(empty($carrier_code))
-            error_log('Izypro :: manque carrier_code');
+            $this->logger->error('Izypro :: manque carrier_code');
     
         return $getId ? $carrier_id : $carrier_code;
     }

@@ -4,28 +4,41 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Chullanka\Parameter;
 use App\Entity\Chullanka\Store;
 use App\Entity\Order\Order;
 use App\Entity\Product\ProductVariant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 
 class GinkoiaHelper
 {
     private $entityManager;
+    private $logger;
     private $projectDir;
-    private $exportDir;
+    private $tmpDir;
+    private $logfilesDir;
     private $channel;
     private $doc;
     private $totaux;
 
-    public function __construct(EntityManagerInterface $entityManager, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, string $projectDir)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->projectDir = $projectDir;
-        $this->exportDir = $this->projectDir . '/var/exports/';
+        $this->tmpDir = $this->projectDir . '/var/tmp/ginkoia';
+        if(!is_dir($this->tmpDir)) mkdir($this->tmpDir);
+        $this->logfilesDir = $this->projectDir . '/var/ginkoiafiles/';
+        if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
+
         $this->totaux = [];
+    }
+    private function chkParameter($slug)
+    {
+        return $this->entityManager->getRepository(Parameter::class)->getValue($slug);
     }
 
     public function export(Order $order)
@@ -37,17 +50,27 @@ class GinkoiaHelper
         $this->doc = $this->xmlOrder($order);
         
         $filename = 'GINK_' . $order->getCheckoutCompletedAt()->format('YmdHis') . '.xml';
-        $file = $this->exportDir . $filename;
+        $file = $this->tmpDir . $filename;
         if (file_exists($file)) { unlink ($file); }
 
         if(file_put_contents($file, $this->doc->saveXML(), FILE_APPEND))
         {
-
-            //todo: envoyer le XML par FTP
-
-            return  "XML well done: ".$filename;
+            //envoyer le XML par FTP
+            $exportPath = $this->chkParameter('ginkoia-path-export');
+            if(copy($file, $exportPath . DIRECTORY_SEPARATOR . $filename))
+            {
+                $this->logger->info('Ginkoia :: Le fichier XML des ventes a été exporté : '.$exportPath);
+                
+                // We move the tmp file in a logfiles dir
+                if(!rename($file, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($file)))
+                    $this->logger->error('Ginkoia :: ERROR : File "'.$file.'" not moved to ginkoiafiles');
+            }
+            else
+            {
+                $this->logger->error('Ginkoia :: Le fichier XML n\a pas pu être copié dans : '.$exportPath);
+            }
         }
-        else return "Issue to generate file: $filename";
+        else $this->logger->error('Ginkoia :: Issue to generate file: ' . $filename);
     }
     
     /**

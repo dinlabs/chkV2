@@ -2,6 +2,7 @@
 namespace App\Command;
 
 use App\Entity\Channel\ChannelPricing;
+use App\Entity\Chullanka\Parameter;
 use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
@@ -37,6 +38,7 @@ class GinkoiaCommand extends Command
     
     
     // pour Ginkoia
+    protected $logfilesDir;
     protected $genre_ids = [];
     protected $cycle_vie_ids = [];
     protected $mag_ids = [];
@@ -57,6 +59,13 @@ class GinkoiaCommand extends Command
         $this->productVariantRepository = $productVariantRepository;
         $this->channelRepository = $channelRepository;
         $this->brandRepository = $brandRepository;
+
+        $this->logfilesDir = 'var/ginkoiafiles/';
+        if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
+    }
+    private function chkParameter($slug)
+    {
+        return $this->manager->getRepository(Parameter::class)->getValue($slug);
     }
     
     protected function configure(): void
@@ -70,7 +79,7 @@ class GinkoiaCommand extends Command
     
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $importPath = 'var/ginkoia';
+        $importPath = $this->chkParameter('ginkoia-path-import');
         
         $this->output = $output;
         $output->writeln([
@@ -165,13 +174,12 @@ class GinkoiaCommand extends Command
         {
             if(in_array($files[$i], ['.','..','factures'])) continue;
             
-            $tmpFile = $importPath . '/' . basename($files[$i]);
+            $tmpFile = $importPath . DIRECTORY_SEPARATOR . basename($files[$i]);
             
             $output->writeln('Fichier : ' . $tmpFile);
             
             // si le fichier existe déjà dans le dossier final, on le supprime et on passe au suivant
-            //if(file_exists($this->logfilesDir . DS . basename($files[$i])))
-            if(false)
+            if(file_exists($this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
             {
                 unlink($tmpFile);
                 continue;
@@ -206,15 +214,15 @@ class GinkoiaCommand extends Command
                 if($return)
                 {
                     // We move the tmp file in a logfiles dir
-                    /*if(copy($tmpFile, $this->logfilesDir . DS . basename($files[$i])))
+                    if(copy($tmpFile, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                     {
                         unlink($tmpFile);
                     }
                     else
                     {
-                        echo "ERREUR : le fichier ".$files[$i]." n'a pu etre deplace dans ginkoiafiles\n";
-                        $this->reportMsg[] = 'ERREUR : le fichier '.$files[$i].' n\'a pu etre deplace dans ginkoiafiles';
-                    }*/
+                        $output->writeln("ERREUR : le fichier ".$files[$i]." n'a pu etre deplace dans ginkoiafiles\n");
+                        //$this->reportMsg[] = 'ERREUR : le fichier '.$files[$i].' n\'a pu etre deplace dans ginkoiafiles';
+                    }
                  }
                  else
                  {

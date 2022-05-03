@@ -8,6 +8,7 @@ use App\Entity\Promotion\Promotion;
 use App\Service\GinkoiaHelper;
 use App\Service\IzyproHelper;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface as SMFactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
@@ -22,6 +23,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class EventSubscriber implements EventSubscriberInterface
 {
     private $entityManager;
+    private $logger;
     private $session;
     private $slugger;
     private $ginkoiaHelper;
@@ -31,9 +33,10 @@ class EventSubscriber implements EventSubscriberInterface
     private $orderItemQuantityModifier;
     private $adjustmentFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->session = $session;
         $this->slugger = $slugger;
         $this->ginkoiaHelper = $ginkoiaHelper;
@@ -467,8 +470,8 @@ class EventSubscriber implements EventSubscriberInterface
     public function onSyliusOrderPostComplete(GenericEvent $event)
     {
         $order = $event->getSubject();
-        error_log($this->ginkoiaHelper->export($order));
-        error_log($this->izyproHelper->export($order));
+        $this->ginkoiaHelper->export($order);
+        $this->izyproHelper->export($order);
     }
 
 
