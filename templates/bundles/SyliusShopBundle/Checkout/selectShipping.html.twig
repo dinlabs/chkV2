@@ -78,6 +78,9 @@
         var _shipmethod = $('#sylius_checkout_select_shipping [name="sylius_checkout_select_shipping[shipments][0][method]"]:checked').val();
         $('#sylius_checkout_select_shipping').on('change', '[name="sylius_checkout_select_shipping[shipments][0][method]"]', function(e) {
 
+            //désactive le choix du magasin
+            $('.storelist [name="ship_in_store"]').prop('checked', false);
+
             // test la méthode précédente et la nouvelle
             if((_shipmethod.indexOf('pickup') > -1) && ($(this).val().indexOf('pickup') > -1))
             {

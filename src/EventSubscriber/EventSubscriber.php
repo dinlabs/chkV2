@@ -418,8 +418,9 @@ class EventSubscriber implements EventSubscriberInterface
                         $shippingAddress->setPhoneNumber( $billingAddress->getPhoneNumber() );
     
                         // en changeant $order->setCheckoutState pour remmetre à "cart" afin de forcer à rechoisir l'adresse ?
-                        //$order->setCheckoutState('cart');
-                        $nextOrderState = OrderCheckoutTransitions::TRANSITION_ADDRESS;
+                        $order->setCheckoutState('cart');
+                        //$nextOrderState = OrderCheckoutTransitions::TRANSITION_ADDRESS;
+                        $nextOrderState = false;
                     }
                 }
             }
@@ -449,8 +450,11 @@ class EventSubscriber implements EventSubscriberInterface
             }*/
 
             // changer le state
-            $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-            $stateMachine->apply($nextOrderState);
+            if($nextOrderState)
+            {
+                $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+                $stateMachine->apply($nextOrderState);
+            }
 
             $this->entityManager->flush();
         }
