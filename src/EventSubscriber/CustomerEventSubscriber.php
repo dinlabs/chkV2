@@ -267,37 +267,52 @@ class CustomerEventSubscriber implements EventSubscriberInterface
             $user['DateAnniversaire'] = $birthday->format('d/m/Y');
         }
         
+        // default Address
+        $defaultAddress = $customer->getDefaultAddress();
+        if(!$defaultAddress)
+        {
+            if($customerAddresses = $customer->getAddresses())
+            {
+                $defaultAddress = $customerAddresses->first();
+            }
+        }
+
         // Billing
-        $billingAddress = $customer->getDefaultAddress();
-        $user['FactureAdresse']['Mail'] = $email;
-        //$user['FactureAdresse']['Mobile'] = $billingAddress->getMobile();
-        $user['FactureAdresse']['Telephone'] = $billingAddress->getPhoneNumber();
-        //$user['FactureAdresse']['Fax'] = $billingAddress->getFax();
-        $user['FactureAdresse']['Ligne'] = $billingAddress->getStreet();
-        $user['FactureAdresse']['Code'] = $billingAddress->getPostcode();
-        $user['FactureAdresse']['Ville'] = $billingAddress->getCity();
-        
-        $billCountryCode = $billingAddress->getCountryCode();
-        $user['FactureAdresse']['CodePays'] = $billCountryCode;
-        /*$billCountry = Mage::getModel('directory/country')->load($billCountryId);
-        $user['FactureAdresse']['Pays'] = $billCountry->getName();*/
+        if($defaultAddress)
+        {
+            $billingAddress = $defaultAddress;
+            $user['FactureAdresse']['Mail'] = $email;
+            //$user['FactureAdresse']['Mobile'] = $billingAddress->getMobile();
+            $user['FactureAdresse']['Telephone'] = $billingAddress->getPhoneNumber();
+            //$user['FactureAdresse']['Fax'] = $billingAddress->getFax();
+            $user['FactureAdresse']['Ligne'] = $billingAddress->getStreet();
+            $user['FactureAdresse']['Code'] = $billingAddress->getPostcode();
+            $user['FactureAdresse']['Ville'] = $billingAddress->getCity();
+            
+            $billCountryCode = $billingAddress->getCountryCode();
+            $user['FactureAdresse']['CodePays'] = $billCountryCode;
+            /*$billCountry = Mage::getModel('directory/country')->load($billCountryId);
+            $user['FactureAdresse']['Pays'] = $billCountry->getName();*/
+        }
         
         
         // Shipping
-        $shippingAddress = $customer->getDefaultAddress();
-        $shippingAddress = $billingAddress;
-        $user['Adresse']['Mail'] = $email;
-        //$user['Adresse']['Mobile'] = $shippingAddress->getMobile();
-        $user['Adresse']['Telephone'] = $shippingAddress->getPhoneNumber();
-        //$user['Adresse']['Fax'] = $shippingAddress->getFax();
-        $user['Adresse']['Ligne'] = $shippingAddress->getStreet();
-        $user['Adresse']['Code'] = $shippingAddress->getPostcode();
-        $user['Adresse']['Ville'] = $shippingAddress->getCity();
-        
-        $shipCountryCode = $shippingAddress->getCountryCode();
-        $user['Adresse']['CodePays'] = $shipCountryCode;
-        /*$shipCountry = Mage::getModel('directory/country')->load($shipCountryId);
-        $user['Adresse']['Pays'] = $shipCountry->getName();*/
+        if($defaultAddress)
+        {
+            $shippingAddress = $defaultAddress;
+            $user['Adresse']['Mail'] = $email;
+            //$user['Adresse']['Mobile'] = $shippingAddress->getMobile();
+            $user['Adresse']['Telephone'] = $shippingAddress->getPhoneNumber();
+            //$user['Adresse']['Fax'] = $shippingAddress->getFax();
+            $user['Adresse']['Ligne'] = $shippingAddress->getStreet();
+            $user['Adresse']['Code'] = $shippingAddress->getPostcode();
+            $user['Adresse']['Ville'] = $shippingAddress->getCity();
+            
+            $shipCountryCode = $shippingAddress->getCountryCode();
+            $user['Adresse']['CodePays'] = $shipCountryCode;
+            /*$shipCountry = Mage::getModel('directory/country')->load($shipCountryId);
+            $user['Adresse']['Pays'] = $shipCountry->getName();*/
+        }
         
 
         // Appel du WebService
