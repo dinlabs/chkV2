@@ -55,6 +55,7 @@ class EventSubscriber implements EventSubscriberInterface
 
 
         return [
+            'sylius.taxon.pre_update' => 'onSyliusTaxonPreUpdate',
             'sylius.product.pre_create' => 'onSyliusProductPreCreUpdate',
             'sylius.product.pre_update' => 'onSyliusProductPreCreUpdate',
             'sylius.order.pre_update' => 'onSyliusOrderPreAdd',
@@ -73,6 +74,21 @@ class EventSubscriber implements EventSubscriberInterface
             'app.store_service.pre_update' => 'onAppStoreServicePreCreUpdate',
             'app.parameter.pre_create' => 'onAppParameterPreCreate',
         ];
+    }
+
+    /**
+     * Appelé quand on enregistre un Taxon
+     */
+    public function onSyliusTaxonPreUpdate(GenericEvent $event)
+    {
+        $subject = $event->getSubject();
+        if($redirection = $subject->getRedirection())
+        {
+            if(!$redirection->getParent() || ($redirection === $subject)) 
+            {
+                $subject->setRedirection(null);
+            }
+        }
     }
 
     /**
