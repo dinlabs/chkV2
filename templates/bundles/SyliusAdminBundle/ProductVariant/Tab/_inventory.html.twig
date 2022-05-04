@@ -1,0 +1,26 @@
+<div class="ui tab" data-tab="inventory">
+    <h3 class="ui dividing header">{{ 'sylius.ui.inventory'|trans }}</h3>
+    <div class="ui segment">
+        {{ form_row(form.onHand) }}
+        {{ form_row(form.tracked) }}
+
+        <div class="ui pointing above ignored label">
+            {{ form_help(form.tracked) }}
+        </div>
+
+        {{ form_row(form.version) }}
+    </div>
+
+    {% if product_variant.stocks %}
+    <h3 class="ui top attached header">Stocks en Magasins</h3>
+    <div class="ui attached segment">
+        <ul>
+            {% for stock in product_variant.stocks %}
+            <li><strong>{{ stock.store }}</strong> : {{ stock.onHand }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {{ sylius_template_event(['sylius.admin.product_variant.' ~ action ~ '.tab_inventory', 'sylius.admin.product_variant.tab_inventory'], {'form': form}) }}
+</div>

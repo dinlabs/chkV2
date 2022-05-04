@@ -3,6 +3,11 @@ namespace App\Command;
 
 use App\Entity\Channel\ChannelPricing;
 use App\Entity\Chullanka\Parameter;
+use App\Entity\Chullanka\Stock;
+use App\Entity\Chullanka\Store;
+use App\Entity\Product\ProductAttribute;
+use App\Entity\Product\ProductAttributeValue;
+use App\Entity\Taxation\TaxCategory;
 use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
@@ -39,9 +44,12 @@ class GinkoiaCommand extends Command
     
     // pour Ginkoia
     protected $logfilesDir;
+    protected $_taxCategories = [];
+    protected $_attributes = [];
+    protected $_stores = [];
     protected $genre_ids = [];
     protected $cycle_vie_ids = [];
-    protected $mag_ids = [];
+    protected $store_codes = [];
     protected $channel = [];
     protected $compteur = 0;
     
@@ -111,16 +119,35 @@ class GinkoiaCommand extends Command
         );
         
         // correspondance des MAG_ID
-        $this->mag_ids = array(
-            '170000003' => 1, // Antibes
-            '170005961' => 2, // Metz
-            '170005231' => 3, // Toulouse
-            '170005589' => 4, // Bordeaux
-            '170006318' => 5 // Web
+        $this->store_codes = array(
+            '170000003' => 'antibes',
+            '170005961' => 'metz',
+            '170005231' => 'toulouse',
+            '170005589' => 'bordeaux',
+            '170006318' => 'comptoir', // Web
+            '184556263' => 'aix-en-provence',
+            '184557187' => 'briancon',
+            '184557771' => 'gap',
+            '184558355' => 'valence',
+            '184558946' => 'montpellier'
         );
 
         // canal Chullanka
         $this->channel = $this->channelRepository->findOneByCode('default');
+
+        // récupération des TaxCategories
+        $taxCategories = $this->manager->getRepository(TaxCategory::class)->findAll();
+        foreach($taxCategories as $tc)
+        {
+            $this->_taxCategories[ $tc->getCode() ] = $tc;
+        }
+
+        // récupération des Stores
+        $stores = $this->manager->getRepository(Store::class)->findAll();
+        foreach($stores as $store)
+        {
+            $this->_stores[ $store->getCode() ] = $store;
+        }
         
         $doArt = $doPrices = $doOc = $doStock = false;
         
@@ -167,15 +194,14 @@ class GinkoiaCommand extends Command
             $output->writeln('Aucun fichier dans '.$importPath);
         }
         
-        $return = false;
-        
         // PROCESS FILE BY FILE
         for($i = 0; isset($files[$i]); $i++)
         {
+            $return = false;
+            
             if(in_array($files[$i], ['.','..','factures'])) continue;
             
             $tmpFile = $importPath . DIRECTORY_SEPARATOR . basename($files[$i]);
-            
             $output->writeln('Fichier : ' . $tmpFile);
             
             // si le fichier existe déjà dans le dossier final, on le supprime et on passe au suivant
@@ -193,16 +219,16 @@ class GinkoiaCommand extends Command
                 elseif((strpos($tmpFile, 'STOCK')>-1) && $doStock)
                 {
                     $output->writeln('C\'est du Stock');
-                    //$return = $this->manageStocks($tmpFile);
+                    $return = $this->manageStocks($tmpFile);
                 }
                 elseif((strpos($tmpFile, 'OC')>-1) && $doOc)
                 {
                     $output->writeln('C\'est une Opération Commerciale');
-                    //$return = $this->managePromotions($tmpFile);
+                    $return = $this->managePromotions($tmpFile);
                 }
                 elseif((strpos($tmpFile, 'PRIX')>-1) && $doPrices)
                 {
-                    //$return = $this->managePrices($tmpFile);
+                    $return = $this->managePrices($tmpFile);
                 }
                 else 
                 {
@@ -233,8 +259,6 @@ class GinkoiaCommand extends Command
             }
         }
         $output->writeln(['', 'Fin import à ' . date('H:i:s d/m/Y')]);
-        
-        
         
         // this method must return an integer number with the "exit status code"
         // of the command. You can also use these constants to make code more readable
@@ -302,12 +326,33 @@ class GinkoiaCommand extends Command
      * @param string $dateDDMMYYYY
      * @return string
      */
-    private function getSQLDate($dateDDMMYYYY)
+    private static function getSQLDate($dateDDMMYYYY)
     {
         $tmpArray = explode('/', $dateDDMMYYYY);
         //$date = $tmpArray[2] . '-' . $tmpArray[1] . '-' . $tmpArray[0];
         $date = implode('-', array_reverse($tmpArray));
         return $date;
+    }
+
+    /**
+     * Conversion de JJ/MM/AAAA en Objet DateTime
+     * @param string $dateDDMMYYYY
+     * @return \DateTime
+     */
+    private static function getDateTime($dateDDMMYYYY)
+    {
+        $dateYYYYMMDD = self::getSQLDate($dateDDMMYYYY);
+        return new \DateTime($dateYYYYMMDD);
+    }
+
+    /**
+     * Conversion des prix textuels (aka: 123,45) en prix Sylius (12345)
+     * @param string $priceInText
+     * @return int
+     */
+    private static function getSyliusPrice($priceInText)
+    {
+        return (int)((float)str_replace(',', '.', $priceInText) * 100);
     }
 
     /**
@@ -334,9 +379,17 @@ class GinkoiaCommand extends Command
         return $brand;
     }
     
-    public function manageArticles($file)
+    private function manageArticles($file)
     {
         $this->output->writeln(['', 'manageArticles ' . basename($file), '---------------', '']);
+
+        // récupération des attributs
+        $attributes = $this->manager->getRepository(ProductAttribute::class)->findAll();
+        foreach($attributes as $attr)
+        {
+            $this->_attributes[ $attr->getCode() ] = $attr;
+        }
+
 
         $articles = self::csvToArray($file);
         $_total = count($articles);
@@ -365,7 +418,7 @@ class GinkoiaCommand extends Command
 		return $return;
     }
     
-    public function manageProduct($articles)
+    private function manageProduct($articles)
     {
         //https://docs.sylius.com/en/latest/book/products/products.html
 
@@ -385,7 +438,8 @@ class GinkoiaCommand extends Command
         }
         else
         {
-            $this->output->writeln("Produit à créer");
+            $this->output->writeln("Produit à créer : $art_uuid");
+            $name .= ' ' . $article['CODE_CHRONO'];
             $product = $this->productFactory->createNew();
             $product->setCode($art_uuid);
             $product->setName($name);
@@ -415,25 +469,6 @@ class GinkoiaCommand extends Command
             if($productVariant = $this->productVariantRepository->findOneByCode($art_uuid))
             {
                 $this->output->writeln("Variante trouvée : ".$productVariant->getName());
-
-                // utile pour la màj des prix
-                if($priceChannels = $productVariant->getChannelPricings())
-                {
-                    if(count($priceChannels) == 0)
-                    {
-                        $priceChannel = $this->channelPricingFactory->createNew();
-                        $priceChannel->setChannelCode('default');
-                        $priceChannel->setProductVariant($productVariant);
-                        $productVariant->addChannelPricing($priceChannel);
-                    }
-                    else
-                    {
-                        $priceChannel = $priceChannels->first();
-                    }
-                    $_newPrice = rand(1000, 50000);
-                    $priceChannel->setPrice($_newPrice);
-                    $this->manager->persist($priceChannel);
-                }
             }
             else 
             {
@@ -448,7 +483,249 @@ class GinkoiaCommand extends Command
             }
         }
 
+        // attributes:
+        //$article['TVA']
+        $this->addOrUpdateAttrValue($product, 'code_ean', $article['CODE_EAN']);
+        //$this->addOrUpdateAttrValue($product, 'code_chrono', $article['CODE_CHRONO']);
+        $this->addOrUpdateAttrValue($product, 'supplier_ref', $article['CODE_FOURN']);
+        $this->addOrUpdateAttrValue($product, 'genre', $article['GENRE']);
+        $this->addOrUpdateAttrValue($product, 'typologie', $article['CLASSEMENT1']);
+        $this->addOrUpdateAttrValue($product, 'cycle_vie', $article['CLASSEMENT2']);
+        //$this->addOrUpdateAttrValue($product, 'ginkoia_class3', $article['CLASSEMENT3']);
+        $this->addOrUpdateAttrValue($product, 'annee', $article['CLASSEMENT4']);
+        $this->addOrUpdateAttrValue($product, 'imported_data', (string)json_encode($article));
+        
         $this->manager->flush();
         return true;
     }
+
+    private function addOrUpdateAttrValue($product, $attr, $value)
+    {
+        $this->output->writeln('addOrUpdateAttrValue');
+
+        // recherche l'attribute
+        if(isset($this->_attributes[ $attr ]) && ($attribute = $this->_attributes[ $attr ]))
+        {
+            //search
+            $repo = $this->manager->getRepository(ProductAttributeValue::class);
+            $attrValue = $repo->findOneBy([
+                'subject' => $product,
+                'attribute' => $attribute,
+            ]);
+            if(!$attrValue)
+            {
+                $attrValue = new ProductAttributeValue();
+                $attrValue->setSubject($product);
+                $attrValue->setAttribute($attribute);
+            }
+            
+            switch($attribute->getType())
+            {
+                case 'select':
+                    $conf = $attribute->getConfiguration();
+                    $choices = $conf['choices'];
+                    foreach($choices as $key => $choice)
+                    {
+                        if($choice['fr_FR'] == $value)
+                        {
+                            $attrValue->setValue([$key]);
+                            break;
+                        }
+                    }
+                    break;
+                
+                case 'checkbox':
+                    if((bool)$value)
+                        $attrValue->setValue( (bool)$value );
+                    else 
+                        return;
+                    break;
+                case 'text':
+                default:
+                    $attrValue->setValue($value);
+            }
+
+            $this->manager->persist($attrValue);
+        }
+    }
+
+    private function managePrices($file)
+    {
+        $this->output->writeln(['', 'managePrices ' . basename($file), '---------------', '']);
+
+		$prices = self::csvToArray($file);
+		foreach($prices as $artSite)
+		{
+            $this->output->writeln($artSite['CODE_ARTICLE']);
+            if($productVariant = $this->productVariantRepository->findOneByCode($artSite['CODE_ARTICLE']))
+			{
+                $this->output->writeln($productVariant->getId() . ' : ' . $artSite['PXVTE']);
+
+                if($artSite['TVA'] == '20')
+                {
+                    $taxCat = $this->_taxCategories['tva1'];
+                }
+                elseif($artSite['TVA'] == '5,5')
+                {
+                    $taxCat = $this->_taxCategories['tva3'];
+                }
+                $productVariant->setTaxCategory($taxCat);
+
+                if($priceChannels = $productVariant->getChannelPricings())
+                {
+                    if(count($priceChannels) == 0)
+                    {
+                        $priceChannel = $this->channelPricingFactory->createNew();
+                        $priceChannel->setChannelCode('default');
+                        $priceChannel->setProductVariant($productVariant);
+                        $productVariant->addChannelPricing($priceChannel);
+                    }
+                    else
+                    {
+                        $priceChannel = $priceChannels->first();
+                    }
+                    $price = self::getSyliusPrice($artSite['PXVTE']);
+                    $priceChannel->setOriginalPrice($price);
+                    $priceChannel->setPrice($price);
+                    $this->manager->persist($priceChannel);
+                }
+            }
+		}
+
+        $this->manager->flush();
+		return true;
+    }
+
+    private function managePromotions($file)
+	{
+        $this->output->writeln(['', 'managePromotions ' . basename($file), '---------------', '']);
+
+        $now = new \DateTime();
+		$promos = self::csvToArray($file);
+		
+		//echo  "Nombre d'articles : " . count($promos) . "\n";
+		
+		$count = 0;
+		foreach($promos as $artSite)
+		{			
+    		$count++;
+    		if(($count%50) == 0)
+    		{
+    			//echo "--------------------------------------------------articles passés : $count\n";
+    		}
+    		
+            //$artSite['']
+
+    		if($productVariant = $this->productVariantRepository->findOneByCode($artSite['CODE_ARTICLE']))
+    		{
+    			$this->output->writeln("promo '{$artSite['NOM_OC']}' pour " . $productVariant->getId());
+
+                if($priceChannels = $productVariant->getChannelPricings())
+                {
+                    if(count($priceChannels) == 0)
+                    {
+                        $priceChannel = $this->channelPricingFactory->createNew();
+                        $priceChannel->setChannelCode('default');
+                        $priceChannel->setProductVariant($productVariant);
+                        $productVariant->addChannelPricing($priceChannel);
+                    }
+                    else
+                    {
+                        $priceChannel = $priceChannels->first();
+                    }
+                    
+                    $specialPrice = self::getSyliusPrice($artSite['PRIX_ARTICLE']);
+                    $priceChannel->setDiscountPrice($specialPrice);
+
+                    if(isset($artSite['DATE_DEBUT']))
+                    {
+                        $specialDateFrom = self::getDateTime($artSite['DATE_DEBUT']);
+                        $priceChannel->setDiscountFrom($specialDateFrom);
+                    }
+                    if(isset($artSite['DATE_FIN']))
+                    {
+                        $specialDateTo = self::getSQLDate($artSite['DATE_FIN']);
+                        $specialDateTo = new \DateTime($specialDateTo);
+                        $priceChannel->setDiscountTo($specialDateTo);
+                    }
+
+                    // test s'il faut changer le prix aujourd'hui
+                    if(!empty($priceChannel->getDiscountPrice())
+                        && !empty($priceChannel->getDiscountFrom())
+                        && !empty($priceChannel->getDiscountTo())
+                        && ($now >= $priceChannel->getDiscountFrom())
+                        && ($now < $priceChannel->getDiscountTo())
+                        )
+                    {
+                        $priceChannel->setPrice( $priceChannel->getDiscountPrice() );
+                    }
+                    else
+                    {
+                        $priceChannel->setPrice( $priceChannel->getOriginalPrice() );
+                    }
+
+                    $this->manager->persist($priceChannel);
+                }
+    		}
+		}
+		
+        $this->manager->flush();
+		return true;
+	}
+
+    private function manageStocks($file)
+	{
+        $this->output->writeln(['', 'manageStocks ' . basename($file), '---------------', '']);
+
+        $stock = self::csvToArray($file);
+	    foreach($stock as $artSite)
+	    {
+	        $this->output->writeln("Sku : " . $artSite['CODE_ARTICLE']);
+
+            //$this->store_codes
+            if($productVariant = $this->productVariantRepository->findOneByCode($artSite['CODE_ARTICLE']))
+    		{
+                $qty = (int)$artSite['QTE_STOCK'];
+                $storeCode = $this->store_codes[ (int)$artSite['MAG_ID'] ];
+                $this->output->writeln("Store $storeCode : $qty");
+
+                if($storeCode == 'comptoir')
+                {
+                    $productVariant->setOnHand($qty);
+                }
+                else
+                {
+                    $store = $this->_stores[ $storeCode ];
+
+                    $storeFound = false;
+                    $stocks = $productVariant->getStocks();
+                    if(count($stocks))
+                    {
+                        foreach($stocks as $stock)
+                        {
+                            if($storeFound) continue;
+                            if($stock->getStore() == $store)
+                            {
+                                $storeFound = true;
+                                $stock->setOnHand($qty);
+                                $this->manager->persist($stock);
+                                continue;
+                            }
+                        }
+                    }
+                    if(!$storeFound)
+                    {
+                        $stock = new Stock();
+                        $stock->setVariant($productVariant);
+                        $stock->setStore($store);
+                        $stock->setOnHand($qty);
+                        $this->manager->persist($stock);
+                    }
+                }
+	        }
+	    }
+
+        $this->manager->flush();
+	    return true;
+	}
 }

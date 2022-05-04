@@ -26,7 +26,8 @@ class TaxonTypeExtension extends AbstractTypeExtension
         ]);
 
         $builder->add('redirection', TaxonAutocompleteChoiceType::class, [
-            'label' => 'Redirection vers une autre catégorie ?',
+            'placeholder' => 'Aucune',
+            'label' => 'Redirection vers une autre catégorie ? (Choisir "Univers" pour réinitialiser)',
             'required' => false
         ]);
 
