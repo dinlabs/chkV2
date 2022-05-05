@@ -31,7 +31,6 @@ class Link
 
     /**
      * @ORM\ManyToOne(targetEntity=Taxon::class, inversedBy="sub_links")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $taxon;
 

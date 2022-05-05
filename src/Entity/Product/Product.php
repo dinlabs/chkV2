@@ -75,6 +75,16 @@ class Product extends BaseProduct
      */
     private $new_to;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $imported_data = [];
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $code_chrono;
+
     public function __construct()
     {
         parent::__construct();
@@ -399,5 +409,29 @@ class Product extends BaseProduct
         }
 
         return $tags;
+    }
+
+    public function getImportedData(): ?array
+    {
+        return $this->imported_data;
+    }
+
+    public function setImportedData(?array $imported_data): self
+    {
+        $this->imported_data = $imported_data;
+
+        return $this;
+    }
+
+    public function getCodeChrono(): ?string
+    {
+        return $this->code_chrono;
+    }
+
+    public function setCodeChrono(?string $code_chrono): self
+    {
+        $this->code_chrono = $code_chrono;
+
+        return $this;
     }
 }

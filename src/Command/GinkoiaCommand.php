@@ -453,6 +453,9 @@ class GinkoiaCommand extends Command
             }
             $this->productRepository->add($product);
         }
+        $product->setImportedData($article);
+        $product->setCodeChrono($article['CODE_CHRONO']);
+        
 
         // Variante(s)
         foreach($articles as $article)
@@ -481,19 +484,26 @@ class GinkoiaCommand extends Command
                 $productVariant->setEnabled(false);
                 $this->productVariantRepository->add($productVariant);
             }
+
+            if($article['TVA'] == '20')
+            {
+                $taxCat = $this->_taxCategories['tva1'];
+            }
+            elseif($article['TVA'] == '5,5')
+            {
+                $taxCat = $this->_taxCategories['tva3'];
+            }
+            $productVariant->setTaxCategory($taxCat);
         }
 
         // attributes:
-        //$article['TVA']
         $this->addOrUpdateAttrValue($product, 'code_ean', $article['CODE_EAN']);
-        //$this->addOrUpdateAttrValue($product, 'code_chrono', $article['CODE_CHRONO']);
         $this->addOrUpdateAttrValue($product, 'supplier_ref', $article['CODE_FOURN']);
         $this->addOrUpdateAttrValue($product, 'genre', $article['GENRE']);
         $this->addOrUpdateAttrValue($product, 'typologie', $article['CLASSEMENT1']);
         $this->addOrUpdateAttrValue($product, 'cycle_vie', $article['CLASSEMENT2']);
         //$this->addOrUpdateAttrValue($product, 'ginkoia_class3', $article['CLASSEMENT3']);
         $this->addOrUpdateAttrValue($product, 'annee', $article['CLASSEMENT4']);
-        $this->addOrUpdateAttrValue($product, 'imported_data', (string)json_encode($article));
         
         $this->manager->flush();
         return true;
