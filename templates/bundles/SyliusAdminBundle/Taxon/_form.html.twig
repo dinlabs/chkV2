@@ -12,10 +12,8 @@
     </div>
 
     <div style="border:2px dashed; padding:.5em; margin-bottom:1em;">{{ form_row(form.redirection) }}</div>
-    <div class="ui segment">
-        <h3 class="ui dividing header">Liste de liens sous le titre</h3>
-        {{ form_row(form.sub_links, {'label': false}) }}
-    </div>
+
+    {% include '@SyliusAdmin/Taxon/_sub_links.html.twig' %}
 
     {{ form_row(form.top_products) }}
     
