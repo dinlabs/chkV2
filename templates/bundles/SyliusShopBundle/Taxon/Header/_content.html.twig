@@ -23,10 +23,10 @@
     {% endif %}
 </div>
 
-{% if taxon is defined and taxon.enabledChildren %}
+{% if taxon is defined and taxon.subLinks %}
 <ul class="ctaCats">
-    {% for child in taxon.enabledChildren %}
-    <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}">{{ child.name }}</a></li>
+    {% for link in taxon.subLinks %}
+    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
