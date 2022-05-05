@@ -106,7 +106,7 @@ class GinkoiaCustomerWs
     {
         if($return = $this->_callWS(['email' => $email]))
         {
-            return ($return['Result'] == 'OK') ? $return['Customer'] : $return;
+            return (isset($return['Result']) && ($return['Result'] == 'OK')) ? $return['Customer'] : $return;
         }
         
         return false;
@@ -126,7 +126,7 @@ class GinkoiaCustomerWs
         
         if($return = $this->_callWS($newData, 'POST'))
         {
-            return ($return['Result'] == 'OK') ? $return['Customer'] : $return;
+            return (isset($return['Result']) && ($return['Result'] == 'OK')) ? $return['Customer'] : $return;
         }
         return false;
     }
@@ -145,7 +145,7 @@ class GinkoiaCustomerWs
         
         if($return = $this->_callWS($data))
         {
-            if($return['Result'] == 'OK')
+            if(isset($return['Result']) && ($return['Result'] == 'OK'))
             {
                 $loyalties = [
                     'loyalty_points' => $return['loyalty_points'],
@@ -192,7 +192,7 @@ class GinkoiaCustomerWs
     {
         if($return = $this->_callWS(['voucher_id' => $voucher_id]))
         {
-            return ($return['Result'] == 'OK') ? true : $return;
+            return (isset($return['Result']) && ($return['Result'] == 'OK')) ? true : $return;
         }
         
         return false;
@@ -207,7 +207,7 @@ class GinkoiaCustomerWs
     {
         if($return = $this->_callWS(['email' => $email, 'ReceiptsList' => true]))
         {
-            return ($return['Result'] == 'OK') ? $return['ReceiptsList'] : $return;
+            return (isset($return['Result']) && ($return['Result'] == 'OK')) ? $return['ReceiptsList'] : $return;
         }
         return false;
     }
@@ -221,7 +221,7 @@ class GinkoiaCustomerWs
     {
         if($return = $this->_callWS(['ReceiptID' => $receiptID]))
         {
-            return ($return['Result'] == 'OK') ? $return['ReceiptDetail'] : $return;
+            return (isset($return['Result']) && ($return['Result'] == 'OK')) ? $return['ReceiptDetail'] : $return;
         }
         return false;
     }

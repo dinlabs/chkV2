@@ -306,7 +306,6 @@ class UpstreamPayWidget
                         'gender_code' => $gender,
                         'first_name' => $customer->getFirstname(),
                         'last_name' => $customer->getLastname(),
-                        'birthdate' => $customer->getBirthday()->format('Y-m-d'),
                         'ip' => $order->getCustomerIp(),
                         'locale_code' => 'fr_FR',
                         'billing_address' => [
@@ -323,6 +322,11 @@ class UpstreamPayWidget
                             'phone' => $address->getPhoneNumber()
                         ]
                     ];
+                    if($customer->getBirthday())
+                    {
+                        $customer_lines['birthdate'] = $customer->getBirthday()->format('Y-m-d');
+                    }
+
                     if($customer->hasUser())
                     {
                         $customer_lines['account'] = [
