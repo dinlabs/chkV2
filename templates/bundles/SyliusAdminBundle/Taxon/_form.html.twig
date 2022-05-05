@@ -12,6 +12,10 @@
     </div>
 
     <div style="border:2px dashed; padding:.5em; margin-bottom:1em;">{{ form_row(form.redirection) }}</div>
+    <div class="ui segment">
+        <h3 class="ui dividing header">Liste de liens sous le titre</h3>
+        {{ form_row(form.sub_links, {'label': false}) }}
+    </div>
 
     {{ form_row(form.top_products) }}
     
@@ -21,9 +25,6 @@
 
     {{ form_row(form.blogfeedurl) }}
 </div>
-{#<div class="ui segment">
-    {{ form_row(form.sub_links) }}
-</div>#}
 {{ translationFormWithSlug(form.translations, '@SyliusAdmin/Taxon/_slugField.html.twig', taxon) }}
 
 {% include '@SyliusAdmin/Taxon/_media.html.twig' %}

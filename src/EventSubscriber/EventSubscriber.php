@@ -55,7 +55,8 @@ class EventSubscriber implements EventSubscriberInterface
 
 
         return [
-            'sylius.taxon.pre_update' => 'onSyliusTaxonPreUpdate',
+            'sylius.taxon.pre_create' => 'onSyliusTaxonPreCreUpdate',
+            'sylius.taxon.pre_update' => 'onSyliusTaxonPreCreUpdate',
             'sylius.product.pre_create' => 'onSyliusProductPreCreUpdate',
             'sylius.product.pre_update' => 'onSyliusProductPreCreUpdate',
             'sylius.order.pre_update' => 'onSyliusOrderPreAdd',
@@ -79,7 +80,7 @@ class EventSubscriber implements EventSubscriberInterface
     /**
      * Appelé quand on enregistre un Taxon
      */
-    public function onSyliusTaxonPreUpdate(GenericEvent $event)
+    public function onSyliusTaxonPreCreUpdate(GenericEvent $event)
     {
         $subject = $event->getSubject();
         if($redirection = $subject->getRedirection())
@@ -88,6 +89,15 @@ class EventSubscriber implements EventSubscriberInterface
             {
                 $subject->setRedirection(null);
             }
+        }
+
+        if($links = $subject->getSubLinks())
+        {
+            foreach($links as $link)
+            {
+                $this->entityManager->persist($link);
+            }
+            $this->entityManager->flush();
         }
     }
 

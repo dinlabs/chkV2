@@ -31,14 +31,14 @@ class TaxonTypeExtension extends AbstractTypeExtension
             'required' => false
         ]);
 
-        /*$builder->add('sub_links', CollectionType::class, [
+        $builder->add('sub_links', CollectionType::class, [
             'entry_type' => LinkType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
             'label' => 'Liste de liens sous le titre',
             'block_name' => 'entry'
-        ]);*/
+        ]);
 
         $builder->add('top_brands');
         $builder->add('top_products', ProductAutocompleteChoiceType::class, [
