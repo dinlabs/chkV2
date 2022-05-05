@@ -39,7 +39,6 @@ final class ChullankaCalculator implements CalculatorInterface
                 if($department == '20')
                 {
                     $price += $supForCorsica;
-                    $canBeFree = false;
                 }
                 elseif(in_array($department, ['97','98']))
                 {
