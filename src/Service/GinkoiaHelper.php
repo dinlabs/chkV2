@@ -18,8 +18,8 @@ class GinkoiaHelper
     private $entityManager;
     private $logger;
     private $projectDir;
+    private $ginkoiaDir;
     private $tmpDir;
-    private $logfilesDir;
     private $channel;
     private $doc;
     private $totaux;
@@ -29,10 +29,10 @@ class GinkoiaHelper
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->projectDir = $projectDir;
-        $this->tmpDir = $this->projectDir . '/var/tmp/ginkoia/';
+        $this->ginkoiaDir = $this->projectDir . '/var/chkfiles/ginkoia/';
+        if(!is_dir($this->ginkoiaDir)) mkdir($this->ginkoiaDir);
+        $this->tmpDir = $this->ginkoiaDir . 'tmp/';
         if(!is_dir($this->tmpDir)) mkdir($this->tmpDir);
-        $this->logfilesDir = $this->projectDir . '/var/ginkoiafiles/';
-        if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
 
         $this->totaux = [];
     }
@@ -62,8 +62,8 @@ class GinkoiaHelper
                 $this->logger->info('Ginkoia :: Le fichier XML des ventes a été exporté : '.$exportPath);
                 
                 // We move the tmp file in a logfiles dir
-                if(!rename($file, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($file)))
-                    $this->logger->error('Ginkoia :: ERROR : File "'.$file.'" not moved to ginkoiafiles');
+                if(!rename($file, $this->ginkoiaDir . DIRECTORY_SEPARATOR . basename($file)))
+                    $this->logger->error('Ginkoia :: ERROR : File "'.$file.'" not moved to chkfiles/ginkoia');
             }
             else
             {

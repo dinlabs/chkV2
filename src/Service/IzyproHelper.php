@@ -30,8 +30,8 @@ class IzyproHelper
     private $stateMachineFactory;
     private $eventBus;
     private $projectDir;
+    private $izyproDir;
     private $tmpDir;
-    private $logfilesDir;
     private $channel;
     private $doc;
     private $commentaires;
@@ -47,9 +47,10 @@ class IzyproHelper
         $this->stateMachineFactory = $stateMachineFactory;
         $this->eventBus = $eventBus;
         $this->projectDir = $projectDir;
-        $this->tmpDir = $this->projectDir . '/var/tmp/izypro/';
-        $this->logfilesDir = $this->projectDir . '/var/izyprofiles/';
-        if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
+        $this->izyproDir = $this->projectDir . '/var/chkfiles/izypro/';
+        if(!is_dir($this->izyproDir)) mkdir($this->izyproDir);
+        $this->tmpDir = $this->izyproDir . 'tmp/';
+        if(!is_dir($this->tmpDir)) mkdir($this->tmpDir);
         $this->totaux = [];
     }
     private function chkParameter($slug)
@@ -149,9 +150,9 @@ class IzyproHelper
                     $this->logger->info('SFTP :: fichier '.$file.' écrit avec succès');
                     //$this->reportMsg[] = 'SFTP :: fichier '.$file.' écrit avec succès';
                     // We move the tmp file in a logfiles dir
-                    if(!rename($file, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($file)))
+                    if(!rename($file, $this->izyproDir . DIRECTORY_SEPARATOR . basename($file)))
                     {
-                        $this->logger->error('SFTP :: fichier '.$file.' non déplacé dans izyprofiles');
+                        $this->logger->error('SFTP :: fichier '.$file.' non déplacé dans chkfiles/izypro');
                         //$this->reportMsg[] = 'SFTP :: fichier '.$file.' non déplacé dans izyprofiles';
                     }
                 }
@@ -171,7 +172,7 @@ class IzyproHelper
                         $this->logger->info('SFTP :: Fichier courant : '.$files[$i]);
                         //$this->reportMsg[] = 'SFTP :: Fichier courant : '.$files[$i];
                         
-                        if(file_exists($this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
+                        if(file_exists($this->izyproDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                         {
                             // If process was ok, delete the distant file
                             if($sftp->deleteFile($importDir . DIRECTORY_SEPARATOR . $files[$i]))
@@ -252,7 +253,7 @@ class IzyproHelper
             if($return == true)
             {
                 // We move the tmp file in a logfiles dir
-                if(!rename($tmpFile, $this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
+                if(!rename($tmpFile, $this->izyproDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                 {
                     $this->logger->error('Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles');
                     //$this->reportMsg[] = 'Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles';

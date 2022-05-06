@@ -8,8 +8,8 @@ parameters:
 # Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
 fos_elastica:
     clients:
-        #default: { url: '%env(ELASTICSEARCH_URL)%' }
-        default: { host: localhost, port: 9200 }
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+        #default: { host: localhost, port: 9200 }
     indexes:
         nan_chk_brands:
             index_name: "nan_chk_brands_%kernel.environment%"

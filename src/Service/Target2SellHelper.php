@@ -21,6 +21,7 @@ class Target2SellHelper
     private $router;
     private $cacheManager;
     private $projectDir;
+    private $targetToSellDir;
     private $exportDir;
     private $doc;
 
@@ -30,6 +31,8 @@ class Target2SellHelper
         $this->router = $router;
         $this->cacheManager = $cacheManager;
         $this->projectDir = $projectDir;
+        $this->targetToSellDir = $this->projectDir . '/var/chkfiles/target2sell/';
+        if(!is_dir($this->targetToSellDir)) mkdir($this->targetToSellDir);
         $this->exportDir = $this->projectDir . '/public/exports/';
     }
     private function chkParameter($slug)
@@ -321,7 +324,7 @@ class Target2SellHelper
     private function getRankFile()
     {
         $filename = 'rankings.csv';
-        $filePath = $this->projectDir . '/var/imports/' . $filename;
+        $filePath = $this->targetToSellDir . $filename;
         if(!is_file($filePath))
         {
             $serverUrl = $this->chkParameter('t2s-server-url');//'https://api.target2sell.com/catalog/indexes/';

@@ -68,7 +68,7 @@ class GinkoiaCommand extends Command
         $this->channelRepository = $channelRepository;
         $this->brandRepository = $brandRepository;
 
-        $this->logfilesDir = 'var/ginkoiafiles/';
+        $this->logfilesDir = 'var/chkfiles/ginkoia/';
         if(!is_dir($this->logfilesDir)) mkdir($this->logfilesDir);
     }
     private function chkParameter($slug)
@@ -179,13 +179,6 @@ class GinkoiaCommand extends Command
                 $doArt = $doPrices = $doOc = $doStock = true;
                 break;
         }
-        
-        /*if(true)
-        {
-            $output->writeln('Traitements des fichiers Ginkoia');
-            
-            $this->manageProduct(null);
-        }*/
         
         $files = scandir($importPath); // liste des fichiers dans le rep. d'import
         sort($files);
