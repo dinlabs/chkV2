@@ -26,3 +26,5 @@
 </div>
 {{ render(url('store_index', {'template': 'chullanka/store/popin.html.twig'})) }}
 {% endif %}
+
+{{ sylius_template_event('sylius.shop.product.show.content', _context) }}

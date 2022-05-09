@@ -564,9 +564,9 @@ header + #breadcrumb { padding-top:0; }
 
 #productInfos .colorVars { padding-bottom:1em; }
 #productInfos .colorVars ul li { display:inline-block; }
-#productInfos .colorVars ul li + li { margin-left:.5em; }
+#productInfos .colorVars ul li + li { margin-left:.75em; }
 #productInfos .colorVars ul li a { display:block; }
-#productInfos .colorVars ul li a img { border:2px solid var(--default);  border-radius:5px; }
+#productInfos .colorVars ul li a img { border:2px solid var(--default);  border-radius:5px; width:65px; height:65px; object-fit:cover; }
 #productInfos .colorVars ul li a:hover img { border-color:var(--primary); }
 
 #productInfos #addToWisthList { padding:0.5em 0 1em 0; }

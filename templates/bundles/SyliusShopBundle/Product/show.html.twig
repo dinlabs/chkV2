@@ -200,10 +200,7 @@
             <a href="{{ path('sylius_shop_product_review_create', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn primary"><i class="icon plus"></i> {{ 'sylius.ui.add_your_review'|trans }}</a>
         </div>
     </div>
-
-    {{ sylius_template_event('sylius.shop.product.show.content', _context) }}
 </div>
-
 
 <div id="panierPop" class="popin hidden" data-url="{{ path('chk_ajax_popaddtocart') }}">
     <div class="popinside">
