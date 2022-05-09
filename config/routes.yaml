@@ -4,6 +4,13 @@
 #     defaults:
 #         _controller: sylius.controller.product::indexAction
 
+sylius_admin_ajax_product_index:
+    path: /admin/ajax/products/
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\Chullanka\AdminController:searchProduct
+        _format: json
+
 bitbag_sylius_elasticsearch_plugin:
     resource: "@BitBagSyliusElasticsearchPlugin/Resources/config/routing.yml"
 

@@ -2,13 +2,27 @@
 
 namespace App\Repository;
 
-use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\ProductRepositoryInterface as LoevgaardSyliusBrandPluginProductRepositoryInterface;
-use Loevgaard\SyliusBrandPlugin\Doctrine\ORM\ProductRepositoryTrait as LoevgaardSyliusBrandPluginProductRepositoryTrait;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as BaseProductRepository;
 
-class ProductRepository extends BaseProductRepository implements LoevgaardSyliusBrandPluginProductRepositoryInterface
+class ProductRepository extends BaseProductRepository
 {
-    public function findAllByBrand(Int $brand_id): array
+    public function findBySearch($term)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('translation.name')
+            ->addSelect('o.code')
+            ->innerJoin('o.translations', 'translation', 'WITH', 'translation.locale = :locale')
+            ->addOrderBy('o.updatedAt', 'DESC')
+            ->andWhere('o.code LIKE :term')
+            ->orWhere('translation.name LIKE :term')
+            ->setParameter('locale', 'fr_FR')
+            ->setParameter('term', '%' . $term . '%')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /*public function findAllByBrand(Int $brand_id): array
     {
         $brand = $this->getEntityManager()
                         ->getRepository('Loevgaard\SyliusBrandPlugin\Model\Brand')
@@ -22,5 +36,5 @@ class ProductRepository extends BaseProductRepository implements LoevgaardSylius
                     ->getQuery()
                     ->getResult()
         ;
-    }
+    }*/
 }

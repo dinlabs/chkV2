@@ -3,6 +3,7 @@
 namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\Parameter;
+use App\Entity\Product\Product;
 use App\Entity\Shipping\Shipment;
 use Cloudflare\API\Auth\APIKey as CFAPIKey;
 use Cloudflare\API\Adapter\Guzzle as CFGuzzle;
@@ -14,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -22,6 +24,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
 
+    public function searchProduct(Request $request)
+    {
+        $repo = $this->container->get('doctrine')->getRepository(Product::class);
+
+        $criteria = $request->query->get('criteria');
+        $q = $criteria['search']['value'];
+
+        $items = $repo->findBySearch($q);
+
+        return new JsonResponse([
+            '_embedded' => [
+                'items' => $items,
+            ]
+        ]);
+    }
 
 
     /**
