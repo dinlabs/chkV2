@@ -156,7 +156,7 @@
       height = Math.max(__.offsetHeight, height)
     })
     
-    width -= _interSpace;
+    if(_total > 1) width -= _interSpace;
 
     _.track.style.width = width + 'px'
     _.trackWidth = width
