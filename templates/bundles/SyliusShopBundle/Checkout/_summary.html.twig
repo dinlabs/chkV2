@@ -81,7 +81,7 @@
 
     {% if active is defined and active == 'select_payment' %}
     <div class="agreement">
-        <input type="checkbox" name="agreement" id="agreement-checkbox" value="1" autocomplete="off">
+        <input type="checkbox" name="agreement" id="agreement-checkbox" value="1" autocomplete="off" required oninvalid="this.setCustomValidity('Veuillez accepter les conditions générales de ventes avant de valider la commande.')">
         <label for="agreement-checkbox">J'accepte <a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': 'conditions-generales-de-vente' }) }}" target="_blank">les conditions générales de vente</a></label>
     </div>
     {% endif %}

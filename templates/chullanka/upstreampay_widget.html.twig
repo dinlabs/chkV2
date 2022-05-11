@@ -55,11 +55,11 @@
             e.preventDefault();
 
             var _agreement = document.querySelector('#agreement-checkbox');
-            if(_agreement.checked == false)
+            if(_agreement.checked)
             {
-                alert('Veuillez accepter les conditions générales de ventes avant de valider la commande.');
+                manager.submit();
+                //alert('Veuillez accepter les conditions générales de ventes avant de valider la commande.');
             }
-            else manager.submit();
         });
     });
 </script>
