@@ -101,9 +101,11 @@
 
     _.slides = _.track.children;
 
+    var _total = 0;
     [].forEach.call(_.slides, function (_, i) {
       _.classList.add('glider-slide')
       _.setAttribute('data-gslide', i)
+      _total++;
     })
 
     _.containerWidth = _.ele.clientWidth
@@ -131,20 +133,30 @@
 
     // ajout Yannick
     var _itemWidth = _.itemWidth;
+    var _interSpace = 20;
+    var _count = 0;
     // fin ajout Yannick
 
     // set slide dimensions
     [].forEach.call(_.slides, function (__) {
+      
       // ajout Yannick
-      _itemWidth = _.opt.specialGlider
-      ? __.querySelector('img').naturalWidth + (_.opt.exactWidth ? _.opt.itemWidth - _.opt.exactWidth : 0)
-      : _.itemWidth;
+      _count++;
+      _itemWidth = _.itemWidth;
+      if(_.opt.specialGlider)
+      {
+        var _img = __.querySelector('img');
+        _itemWidth = (_img.style != undefined && _img.style.width) ? parseInt(_img.style.width) : _img.width;
+        if(_count < _total) _itemWidth += _interSpace;
+      }
       // fin ajout Yannick
       __.style.height = 'auto'
       __.style.width = _itemWidth + 'px'
       width += _itemWidth
       height = Math.max(__.offsetHeight, height)
     })
+    
+    width -= _interSpace;
 
     _.track.style.width = width + 'px'
     _.trackWidth = width

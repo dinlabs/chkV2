@@ -9,13 +9,13 @@
 
     <div class="ui stackable grid">
         <div class="eleven wide column">
-            <div class="ui padded segment" id="sylius-payment-methods">
-                {{ sylius_template_event('sylius.shop.checkout.select_payment.before_form', {'order': order}) }}
-
             {% if true %}
             {#% set paymethod = order.payments.first.method.code %#}
                 {{ render(url('chk_upstream_payment_widget')) }}
             {% else %}
+            <div class="ui padded segment" id="sylius-payment-methods">
+                {{ sylius_template_event('sylius.shop.checkout.select_payment.before_form', {'order': order}) }}
+
                 {{ form_start(form, {'action': path('sylius_shop_checkout_select_payment'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
                     {{ form_errors(form) }}
                     <input type="hidden" name="_method" value="PUT" />
@@ -28,11 +28,11 @@
 
                     {{ form_row(form._token) }}
                 {{ form_end(form, {'render_rest': false}) }}
-                {% endif %}
             </div>
+            {% endif %}
         </div>
         <div class="five wide column">
-            {{ sylius_template_event(['sylius.shop.checkout.select_payment.sidebar', 'sylius.shop.checkout.sidebar'], _context) }}
+            {{ sylius_template_event(['sylius.shop.checkout.select_payment.sidebar', 'sylius.shop.checkout.sidebar'], _context|merge({'active': 'select_payment'})) }}
         </div>
     </div>
 {% endblock %}

@@ -232,6 +232,21 @@ app_admin_parameter:
 #             grid: app_admin_parameter
 #             template: "@SyliusAdmin/Parameter/index.html.twig"
 
+app_admin_task:
+    resource: |
+        alias: app.task
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: index
+        grid: app_admin_task
+        vars:
+            all:
+                subheader: 'Tâches plannifiées'
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: /admin
+
 # app_product_bundle:
 #     resource: |
 #         alias: app.product_bundle

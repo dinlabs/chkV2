@@ -91,3 +91,9 @@ sylius_resource:
                 model: App\Entity\Chullanka\Parameter
                 form: App\Form\Type\ParameterType
                 repository: App\Repository\Chullanka\ParameterRepository
+        app.task:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Chullanka\Task
+                form: App\Form\Type\TaskType
+                repository: App\Repository\Chullanka\TaskRepository

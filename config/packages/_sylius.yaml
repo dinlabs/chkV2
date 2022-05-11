@@ -527,6 +527,33 @@ sylius_grid:
                 item:
                     update:
                         type: update
+        
+        app_admin_task:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: App\Entity\Chullanka\Task
+            fields:
+                command:
+                    type: string
+                    label: 'Commande'
+                done:
+                    type: twig
+                    label: 'Exécutée ?'
+                    options:
+                        template: "@SyliusUi/Grid/Field/yesNo.html.twig"
+                executed_at:
+                    type: datetime
+                    label: "Date et heure d'exécution"
+                    options:
+                        format: 'd/m/Y à H:i'
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    delete:
+                        type: delete
 
 sylius_ui:
     events:

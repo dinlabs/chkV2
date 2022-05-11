@@ -49,10 +49,17 @@
             } else {
                 document.getElementById('next-step').setAttribute('disabled', true);
             }
-            document.querySelector('#next-step').addEventListener('click', function(e) {
-                e.preventDefault();
-                manager.submit();
-            });
         })
+        
+        document.querySelector('#next-step').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var _agreement = document.querySelector('#agreement-checkbox');
+            if(_agreement.checked == false)
+            {
+                alert('Veuillez accepter les conditions générales de ventes avant de valider la commande.');
+            }
+            else manager.submit();
+        });
     });
 </script>

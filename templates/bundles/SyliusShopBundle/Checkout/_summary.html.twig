@@ -79,6 +79,12 @@
         </tfoot>
     </table>
 
+    {% if active is defined and active == 'select_payment' %}
+    <div class="agreement">
+        <input type="checkbox" name="agreement" id="agreement-checkbox" value="1" autocomplete="off">
+        <label for="agreement-checkbox">J'accepte <a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': 'conditions-generales-de-vente' }) }}" target="_blank">les conditions générales de vente</a></label>
+    </div>
+    {% endif %}
     
     <button type="submit" id="next-step" form="{{ _context.form.vars.id }}" class="btn primary" {{ sylius_test_html_attribute('next-step') }}>Continuer</button>
 

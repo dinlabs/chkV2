@@ -4,12 +4,13 @@ namespace App\Entity\Chullanka;
 
 use App\Repository\Chullanka\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  * @ORM\Table(name="nan_chk_task")
  */
-class Task
+class Task implements ResourceInterface
 {
     /**
      * @ORM\Id
@@ -29,9 +30,14 @@ class Task
     private $done;
 
     /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $executed_at;
+
+    public function __construct()
+    {
+        $this->done = false;
+    }
 
     public function getId(): ?int
     {
@@ -62,12 +68,12 @@ class Task
         return $this;
     }
 
-    public function getExecutedAt(): ?\DateTimeImmutable
+    public function getExecutedAt(): ?\DateTime
     {
         return $this->executed_at;
     }
 
-    public function setExecutedAt(?\DateTimeImmutable $executed_at): self
+    public function setExecutedAt(?\DateTime $executed_at): self
     {
         $this->executed_at = $executed_at;
 

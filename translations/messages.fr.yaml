@@ -56,6 +56,10 @@ app:
     parameters: 'Paramètres'
     edit_parameter: 'Modifier le paramètre'
     new_parameter: 'Nouveau paramètre'
+    task: 'Tâche'
+    tasks: 'Exécuteur de Tâches'
+    edit_task: 'Modifier la tâche'
+    new_task: 'Nouvelle tâche à planifier'
     product:
       admin:
         test:

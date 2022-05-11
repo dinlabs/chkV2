@@ -840,8 +840,10 @@ body.checkout { background:var(--bg1); }
 
 .checkout .insert.addresses { padding-bottom:0; }
 
-.checkout #sylius-checkout-subtotal + .btn.primary { width:100%; height:3.75em; font-size:1em; }
-.checkout #sylius-checkout-subtotal + .btn.primary[disabled] { background:var(--default); cursor:not-allowed; }
+.checkout .insert .agreement { padding-bottom:1em; }
+
+.checkout #next-step.btn.primary { width:100%; height:3.75em; font-size:1em; }
+.checkout #next-step.btn.primary[disabled] { background:var(--default); cursor:not-allowed; }
 
 .checkout #sylius-shipping-methods .insert { padding:1em 2em; }
 .checkout #sylius-shipping-methods .shippingType { padding-bottom:1em; font-size:1.2em; font-family:var(--altFont); text-transform:capitalize; }
@@ -874,10 +876,26 @@ body.checkout { background:var(--bg1); }
 .checkout #getPickups #pickupList .pickupElement .relayDetails .boxhoraires { margin:2em 0; }
 
 
-
-
 .checkout #sylius-shipping-methods .storelist { padding-left:50px; }
 .checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }
+
+/* Widget UpStream Pay */
+.checkout .usp-widget-layout {
+    --usp-button-bg:var(--primary);
+    --usp-button-text:var(--bg0);
+    --usp-button-bg-hovered:var(--primary);
+    --usp-card-input-min-height:3em;
+    --usp-protocol-icon-size-sm:300px;
+}
+.checkout .usp-widget-layout > div.usp-flex, .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { background:var(--bg0); border-radius:5px; padding:1em; }
+.checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { margin-top:1em; }
+.checkout .usp-widget-layout .usp-button { border-radius:5px; padding:.75em 1em; font-weight:700; }
+
+.checkout .usp-widget-layout .usp-widget-container .usp-overflow-scroll { overflow:auto !important; }
+
+.checkout .usp-widget-layout .usp-secondary-token-form-header-row.svelte-1ivwvss { visibility:hidden; }
+.checkout .usp-widget-layout .usp-payment-layout-merge .usp-protocol-list-item.svelte-1v7vq23 { padding:0; }
+
 
 
 /* CUSTOMER */
