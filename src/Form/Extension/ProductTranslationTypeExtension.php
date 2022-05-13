@@ -7,6 +7,7 @@ namespace App\Form\Extension;
 use BitBag\SyliusCmsPlugin\Form\Type\WysiwygType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductTranslationType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductTranslationTypeExtension extends AbstractTypeExtension
@@ -21,6 +22,10 @@ class ProductTranslationTypeExtension extends AbstractTypeExtension
             ->add('description', WysiwygType::class, [
                 'required' => false,
                 'label' => 'sylius.form.product.description',
+            ])
+            ->add('metaTitle', TextType::class, [
+                'required' => false,
+                'label' => 'Meta titre',
             ])
         ;
     }

@@ -13,4 +13,20 @@ use Sylius\Component\Core\Model\ProductTranslation as BaseProductTranslation;
  */
 class ProductTranslation extends BaseProductTranslation
 {
+    /**
+     * @ORM\Column(name="meta_title", type="string", length=255, nullable=true)
+     */
+    private $metaTitle;
+
+    public function getMetaTitle(): ?string
+    {
+        return $this->metaTitle;
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->metaTitle = $metaTitle;
+
+        return $this;
+    }
 }

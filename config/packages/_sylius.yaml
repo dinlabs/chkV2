@@ -253,6 +253,25 @@ sylius_theme:
 sylius_grid:
     grids:
         sylius_admin_product:
+            fields:
+                id:
+                    position: 1
+                    type: string
+                    label: ID
+                    sortable: ~
+                image:
+                    position: 2
+                code:
+                    position: 3
+                name:
+                    position: 4
+                # mainTaxon:
+                #     enabled: false
+                brand:
+                    position: 5
+                    type: string
+                    label: Marque
+                    sortable: ~
             actions:
                 main:
                     create:
@@ -272,6 +291,35 @@ sylius_grid:
                                     label: sylius.ui.pack_product
                                     icon: plus
                                     route: sylius_admin_product_create_pack
+            filters:
+                channel:
+                    enabled: false
+        # sylius_admin_order:
+        #     fields:
+        #         number:
+        #             position: 1
+        #         date:
+        #             position: 2
+        #         channel:
+        #             enabled: false
+        #         customer:
+        #             position: 3
+        #         billingAddress:
+        #             position: 4
+        #             type: twig
+        #             label: Facturation
+        #             sortable: billingAddress.lastName
+        #             options:
+        #                 template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
+        #         shippingAddress:
+        #             position: 5
+        #             type: twig
+        #             label: Livraison
+        #             sortable: shippingAddress.lastName
+        #             options:
+        #                 template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
+        #         currencyCode:
+        #             enabled: false
         app_admin_store:
             driver:
                 name: doctrine/orm

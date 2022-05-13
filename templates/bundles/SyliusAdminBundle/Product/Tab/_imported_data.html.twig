@@ -1,0 +1,10 @@
+<div class="ui tab" data-tab="imported_data">
+    <h3 class="ui top attached header">Données importées de Ginkoia</h3>
+    <div class="ui attached segment">
+        <ul style="display:grid; grid-template-columns:repeat(3, 1fr);">
+            {% for name, value in product.ImportedData %}
+            <li><strong>{{ name }}&nbsp;:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

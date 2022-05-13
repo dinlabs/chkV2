@@ -22,7 +22,12 @@
     {% endif %}
 {% endif %}
 
-{% block title %}{{ taxon.name }} | {{ parent() }}{% endblock %}
+{% block title %}{{ taxon.metaTitle ? taxon.metaTitle : taxon.name ~ ' | ' ~ parent() }}{% endblock %}
+{% block metatags %}
+{% if taxon.metaDescription %}
+<meta name="description" content="{{ taxon.metaDescription }}">
+{% endif %}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

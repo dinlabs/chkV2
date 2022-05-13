@@ -6,6 +6,7 @@ use App\Entity\Chullanka\BrandTranslation;
 use BitBag\SyliusCmsPlugin\Form\Type\WysiwygType;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,6 +31,14 @@ class BrandTranslationType extends AbstractResourceType
             ->add('advertising', WysiwygType::class, [
                 'label' => 'Encart promo',
                 'required' => false
+            ])
+            ->add('metaTitle', TextType::class, [
+                'required' => false,
+                'label' => 'Meta titre'
+            ])
+            ->add('metaDescription', TextType::class, [
+                'required' => false,
+                'label' => 'Meta description'
             ])
         ;
     }

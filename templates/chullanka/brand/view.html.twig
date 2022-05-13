@@ -10,7 +10,13 @@
 
 {% set ajax_pagination = app.request.get('page') %}
 
-{% block title %}{{ brand.name }}{% endblock %}
+{% block title %}{{ brand.metaTitle ? brand.metaTitle : brand.name }}{% endblock %}
+{% if brand.metaDescription %}
+{% block metatags %}
+<meta name="description" content="{{ brand.metaDescription }}">
+{% endblock %}
+{% endif %}
+
 {% block bodyattr %}id="brand"{% endblock %}
 
 {% block content %}

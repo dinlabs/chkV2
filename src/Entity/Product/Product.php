@@ -80,11 +80,6 @@ class Product extends BaseProduct
      */
     private $imported_data = [];
 
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $code_chrono;
-
     public function __construct()
     {
         parent::__construct();
@@ -344,6 +339,18 @@ class Product extends BaseProduct
         ;
     }
 
+    public function getMetaTitle(): ?string
+    {
+        return $this->getTranslation()->getMetaTitle();
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->getTranslation()->setMetaTitle($metaTitle);
+
+        return $this;
+    }
+
 
     /** Twig */
     public function getLabels()
@@ -419,18 +426,6 @@ class Product extends BaseProduct
     public function setImportedData(?array $imported_data): self
     {
         $this->imported_data = $imported_data;
-
-        return $this;
-    }
-
-    public function getCodeChrono(): ?string
-    {
-        return $this->code_chrono;
-    }
-
-    public function setCodeChrono(?string $code_chrono): self
-    {
-        $this->code_chrono = $code_chrono;
 
         return $this;
     }

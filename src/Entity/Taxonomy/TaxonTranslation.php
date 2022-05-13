@@ -18,6 +18,16 @@ class TaxonTranslation extends BaseTaxonTranslation
      */
     private $content;
 
+    /**
+     * @ORM\Column(name="meta_title", type="string", length=255, nullable=true)
+     */
+    private $metaTitle;
+
+    /**
+     * @ORM\Column(name="meta_description", type="string", length=255, nullable=true)
+     */
+    private $metaDescription;
+
     public function getContent(): ?string
     {
         return $this->content;
@@ -26,6 +36,30 @@ class TaxonTranslation extends BaseTaxonTranslation
     public function setContent(?string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getMetaTitle(): ?string
+    {
+        return $this->metaTitle;
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->metaTitle = $metaTitle;
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->metaDescription;
+    }
+
+    public function setMetaDescription(?string $metaDescription): self
+    {
+        $this->metaDescription = $metaDescription;
 
         return $this;
     }

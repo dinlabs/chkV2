@@ -888,6 +888,7 @@ body.checkout { background:var(--bg1); }
     --usp-protocol-icon-size-sm:300px;
 }
 .checkout .usp-widget-layout > div.usp-flex, .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { background:var(--bg0); border-radius:5px; padding:1em; }
+.checkout .usp-widget-layout .usp-protocol-item[testid='easy2play-giftcard-protocol'] { cursor:pointer; }
 .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { margin-top:1em; }
 .checkout .usp-widget-layout .usp-button { border-radius:5px; padding:.75em 1em; font-weight:700; }
 

@@ -81,6 +81,30 @@ class Taxon extends BaseTaxon
         $this->getTranslation()->setContent($content);
     }
 
+    public function getMetaTitle(): ?string
+    {
+        return $this->getTranslation()->getMetaTitle();
+    }
+
+    public function setMetaTitle(?string $metaTitle): self
+    {
+        $this->getTranslation()->setMetaTitle($metaTitle);
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->getTranslation()->getMetaDescription();
+    }
+
+    public function setMetaDescription(?string $metaDescription): self
+    {
+        $this->getTranslation()->setMetaDescription($metaDescription);
+
+        return $this;
+    }
+
     /**
      * @return Collection|Brand[]
      */
