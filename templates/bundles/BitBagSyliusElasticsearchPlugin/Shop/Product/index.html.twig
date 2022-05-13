@@ -22,11 +22,9 @@
     {% endif %}
 {% endif %}
 
-{% block title %}{{ taxon.metaTitle ? taxon.metaTitle : taxon.name ~ ' | ' ~ parent() }}{% endblock %}
+{% block title %}{{ taxon.metaTitle ? taxon.metaTitle|e : taxon.name|e ~ ' : les plus grandes marques outdoor sont chez Chullanka' }}{% endblock %}
 {% block metatags %}
-{% if taxon.metaDescription %}
-<meta name="description" content="{{ taxon.metaDescription }}">
-{% endif %}
+<meta name="description" content="{{ taxon.metaDescription ? taxon.metaDescription|e : 'La meilleure sélection ' ~ taxon.name|e ~ ' est sur Chullanka, votre site d’équipement outdoor pour pratiquer les sports de montagne, du débutant au passionné.' }}">
 {% endblock %}
 
 {% block stylesheets %}

@@ -10,12 +10,10 @@
 
 {% set ajax_pagination = app.request.get('page') %}
 
-{% block title %}{{ brand.metaTitle ? brand.metaTitle : brand.name }}{% endblock %}
-{% if brand.metaDescription %}
+{% block title %}{{ brand.metaTitle ? brand.metaTitle|e : brand.name|e ~ ' – tous les produits outdoor pas cher - Chullanka' }}{% endblock %}
 {% block metatags %}
-<meta name="description" content="{{ brand.metaDescription }}">
+<meta name="description" content="{{ brand.metaDescription ? brand.metaDescription|e : 'La plus grande offre ' ~ brand.name|e ~ ' est chez Chullanka qui vous propose le meilleur de l’équipement randonnée, ski, escalade, alpinisme, au meilleur prix !' }}">
 {% endblock %}
-{% endif %}
 
 {% block bodyattr %}id="brand"{% endblock %}
 

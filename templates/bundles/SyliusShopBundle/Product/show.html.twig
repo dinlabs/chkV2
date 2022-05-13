@@ -1,10 +1,8 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{% block title %}{{ product.metaTitle ? product.metaTitle : product.name ~ ' | ' ~ parent() }}{% endblock %}
+{% block title %}{{ product.metaTitle ? product.metaTitle|e : product.name|e ~ ' – ' ~ product.mainTaxon.name|e ~ ' – Chullanka' }}{% endblock %}
 {% block metatags %}
-{% if product.metaDescription %}
-<meta name="description" content="{{ product.metaDescription }}">
-{% endif %}
+<meta name="description" content="{{ product.metaDescription ? product.metaDescription|e : product.name|e ~ ' – ' ~ product.shortDescription|e }}">
 {% endblock %}
 
 {% set univers = null %}
