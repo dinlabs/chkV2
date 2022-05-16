@@ -748,6 +748,8 @@ header + #breadcrumb { padding-top:0; }
 /* CHECKOUT */
 body.checkout { background:var(--bg1); }
 .checkout .insert { margin-bottom:1em; }
+.checkout .ui.grid > .wide.column { padding:0 !important; }
+
 .checkout header .autoMargin { display:flex; justify-content:space-between; align-items:center; }
 .checkout header #logo { margin:0; }
 
@@ -830,15 +832,15 @@ body.checkout { background:var(--bg1); }
 
 .checkout.cart .getAdvice .btnCall { background:var(--default); }
 
-
 .checkout form input[type='text'], .checkout form input[type='email'], .checkout form input[type='password'], .checkout form select { border:2px solid var(--default) !important; padding:.5em 2em; }
-.checkout #sylius-billing-address { padding:1em 2em; margin-bottom:1em; }
-.checkout #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em 2em; }
+.checkout #sylius-billing-address { padding-bottom:1em; }
+.checkout #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em; }
 
 .checkout .ui.fluid.dropdown { background:var(--primary) !important; color: #fff !important; }
 .checkout .ui.fluid.dropdown > .text, .checkout .ui.active.search.dropdown input.search, .checkout .ui.active.search.dropdown input.search:focus + .text { color: #fff !important; }
 
 .checkout .insert.addresses { padding-bottom:0; }
+.checkout .insert.addresses .ui.floating.dropdown > .menu { max-width:80%; overflow:auto; }
 
 .checkout .insert .agreement { padding-bottom:1em; }
 
@@ -880,14 +882,14 @@ body.checkout { background:var(--bg1); }
 .checkout #sylius-shipping-methods .storelist li { padding:.25em .5em; }
 
 /* Widget UpStream Pay */
-.checkout .usp-widget-layout {
+.checkout #widget-payment { padding-bottom:1rem;
     --usp-button-bg:var(--primary);
     --usp-button-text:var(--bg0);
     --usp-button-bg-hovered:var(--primary);
     --usp-card-input-min-height:3em;
     --usp-protocol-icon-size-sm:300px;
 }
-.checkout .usp-widget-layout > div.usp-flex, .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { background:var(--bg0); border-radius:5px; padding:1em; }
+.checkout .usp-widget-layout > div.usp-flex, .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible > div { background:var(--bg0); border-radius:5px; padding:1em; }
 .checkout .usp-widget-layout .usp-protocol-item[testid='easy2play-giftcard-protocol'] { cursor:pointer; }
 .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { margin-top:1em; }
 .checkout .usp-widget-layout .usp-button { border-radius:5px; padding:.75em 1em; font-weight:700; }
@@ -1218,6 +1220,8 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     .customer #welcomePop { place-items:center; }
 
     #brand #brandTop .grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+
+    .checkout .ui.grid > .wide.column { padding:1rem !important; }
 }
 
 @media screen and (min-width:1050px) {

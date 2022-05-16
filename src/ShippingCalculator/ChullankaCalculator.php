@@ -18,12 +18,10 @@ final class ChullankaCalculator implements CalculatorInterface
                 'amount' => 500
             ],
             'price' => 600,
-            'sup_for_corsica' => 300,
             'sup_outside_france' => 500,
             'free_above' => 12000
         ];*/
         $price = $configuration['price'];
-        $supForCorsica = $configuration['sup_for_corsica'];
         $supOutsideFrance = $configuration['sup_outside_france'];
         $freeAbove = $configuration['free_above'];
         $canBeFree = true;
@@ -36,11 +34,7 @@ final class ChullankaCalculator implements CalculatorInterface
             {
                 $postcode = $shipAddress->getPostcode();
                 $department = substr($postcode, 0, 2);
-                if($department == '20')
-                {
-                    $price += $supForCorsica;
-                }
-                elseif(in_array($department, ['97','98']))
+                if(in_array($department, ['97','98']))
                 {
                     $price += $supOutsideFrance;
                     $canBeFree = false;

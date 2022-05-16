@@ -4,6 +4,7 @@ namespace App\Form\Type;
 
 use App\Entity\Chullanka\Parameter;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,7 +14,10 @@ class ParameterType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('value')
+            ->add('value', TextType::class, [
+                'label' => 'Valeur',
+                'required' => false
+            ])
         ;
     }
 

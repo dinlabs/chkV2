@@ -18,10 +18,6 @@ final class ChullankaShippingCalculatorType extends AbstractType
                 'label' => 'app.calculator.chullanka.price',
                 'currency' => 'EUR',
             ])
-            ->add('sup_for_corsica', MoneyType::class, [
-                'label' => 'app.calculator.chullanka.sup_for_corsica',
-                'currency' => 'EUR',
-            ])
             ->add('sup_outside_france', MoneyType::class, [
                 'label' => 'app.calculator.chullanka.sup_outside_france',
                 'currency' => 'EUR',

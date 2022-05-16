@@ -415,13 +415,12 @@ class GinkoiaCommand extends Command
     {
         //https://docs.sylius.com/en/latest/book/products/products.html
 
-        $hasConf = (count($articles) > 1);
         $article = $articles[0];
-        $art_uuid = $hasConf ? $article['CODE_CHRONO'] : $article['CODE_ARTICLE'];
+        $code_chrono = $article['CODE_CHRONO'];
         $name = $article['PRODUIT'];
         
         // cherche si le produit existe
-        if($product = $this->productRepository->findOneByCode($art_uuid))
+        if($product = $this->productRepository->findOneByCode($code_chrono))
         {
             $this->output->writeln("Produit trouvé : ".$product->getName());
             //$this->output->writeln("marque : ".$product->getBrand()->getName());
@@ -431,10 +430,10 @@ class GinkoiaCommand extends Command
         }
         else
         {
-            $this->output->writeln("Produit à créer : $art_uuid");
+            $this->output->writeln("Produit à créer : $code_chrono");
             $name .= ' ' . $article['CODE_CHRONO'];
             $product = $this->productFactory->createNew();
-            $product->setCode($art_uuid);
+            $product->setCode($code_chrono);
             $product->setName($name);
             $product->setSlug( $this->slugGenerator->generate($name) );
             $product->addChannel($this->channel);
@@ -447,7 +446,6 @@ class GinkoiaCommand extends Command
             $this->productRepository->add($product);
         }
         $product->setImportedData($article);
-        $product->setCodeChrono($article['CODE_CHRONO']);
         
 
         // Variante(s)
@@ -543,6 +541,15 @@ class GinkoiaCommand extends Command
                     else 
                         return;
                     break;
+            
+                case 'integer':
+                    if(strpos($attr, 'rank') == 0)
+                    {
+                        $value *= 100;
+                    }
+                    $attrValue->setValue( (int)$value );
+                    break;
+                
                 case 'text':
                 default:
                     $attrValue->setValue($value);

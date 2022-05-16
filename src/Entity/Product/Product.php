@@ -10,6 +10,7 @@ use App\Entity\Chullanka\ComplementaryProduct;
 use App\Entity\Chullanka\Faq;
 use App\Entity\Chullanka\PackElement;
 use App\Entity\Chullanka\Recall;
+use App\Entity\Taxonomy\Taxon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -351,6 +352,18 @@ class Product extends BaseProduct
         return $this;
     }
 
+    public function getImportedData(): ?array
+    {
+        return $this->imported_data;
+    }
+
+    public function setImportedData(?array $imported_data): self
+    {
+        $this->imported_data = $imported_data;
+
+        return $this;
+    }
+
 
     /** Twig */
     public function getLabels()
@@ -418,15 +431,22 @@ class Product extends BaseProduct
         return $tags;
     }
 
-    public function getImportedData(): ?array
+    public function getHighestTaxon(): ?Taxon
     {
-        return $this->imported_data;
-    }
-
-    public function setImportedData(?array $imported_data): self
-    {
-        $this->imported_data = $imported_data;
-
-        return $this;
+        $highestTaxon = null;
+        $productTaxons = $this->getProductTaxons();
+        foreach($productTaxons as $productTaxon)
+        {
+            $_taxon = $productTaxon->getTaxon();
+            if(is_null($highestTaxon))
+            {
+                $highestTaxon = $_taxon;
+            }
+            if($_taxon->getLevel() > $highestTaxon->getLevel())
+            {
+                $highestTaxon = $_taxon;
+            }
+        }
+        return $highestTaxon;
     }
 }

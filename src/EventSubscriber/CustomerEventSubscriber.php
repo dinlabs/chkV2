@@ -140,11 +140,11 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                     }
 
                     // fidélité
-                    /*if(($loyalties = $webserv->getCustomerLoyalties($email)) && isset($loyalties['loyalty_total_points']))
+                    if(($loyalties = $webserv->getCustomerLoyalties($email)) && isset($loyalties['loyalty_total_points']))
                     {
                         $chullz = $loyalties['loyalty_total_points'];// on récupère le nbre de points à jour sur le WS
                         $customer->setChullpoints($chullz);
-                    }*/
+                    }
 
                     $this->entityManager->persist($customer);
 

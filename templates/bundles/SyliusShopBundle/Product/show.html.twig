@@ -1,6 +1,18 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{% block title %}{{ product.metaTitle ? product.metaTitle|e : product.name|e ~ ' – ' ~ product.mainTaxon.name|e ~ ' – Chullanka' }}{% endblock %}
+{% if product.metaTitle %}
+    {% set _productTitle = product.metaTitle|e %}
+{% else %}
+    {% set _productTitle = product.name|e %}
+    {% if product.highestTaxon %}
+    {% set _productTitle = _productTitle ~ ' – ' ~ product.highestTaxon.name|e %}
+    {% elseif product.mainTaxon %}
+    {% set _productTitle = _productTitle ~ ' – ' ~ product.mainTaxon.name|e %}
+    {% endif %}
+    {% set _productTitle = _productTitle ~ ' – Chullanka' %}
+{% endif %}
+{% block title %}{{ _productTitle }}{% endblock %}
+
 {% block metatags %}
 <meta name="description" content="{{ product.metaDescription ? product.metaDescription|e : product.name|e ~ ' – ' ~ product.shortDescription|e }}">
 {% endblock %}
