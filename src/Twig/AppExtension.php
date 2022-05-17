@@ -32,8 +32,16 @@ class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
+            new TwigFunction('pr', [$this, 'specialprintr']),
             new TwigFunction('t2sHash', [$this, 'hashEmail']),
         ];
+    }
+
+    public function specialprintr($array)
+    {
+        echo "<pre>";
+        print_r($array);
+        echo "</pre>";
     }
 
     public function getExcerpt($text, $words = 100, $link = null)
@@ -107,6 +115,8 @@ class AppExtension extends AbstractExtension
         }
         return false;
     }
+
+    
 
     /** pour Target2Sell */
     public function hashEmail($string): string

@@ -1,0 +1,15 @@
+{% if order.notes is not null %}
+    <h4 class="ui top attached styled header">
+        {{ 'sylius.ui.notes'|trans }}
+    </h4>
+    <div class="ui attached segment" id="sylius-order-notes">
+        {{ order.notes|nl2br }}
+    </div>
+{% endif %}
+{% if order.further is not null and order.further|length %}
+    <br>
+    <h4 class="ui top attached styled header">Complément d'informations de la commande</h4>
+    <div class="ui attached segment" id="sylius-order-notes">
+        <pre>{{ order.further|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+    </div>
+{% endif %}
