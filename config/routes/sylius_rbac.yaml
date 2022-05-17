@@ -1,0 +1,2 @@
+sylius_rbac:
+    resource: "@OdiseoSyliusRbacPlugin/Resources/config/routing.yml"
