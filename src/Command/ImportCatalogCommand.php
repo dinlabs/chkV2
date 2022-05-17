@@ -50,6 +50,7 @@ class ImportCatalogCommand extends Command
     protected $productVariantRepository;
     protected $channelRepository;
     protected $brandRepository;
+    protected $channel;
     protected $_taxons = [];
     protected $_mapping = [];
     protected $_taxCategories = [];
@@ -107,7 +108,8 @@ class ImportCatalogCommand extends Command
         $mapping = self::convertCsvToArray('var/imports/taxon_sylius_arbo_final.csv');
         foreach($mapping as $tx)
         {
-            $this->_mapping[ $tx['magento_id'] ] = $tx['sylius_id'];
+            //$this->_mapping[ $tx['magento_id'] ] = $tx['sylius_id'];
+            $this->_mapping[ $tx['magento_id'] ][] = $tx['sylius_id'];
         }
 
         // récupération des TaxCategories
@@ -135,7 +137,7 @@ class ImportCatalogCommand extends Command
 
 
         // récupération des magasins
-        $this->_stores = $this->manager->getRepository(Store::class)->findAll();
+        $this->_stores = $this->manager->getRepository(Store::class)->getTrueStores();
 
         // canal Chullanka
         $this->channel = $this->channelRepository->findOneByCode('default');
@@ -153,17 +155,139 @@ class ImportCatalogCommand extends Command
         {
             if(isset($art['code']))
             {
-                $art_uuid = $art['code'];
-                echo "art_uuid : $art_uuid\n\n";
-                
-                $parent_code = isset($art['parent_code']) ? $art['parent_code'] : '';
-                
-                $found = $this->productVariantRepository->findOneByCode($art_uuid);
-                if($found)
+                if(isset($art['code_chrono']) && !empty($art['code_chrono']))
                 {
-                    echo "Found : ".$found->getId() . "\n";
-                    if(!empty($parent_code))
+                    $code_chrono = $art['code_chrono'];
+                }
+                elseif(isset($art['parent_code']) && !empty($art['parent_code']))
+                {
+                    $code_chrono = $art['parent_code'];
+                }
+                /*elseif($art['type_product'] == 'configurable')
+                {
+                    $code_chrono = $art['code'];
+                }*/
+                else
+                {
+                    $code_chrono = $art['code'];
+                }
+                $art_uuid = $art['code'];
+                echo "Code_article : $art_uuid\n\n";
+                echo "Code_chrono : $code_chrono\n\n";
+
+                $product = $this->getOrCreateProduct($code_chrono, $art);
+
+                // variante
+                if($art['type_product'] == 'simple')
+                {
+                    $found = $this->productVariantRepository->findOneByCode($art['code']);
+                    if($found)
                     {
+                        echo "Found : ".$found->getId() . "\n";
+                        /*$parent_code = isset($art['parent_code']) ? $art['parent_code'] : '';
+                        if(!empty($parent_code))
+                        {
+                            //todo: récupérer $product->getOptions() ?
+
+                            // ajout option de variantes
+                            foreach($this->_options as $opt => $option)
+                            {
+                                if(isset($art[ $opt ]))
+                                {
+                                    $optValues = $option->getValues();
+                                    $artVals = explode('|', $art[ $opt ]);
+                                    foreach($artVals as $artVal)
+                                    {
+                                        foreach($optValues as $optValue)
+                                        {
+                                            if($optValue->getValue() == $artVal)
+                                            {
+                                                // ajoute l'option
+                                                $found->addOptionValue($optValue);
+                                                echo "trouvee : $artVal\n";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }*/
+                    }
+                    else
+                    {
+                        $name = $art['name'];
+                
+                        // Variante(s)
+                        $this->output->writeln('On créé la variante');
+                        $productVariant = $this->productVariantFactory->createNew();
+                        $productVariant->setCode($art['code']);
+                        $productVariant->setName($name);
+                        $createdAt = new \DateTime($art['created_at']);
+                        $productVariant->setCreatedAt($createdAt);
+                        $updatedAt = new \DateTime($art['updated_at']);
+                        $productVariant->setUpdatedAt($updatedAt);
+                        $productVariant->setOnHand($art['qty']);
+                        if(isset($art['weight'])) $productVariant->setWeight($art['weight']);
+                        $productVariant->setShippingRequired(true);
+                        $productVariant->setEnabled($art['status'] == 'Enabled');
+
+                        //tax_class_id 
+                        if(isset($art['tax_class_id']) && ($art['tax_class_id'] != 'Taux normal produit non alimentaire'))
+                        {
+                            $taxCat = $this->_taxCategories['tva3'];
+                            $rate = 55;
+                        }
+                        else
+                        {
+                            $taxCat = $this->_taxCategories['tva1'];
+                            $rate = 120;
+                        }
+                        $productVariant->setTaxCategory($taxCat);
+
+
+                        //Price
+                        if(isset($art['price']))
+                        {
+                            $price = round($art['price'] * $rate);
+
+                            $priceChannel = $this->channelPricingFactory->createNew();
+                            $priceChannel->setChannelCode('default');
+                            $priceChannel->setProductVariant($productVariant);
+                            $priceChannel->setOriginalPrice($price);
+                            $priceChannel->setPrice($price);
+
+                            if(isset($art['special_price']))
+                            {
+                                $specialPrice = round($art['special_price'] * $rate);
+                                $priceChannel->setDiscountPrice($specialPrice);
+                            }
+                            if(isset($art['special_from_date']))
+                            {
+                                $specialDateFrom = new \DateTime($art['special_from_date']);
+                                $priceChannel->setDiscountFrom($specialDateFrom);
+                            }
+                            if(isset($art['special_to_date']))
+                            {
+                                $specialDateTo = new \DateTime($art['special_to_date']);
+                                $priceChannel->setDiscountTo($specialDateTo);
+                            }
+                            //appliquer ?
+                            if(!empty($priceChannel->getDiscountPrice())
+                            && !empty($priceChannel->getDiscountFrom())
+                            && !empty($priceChannel->getDiscountTo())
+                            && ($now >= $priceChannel->getDiscountFrom())
+                            && ($now < $priceChannel->getDiscountTo())
+                            )
+                            {
+                                $priceChannel->setPrice( $priceChannel->getDiscountPrice() );
+                            }
+                            else
+                            {
+                                $priceChannel->setPrice( $priceChannel->getOriginalPrice() );
+                            }
+
+                            $productVariant->addChannelPricing($priceChannel);
+                        }
+                        
                         // ajout option de variantes
                         foreach($this->_options as $opt => $option)
                         {
@@ -178,186 +302,83 @@ class ImportCatalogCommand extends Command
                                         if($optValue->getValue() == $artVal)
                                         {
                                             // ajoute l'option
-                                            $found->addOptionValue($optValue);
-                                            echo "trouvee : $artVal\n";
+                                            $productVariant->addOptionValue($optValue);
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                }
-                else
-                {
-                    $name = $art['name'];
-            
-                    // Variante(s)
-                    $this->output->writeln('On créé la variante');
-                    $productVariant = $this->productVariantFactory->createNew();
-                    $productVariant->setCode($art_uuid);
-                    $productVariant->setName($name);
-                    $createdAt = new \DateTime($art['created_at']);
-                    $productVariant->setCreatedAt($createdAt);
-                    $updatedAt = new \DateTime($art['updated_at']);
-                    $productVariant->setUpdatedAt($updatedAt);
-                    $productVariant->setOnHand($art['qty']);
-                    if(isset($art['weight'])) $productVariant->setWeight($art['weight']);
-                    $productVariant->setShippingRequired(true);
-                    $productVariant->setEnabled($art['status'] == 'Enabled');
 
-                    //tax_class_id 
-                    
-                    if(isset($art['tax_class_id']) && ($art['tax_class_id'] != 'Taux normal produit non alimentaire'))
-                    {
-                        $taxCat = $this->_taxCategories['tva3'];
-                        $rate = 55;
-                    }
-                    else
-                    {
-                        $taxCat = $this->_taxCategories['tva1'];
-                        $rate = 120;
-                    }
-                    $productVariant->setTaxCategory($taxCat);
-
-
-                    //Price
-                    if(isset($art['price']))
-                    {
-                        $price = round($art['price'] * $rate);
-
-                        $priceChannel = $this->channelPricingFactory->createNew();
-                        $priceChannel->setChannelCode('default');
-                        $priceChannel->setProductVariant($productVariant);
-                        $priceChannel->setOriginalPrice($price);
-                        $priceChannel->setPrice($price);
-
-                        if(isset($art['special_price']))
+                        /*foreach($this->all_valid_options as $opt)
                         {
-                            $specialPrice = round($art['special_price'] * $rate);
-                            $priceChannel->setDiscountPrice($specialPrice);
-                        }
-                        if(isset($art['special_from_date']))
-                        {
-                            $specialDateFrom = new \DateTime($art['special_from_date']);
-                            $priceChannel->setDiscountFrom($specialDateFrom);
-                        }
-                        if(isset($art['special_to_date']))
-                        {
-                            $specialDateTo = new \DateTime($art['special_to_date']);
-                            $priceChannel->setDiscountTo($specialDateTo);
-                        }
-                        //appliquer ?
-                        if(!empty($priceChannel->getDiscountPrice())
-                        && !empty($priceChannel->getDiscountFrom())
-                        && !empty($priceChannel->getDiscountTo())
-                        && ($now >= $priceChannel->getDiscountFrom())
-                        && ($now < $priceChannel->getDiscountTo())
-                        )
-                        {
-                            $priceChannel->setPrice( $priceChannel->getDiscountPrice() );
-                        }
-                        else
-                        {
-                            $priceChannel->setPrice( $priceChannel->getOriginalPrice() );
-                        }
-
-                        $productVariant->addChannelPricing($priceChannel);
-                    }
-                    
-                    // ajout option de variantes
-                    foreach($this->_options as $opt => $option)
-                    {
-                        if(isset($art[ $opt ]))
-                        {
-                            $optValues = $option->getValues();
-                            $artVals = explode('|', $art[ $opt ]);
-                            foreach($artVals as $artVal)
+                            if(isset($art[ $opt ]))
                             {
+                                $option = $this->_options[ $opt ];
+                                $optValues = $option->getValues();
                                 foreach($optValues as $optValue)
                                 {
-                                    if($optValue->getValue() == $artVal)
+                                    if($optValue->getValue() == $art[ $opt ])
                                     {
                                         // ajoute l'option
                                         $productVariant->addOptionValue($optValue);
                                     }
                                 }
                             }
-                        }
-                    }
-
-                    /*foreach($this->all_valid_options as $opt)
-                    {
-                        if(isset($art[ $opt ]))
-                        {
-                            $option = $this->_options[ $opt ];
-                            $optValues = $option->getValues();
-                            foreach($optValues as $optValue)
-                            {
-                                if($optValue->getValue() == $art[ $opt ])
-                                {
-                                    // ajoute l'option
-                                    $productVariant->addOptionValue($optValue);
-                                }
-                            }
-                        }
-                    }*/
-            
-                    // si c'est une variante de configurable...
-                    $product = !empty($parent_code) ? $this->getOrCreateProduct($parent_code, $art) : $this->getOrCreateProduct($art_uuid, $art);
-
-                    if($art['type_product'] == 'simple')
-                    {
+                        }*/
+                
                         $productVariant->setProduct($product);
                         $this->productVariantRepository->add($productVariant);
-                    }
+                        
 
-                    if($productVariant->getId())
-                    {
-                        //stocks mag
-                        foreach($this->_stores as $store)
+                        if($productVariant->getId())
                         {
-                            $sid = $store->getId();
-                            $storeFound = false;
-                            $stocks = $productVariant->getStocks();
-                            if(count($stocks))
+                            //stocks mag
+                            foreach($this->_stores as $store)
                             {
-                                foreach($stocks as $stock)
-                                {
-                                    if($storeFound) continue;
-                                    if($stock->getStore() == $store)
-                                    {
-                                        $storeFound = true;
-                                    }
-                                }
-                            }
-                            
-                            if(!$storeFound)
-                            {
+                                $sid = $store->getId();
                                 $quantity = 0;
                                 if(isset($art['qty_' . $sid]))
                                 {
                                     $quantity = $art['qty_' . $sid];
                                 }
 
-                                //todo: ne pas créer de stock pour le comptoir ! C'est le stock web
-
-                                $output->writeln("Variante {$productVariant->getId()} : on va créer un stock pour : ".$store->getName());
-                                $stock = new Stock();
-                                $stock->setVariant($productVariant);
-                                $stock->setStore($store);
+                                $storeFound = false;
+                                $stock = null;
+                                $stocks = $productVariant->getStocks();
+                                if(count($stocks))
+                                {
+                                    foreach($stocks as $_stock)
+                                    {
+                                        if($storeFound) continue;
+                                        if($_stock->getStore() == $store)
+                                        {
+                                            $storeFound = true;
+                                            $stock = $_stock;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if(!$storeFound)
+                                {
+                                    $output->writeln("Variante {$productVariant->getId()} : on va créer un stock pour : ".$store->getName());
+                                    $stock = new Stock();
+                                    $stock->setVariant($productVariant);
+                                    $stock->setStore($store);
+                                }
                                 $stock->setOnHand($quantity);
                                 $this->manager->persist($stock);
                             }
-                        }
-                
-                        $this->output->writeln('VariantID : '.$productVariant->getId());
-                        // on remplit la table relationnelle MagentoID - SKU - SyliusID pour mettre à jour les commandes importées
-                        $mp = new MagentoProduct();
-                        $mp->setMagento( $art['id'] );
-                        $mp->setCode( $art['code'] );
-                        $mp->setSylius( $productVariant->getId() );
-                        $this->manager->persist($mp);
-                    }       
+                    
+                            $this->output->writeln('VariantID : '.$productVariant->getId());
+                            // on remplit la table relationnelle MagentoID - SKU - SyliusID pour mettre à jour les commandes importées
+                            $mp = new MagentoProduct();
+                            $mp->setMagento( $art['id'] );
+                            $mp->setCode( $art['code'] );
+                            $mp->setSylius( $productVariant->getId() );
+                            $this->manager->persist($mp);
+                        }       
+                    }
                 }
             }
             $i++;
@@ -377,20 +398,25 @@ class ImportCatalogCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function getOrCreateProduct($code, $article)
+    private function getOrCreateProduct($code_chrono, $article)
     {
-        $product = $this->productRepository->findOneByCode($code);
-        if(!$product)
+        $isConfigProd = ($article['type_product'] == 'configurable');
+
+        $product = $this->productRepository->findOneByCode($code_chrono);
+        if(!$product || $isConfigProd)
         {
+            $trueNew = !$product;
+
             $name = $article['name'];
-            $product = $this->productFactory->createNew();
-            $product->setCode($code);
+            if($trueNew) $product = $this->productFactory->createNew();
+
+            $product->setCode($code_chrono);
             $product->setName($name);
 
             // test slug
             if($article['visibility'] == 'Not Visible Individually')
             {
-                $slug = $this->slugGenerator->generate($name) . '-' . $article['code'];
+                $slug = $this->slugGenerator->generate($name) . '-' . $code_chrono;
             }
             else 
             {
@@ -403,7 +429,7 @@ class ImportCatalogCommand extends Command
             }
             $product->setSlug($slug);
 
-            $product->addChannel($this->channel);
+            if($trueNew) $product->addChannel($this->channel);
             $createdAt = new \DateTime($article['created_at']);
             $product->setCreatedAt($createdAt);
             $updatedAt = new \DateTime($article['updated_at']);
@@ -416,35 +442,54 @@ class ImportCatalogCommand extends Command
             if(isset($article['taxonomy_ids']))
             {
                 $taxos = explode('|', $article['taxonomy_ids']);
-                $i = 0;
                 $allreadyDone = [];
+                foreach($product->getProductTaxons() as $_pTaxon)
+                {
+                    $allreadyDone[] = $_pTaxon->getTaxon()->getId();
+                }
                 foreach($taxos as $t)
                 {
                     if(isset($this->_mapping[$t]))
                     {
-                        $sylius_id = $this->_mapping[$t];
-                        $taxon = $this->_taxons[ $sylius_id ];
-                        
-                        echo "Ajout de la taxo : ".$taxon->getId()."\n";
-
-                        if(!in_array($taxon->getId(), $allreadyDone))
+                        foreach($this->_mapping[$t] as $sylius_id)
                         {
-                            /** @var ProductTaxonInterface $productTaxon */
-                            $productTaxon = $this->productTaxonFactory->createNew();
-                            $productTaxon->setTaxon($taxon);
-                            $productTaxon->setProduct($product);
+                            if(isset($this->_taxons[ $sylius_id ]))
+                            {
+                                $taxon = $this->_taxons[ $sylius_id ];
+                                do
+                                {
+                                    $doIt = true;
+                                    if(!in_array($taxon->getId(), $allreadyDone))
+                                    {
+                                        echo "Ajout de la taxo : ".$taxon->getId()."\n";
 
-                            $product->addProductTaxon($productTaxon);
-                            
-                            $allreadyDone[] = $taxon->getId();//evite les doublons de catégories
-                            
-                            if($i == 0) $product->setMainTaxon($taxon);
-                            $i++;
+                                        /** @var ProductTaxonInterface $productTaxon */
+                                        $productTaxon = $this->productTaxonFactory->createNew();
+                                        $productTaxon->setTaxon($taxon);
+                                        $productTaxon->setProduct($product);
+        
+                                        $product->addProductTaxon($productTaxon);
+                                        
+                                        $allreadyDone[] = $taxon->getId();//evite les doublons de catégories
+                                        
+                                        if(($taxon->getLevel() == 1) && !$product->getMainTaxon())
+                                        {
+                                            $product->setMainTaxon($taxon);
+                                        }
+                                    }
+
+                                    if($taxon->getParent() && ($taxon->getParent()->isRoot() == false))
+                                    {
+                                        $taxon = $taxon->getParent();
+                                    }
+                                    else $doIt = false;
+                                }
+                                while($doIt);
+                            }
                         }
                     }
                 }
             }
-            
 
             // ajout attributs du produit
             if(isset($article['description'])) $product->setDescription( $article['description'] );
@@ -454,18 +499,21 @@ class ImportCatalogCommand extends Command
             {
                 $product->setBrand($brand);
             }
-
-            if(isset($article['super_option']))
+            
+            if($isConfigProd)
             {
-                $superOptions = explode('|', $article['super_option']);
-                foreach($superOptions as $supOption)
+                $product->setVariantSelectionMethod('match');
+                if(isset($article['super_option']))
                 {
-                    if(isset($this->_options[ $supOption ]))
+                    $superOptions = explode('|', $article['super_option']);
+                    foreach($superOptions as $supOption)
                     {
-                        // ajoute l'option
-                        $option = $this->_options[ $supOption ];
-                        $product->addOption($option);
-                        $product->setVariantSelectionMethod('match');
+                        if(isset($this->_options[ $supOption ]))
+                        {
+                            // ajoute l'option
+                            $option = $this->_options[ $supOption ];
+                            $product->addOption($option);
+                        }
                     }
                 }
             }
@@ -499,8 +547,7 @@ class ImportCatalogCommand extends Command
                 }
             }
 
-
-            $removeAttributes = ['id','code','parent_code','super_option','product_images','name','qty','qty_1','qty_2','qty_3','qty_4','brand_id','created_at','short_description','special_from_date','special_to_date','special_price','status','updated_at','url_key','url_path','visibility','weight'];
+            $removeAttributes = ['id','code','parent_code','super_option','code_chrono','product_images','image','small_image','thumbnail','name','qty','qty_1','qty_2','qty_3','qty_4','brand_id','created_at','short_description','special_from_date','special_to_date','special_price','status','updated_at','url_key','url_path','visibility','weight'];
             foreach($removeAttributes as $attr)
             {
                 unset($article[$attr]);
@@ -508,6 +555,13 @@ class ImportCatalogCommand extends Command
 
             foreach($article as $attr => $value)
             {
+                //imported_data
+                if($attr == 'imported_data')
+                {
+                    $product->setImportedData(json_decode($value, true));
+                    continue;
+                }
+
                 // recherche l'attribute
                 if(isset($this->_attributes[ $attr ]) && ($attribute = $this->_attributes[ $attr ]))
                 {
@@ -535,6 +589,15 @@ class ImportCatalogCommand extends Command
                             else 
                                 $shouldAddIt = false;
                             break;
+
+                        case 'integer':
+                            if(strpos($attr, 'rank') == 0)
+                            {
+                                $value *= 100;
+                            }
+                            $attrValue->setValue( (int)$value );
+                            break;
+                        
                         case 'text':
                         default:
                             $attrValue->setValue($value);
@@ -544,8 +607,14 @@ class ImportCatalogCommand extends Command
                 }
             }
 
-            $this->productRepository->add($product);
+            if($article['type_product'] == 'bundle')
+            {
+                $product->setIsPack(true);
+            }
+
+            if($trueNew) $this->productRepository->add($product);
         }
+
         return $product;
     }
 

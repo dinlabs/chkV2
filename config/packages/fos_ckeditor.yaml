@@ -18,5 +18,6 @@ fos_ck_editor:
             bitbag_sylius_cms_plugin:
                 - '@full.colors'
         items:
-            standard.insert: [ 'Smiley', 'EmojiPanel' ]
+            standard.insert: [ 'EmojiPanel' ]
             full.colors: [ 'TextColor' ]
+    #filebrowsers:

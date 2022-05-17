@@ -130,7 +130,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodInList .svg-picto { position:absolute; top:0; right:8px; width:40px; height:20px; stroke:var(--primary); fill:var(--primary); z-index:2; }
 .prodInList .insert { padding:0; height:100%; border-radius:5px 5px 0 0; }
 .prodInList .picture { position:relative; display:block; z-index:1; color:inherit; }
-.prodInList .picture img { display:block; /*width:100%;*/ border-radius:5px 5px 0 0; }
+.prodInList .picture img { display:block; width:100%; border-radius:5px 5px 0 0; }
 
 .prodInList .infos { position:relative; padding:.5em; text-align:initial; z-index:1; }
 .prodInList .price { text-align:right; }
@@ -501,6 +501,8 @@ header + #breadcrumb { padding-top:0; }
 #searchWrapper #productList .getAdvice .btnCall { margin-bottom:2em; }
 #searchWrapper #productList .getAdvice input { margin:3em 0; }
 #searchWrapper #productList .list + .btn { width:320px; }
+
+.category #promos .glider.draggable .glider-slide img { border-radius:5px; }
 
 #catBrands .brandBox { display:flex; flex-wrap:wrap; justify-content:center; align-content:center; background:var(--bg0); border:1px solid var(--bg1); border-radius:5px; width:150px; height:233px; padding:1em; text-align:center; }
 #catBrands .brandBox strong { text-transform:uppercase; }

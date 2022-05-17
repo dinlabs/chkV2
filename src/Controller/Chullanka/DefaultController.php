@@ -103,7 +103,15 @@ final class DefaultController extends AbstractController
         echo "<h2>Commandes en magasins</h2>";
         $return = $ginkoiaCustomerWs->getCustomerShopOrders($email);
         echo "<pre>";
-        print_r($return);
+        //print_r($return);
+        foreach($return as $order)
+        {
+            $receiptId = $order['ReceiptID'];
+            if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
+            {
+                print_r($orderItems);
+            }
+        }
         echo "</pre>";
 
         //$target2SellHelper->exportCatalog();
@@ -378,16 +386,18 @@ final class DefaultController extends AbstractController
             }
         }
         
-        $rss = simplexml_load_file($blogfeedurl);
-
-        $limit = 10;
         $blogposts = [];
-        for ($i=0; $i<$limit; $i++)
+        $rss = simplexml_load_file($blogfeedurl);
+        if(isset($rss->channel) && isset($rss->channel->item))
         {
-            $item = $rss->channel->item[ $i ];
-            $date =  date_create_from_format(\DateTime::RSS, (string)$item->pubDate);
-            $item->dateTxt = $date->format('d/m/Y');
-            $blogposts[] = $item;
+            $limit = 10;
+            for ($i=0; $i<$limit; $i++)
+            {
+                $item = $rss->channel->item[ $i ];
+                $date =  date_create_from_format(\DateTime::RSS, (string)$item->pubDate);
+                $item->dateTxt = $date->format('d/m/Y');
+                $blogposts[] = $item;
+            }
         }
 
         return $this->render('@SyliusShop/Layout/_lastnews.html.twig', [
@@ -633,10 +643,12 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
-        if($request->get('hook'))
+        $infos = [];
+
+        /*if($request->get('hook'))
         {
             echo "HOOK !";
-        }
+        }*/
 
         if($request->get('success'))
         {
@@ -646,34 +658,132 @@ final class DefaultController extends AbstractController
             if($infos = $upstreamPayWidget->getSessionInfos())
             {
                 error_log(print_r($infos, true));
-                $return = $infos[0];
+
+                $further = $order->getFurther();
+                $further['upstreampay_return'] = $infos;
+                $order->setFurther($further);
 
                 /*
-                stdClass Object
-                (
-                    [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                    [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
-                    [partner] => braintree
-                    [method] => paypal
-                    [status] => stdClass Object
-                            [action] => AUTHORIZE
-                            [state] => SUCCESS
-                            [code] => SUCCEEDED
-                    [date] => 2022-02-23T16:52:15.646668501
-                    [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                    [plugin_result] => stdClass Object
-                            [status] => 1000
-                            [amount] => 16
-                            [logs] => stdClass Object
-                            [cardHolder] => payer@example.com
-                            [status] => authorized
-                            */
+                    [0] => stdClass Object
+                        (
+                            [id] => 5238c014-9d80-4316-bc2d-78a59ea57069
+                            [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
+                            [partner] => dalenys
+                            [method] => creditcard
+                            [status] => stdClass Object
+                                (
+                                    [action] => AUTHORIZE
+                                    [state] => SUCCESS
+                                    [code] => SUCCEEDED
+                                )
+                            [date] => 2022-05-13T10:31:32.337632232
+                            [transaction_id] => 5238c014-9d80-4316-bc2d-78a59ea57069
+                            [plugin_result] => stdClass Object
+                                (
+                                    [status] => 0000
+                                    [amount] => 1
+                                    [integrated_token] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [id] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
+                                                    [uniqueness_token] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
+                                                    [expiration_date] => 2022-12-01T00:00:00Z
+                                                    [description] => stdClass Object
+                                                        (
+                                                            [brand_name] => cb
+                                                            [display_token] => 423460XXXXXX0000
+                                                        )
+                                                    [owner] => chk_customer_2
+                                                )
+                                        )
+                                    [partner_reference] => A19428176
+                                    [logs] => stdClass Object
+                                        (
+                                            [optional_details] => Successful operation
+                                        )
+                                )
+                        )
+
+                    [1] => stdClass Object
+                        (
+                            [id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
+                            [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
+                            [partner] => easy2play
+                            [method] => giftcard
+                            [status] => stdClass Object
+                                (
+                                    [action] => AUTHORIZE
+                                    [state] => SUCCESS
+                                    [code] => SUCCEEDED
+                                )
+                            [date] => 2022-05-13T10:31:31.911981167
+                            [transaction_id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
+                            [plugin_result] => stdClass Object
+                                (
+                                    [status] => 1
+                                    [amount] => 1.5
+                                    [integrated_token] => Array
+                                        (
+                                            [0] => 
+                                        )
+                                    [partner_reference] => 1de6cc084d13b
+                                )
+                        )
+                    )
+
+                    [2] => stdClass Object
+                        (
+                            [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                            [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
+                            [partner] => braintree
+                            [method] => paypal
+                            [status] => stdClass Object
+                                    [action] => AUTHORIZE
+                                    [state] => SUCCESS
+                                    [code] => SUCCEEDED
+                            [date] => 2022-02-23T16:52:15.646668501
+                            [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                            [plugin_result] => stdClass Object
+                                    [status] => 1000
+                                    [amount] => 16
+                                    [logs] => stdClass Object
+                                    [cardHolder] => payer@example.com
+                                    [status] => authorized
+                */
+                //dd($infos);
+
+                $notes = [];
+                $successPay = 0;
+                foreach($infos as $return)
+                {
+                    $msg = 'Revenu avec succès de la plateforme de paiement ' . $return->partner . ' : ';
+                    switch($return->method)
+                    {
+                        case 'creditcard':
+                            $msg .= $return->plugin_result->partner_reference;
+                            break;
+                        
+                        case 'paypal':
+                            $msg .= $return->plugin_result->cardHolder;
+                            break;
+                        
+                        case 'giftcard':
+                            $msg .= $return->plugin_result->partner_reference;
+                            break;
+                    }
+                    $notes[] = $msg;
+
+                    if($return->status && ($return->status->state == 'SUCCESS'))
+                    {
+                        $successPay++;
+                    }
+                }
                 
                 // on commente temporairement pour les tests
-                /*if($return->status && ($return->status->state == 'SUCCESS'))
-                {*/
-                    
-                    $order->setNotes('Revenu avec succès de la plateforme de paiement : '.$return->method);
+                if($successPay == count($infos))
+                {
+                    $order->setNotes(implode("\n", $notes));
 
                     // changer le state
                     //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
@@ -742,24 +852,25 @@ final class DefaultController extends AbstractController
                     
                     // dispatch event
                     $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
-                //}
+
+                    return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+                        'order' => $order
+                    ]);
+                }
             }
             //return $this->redirectToRoute('sylius_shop_order_thank_you');
             //==> quelque chose fait que le controller nous renvoie ensuite sur la home
-            return $this->render('@SyliusShop/Order/thankYou.html.twig', [
-                'order' => $order
-            ]);
         }
 
         if($request->get('failure'))
         {
-            echo "FAIL";
-            if($infos = $upstreamPayWidget->getSessionInfos())
-            {
-                dd($infos);
-            }
+            $infos = $upstreamPayWidget->getSessionInfos();
         }
-        die;
+
+        return $this->render('@SyliusShop/Order/failure.html.twig', [
+            'cart' => $order,
+            'infos' => $infos,
+        ]);
     }
 
     /**
