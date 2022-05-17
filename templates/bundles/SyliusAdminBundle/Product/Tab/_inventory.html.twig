@@ -15,15 +15,17 @@
     </div>
 
     {% if product.simple %}
+    {% set variant = product|sylius_resolve_variant %}
+    {% if variant %}
     <h3 class="ui top attached header">Stocks en Magasins</h3>
     <div class="ui attached segment">
-    {% set variant = product|sylius_resolve_variant %}
         <ul>
             {% for stock in variant.stocks %}
             <li><strong>{{ stock.store }}</strong> : {{ stock.onHand }}</li>
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
     {% endif %}
     {{ sylius_template_event(['sylius.admin.product.' ~ action ~ '.tab_inventory', 'sylius.admin.product.tab_inventory'], {'form': form}) }}
 </div>
