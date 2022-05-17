@@ -9,7 +9,7 @@
 
 {% if resources.data|length > 0 %}
     <div class="list" id="products" {{ sylius_test_html_attribute('products') }}>
-        {% for product in resources.data %}
+        {% for product in resources.data if product.enabled %}
             {% include '@SyliusShop/Product/_box.html.twig' %}
             {#% if _count == 1 %}
             {% include 'prodlist/encartPromo.html.twig' %}

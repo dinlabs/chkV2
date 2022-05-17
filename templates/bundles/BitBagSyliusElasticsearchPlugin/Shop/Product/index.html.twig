@@ -71,7 +71,7 @@
                     <h2>Tous nos produits {{ taxon.name }}</h2>
                     <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
                         {% set _count = 0 %}
-                        {% for product in products %}
+                        {% for product in products if product.enabled %}
                             {% include '@SyliusShop/Product/_box.html.twig' %}
                             
                             {% if _count == 7 %}
@@ -95,7 +95,7 @@
             {# pagination en AJAX #}
                 {% if products|length > 0 %}
                 {% set _count = 0 %}
-                {% for product in products %}
+                {% for product in products if product.enabled %}
                     {% include '@SyliusShop/Product/_box.html.twig' %}
                     {% set _count = _count + 1 %}
                 {% endfor %}

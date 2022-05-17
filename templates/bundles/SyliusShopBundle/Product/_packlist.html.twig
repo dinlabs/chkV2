@@ -10,7 +10,7 @@
     </div>
     <div class="glider-contain">
         <div class="glider">
-            {% for product in media.products %}
+            {% for product in media.products if product.enabled %}
                 <div>{% include '@SyliusShop/Product/_box.html.twig' %}</div>
             {% endfor %}
         </div>

@@ -37,7 +37,7 @@
     <h2>Voici les Nouveautés Chullanka</h2>
     <div class="prodList">
         <div class="list">
-            {% for product in taxon.topProducts %}
+            {% for product in taxon.topProducts if product.enabled %}
             <div>
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             </div>

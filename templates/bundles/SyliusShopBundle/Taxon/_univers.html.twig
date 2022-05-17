@@ -77,7 +77,7 @@
     </div>
     <div class="glider-contain">
         <div class="glider">
-            {% for product in taxon.topProducts %}
+            {% for product in taxon.topProducts if product.enabled %}
             <div>
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             </div>

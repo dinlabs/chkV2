@@ -3,7 +3,7 @@
     <h2 class="autoMargin">Les produits en Exclus</h2>
     <div class="prodList">
         <div class="list">
-            {% for product in store.exclusiveProducts %}
+            {% for product in store.exclusiveProducts if product.enabled %}
             <div class="big">
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             </div>

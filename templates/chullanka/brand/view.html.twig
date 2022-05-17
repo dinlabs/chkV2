@@ -46,7 +46,7 @@
                 {% if brand.advertising %}{{ brand.advertising|raw }}{% endif %}
             </div>
 
-            {% if brand.TopProduct %}
+            {% if brand.TopProduct and brand.TopProduct.enabled %}
             <div class="topProduct big"{% if brand.ProductBackground %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
                 {% include '@SyliusShop/Product/_box.html.twig' with {'product': brand.TopProduct} %}
             </div>
@@ -72,7 +72,7 @@
                 <h2>Voici les Nouveautés {{ brand.name }}</h2>
                 <div class="prodList">
                     <div class="list big">
-                        {% for product in brand.topProducts %}
+                        {% for product in brand.topProducts if product.enabled %}
                         <div>
                             {% include '@SyliusShop/Product/_box.html.twig' %}
                         </div>
@@ -110,7 +110,7 @@
                 <h2>Tous les produits {{ brand.name }}</h2>
                 <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ products|length }}">
                     {% set _count = 0 %}
-                    {% for product in products %}
+                    {% for product in products if product.enabled %}
                         {% include '@SyliusShop/Product/_box.html.twig' %}
                         
                         {#% if _count == 1 %}
@@ -127,7 +127,7 @@
         </div>
         {% else %}
             {# pagination en AJAX #}
-            {% for product in products %}
+            {% for product in products if product.enabled %}
                 {% include '@SyliusShop/Product/_box.html.twig' %}
             {% endfor %}
             {{ pagination.simple(products) }}
