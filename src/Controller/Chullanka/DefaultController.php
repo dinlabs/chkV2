@@ -761,15 +761,18 @@ final class DefaultController extends AbstractController
                     switch($return->method)
                     {
                         case 'creditcard':
-                            $msg .= $return->plugin_result->partner_reference;
+                            if(isset($return->plugin_result->partner_reference))
+                                $msg .= $return->plugin_result->partner_reference;
                             break;
                         
                         case 'paypal':
-                            $msg .= $return->plugin_result->cardHolder;
+                            if(isset($return->plugin_result->cardHolder))
+                                $msg .= $return->plugin_result->cardHolder;
                             break;
                         
                         case 'giftcard':
-                            $msg .= $return->plugin_result->partner_reference;
+                            if(isset($return->plugin_result->partner_reference))
+                                $msg .= $return->plugin_result->partner_reference;
                             break;
                     }
                     $notes[] = $msg;
