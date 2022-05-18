@@ -54,6 +54,7 @@ final class AdminProductFormMenuListener
                                 ->setAttribute('template', 'bundles/SyliusAdminBundle/Product/Tab/_complementary.html.twig')
         ;
         
+        // !!! CE TRI PROVOQUE UN PROBLEME POUR L'ONGLET PACK DONT IL MANQUE ALORS remote_url !!!
         // début tri
         //dd($children);
         /* Current order:
@@ -68,7 +69,7 @@ final class AdminProductFormMenuListener
         "faqs"
         "complementary_product"
         */
-        $newChild = [
+        /*$newChild = [
             "imported_data" => [],
             "details" => [],
             "packs" => [],
@@ -84,7 +85,7 @@ final class AdminProductFormMenuListener
         $tmpChildren = array_merge($newChild, $children);
         $children = [];
         foreach($tmpChildren as $key => $child) if($child) $children[ $key ] = $child;
-        // fin tri
+        // fin tri*/
 
         $menu->setChildren($children);
     }
