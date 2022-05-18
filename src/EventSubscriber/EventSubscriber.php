@@ -126,7 +126,7 @@ class EventSubscriber implements EventSubscriberInterface
             {
                 $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
-                $path = 'upload/complementary/backgrounds';
+                $path = 'media/complementary/backgrounds';
                 try {
                     $backgroundFile->move($path, $newFilename);
                 } catch (FileException $e) {
@@ -513,7 +513,7 @@ class EventSubscriber implements EventSubscriberInterface
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$logoFile->guessExtension());
             
             // Move the file to the directory where brochures are stored
-            $path = 'upload/brand/logos';
+            $path = 'media/brand/logos';
             try {
                 $logoFile->move($path, $newFilename);
             } catch (FileException $e) {
@@ -531,7 +531,7 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
-            $path = 'upload/brand/backgrounds';
+            $path = 'media/brand/backgrounds';
             try {
                 $backgroundFile->move($path, $newFilename);
             } catch (FileException $e) {
@@ -547,7 +547,7 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $originalFilename = pathinfo($productBackgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$productBackgroundFile->guessExtension());
-            $path = 'upload/brand/backgrounds';
+            $path = 'media/brand/backgrounds';
             try {
                 $productBackgroundFile->move($path, $newFilename);
             } catch (FileException $e) {
@@ -573,7 +573,7 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$avatarFile->guessExtension());
-            $path = 'upload/chullis';
+            $path = 'media/chullis';
             try {
                 $avatarFile->move($path, $newFilename);
             } catch (FileException $e) {
@@ -599,7 +599,7 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $originalFilename = pathinfo($backgroundFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$backgroundFile->guessExtension());
-            $path = 'upload/store/backgrounds';
+            $path = 'media/store/backgrounds';
             try {
                 $backgroundFile->move($path, $newFilename);
             } catch (FileException $e) {
@@ -625,7 +625,7 @@ class EventSubscriber implements EventSubscriberInterface
         {
             $originalFilename = pathinfo($thumbnailFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = strtolower($this->slugger->slug($originalFilename).'-'.uniqid().'.'.$thumbnailFile->guessExtension());
-            $path = 'upload/store/services';
+            $path = 'media/store/services';
             try {
                 $thumbnailFile->move($path, $newFilename);
             } catch (FileException $e) {

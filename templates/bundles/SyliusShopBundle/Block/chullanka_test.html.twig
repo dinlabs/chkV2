@@ -5,7 +5,7 @@
         <div class="chullis">
             {% for chulli in block.chullis %}
             <div class="chulli">
-                <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="Chulli">
+                <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" alt="Chulli">
                 <div class="info">
                     <strong>{{ chulli }}</strong>, {{ chulli.expertise }}
                     {% if chulli.store %}, magasin {{ chulli.store }}{% endif %}

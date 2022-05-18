@@ -22,7 +22,7 @@
 {% if app.request.xmlHttpRequest == false %}
 <div id="js-loader" class="ui form"></div>
 
-<div id="brandTop"{% if brand.background %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.background) }});"{% endif %}>
+<div id="brandTop"{% if brand.background %} style="background-image:url({{ asset('media/brand/backgrounds/' ~ brand.background) }});"{% endif %}>
     <div class="autoMargin">
         <ul id="breadcrumb">
             <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
@@ -35,7 +35,7 @@
                 <h1>{{ brand.name }}</h1>
                 <p>{{ brand.introduction|raw }}</p>
                 <ul class="socials">
-                    {% if brand.logo %}<li><img src="{{ asset('upload/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo"></li>{% endif %}
+                    {% if brand.logo %}<li><img src="{{ asset('media/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo"></li>{% endif %}
                     {% if brand.SocInstagram %}<li><a href="{{ brand.SocInstagram }}" target="_blank"><i class="icon instagram" title="Instagram"></i></a></li>{% endif %}
                     {% if brand.SocYoutube %}<li><a href="{{ brand.SocYoutube }}" target="_blank"><i class="icon youtube" title="YouTube"></i></a></li>{% endif %}
                     {% if brand.SocTwitter %}<li><a href="{{ brand.SocTwitter }}" target="_blank"><i class="icon twitter" title="Twitter"></i></a></li>{% endif %}
@@ -47,7 +47,7 @@
             </div>
 
             {% if brand.TopProduct and brand.TopProduct.enabled %}
-            <div class="topProduct big"{% if brand.ProductBackground %} style="background-image:url({{ asset('upload/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
+            <div class="topProduct big"{% if brand.ProductBackground %} style="background-image:url({{ asset('media/brand/backgrounds/' ~ brand.ProductBackground) }});"{% endif %}>
                 {% include '@SyliusShop/Product/_box.html.twig' with {'product': brand.TopProduct} %}
             </div>
             {% endif %}

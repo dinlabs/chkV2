@@ -48,7 +48,7 @@
 {% if product.complementaryProduct %}
 {% set complementary = product.complementaryProduct %}
 <div id="otherProducts" class="prodList">
-    <div class="background"{% if complementary.background %} style="background-image:url({{ asset('upload/complementary/backgrounds/' ~ complementary.background) }});"{% endif %}>
+    <div class="background"{% if complementary.background %} style="background-image:url({{ asset('media/complementary/backgrounds/' ~ complementary.background) }});"{% endif %}>
         <div class="autoMargin">
             <img src="{{ asset('build/chullanka/images/mask_prodlist.png', 'chullanka') }}" alt="">
         </div>
@@ -59,7 +59,7 @@
                 {% set chulli = complementary.chulli %}
                 {% if chulli %}
                 <div class="pichulli">
-                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="190" height="190" alt="{{ chulli }}">
+                    <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" width="190" height="190" alt="{{ chulli }}">
                 </div>
                 {% endif %}
                 <h2>{{ complementary.title }}</h2>
@@ -83,7 +83,7 @@
         {% if product.chulltest.chulli %}
         {% set chulli = product.chulltest.chulli %}
         <div class="pichulli">
-            <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
+            <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
             <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
         </div>
         {% endif %}
@@ -97,7 +97,7 @@
                     <strong>PAR</strong>
                     <div class="inline">
                         <span>{{ chulli }}</span>
-                        <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="150" height="150" alt="{{ chulli }}">
+                        <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" width="150" height="150" alt="{{ chulli }}">
                         <span>{{ chulli.expertise }}</span>
                     </div>
                     {% endif %}

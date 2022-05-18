@@ -12,7 +12,7 @@
 	{% if topBrands %}
 	<div id="topBrands">
 	{% for brand in topBrands %}
-		<a href="{{ path('brand_view', {'code': brand.code}) }}">{% if brand.logo %}<img src="{{ asset('upload/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo">{% else %}{{ brand.name }}{% endif %}</a>
+		<a href="{{ path('brand_view', {'code': brand.code}) }}">{% if brand.logo %}<img src="{{ asset('media/brand/logos/' ~ brand.logo) }}" alt="{{ brand.name }}" class="logo">{% else %}{{ brand.name }}{% endif %}</a>
 	{% endfor %}
 	</div>
 	{% endif %}

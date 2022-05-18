@@ -3,7 +3,7 @@
     {% if product.chulltest.chulli %}
     {% set chulli = product.chulltest.chulli %}
     <div class="pichulli">
-        <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
+        <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" width="70" height="70" alt="Chulli">
         <svg class="svg-icon" role="img" style="width:70px; height:70px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
     </div>
     {% endif %}

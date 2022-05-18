@@ -4,7 +4,7 @@
 {% block bodyattr %}id="store"{% endblock %}
 
 {% block content %}
-<div id="storeTop"{% if store.background %} style="background-image:url({{ asset('upload/store/backgrounds/' ~ store.background) }});"{% endif %}>
+<div id="storeTop"{% if store.background %} style="background-image:url({{ asset('media/store/backgrounds/' ~ store.background) }});"{% endif %}>
     <div class="autoMargin">
         <ul id="breadcrumb">
             <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
@@ -51,7 +51,7 @@
             {% if store.otherProducts|length > 0 %}
                 <h2>Produits du magasin {{ store.name }}</h2>
                 <div class="list" id="products" {{ sylius_test_html_attribute('products') }} data-total="{{ store.otherProducts|length }}">
-                    {% for product in store.otherProducts %}
+                    {% for product in store.otherProducts if product.enabled %}
                         {% include '@SyliusShop/Product/_box.html.twig' %}
                     {% endfor %}
                 </div>
@@ -94,7 +94,7 @@
                     <div class="director">
                         {% if store.director and store.director.avatar %}
                         <div class="pichulli">
-                            <img src="{{ asset('upload/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director }}">
+                            <img src="{{ asset('media/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director }}">
                             <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
                         </div>
                         {% endif %}
@@ -110,7 +110,7 @@
                             <div>
                                 <div class="chulli">
                                     {% if chulli.avatar %}
-                                    <img src="{{ asset('upload/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                                    <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
                                     {% else %}
                                     <span class="pict"></span>
                                     {% endif %}
@@ -156,7 +156,7 @@
                                     <h3>{{ service.title }}</h3>
 
                                     {% if service.thumbnail %}
-                                    <img src="{{ asset('upload/store/services/' ~ service.thumbnail) }}" alt="" class="pict">
+                                    <img src="{{ asset('media/store/services/' ~ service.thumbnail) }}" alt="" class="pict">
                                     {% else %}
                                     <span class="pict"></span>
                                     {% endif %}
