@@ -113,6 +113,11 @@ class IzyproHelper
         }
     }
 
+    public function getFiles()
+    {
+        $this->doSftp('status');
+    }
+
     public function updateOrderStates()
     {
         //return 
@@ -159,9 +164,11 @@ class IzyproHelper
             }
             else
             {
+                $this->logger->info('SFTP :: Get Files');
                 $files = $sftp->scanFilesystem($importDir);// liste des fichiers
                 sort($files);
 
+                $this->logger->info('SFTP :: ' . count($files) . ' File(s)');
                 if(count($files)>0)
                 {
                     // PROCESS FILE BY FILE

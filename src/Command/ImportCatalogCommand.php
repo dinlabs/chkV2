@@ -403,7 +403,8 @@ class ImportCatalogCommand extends Command
         $isConfigProd = ($article['type_product'] == 'configurable');
 
         $product = $this->productRepository->findOneByCode($code_chrono);
-        if(!$product || $isConfigProd)
+        //if(!$product || $isConfigProd)
+        if(!$product)
         {
             $trueNew = !$product;
 
@@ -519,7 +520,7 @@ class ImportCatalogCommand extends Command
             }
 
             // images
-            if(isset($article['product_images']))
+            /*if(isset($article['product_images']))
             {
                 $images = explode('|', $article['product_images']);
                 foreach($images as $img)
@@ -533,7 +534,7 @@ class ImportCatalogCommand extends Command
                         //$uploadedImage = new UploadedFile($imagePath, basename($imagePath));
                         $uploadedImage = new File($tmpPath);
 
-                        /** @var ImageInterface $productImage */
+                        /** @var ImageInterface $productImage 
                         $productImage = $this->productImageFactory->createNew();
                         $productImage->setFile($uploadedImage);
                         //$productImage->setType($imageType);
@@ -545,7 +546,7 @@ class ImportCatalogCommand extends Command
                         unlink($tmpPath);//on supprime le fichier temporaire
                     }
                 }
-            }
+            }*/
 
             $removeAttributes = ['id','code','parent_code','super_option','code_chrono','product_images','image','small_image','thumbnail','name','qty','qty_1','qty_2','qty_3','qty_4','brand_id','created_at','short_description','special_from_date','special_to_date','special_price','status','updated_at','url_key','url_path','visibility','weight'];
             foreach($removeAttributes as $attr)

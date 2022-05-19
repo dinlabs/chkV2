@@ -86,9 +86,9 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
     {
-        /*echo "<h2>Test Izypro</h2>";
+        echo "<h2>Test Izypro</h2>";
         echo "<h3>Liste de fichiers du SFTP</h3>";
-        $izyproHelper->updateOrderStates();*/
+        $izyproHelper->getFiles();
 
         echo "<hr>";
         $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
