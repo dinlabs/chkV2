@@ -102,7 +102,6 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                         $defaultAddress = $customer->getDefaultAddress();
                         if(!$defaultAddress)
                         {
-                            error_log("on va créer");
                             /** @var AddressInterface $address */
                             $defaultAddress = $this->addressFactory->createNew();
                             $customer->setDefaultAddress($defaultAddress);
@@ -124,19 +123,26 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                             $value = is_array($value) ? implode("\n", $value) : $value;
                             $defaultAddress->setStreet($value);
                         }
+                        else $defaultAddress->setStreet('-');
+
                         if(isset($_user['Adresse']['Code']) && ($value = trim($_user['Adresse']['Code'])) && !empty($value))
                         {
                             $value = (strlen($value) < 5) ? '0' . $value : $value;
                             $defaultAddress->setPostcode($value);
                         }
+                        else $defaultAddress->setPostcode('-');
+
                         if(isset($_user['Adresse']['Ville']) && ($value = trim($_user['Adresse']['Ville'])) && !empty($value))
                         {
                             $defaultAddress->setCity($value);
                         }
+                        else $defaultAddress->setCity('-');
+
                         if(isset($_user['Adresse']['CodePays']) && ($value = trim($_user['Adresse']['CodePays'])) && !empty($value))
                         {
                             $defaultAddress->setCountryCode($value);
                         }
+                        else $defaultAddress->setCountryCode('-');
                     }
 
                     // fidélité
