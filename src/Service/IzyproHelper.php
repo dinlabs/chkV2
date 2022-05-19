@@ -113,9 +113,9 @@ class IzyproHelper
         }
     }
 
-    public function getFiles()
+    public function showFiles()
     {
-        $this->doSftp('status');
+        $this->doSftp('showall');
     }
 
     public function updateOrderStates()
@@ -138,15 +138,29 @@ class IzyproHelper
         $importDir = $this->chkParameter('izypro-import-directory');//'/WMS_TO_MGNT/';
         $exportDir = $this->chkParameter('izypro-export-directory');//'/MGNT_TO_WMS/';
         
-        if(empty($ftp_server) || empty($user) || empty($passwd))
-            return false;
+        if(empty($ftp_server) || empty($user) || empty($passwd)) return false;
         
         try
         {
             $sftp = new ServiceSFTPConnection($ftp_server, $ftp_port);
             $sftp->login($user, $passwd);
             
-            if($TRtype == 'sendxml')
+            if($TRtype == 'showall')
+            {
+                foreach([$importDir, $exportDir] as $_dir)
+                {
+                    echo "<p>Dir : $_dir</p>";
+                    $files = $sftp->scanFilesystem($_dir);// liste des fichiers
+                    sort($files);
+                    for($i = 0; isset($files[$i]); $i++)
+                    {
+                        if(strpos($files[$i], 'ARCHIVE') > -1) continue;
+                        
+                        echo '<p>Fichier courant : '.$files[$i].'</p>';
+                    }
+                }
+            }
+            elseif($TRtype == 'sendxml')
             {
                 $tmpFile = basename($file);
                 $remote_file = $exportDir . $tmpFile;

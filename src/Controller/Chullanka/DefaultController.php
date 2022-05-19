@@ -88,7 +88,7 @@ final class DefaultController extends AbstractController
     {
         echo "<h2>Test Izypro</h2>";
         echo "<h3>Liste de fichiers du SFTP</h3>";
-        $izyproHelper->getFiles();
+        $izyproHelper->showFiles();
 
         echo "<hr>";
         $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
