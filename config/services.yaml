@@ -382,3 +382,19 @@ services:
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
             - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\Doofinder:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'doofinder'
+            - 'chullanka/feeds/doofinder_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'
+    App\Overrides\SyliusFeedPlugin\FeedType\ShoppingFlux:
+        class: Setono\SyliusFeedPlugin\FeedType\FeedType
+        arguments:
+            - 'shoppingflux'
+            - 'chullanka/feeds/shoppingflux_feed.txt.twig'
+            - '@setono_sylius_feed.data_provider.product'
+            - '@setono_sylius_feed.feed_context.google.shopping'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item'

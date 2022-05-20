@@ -1,0 +1,63 @@
+{# @var item \Setono\SyliusFeedPlugin\Feed\Model\Google\Shopping\Product #}
+<product>
+{% apply spaceless %}
+{% apply setono_sylius_feed_remove_empty_tags %}
+    <reference>{{ item.id|e }}</reference>
+    <gtin>{{ item.gtin|e }}</gtin>
+    <name>{{ item.title|e }}</title>
+    <link>{{ item.link|e }}</link>
+    <price>{{ item.price|e }}EUR</price>
+    <quantity>{{ item.availability|e }}</quantity>
+    {#
+    <vat></vat>
+    <ecotax></ecotax>
+    <weight></weight>
+    #}
+    <brand>
+        <name>{{ item.brand|e }}</name>
+        {#<link></link>#}
+    </brand>
+    {#
+    <category>
+        <name><![CDATA[ Root > Home > Mugs ]]></name>
+        <link><![CDATA[http://ps-dev.shopping-feed.com]]></link>
+    </category>
+    #}
+    {% if item.salePrice != item.price %}
+    <discounts>
+        <discount>{{ item.salePrice|e }}</discount>
+    </discounts>
+    {% endif %}
+    <description>
+        <full><![CDATA[{{ item.description|e }}]]></full>
+        {#<short></short>#}
+    </description>
+    {#
+    <shippings>
+        <shipping>
+            <amount>5.90</amount>
+            <label><![CDATA[ Retrait magasin]]></label>
+        </shipping>
+    </shippings>
+    #}
+    <images>
+        <image type="main">{{ item.imageLink|e }}</image>
+        {% for additionalImageLink in item.additionalImageLinks %}
+        <image type="additional">{{ additionalImageLink|e }}</image>
+        {% endfor %}
+    </images>
+    {#
+    <attributes>
+        <attribute>
+            <name>Capacity</name>
+            <value>10</value>
+        </attribute>
+        <attribute>
+            <name>Material</name>
+            <value>Iron</value>
+        </attribute>
+    </attributes>
+    #}
+{% endapply %}
+{% endapply %}
+</product>

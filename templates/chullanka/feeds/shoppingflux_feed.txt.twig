@@ -1,0 +1,7 @@
+{% block extension %}xml{% endblock %}
+<?xml version="1.0" encoding="utf-8"?>
+<products version="2022">
+{% block item -%}
+    {%- include 'chullanka/feeds/shoppingflux_item.txt.twig' -%}
+{%- endblock %}
+</products>
