@@ -4,8 +4,8 @@
 {% apply setono_sylius_feed_remove_empty_tags %}
     <reference>{{ item.id|e }}</reference>
     <gtin>{{ item.gtin|e }}</gtin>
-    <name>{{ item.title|e }}</title>
-    <link>{{ item.link|e }}</link>
+    <name><![CDATA[{{ item.title|e }}]]></title>
+    <link><![CDATA[{{ item.link|e }}]]></link>
     <price>{{ item.price|e }}EUR</price>
     <quantity>{{ item.availability|e }}</quantity>
     {#
@@ -14,8 +14,8 @@
     <weight></weight>
     #}
     <brand>
-        <name>{{ item.brand|e }}</name>
-        {#<link></link>#}
+        <name><![CDATA[{{ item.brand|e }}]]></name>
+        {#<link><![CDATA[]]></link>#}
     </brand>
     {#
     <category>
@@ -30,7 +30,7 @@
     {% endif %}
     <description>
         <full><![CDATA[{{ item.description|e }}]]></full>
-        {#<short></short>#}
+        {#<short><![CDATA[]]></short>#}
     </description>
     {#
     <shippings>
@@ -41,9 +41,9 @@
     </shippings>
     #}
     <images>
-        <image type="main">{{ item.imageLink|e }}</image>
+        <image type="main"><![CDATA[{{ item.imageLink|e }}]]></image>
         {% for additionalImageLink in item.additionalImageLinks %}
-        <image type="additional">{{ additionalImageLink|e }}</image>
+        <image type="additional"><![CDATA[{{ additionalImageLink|e }}]]></image>
         {% endfor %}
     </images>
     {#
