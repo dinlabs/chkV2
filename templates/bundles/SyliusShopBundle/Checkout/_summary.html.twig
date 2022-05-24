@@ -12,11 +12,13 @@
             {% set product = variant.product %}
             <tr class="withPicture">
                 <td class="picture">
+                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">
                     {% if variant.hasImages %}
                         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
                     {% else %}
                         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
                     {% endif %}
+                    </a>
                 </td>
                 <td class="aligned" id="sylius-item-{{ product.slug }}-subtotal" {{ sylius_test_html_attribute('item-subtotal', product.slug) }}>
                     {% if product.brand %}{{ product.brand.name }} &ndash; {% endif %}
