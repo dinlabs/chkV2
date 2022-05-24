@@ -495,17 +495,18 @@ class IzyproHelper
             {
                 $code_carrier = ($split_ship[1] == 'express') ? '020' : '001';
 
-                // test si AMS et > 200€
+                // test si AMS et > 249€
                 if($order->getItemsTotal() > 24900)
                 {
                     // AMS = electro 
                     $checkTaxonIds = [
                         72,//Montres trail running
                         73,//Montres GPS et altimetre
-                        74,//Cameras, télépones et accessoires 
+                        //74,//Cameras, télépones et accessoires 
                         75,//GPS de randonnée
-                        76,//Orientation
+                        //76,//Orientation
                         77,//Electrostimulation
+                        243,//Compteurs et GPS cycle
                     ];
                     $arrayIntersect = array_intersect($taxonIds, $checkTaxonIds);
                     if(count($arrayIntersect)) $code_carrier = '002';//colissimo signature
