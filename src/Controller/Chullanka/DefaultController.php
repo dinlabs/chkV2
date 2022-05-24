@@ -100,6 +100,13 @@ final class DefaultController extends AbstractController
         echo "</pre>";
 
         echo "<hr>";
+        echo "<h2>Points de fidélité ?</h2>";
+        $return = $ginkoiaCustomerWs->getCustomerLoyalties($email);
+        echo "<pre>";
+        print_r($return);
+        echo "</pre>";
+
+        echo "<hr>";
         echo "<h2>Commandes en magasins</h2>";
         $return = $ginkoiaCustomerWs->getCustomerShopOrders($email);
         echo "<pre>";
@@ -612,6 +619,8 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPayWidgetAction(Request $request, UpstreamPayWidget $upstreamPayWidget)
     {
+        $widgetUrl = $this->chkParameter('upstreampay-widget-url');
+
         $cart = $this->cartContext->getCart();
         $cart->setCustomerIp($request->getClientIp());
 
@@ -631,6 +640,7 @@ final class DefaultController extends AbstractController
         $em->flush();
 
         return $this->render('chullanka/upstreampay_widget.html.twig', [
+            'widget_url' => $widgetUrl,
             'payment_base_url' => $upstreamPayWidget->upstreampay_base_url,
             'entity_id' => $upstreamPayWidget->entity_id,
             'api_key' => $upstreamPayWidget->api_key,
