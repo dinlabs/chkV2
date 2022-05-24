@@ -532,6 +532,7 @@ header + #breadcrumb { padding-top:0; }
 .univers #categoryTop #category { padding:0; }
 .univers #categoryTop .subcats .glider a { display:flex; flex-wrap:wrap; align-content:space-between; border-radius:5px; padding:1em; background:rgba(255,255,255,.8); width:150px; height:260px; text-align:center; font-family:var(--altFont); font-size:1.2em; font-weight:700; color:inherit; text-decoration:none; }
 .univers #categoryTop .subcats .glider a img { width:114px; height:114px; object-fit:cover; border-radius:5px; }
+.univers #guideList .glider a img { width:330px !important; height:330px !important; object-fit:cover; }
 
 
 
