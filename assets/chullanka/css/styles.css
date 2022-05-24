@@ -137,6 +137,8 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .prodInList .price del { float:left; }
 .prodInList .brand { padding:.25em 0; }
 .prodInList .title { padding-bottom:.25em; text-transform:uppercase; }
+.prodInList .title a { color:inherit; text-decoration:none; }
+.prodInList .title a:hover { text-decoration:underline; }
 .prodInList .clientRating .rating li { margin-right:.5em; }
 
 .big .prodInList { width:325px; min-height:445px; padding:18px 5px 0 5px; margin-bottom:2em; }
