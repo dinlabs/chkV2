@@ -270,6 +270,8 @@ services:
 
 
     #ndY: Overrides
+    sylius.available_product_option_values_resolver:
+        class: App\Overrides\Resolver\AvailableProductOptionValuesResolver
 
     # BitBag\SyliusElasticsearchPlugin
     BitBag\SyliusElasticsearchPlugin\Repository\TaxonRepositoryInterface: 
