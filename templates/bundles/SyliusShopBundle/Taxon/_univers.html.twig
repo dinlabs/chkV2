@@ -111,14 +111,14 @@
 
 {{ render(path('chk_ajax_getadviceform')) }}
 
+{{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_promos', 'taxonCode': taxon.code, 'template': '@SyliusShop/Taxon/_promotions.html.twig'})) }}
+
 <div class="autoMargin">
     {#
     <div class="todo">
         <h2>Nos top articles (blog)</h2>
     </div>
     #}
-
-    {{ render(path('get_blocks_by_section_taxon', {'sectionCode': 'cat_promos', 'taxonCode': taxon.code, 'template': '@SyliusShop/Taxon/_promotions.html.twig'})) }}
 
     {% if taxon.otherTaxons|length %}
     <div id="checkThat">
