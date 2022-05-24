@@ -46,21 +46,13 @@
             <script>
                 window.addEventListener('load', function(){
                     new Glider(document.querySelector('#categoryTop .subcats .glider'), { 
-                        slidesToShow: 5,
+                        slidesToShow: 'auto',
+                        itemWidth: 180,
+                        exactWidth: 150,
                         slidesToScroll: 1,
                         draggable: true,
                         scrollLock: true,
-                        dots: '#categoryTop .subcats .dots',
-                        responsive: [
-                            {
-                                breakpoint: 1024,
-                                settings: {
-                                    slidesToShow: 'auto',
-                                    itemWidth: 180,
-                                    exactWidth: 150,
-                                }
-                            }
-                        ]
+                        dots: '#categoryTop .subcats .dots'
                     });
                 });
             </script>
@@ -110,7 +102,7 @@
 {% endif %}
 
 {% if taxon.topBrands %}
-{% include 'chullanka/brand/top_items.html.twig' with {'brands': taxon.topBrands, '_title': 'Nos Top Marques'} %}
+{% include 'chullanka/brand/top_items.html.twig' with {'brands': taxon.topBrands, '_title': 'Nos Top Marques ' ~ taxon.name} %}
 {% endif %}
 
 {{ bitbag_cms_render_media('selection_univ_' ~ taxon.slug, '@SyliusShop/Product/_packlist.html.twig') }}

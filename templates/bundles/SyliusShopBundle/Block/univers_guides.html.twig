@@ -14,22 +14,14 @@
     <script>
         window.addEventListener('load', function(){
             new Glider(document.querySelector('#guideList .glider'), { 
-                slidesToShow: 1,
+                slidesToShow: 'auto',
+                itemWidth: 360,
+                exactWidth: 330,
                 slidesToScroll: 1,
                 duration: 3,
                 draggable: true,
                 scrollLock: true,
-                dots: '#guideList .dots',
-                responsive: [
-                    {
-                        breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 'auto',
-                            itemWidth: 360,
-                            exactWidth: 330
-                        }
-                    }
-                ]
+                dots: '#guideList .dots'
             });
         });
     </script>

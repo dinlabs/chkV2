@@ -1204,8 +1204,6 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #otherProductsBis .header .autoMargin > * { width:330px; padding:0; }
     #otherProductsBis .header .svg-icon { top:-15px; right:auto; left:350px; width:132.938px; height:72.172px; }
 
-    .univers #topBrands h2, .category #topBrands h2 { padding:0; }
-
     .home #promos .glider .glider-slide { margin:0; }
 
     #entreprise .inside { display:grid; grid-template-columns:2fr 3fr; gap:100px; }
