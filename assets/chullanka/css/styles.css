@@ -249,7 +249,7 @@ header .inside #searchBox label { cursor:pointer; }
 header .inside #searchBox label .svg-icon-close { display:none; }
 header .inside #searchBox input { position:absolute; bottom:-33px; left:50%; transform:translateX(-50%); width:320px; vertical-align:super; opacity:0; }
 
-.home header:not(.is-pinned) .inside #logo img { width:auto; }
+.home header:not(.is-pinned) .inside #logo img { width:200px; }
 .home header:not(.is-pinned) .inside #searchBox input { position:static; transform:none; opacity:1; }
 
 header.search-visible { height:120px; }
