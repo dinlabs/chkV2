@@ -173,7 +173,7 @@ class Target2SellHelper
                 $productNode->appendChild($this->addKeyVal('salable', (int)$product->isEnabled()));
 
                 $totalQty = $product->getTotalQuantities();
-                $productNode->appendChild($this->addKeyVal('in_stock', (bool)$totalQty));
+                $productNode->appendChild($this->addKeyVal('in_stock', (int)(bool)$totalQty));
                 $productNode->appendChild($this->addKeyVal('stock_qty', (int)$totalQty));
                 
                 if($productTaxons = $product->getProductTaxons())
