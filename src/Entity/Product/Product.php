@@ -94,6 +94,23 @@ class Product extends BaseProduct
         return new ProductTranslation();
     }
 
+    /*public function getVariants(): Collection
+    {
+        $_variants = [];
+        foreach($this->variants as $variant)
+        {
+            $_variants[ $variant->getPosition() ] = $variant;
+        }
+        ksort($_variants); // tri
+
+        $variants = new ArrayCollection();
+        foreach($_variants as $_variant)
+        {
+            $variants->add( $_variant );
+        }
+        return $variants;
+    }*/
+
     public function getBrand(): ?Brand
     {
         return $this->brand;
@@ -448,5 +465,36 @@ class Product extends BaseProduct
             }
         }
         return $highestTaxon;
+    }
+
+    public function getTotalQuantities(): int
+    {
+        $total = 0;
+        foreach($this->variants as $variant)
+        {
+            $total += $variant->getOnHand();
+        }
+        return $total;
+    }
+
+    public function getMinQty(): int
+    {
+        $min = null;
+        foreach($this->variants as $variant)
+        {
+            if(is_null($min)) $min = $variant->getOnHand();
+            $min = min($min, $variant->getOnHand());
+        }
+        return $min;
+    }
+
+    public function getMaxQty(): int
+    {
+        $max = 0;
+        foreach($this->variants as $variant)
+        {
+            $max = max($max, $variant->getOnHand());
+        }
+        return $max;
     }
 }

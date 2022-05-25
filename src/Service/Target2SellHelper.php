@@ -33,7 +33,7 @@ class Target2SellHelper
         $this->projectDir = $projectDir;
         $this->targetToSellDir = $this->projectDir . '/var/chkfiles/target2sell/';
         if(!is_dir($this->targetToSellDir)) mkdir($this->targetToSellDir);
-        $this->exportDir = $this->projectDir . '/public/exports/';
+        $this->exportDir = $this->projectDir . '/public/media/exports/';
     }
     private function chkParameter($slug)
     {
@@ -171,6 +171,10 @@ class Target2SellHelper
                     }
                 }
                 $productNode->appendChild($this->addKeyVal('salable', (int)$product->isEnabled()));
+
+                $totalQty = $product->getTotalQuantities();
+                $productNode->appendChild($this->addKeyVal('in_stock', (bool)$totalQty));
+                $productNode->appendChild($this->addKeyVal('stock_qty', (int)$totalQty));
                 
                 if($productTaxons = $product->getProductTaxons())
                 {
@@ -194,7 +198,7 @@ class Target2SellHelper
                     {
                         $declinationNode = $this->doc->createElement('declination');
                         $declinationAttr = $this->doc->createAttribute('id');
-                        $declinationAttr->value = $variant->getId();
+                        $declinationAttr->value = 'v-' . $variant->getId();
                         $declinationNode->appendChild($declinationAttr);
 
                         if($channelPricing = $variant->getChannelPricings()->first())
