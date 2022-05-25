@@ -633,11 +633,12 @@ header + #breadcrumb { padding-top:0; }
 #productContent .frame h2 { padding-right:80px; font-size:1.2em; }
 #productContent .foldable { max-width:1000px; margin:auto; }
 #productContent .frame p { padding-bottom:1em; }
+#productContent .frame img { height:auto !important; }
 #productContent .frame ul.list { padding-left:1em; }
 /*#productContent .frame ul.list li { list-style:inside; }*/
 
 #productContent .frame table { border-collapse:collapse; width:100%; margin-top:1em; text-align:left; }
-#productContent .frame table tr th, #productContent .frame table tr td { border:1px solid; padding:1em 2em; width:50%; }
+#productContent .frame table tr th, #productContent .frame table tr td { border:1px solid; padding:.5em 1em; width:50%; font-size:.75em; }
 #productContent .frame table tr:nth-child(odd) th, #productContent .frame table tr:nth-child(odd) td { background:var(--bg0); }
 
 #productTest .pichulli { float:left; width:70px; height:70px; margin:-15px 15px 0 -15px; }
@@ -1115,7 +1116,7 @@ body.customer { background:var(--bg1); }
     header nav #navBlock .wrapper a:hover { color:var(--bg0); text-decoration:none; }
 header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to right, var(--primary) -10%, rgba(255,255,255,0) 80%); }
     header nav #navBottom { display:none; }
-    header .inside #logo img { width:auto; }
+    header .inside #logo img { width:200px; }
     header .inside #searchBox { display:initial; }
     header .inside #searchBox input { position:static; transform:none; opacity:1; }
     header .inside #shopLinks { width:256px; }
@@ -1201,6 +1202,8 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     #productTest article .insert .notation ul li { margin:0 .5em; }
     #productTest article .insert .notation ul li .svg-icon { width:61px; height:23px; }
+
+    #productContent .frame table tr th, #productContent .frame table tr td { padding:1em 2em; font-size:1em; }
 
     #otherProductsBis .header .autoMargin > * { width:330px; padding:0; }
     #otherProductsBis .header .svg-icon { top:-15px; right:auto; left:350px; width:132.938px; height:72.172px; }
