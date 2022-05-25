@@ -303,16 +303,19 @@ class Target2SellHelper
                     // recherche chaque attribut "rank"
                     foreach($_attributes as $rank => $attribute)
                     {
-                        //recherche si la valeur existe
-                        $attrValue = $product->getAttributeByCodeAndLocale($rank);
-                        if(!$attrValue)
+                        if(isset($$rank))
                         {
-                            $attrValue = new ProductAttributeValue();
-                            $attrValue->setAttribute($attribute);
-                            $product->addAttribute($attrValue);
+                            //recherche si la valeur existe
+                            $attrValue = $product->getAttributeByCodeAndLocale($rank);
+                            if(!$attrValue)
+                            {
+                                $attrValue = new ProductAttributeValue();
+                                $attrValue->setAttribute($attribute);
+                                $product->addAttribute($attrValue);
+                            }
+                            $_neoval = (int)($$rank * 100);
+                            $attrValue->setValue($_neoval);
                         }
-                        $_neoval = (int)($$rank * 100);
-                        $attrValue->setValue($_neoval);
                     }
                 }
             }
