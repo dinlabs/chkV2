@@ -1,0 +1,4 @@
+/* set max-width for ckeditor image selection */
+.cke_dialog_ui_vbox_child .media-list__item__img {
+    max-width: 100px;
+}

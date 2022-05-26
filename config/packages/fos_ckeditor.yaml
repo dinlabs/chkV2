@@ -9,9 +9,13 @@ fos_ck_editor:
         bitbag_sylius_cms_plugin:
             extraPlugins:
                 - 'emoji'
+                - 'mediaImage'
     plugins:
         emoji:
             path: '/bundles/fosckeditor/plugins/emoji/'
+            filename: 'plugin.js'
+        mediaImage:
+            path: '/bundles/bitbagsyliuscmsplugin/js/ckeditor-plugins/image/'
             filename: 'plugin.js'
     toolbars:
         configs:

@@ -98,8 +98,14 @@ services:
     #     class: App\Controller\Chullanka\StoreController
     #     autowire: true
     #     tags: ['controller.service_arguments']
-       
-    
+
+    app.block_event_listener.admin.layout.stylesheets:
+        class: Sylius\Bundle\UiBundle\Block\BlockEventListener
+        arguments:
+            - 'bundles/SyliusAdminBundle/Layout/_stylesheets.html.twig'
+        tags:
+            - { name: kernel.event_listener, event: sonata.block.event.sylius.admin.layout.stylesheets, method: onBlockEvent }
+
     #ndY: pour ajouter des liens dans les menus
     #cf. https://docs.sylius.com/en/latest/customization/menu.html
     app.listener.admin.menu_builder:
