@@ -16,8 +16,8 @@ window.displayAvailabilities = function(variantId)
         var $btnAddToCart = $('#addToCart button');
         
         var productPrice = $('#variantMapping [data-id=' + variantId + ']').data('price');//en centimes
-        var price4free = 6000;//en centimes
-        var defaultPriceTxt = 'à 9,90 €';
+        var price4free = $good.data('priceforfree');//en centimes
+        var defaultPriceTxt = $good.data('defaultprice');
         var limitH = 12;
         var dayInSec = 24 * 3600 * 1000;
 
