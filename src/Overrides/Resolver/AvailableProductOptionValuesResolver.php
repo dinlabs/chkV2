@@ -49,7 +49,10 @@ final class AvailableProductOptionValuesResolver implements AvailableProductOpti
         foreach ($product->getEnabledVariants() as $productVariant) {
             foreach($productVariant->getOptionValues() as $opt)
             {
-                $productOptionValues->add($opt);
+                if($opt->getOption() === $productOption)
+                {
+                    $productOptionValues->add($opt);
+                }
             }
         }
         return $productOptionValues;
