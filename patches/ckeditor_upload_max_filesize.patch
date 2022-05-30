@@ -1,0 +1,24 @@
+diff --git a/src/Controller/Action/Admin/UploadEditorImageAction.php b/src/Controller/Action/Admin/UploadEditorImageAction.php
+index a540122b..90ced5e7 100644
+--- a/src/Controller/Action/Admin/UploadEditorImageAction.php
++++ b/src/Controller/Action/Admin/UploadEditorImageAction.php
+@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
+ use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
++use Symfony\Component\HttpKernel\Exception\HttpException;
+ 
+ final class UploadEditorImageAction
+ {
+@@ -47,7 +48,11 @@ final class UploadEditorImageAction
+         /** @var UploadedFile|null $image */
+         $image = $request->files->get('upload');
+ 
+-        if (null === $image || !$this->isValidImage($image)) {
++        if ($image === null || $image->getPath() === '') {
++            throw new HttpException(413, 'Le fichier est trop lourd.');
++        }
++
++        if (!$this->isValidImage($image)) {
+             throw new BadRequestHttpException();
+         }
