@@ -46,10 +46,27 @@
         {% endfor %}
 
         {# OVERRIDE START #}
-
         {# add a custom timestamp for cache busting - ckeditor_widget_extra doesnt work #}
-        CKEDITOR.timestamp = 'v1.0';
+        CKEDITOR.timestamp = "v1.1";
+        var maxUploadSize = '{{ iniGet('upload_max_filesize') }}';
+        {# update label for image upload to display the max filesize #}
+        CKEDITOR.on("dialogDefinition", function(e) {
+            var dialogName = e.data.name;
+            var dialog = e.data.definition.dialog;
+
+            dialog.on('show', function () {
+                var defaultText = 'Envoyer sur le serveur';
+                var labelText = $('div[name="Upload"] label.cke_dialog_ui_labeled_label').text();
+
+                if (labelText === defaultText) {
+                    $('div[name="Upload"] label.cke_dialog_ui_labeled_label').text(
+                        labelText + ' (max: ' + maxUploadSize + ')'
+                    );
+                }
+            });
+        });
         {# OVERRIDE END #}
+
         {% block ckeditor_widget_extra %}
         {% endblock ckeditor_widget_extra %}
 

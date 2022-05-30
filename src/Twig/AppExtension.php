@@ -34,6 +34,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('pr', [$this, 'specialprintr']),
             new TwigFunction('t2sHash', [$this, 'hashEmail']),
+            new TwigFunction('iniGet', [$this, 'iniGet']),
         ];
     }
 
@@ -122,5 +123,10 @@ class AppExtension extends AbstractExtension
     public function hashEmail($string): string
     {
         return $string ? strtoupper(hash('SHA256', $string)) : '';
+    }
+
+    public function iniGet(string $option): string|false
+    {
+        return ini_get($option);
     }
 }
