@@ -1074,6 +1074,18 @@ body.customer { background:var(--bg1); }
 #brand #brandTop .socials a .icon { margin:0; font-size:2em; }
 
 
+#login .blocLogin { padding-bottom:2em; }
+#login .blocLogin h1.header { padding-bottom:1em; text-align:center; text-transform:uppercase; }
+#login .blocLogin .column + .column { border:1px solid var(--bg1); border-width:1px 0 0 0; }
+#login .blocLogin .column h4.header { text-transform:uppercase; color:var(--primary); }
+#login .blocLogin .column form .insert { background-color:var(--bg1); margin:1em auto; }
+#login .blocLogin .column form .floated.right { text-align:right; padding-bottom:1em; }
+#login .blocLogin .column form .floated.right a { color:inherit; }
+#login .blocLogin .column form .btn.submit { width:100%; font-size:1.5em; }
+#login .blocLogin .column .btnLinks { display:flex; justify-content:space-evenly; padding-top:1em; }
+#login .blocLogin .column .btnLinks a { padding:.75em 2em; }
+
+
 /* REVIEWS */
 #reviews { padding-bottom:2em; }
 
@@ -1214,6 +1226,9 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #entreprise .framap { justify-self:end; }
     .home #entreprise .team h3 { max-width:320px; color:inherit; text-shadow:none; }
     #entreprise .team img { width:100%; }
+
+    #login .blocLogin .column { padding-left:1rem; padding-right:5rem; }
+    #login .blocLogin .column + .column { border-width:0 0 0 1px; padding-left:5rem; padding-right:1rem; }
 
     .checkout .overthetop { gap:100px; }
     .checkout .timeline li { min-width:160px; }

@@ -119,6 +119,10 @@ app:
 
 sylius:
   ui:
+    access_your_store_account_or_create_a_new_one: Identifiez-vous ou créez un compte
+    registered_customers: Vous avez déjà commandé sur notre site ?
+    if_you_have_an_account_sign_in_with_your_email_address: Connectez-vous pour accéder à votre compte client
+    new_customers: Vous n'avez jamais commandé sur notre site ?
     pack_product: Produit packagé
     your_shopping_cart: 'Mon panier'
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'

@@ -13,6 +13,7 @@
                 {% set choice = element.products.first %}
                 {% if choice.simple %}
                 <label for="choice_{{ choice.id }}">{{ choice }}</label>
+                {% set choiceVariant = choice|sylius_resolve_variant %}
                 <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}">
                 {% else %}
                 <select id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]">

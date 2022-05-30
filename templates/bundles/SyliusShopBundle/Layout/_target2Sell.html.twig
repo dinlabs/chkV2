@@ -5,7 +5,7 @@
 {% if routeName == 'sylius_shop_homepage' %}{% set t2spID = 1000 %}
 {% elseif routeName == 'sylius_shop_product_show' %}
     {% set t2spID = 1200 %}
-    {% set t2siID = product.id %}
+    {% set t2siID = product.code %}
 {% elseif routeName == 'sylius_shop_product_index' or routeName == 'bitbag_sylius_elasticsearch_plugin_shop_list_products' %}
     {% set t2spID = 1400 + taxon.level - 1 %}
     {% set t2saID = taxon.id %}
@@ -14,7 +14,7 @@
         {% set t2spageNbr = '' %}
         {% set t2sdIS = '' %}{#_t2sparams.dIS = 'p=1&limit=24&order=t2s_sort&dir=asc';#}
         {% for product in products|slice(0, 6) %}
-            {% set t2siID = t2siID|merge([product.id|trans]) %}
+            {% set t2siID = t2siID|merge([product.code|trans]) %}
         {% endfor %}
         {% set t2siID = t2siID|join('|') %}
     {% endif %}
@@ -24,7 +24,7 @@
         {% set t2siID = [] %}
         {% set t2sqTE = [] %}
         {% for item in cart.items %}
-            {% set t2siID = t2siID|merge([item.product.id|trans]) %}
+            {% set t2siID = t2siID|merge([item.product.code|trans]) %}
             {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
         {% endfor %}
         {% set t2siID = t2siID|join('|') %}
@@ -41,7 +41,7 @@
         {% set t2sqTE = [] %}
         {% set t2spriceL = [] %}
         {% for item in order.items %}
-            {% set t2siID = t2siID|merge([item.product.id|trans]) %}
+            {% set t2siID = t2siID|merge([item.product.code|trans]) %}
             {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
             {% set t2spriceL = t2spriceL|merge([item.total / 100]) %}
         {% endfor %}
@@ -64,7 +64,7 @@
     {% set t2spID = 3600 %}
 {% elseif routeName == 'chk_ajax_popaddtocart' %}
     {% set t2spID = 4000 %}
-    {% set t2siID = variant.product.id %}
+    {% set t2siID = variant.product.code %}
 {% endif %}
 {#{ dump(t2spID) }#}
 

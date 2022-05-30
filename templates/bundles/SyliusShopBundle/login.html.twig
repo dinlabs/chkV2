@@ -4,19 +4,19 @@
 
 {% block title %}{{ 'sylius.ui.customer_login'|trans }} | {{ parent() }}{% endblock %}
 
+{% block bodyattr %}id="login"{% endblock %}
+
 {% block content %}
 
-<div class="autoMargin">
-    {% include '@SyliusShop/Login/_header.html.twig' %}
+<div class="blocLogin autoMargin">
+    <h1 class="header">{{ 'sylius.ui.access_your_store_account_or_create_a_new_one'|trans }}</h1>
 
     {{ sylius_template_event('sylius.shop.login.after_content_header') }}
 
-    <div class="ui padded segment">
-        <div class="ui two column very relaxed stackable grid">
+    <div class="ui padded">
+        <div class="ui two column stackable grid">
             <div class="column">
                 {{ sylius_template_event('sylius.shop.login.main_column', _context) }}
-            </div>
-            <div class="ui hidden vertical divider">
             </div>
             <div class="column">
                 {{ sylius_template_event('sylius.shop.login.register_column', _context) }}
