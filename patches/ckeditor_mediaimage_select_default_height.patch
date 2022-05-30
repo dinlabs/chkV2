@@ -1,0 +1,22 @@
+diff --git a/src/Resources/public/js/ckeditor-plugins/dialogs/index.js b/src/Resources/public/js/ckeditor-plugins/dialogs/index.js
+index f5cbafb3..f3acb68e 100644
+--- a/src/Resources/public/js/ckeditor-plugins/dialogs/index.js
++++ b/src/Resources/public/js/ckeditor-plugins/dialogs/index.js
+@@ -243,7 +243,7 @@ CKEDITOR.dialog.add('videoDialog', (editor) => ({
+                         {
+                             type: 'text',
+                             id: 'imageHeight',
+-                            default: '200',
++                            default: '',
+                             label: 'Image height',
+                             inputStyle: 'text-align: center',
+                             controlStyle: 'width: 4em',
+@@ -346,7 +346,7 @@ CKEDITOR.dialog.add('imageDialog', (editor) => ({
+                         {
+                             type: 'text',
+                             id: 'imageHeight',
+-                            default: '200',
++                            default: '',
+                             label: 'Image height',
+                             inputStyle: 'text-align: center',
+                             controlStyle: 'width: 4em',

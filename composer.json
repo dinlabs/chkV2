@@ -124,7 +124,8 @@
         },
         "patches": {
             "bitbag/cms-plugin": {
-              "Champs supplémentaires pour entité BlockCMS": "patches/sylius_cms.patch"
+              "Champs supplémentaires pour entité BlockCMS": "patches/sylius_cms.patch",
+              "Ckeditor MediaImage plugin default height": "patches/ckeditor_mediaimage_select_default_height.patch"
             },
             "bitbag/elasticsearch-plugin": {
               "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch"

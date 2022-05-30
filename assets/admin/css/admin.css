@@ -2,3 +2,12 @@
 .cke_dialog_ui_vbox_child .media-list__item__img {
     max-width: 100px;
 }
+
+#bitbag_sylius_cms_plugin_media_file_img {
+    margin: 10px 0;
+    max-height: 100px;
+}
+
+.bitbag_media_list_image {
+    max-height: 100px;
+}
