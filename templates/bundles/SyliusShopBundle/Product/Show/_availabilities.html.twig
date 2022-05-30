@@ -6,7 +6,7 @@
         <div data-id="{{ variant.id }}"{% for option in variant.OptionValues %} data-{{ option.OptionCode }}="{{ option.code }}"{% endfor %} data-price="{{ variant|sylius_calculate_price({'channel': sylius.channel}) }}"></div>
         {% endfor %}
     </div>
-    <div id="js_good" class="availability good hidden" data-freeabove="{{ freeAbove }}" data-defaultprice="à {{ money.convertAndFormat(defaultPrice) }}">
+    <div id="js_good" class="availability good hidden" data-priceforfree="{{ freeAbove }}" data-defaultprice="à {{ money.convertAndFormat(defaultPrice) }}">
         <p>En stock - Livraison <span class="price">à {{ money.convertAndFormat(defaultPrice) }}</span> : <span class="date">12 - 20 juil</span></p>
         <a href="#dispoMagPop" class="dispoMag topopin">Vérifiez la disponibilité en magasin</a>
     </div>
