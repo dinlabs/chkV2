@@ -1,6 +1,10 @@
+{% set _opened = false %}
+{% if cart.chullpoints %}{% set _opened = true %}{% endif %}
+{% if cart.promotionCoupon %}{% set _opened = true %}{% endif %}
+{% if app.request.get('_route') == 'sylius_shop_cart_save' %}{% set _opened = true %}{% endif %}
 <div id="fidelity_coupon">
-    <button class="pictoLink fold">Un code promo, des points de fidélité ?</button>
-    <div class="foldable">
+    <button class="pictoLink fold{% if _opened %} on{% endif %}">Un code promo, des points de fidélité ?</button>
+    <div class="foldable{% if _opened %} shown{% endif %}">
 
         {% if app.user and app.user.customer and app.user.customer.chullpoints > 500 %}
         {% set customer = app.user.customer %}
