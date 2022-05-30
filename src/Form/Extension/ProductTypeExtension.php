@@ -15,6 +15,7 @@ use App\Repository\Chullanka\BrandRepository;
 use Doctrine\ORM\EntityRepository;
 use Sylius\Bundle\CoreBundle\Form\Type\ChannelCollectionType;
 use Sylius\Bundle\CoreBundle\Form\Type\Product\ChannelPricingType;
+use Sylius\Bundle\ProductBundle\Form\Type\ProductOptionChoiceType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductType;
 use Sylius\Bundle\ResourceBundle\Form\DataTransformer\ResourceToIdentifierTransformer;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -132,8 +133,18 @@ class ProductTypeExtension extends AbstractTypeExtension
             'block_name' => 'entry',
         ]);
 
-        //todo: faire en sorte que le prix ne soit pas obligatoire si c'est un pack
-        /*$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            $form = $event->getForm();
+            $form->add('options', ProductOptionChoiceType::class, [
+                'required' => false,
+                'disabled' => false,// surcharge pour autoriser la modif
+                'multiple' => true,
+                'label' => 'sylius.form.product.options',
+            ]);
+
+
+            //todo: faire en sorte que le prix ne soit pas obligatoire si c'est un pack
+            /*
             $product = $event->getData();
             $variants = $product->getVariants();
             $productVariant = $variants->first();
@@ -162,7 +173,10 @@ class ProductTypeExtension extends AbstractTypeExtension
             //     ],
             //     'label' => 'sylius.form.variant.price',
             // ]);
-        });*/
+            */
+
+        });
+        
     }
 
     /**
