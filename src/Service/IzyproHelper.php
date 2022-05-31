@@ -172,7 +172,7 @@ class IzyproHelper
                     if(!rename($file, $this->izyproDir . DIRECTORY_SEPARATOR . basename($file)))
                     {
                         $this->logger->error('SFTP :: fichier '.$file.' non déplacé dans chkfiles/izypro');
-                        //$this->reportMsg[] = 'SFTP :: fichier '.$file.' non déplacé dans izyprofiles';
+                        //$this->reportMsg[] = 'SFTP :: fichier '.$file.' non déplacé dans chkfiles/izypro';
                     }
                 }
             }
@@ -276,8 +276,8 @@ class IzyproHelper
                 // We move the tmp file in a logfiles dir
                 if(!rename($tmpFile, $this->izyproDir . DIRECTORY_SEPARATOR . basename($files[$i])))
                 {
-                    $this->logger->error('Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles');
-                    //$this->reportMsg[] = 'Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans izyprofiles';
+                    $this->logger->error('Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans chkfiles/izypro');
+                    //$this->reportMsg[] = 'Izypro :: ERREUR : le fichier '.$files[$i].' n\'a pu être déplacé dans chkfiles/izypro';
                 }
             }
             else
