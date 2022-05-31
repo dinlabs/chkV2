@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Overrides\SyliusFeedPlugin\FeedContext\GoogleShopping;
+namespace App\Overrides\SyliusFeedPlugin\FeedContext;
 
 use InvalidArgumentException;
 use App\Overrides\SyliusFeedPlugin\Model\Price;
@@ -178,8 +178,13 @@ class ProductItemContext extends BaseProductItemContext
             }
             // fin ajout Yannick
 
-            if($variant->getOnHand() > 0) 
+            if ($this->getFeedAllowNoStock()) {
                 $contextList->add($data);
+            } else {
+                if ($variant->getOnHand() > 0) {
+                    $contextList->add($data);
+                }
+            }
         }
 
         return $contextList;
@@ -493,4 +498,10 @@ class ProductItemContext extends BaseProductItemContext
             }
         }
     }
+
+    public function getFeedAllowNoStock(): bool
+    {
+        return true;
+    }
+
 }
