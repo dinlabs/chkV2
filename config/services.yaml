@@ -345,7 +345,7 @@ services:
             - 'chullanka/feeds/google_shopping_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\Niveales:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -353,7 +353,7 @@ services:
             - 'chullanka/feeds/niveales_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\PriceAssistant:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -361,7 +361,7 @@ services:
             - 'chullanka/feeds/priceassistant_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\Comparide:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -369,7 +369,7 @@ services:
             - 'chullanka/feeds/comparide_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_'
     App\Overrides\SyliusFeedPlugin\FeedType\Planetgrimpe:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -377,7 +377,7 @@ services:
             - 'chullanka/feeds/planetgrimpe_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\FacebookRetargeting:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -385,7 +385,7 @@ services:
             - 'chullanka/feeds/facebook_retargeting_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\GoogleLocalMagasin:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -393,7 +393,7 @@ services:
             - 'chullanka/feeds/google_local_magasin_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\Doofinder:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -401,7 +401,7 @@ services:
             - 'chullanka/feeds/doofinder_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
     App\Overrides\SyliusFeedPlugin\FeedType\ShoppingFlux:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
@@ -409,4 +409,4 @@ services:
             - 'chullanka/feeds/shoppingflux_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_all'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
