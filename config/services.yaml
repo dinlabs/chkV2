@@ -369,7 +369,7 @@ services:
             - 'chullanka/feeds/comparide_feed.txt.twig'
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
-            - '@setono_sylius_feed.feed_context.google.shopping.product_item_'
+            - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
     App\Overrides\SyliusFeedPlugin\FeedType\Planetgrimpe:
         class: Setono\SyliusFeedPlugin\FeedType\FeedType
         arguments:
