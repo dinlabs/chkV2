@@ -1096,10 +1096,13 @@ body.customer { background:var(--bg1); }
 .wysiwyg ul, .wysiwyg ol { padding:0 0 .5em .5em; }
 .wysiwyg li { position:relative; padding:0 0 .5em .75em; }
 .wysiwyg li::before { content:''; position:absolute; left:0; top:7px; display:block; background:var(--primary); width:5px; height:5px; border-radius:50%; }
-.wysiwyg iframe { max-width:100%; height:auto; }
+.wysiwyg iframe { display:block; max-width:100%; margin:0 auto 1em auto; }
 
 
 /* MEDIA QUERIES */
+@media screen and (max-width:499px) {
+    .wysiwyg iframe { height:auto; }
+}
 @media screen and (min-width:500px) {
     .prodList .background .autoMargin { left:-24px; }
     #socials .instagram li img { width:100px; }
