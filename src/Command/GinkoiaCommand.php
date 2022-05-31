@@ -490,7 +490,11 @@ class GinkoiaCommand extends Command
         // attributes:
         $this->addOrUpdateAttrValue($product, 'code_ean', $article['CODE_EAN']);
         $this->addOrUpdateAttrValue($product, 'supplier_ref', $article['CODE_FOURN']);
-        $this->addOrUpdateAttrValue($product, 'genre', $article['GENRE']);
+        
+        if(isset($article['GENRE']) && isset($this->genre_ids[ $article['GENRE'] ]))
+        {
+            $this->addOrUpdateAttrValue($product, 'genre', $this->genre_ids[ $article['GENRE'] ]);
+        }
         $this->addOrUpdateAttrValue($product, 'typologie', $article['CLASSEMENT1']);
         $this->addOrUpdateAttrValue($product, 'cycle_vie', $article['CLASSEMENT2']);
         //$this->addOrUpdateAttrValue($product, 'ginkoia_class3', $article['CLASSEMENT3']);
@@ -691,7 +695,7 @@ class GinkoiaCommand extends Command
 	    foreach($stock as $artSite)
 	    {
             if(!isset($this->store_codes[ (int)$artSite['MAG_ID'] ])) continue;
-            
+
 	        $this->output->writeln("Sku : " . $artSite['CODE_ARTICLE']);
 
             //$this->store_codes
