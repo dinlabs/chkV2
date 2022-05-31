@@ -1,4 +1,5 @@
-{% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/admin/js/app.js'} %}
+{#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/admin/js/app.js'} %#}
+{{ encore_entry_script_tags('admin-entry', null, 'admin') }}
 
 <script>
     const route = "{{ path('bitbag_sylius_cms_plugin_admin_ajax_media_by_name_phrase')|escape('js') }}";
