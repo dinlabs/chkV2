@@ -1,24 +1,41 @@
 diff --git a/src/Message/Handler/GenerateBatchHandler.php b/src/Message/Handler/GenerateBatchHandler.php
-index de3aa51..9872416 100644
+index de3aa51..c0d034b 100644
 --- a/src/Message/Handler/GenerateBatchHandler.php
 +++ b/src/Message/Handler/GenerateBatchHandler.php
-@@ -112,6 +112,77 @@ final class GenerateBatchHandler implements MessageHandlerInterface
-         $this->logger = $logger;
-     }
+@@ -78,6 +78,10 @@ final class GenerateBatchHandler implements MessageHandlerInterface
  
+     private LoggerInterface $logger;
+ 
++    private array $brandsByFeedCode;
++
++    private array $taxonsByFeedCode;
++
+     public function __construct(
+         FeedRepositoryInterface $feedRepository,
+         ChannelRepositoryInterface $channelRepository,
+@@ -93,7 +97,9 @@ final class GenerateBatchHandler implements MessageHandlerInterface
+         ViolationFactoryInterface $violationFactory,
+         SerializerInterface $serializer,
+         UrlGeneratorInterface $urlGenerator,
+-        LoggerInterface $logger
++        LoggerInterface $logger,
++        array $brandsByFeedCode,
++        array $taxonsByFeedCode
+     ) {
+         $this->feedRepository = $feedRepository;
+         $this->channelRepository = $channelRepository;
+@@ -110,6 +116,61 @@ final class GenerateBatchHandler implements MessageHandlerInterface
+         $this->serializer = $serializer;
+         $this->urlGenerator = $urlGenerator;
+         $this->logger = $logger;
++        $this->brandsByFeedCode = $brandsByFeedCode;
++        $this->taxonsByFeedCode = $taxonsByFeedCode;
++    }
++
 +    private function getBrandsAllowedByFeedCode($feedCode): array
 +    {
-+        /* Example for $brandsByFeedCode
-+         *
-+         * $brandsByFeedCode = [
-+         *     'google_shopping' => ['petzl', 'punch-power', 'thermopad']
-+         * ];
-+         */
-+
-+        $brandsByFeedCode = [];
-+
-+        if (isset($brandsByFeedCode[$feedCode])) {
-+            return $brandsByFeedCode[$feedCode];
++        if (isset($this->brandsByFeedCode[$feedCode])) {
++            return $this->brandsByFeedCode[$feedCode];
 +        }
 +
 +        return [];
@@ -26,17 +43,8 @@ index de3aa51..9872416 100644
 +
 +    private function getTaxonsAllowedByFeedCode($feedCode): array
 +    {
-+        /* Example for $taxonsByFeedCode
-+         *
-+         * $taxonsByFeedCode = [
-+         *     'google_shopping' => ['cat_escalade_et_alpinisme']
-+         * ];
-+         */
-+
-+        $taxonsByFeedCode = [];
-+
-+        if (isset($taxonsByFeedCode[$feedCode])) {
-+            return $taxonsByFeedCode[$feedCode];
++        if (isset($this->taxonsByFeedCode[$feedCode])) {
++            return $this->taxonsByFeedCode[$feedCode];
 +        }
 +
 +        return [];
@@ -75,12 +83,10 @@ index de3aa51..9872416 100644
 +        }
 +
 +        return $itemsFiltered;
-+    }
-+
+     }
+ 
      public function __invoke(GenerateBatch $message): void
-     {
-         $feed = $this->getFeed($message->getFeedId());
-@@ -132,6 +203,18 @@ final class GenerateBatchHandler implements MessageHandlerInterface
+@@ -132,6 +193,18 @@ final class GenerateBatchHandler implements MessageHandlerInterface
  
              $items = $feedType->getDataProvider()->getItems($message->getBatch());
  
@@ -99,3 +105,16 @@ index de3aa51..9872416 100644
              $itemContext = $feedType->getItemContext();
  
              $template = $this->twig->load($feedType->getTemplate());
+diff --git a/src/Resources/config/services/message_handler.xml b/src/Resources/config/services/message_handler.xml
+index 5e3fcda..1c104c0 100644
+--- a/src/Resources/config/services/message_handler.xml
++++ b/src/Resources/config/services/message_handler.xml
+@@ -32,6 +32,8 @@
+             <argument type="service" id="serializer"/>
+             <argument type="service" id="router"/>
+             <argument type="service" id="logger"/>
++            <argument key="$brandsByFeedCode">%env(json:FEED_CODE_BRANDS)%</argument>
++            <argument key="$taxonsByFeedCode">%env(json:FEED_CODE_TAXONS)%</argument>
+ 
+             <tag name="messenger.message_handler"/>
+         </service>
