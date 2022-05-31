@@ -30,7 +30,7 @@ class TwigEventSubscriber implements EventSubscriberInterface
     {
         return [
             'kernel.controller' => 'onKernelController',
-            'sylius.product.show' => 'onShowProduct',
+            //'sylius.product.show' => 'onShowProduct',
         ];
     }
 
@@ -40,15 +40,19 @@ class TwigEventSubscriber implements EventSubscriberInterface
 
         $customerId = $this->chkParameter('t2s-customer-id');//'JINRXA62YWCZ2V';
         $this->twig->addGlobal('t2scID', $customerId);
-    }
 
-    public function onShowProduct(ResourceControllerEvent $event)
-    {
-        // variables dispo dans le template Product
         // shipping method
         $shipMethod = $this->entityManager->getRepository(ShippingMethod::class)->findOneBy(['code' => 'home_standart']);
         $conf = $shipMethod->getConfiguration();
         $this->twig->addGlobal('freeAbove', $conf['free_above']);
         $this->twig->addGlobal('defaultPrice', $conf['price']);
+    }
+
+    public function onShowProduct(ResourceControllerEvent $event)
+    {
+        //dd($event);
+        // variables dispo dans le template Product
+
+        // PROVOQUE UN BUG DANS L'ADMIN, AU NIVEAU DE LA LISTE DES VARIANTES !!!
     }
 }
