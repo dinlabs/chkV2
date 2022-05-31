@@ -130,6 +130,9 @@
             },
             "bitbag/elasticsearch-plugin": {
               "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch"
+            },
+            "setono/sylius-feed-plugin": {
+                "Add filter by brand and taxon for product feeds": "patches/setono_syliusfeed_brand_taxon_filter.patch"
             }
         }
     }

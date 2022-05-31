@@ -1,0 +1,101 @@
+diff --git a/src/Message/Handler/GenerateBatchHandler.php b/src/Message/Handler/GenerateBatchHandler.php
+index de3aa51..9872416 100644
+--- a/src/Message/Handler/GenerateBatchHandler.php
++++ b/src/Message/Handler/GenerateBatchHandler.php
+@@ -112,6 +112,77 @@ final class GenerateBatchHandler implements MessageHandlerInterface
+         $this->logger = $logger;
+     }
+ 
++    private function getBrandsAllowedByFeedCode($feedCode): array
++    {
++        /* Example for $brandsByFeedCode
++         *
++         * $brandsByFeedCode = [
++         *     'google_shopping' => ['petzl', 'punch-power', 'thermopad']
++         * ];
++         */
++
++        $brandsByFeedCode = [];
++
++        if (isset($brandsByFeedCode[$feedCode])) {
++            return $brandsByFeedCode[$feedCode];
++        }
++
++        return [];
++    }
++
++    private function getTaxonsAllowedByFeedCode($feedCode): array
++    {
++        /* Example for $taxonsByFeedCode
++         *
++         * $taxonsByFeedCode = [
++         *     'google_shopping' => ['cat_escalade_et_alpinisme']
++         * ];
++         */
++
++        $taxonsByFeedCode = [];
++
++        if (isset($taxonsByFeedCode[$feedCode])) {
++            return $taxonsByFeedCode[$feedCode];
++        }
++
++        return [];
++    }
++
++    private function removeItemsByBrands($items, $brands)
++    {
++        if (count($brands) === 0) {
++            return $items;
++        }
++
++        $itemsFiltered = [];
++        foreach ($items as $item) {
++            if (in_array($item->getBrand()->getCode(), $brands)) {
++                $itemsFiltered[] = $item;
++            }
++        }
++
++        return $itemsFiltered;
++    }
++
++    private function removeItemsByTaxons($items, $taxons)
++    {
++        if (count($taxons) === 0) {
++            return $items;
++        }
++
++        $itemsFiltered = [];
++        foreach ($items as $item) {
++            foreach ($item->getProductTaxons() as $productTaxon) {
++                if (in_array($productTaxon->getTaxon()->getCode(), $taxons)) {
++                    $itemsFiltered[] = $item;
++                    break;
++                }
++            }
++        }
++
++        return $itemsFiltered;
++    }
++
+     public function __invoke(GenerateBatch $message): void
+     {
+         $feed = $this->getFeed($message->getFeedId());
+@@ -132,6 +203,18 @@ final class GenerateBatchHandler implements MessageHandlerInterface
+ 
+             $items = $feedType->getDataProvider()->getItems($message->getBatch());
+ 
++            // remove items by the values set in getBrandsAllowedByFeedCode()
++            $items = $this->removeItemsByBrands(
++                $items,
++                $this->getBrandsAllowedByFeedCode($feedType->getCode())
++            );
++
++            // remove items by the values set in getTaxonsAllowedByFeedCode()
++            $items = $this->removeItemsByTaxons(
++                $items,
++                $this->getTaxonsAllowedByFeedCode($feedType->getCode())
++            );
++
+             $itemContext = $feedType->getItemContext();
+ 
+             $template = $this->twig->load($feedType->getTemplate());
