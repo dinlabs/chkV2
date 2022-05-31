@@ -690,6 +690,8 @@ class GinkoiaCommand extends Command
         $stock = self::csvToArray($file);
 	    foreach($stock as $artSite)
 	    {
+            if(!isset($this->store_codes[ (int)$artSite['MAG_ID'] ])) continue;
+            
 	        $this->output->writeln("Sku : " . $artSite['CODE_ARTICLE']);
 
             //$this->store_codes
