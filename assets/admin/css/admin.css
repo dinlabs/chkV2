@@ -9,5 +9,6 @@
 }
 
 .bitbag_media_list_image {
-    max-height: 100px;
+    max-height: 700px;
+    max-width: 100px;
 }
