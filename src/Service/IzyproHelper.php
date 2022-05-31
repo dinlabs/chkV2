@@ -412,10 +412,16 @@ class IzyproHelper
             // test les catégories
             $product = $variant->getProduct();
 
-            $taxonIds[] = $product->getMainTaxon()->getId();
+            if($product->getMainTaxon())
+            {
+                $taxonIds[] = $product->getMainTaxon()->getId();
+            }
             foreach($product->getProductTaxons() as $prodTaxon)
             {
-                $taxonIds[] = $prodTaxon->getTaxon()->getId();
+                if($prodTaxon->getTaxon())
+                {
+                    $taxonIds[] = $prodTaxon->getTaxon()->getId();
+                }
             }
         }
         $taxonIds = array_unique($taxonIds);
