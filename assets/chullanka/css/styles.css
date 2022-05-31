@@ -631,7 +631,7 @@ header + #breadcrumb { padding-top:0; }
 #productContent .frame { position:relative; margin:1.5em 0; }
 #productContent .fold { position:absolute; right:30px; bottom:30px; }
 #productContent .frame h2 { padding-right:80px; font-size:1.2em; }
-#productContent .foldable { max-width:1000px; margin:auto; }
+#productContent .foldable { max-width:1000px; margin-left:auto; margin-right:auto; }
 #productContent .frame p { padding-bottom:1em; }
 #productContent .frame img { height:auto !important; }
 #productContent .frame ul.list { padding-left:1em; }
@@ -1096,6 +1096,7 @@ body.customer { background:var(--bg1); }
 .wysiwyg ul, .wysiwyg ol { padding:0 0 .5em .5em; }
 .wysiwyg li { position:relative; padding:0 0 .5em .75em; }
 .wysiwyg li::before { content:''; position:absolute; left:0; top:7px; display:block; background:var(--primary); width:5px; height:5px; border-radius:50%; }
+.wysiwyg iframe { max-width:100%; height:auto; }
 
 
 /* MEDIA QUERIES */
