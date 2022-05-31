@@ -294,32 +294,32 @@ sylius_grid:
             filters:
                 channel:
                     enabled: false
-        # sylius_admin_order:
-        #     fields:
-        #         number:
-        #             position: 1
-        #         date:
-        #             position: 2
-        #         channel:
-        #             enabled: false
-        #         customer:
-        #             position: 3
-        #         billingAddress:
-        #             position: 4
-        #             type: twig
-        #             label: Facturation
-        #             sortable: billingAddress.lastName
-        #             options:
-        #                 template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
-        #         shippingAddress:
-        #             position: 5
-        #             type: twig
-        #             label: Livraison
-        #             sortable: shippingAddress.lastName
-        #             options:
-        #                 template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
-        #         currencyCode:
-        #             enabled: false
+        sylius_admin_order:
+            fields:
+                number:
+                    position: 1
+                date:
+                    position: 2
+                channel:
+                    enabled: false
+                customer:
+                    position: 3
+                billingAddress:
+                    position: 4
+                    type: twig
+                    label: Facturation
+                    sortable: billingAddress.lastName
+                    options:
+                        template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
+                shippingAddress:
+                    position: 5
+                    type: twig
+                    label: Livraison
+                    sortable: shippingAddress.lastName
+                    options:
+                        template: "@SyliusAdmin/Order/Grid/Field/shibilling.html.twig"
+                currencyCode:
+                    enabled: false
         app_admin_store:
             driver:
                 name: doctrine/orm
