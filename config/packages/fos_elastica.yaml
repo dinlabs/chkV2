@@ -26,11 +26,6 @@ fos_elastica:
                 elastica_to_model_transformer:
                     ignore_missing: true
     
-        bitbag_attribute_taxons:
-            index_name: "bitbag_attribute_taxons_%kernel.environment%"
-            properties:
-                attribute_code:
-                    property_path: escode
         bitbag_shop_product:
             index_name: "bitbag_shop_products_%kernel.environment%"
             properties:

@@ -50,7 +50,7 @@ final class AttributeTaxonsBuilder extends AbstractBuilder
         $taxonCodes = [];
 
         foreach ($taxons as $taxon) {
-            $taxonCodes[] = $taxon->getCode();
+            $taxonCodes[] = str_replace('-', '', $taxon->getCode());
         }
 
         $document = $event->getDocument();

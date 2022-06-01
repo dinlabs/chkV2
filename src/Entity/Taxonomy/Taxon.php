@@ -19,9 +19,6 @@ use Sylius\Component\Taxonomy\Model\TaxonTranslationInterface;
  */
 class Taxon extends BaseTaxon
 {
-    /** @var string */
-    private $escode;
-
     /**
      * @ORM\ManyToMany(targetEntity=Brand::class, inversedBy="taxa")
      * @ORM\JoinTable(name="nan_chk_taxon_brand")
@@ -72,11 +69,6 @@ class Taxon extends BaseTaxon
     protected function createTranslation(): TaxonTranslationInterface
     {
         return new TaxonTranslation();
-    }
-
-    public function getEscode(): ?string
-    {
-        return str_replace('-', '', $this->getCode());
     }
 
     public function getContent(): ?string
