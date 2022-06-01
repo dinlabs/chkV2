@@ -242,14 +242,14 @@ header .inside #openMainMenu { background:none; cursor:pointer; }
 header .inside .forNotice { position:relative; }
 header .inside .forNotice span { position:absolute; right:-.7em; top:-.7em; display:inline-block; border:2px solid var(--primary); border-radius:50%; background:var(--bg0); width:22px; height:22px; text-align:center; font-weight:700; font-size:.867em; opacity:0; transition:opacity .25s; }
 header .inside #logo { font-size:1em; font-weight:400; }
-header .inside #logo img { width:152px; }
+header #logo img { width:152px; }
 header .inside #logo span { display:none; }
 
 header .inside #searchBox label { cursor:pointer; }
 header .inside #searchBox label .svg-icon-close { display:none; }
 header .inside #searchBox input { position:absolute; bottom:-33px; left:50%; transform:translateX(-50%); width:320px; vertical-align:super; opacity:0; }
 
-.home header:not(.is-pinned) .inside #logo img { width:200px; }
+.home header:not(.is-pinned) #logo img { width:200px; }
 .home header:not(.is-pinned) .inside #searchBox input { position:static; transform:none; opacity:1; }
 
 header.search-visible { height:120px; }
@@ -1132,7 +1132,7 @@ body.customer { background:var(--bg1); }
     header nav #navBlock .wrapper a:hover { color:var(--bg0); text-decoration:none; }
 header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to right, var(--primary) -10%, rgba(255,255,255,0) 80%); }
     header nav #navBottom { display:none; }
-    header .inside #logo img { width:200px; }
+    header #logo img { width:200px; }
     header .inside #searchBox { display:initial; }
     header .inside #searchBox input { position:static; transform:none; opacity:1; }
     header .inside #shopLinks { width:256px; }
@@ -1252,7 +1252,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 @media screen and (min-width:1050px) {
     .home header:not(.is-pinned) { min-height:400px; padding:30px 0; }
     .home header:not(.is-pinned) .inside  #logo { position:absolute; top:50px; left:50%; transform:translateX(-50%); }
-    .home header:not(.is-pinned) .inside #logo img { width:320px; }
+    .home header:not(.is-pinned) #logo img { width:320px; }
     .home header:not(.is-pinned) #logo span { top:110px; font-size:1.75em; }
     
     /*#illustration { max-width:calc((var(--autoMargin) - var(--gapWidth)) / 2); }*/
