@@ -55,14 +55,15 @@ class GinkoiaHelper
 
         if(file_put_contents($file, $this->doc->saveXML(), FILE_APPEND))
         {
-            // change les droits
-            chgrp($file, 'ginkoia');
-            chmod($file, 664);
-
             //envoyer le XML par FTP
             $exportPath = $this->chkParameter('ginkoia-path-export');
-            if(copy($file, $exportPath . DIRECTORY_SEPARATOR . $filename))
+            $exportFile = $exportPath . DIRECTORY_SEPARATOR . $filename;
+            if(copy($file, $exportFile))
             {
+                // change les droits
+                chmod($exportFile, 664);
+                chgrp($exportFile, 'ginkoia');
+                
                 $this->logger->info('Ginkoia :: Le fichier XML des ventes a été exporté : '.$exportPath);
                 
                 // We move the tmp file in a logfiles dir
