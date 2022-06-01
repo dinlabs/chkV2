@@ -196,6 +196,7 @@ class GinkoiaCommand extends Command
             
             $tmpFile = $importPath . DIRECTORY_SEPARATOR . basename($files[$i]);
             $output->writeln('Fichier : ' . $tmpFile);
+            chmod($tmpFile, 0666);// change les droits
             
             // si le fichier existe déjà dans le dossier final, on le supprime et on passe au suivant
             if(file_exists($this->logfilesDir . DIRECTORY_SEPARATOR . basename($files[$i])))
@@ -239,8 +240,8 @@ class GinkoiaCommand extends Command
                     }
                     else
                     {
-                        $output->writeln("ERREUR : le fichier ".$files[$i]." n'a pu etre deplace dans ginkoiafiles\n");
-                        //$this->reportMsg[] = 'ERREUR : le fichier '.$files[$i].' n\'a pu etre deplace dans ginkoiafiles';
+                        $output->writeln("ERREUR : le fichier ".$files[$i]." n'a pu etre deplace dans chkfiles/ginkoia\n");
+                        //$this->reportMsg[] = 'ERREUR : le fichier '.$files[$i].' n\'a pu etre deplace dans chkfiles/ginkoia';
                     }
                  }
                  else
