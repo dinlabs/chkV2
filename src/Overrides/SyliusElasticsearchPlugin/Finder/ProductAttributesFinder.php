@@ -22,6 +22,10 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
     /** @var string */
     private $taxonsProperty;
 
+    // We must an high limit to retrieve all elements
+    // https://github.com/FriendsOfSymfony/FOSElasticaBundle/issues/169
+    private const LIMIT = 10000;
+
     public function __construct(
         FinderInterface $attributesFinder,
         QueryBuilderInterface $attributesByTaxonQueryBuilder,
@@ -39,7 +43,7 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
 
         $query = $this->attributesByTaxonQueryBuilder->buildQuery($data);
 
-        return $this->attributesFinder->find($query, 20);
+        return $this->attributesFinder->find($query, self::LIMIT);
     }
 
     public function findByBrand($brandCode): ?array
@@ -52,6 +56,6 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
 
         $query->addMust($brandQuery);
 
-        return $this->attributesFinder->find($query, 20);
+        return $this->attributesFinder->find($query, self::LIMIT);
     }
 }
