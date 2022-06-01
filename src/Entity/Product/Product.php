@@ -24,6 +24,12 @@ use Sylius\Component\Product\Model\ProductTranslationInterface;
  */
 class Product extends BaseProduct
 {
+
+    /**
+     * @var Collection|ImageInterface[]
+     */
+    protected $orderedImages;
+
     /**
      * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="products")
      */
@@ -84,6 +90,7 @@ class Product extends BaseProduct
     public function __construct()
     {
         parent::__construct();
+        $this->orderedImages = new ArrayCollection();
         $this->packElements = new ArrayCollection();
         $this->faqs = new ArrayCollection();
         $this->recalls = new ArrayCollection();
@@ -92,6 +99,32 @@ class Product extends BaseProduct
     protected function createTranslation(): ProductTranslationInterface
     {
         return new ProductTranslation();
+    }
+
+    public function getOrderedImages(): Collection
+    {
+        if(empty($this->orderedImages))
+        {
+            $_images = [];
+            foreach(parent::getImages() as $_image)
+            {
+                $type = $_image->getType();
+                if($type == 'main') $type = 1;
+                $_images[ $type ][] = $_image;
+            }
+            ksort($_images);
+            
+            $this->orderedImages = new ArrayCollection();
+            foreach($_images as $i => $imgs)
+            {
+                foreach($imgs as $img)
+                {
+                    $this->orderedImages->add($img);
+                }
+            }
+        }
+
+        return $this->orderedImages;
     }
 
     /*public function getVariants(): Collection
