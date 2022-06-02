@@ -100,6 +100,14 @@ final class DefaultController extends AbstractController
         echo "</pre>";
 
         echo "<hr>";
+        $exportPath = '/home/ginkoia/home/export/';
+        echo "<h2>XML dans $exportPath</h2>";
+        $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
+        echo "<pre>";
+        print_r($files);
+        echo "</pre>";
+
+        echo "<hr>";
         echo "<h2>Points de fidélité ?</h2>";
         $return = $ginkoiaCustomerWs->getCustomerLoyalties($email);
         echo "<pre>";
