@@ -54,9 +54,10 @@
 
             <h3>{{ 'app.front.category.filter.filtrer_par'|trans }}</h3>
             <ul class="filterList">
-                {#{ form_row(form.options) }#}
+                {# {{ form_row(form.options) }} #}
+                {{ form_row(form.availabilities) }}
                 {{ form_row(form.attributes) }}
-                {#{ form_row(form.price) }#}
+                {# {{ form_row(form.price) }} #}
             </ul>
             
             <h3>{{ 'bitbag_sylius_elasticsearch_plugin.ui.sort'|trans }}</h3>

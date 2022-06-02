@@ -530,4 +530,26 @@ class Product extends BaseProduct
         }
         return $max;
     }
+
+    public function getAvailabilities()
+    {
+        $availability = ['web' => $this->getMaxQty()];
+
+        foreach ($this->variants as $variant) {
+            foreach ($variant->getStocks() as $stock) {
+                if ($stock->getStore() === null ||
+                    $stock->getStore()->isEnabled() === false) {
+                    continue;
+                }
+
+                if (!isset($availability[$stock->getStore()->getCode()])) {
+                    $availability[$stock->getStore()->getCode()] = 0;
+                }
+
+                $availability[$stock->getStore()->getCode()] += $stock->getOnHand();
+            }
+        }
+
+        return $availability;
+    }
 }

@@ -129,7 +129,8 @@
               "Ckeditor upload max filesize": "patches/ckeditor_upload_max_filesize.patch"
             },
             "bitbag/elasticsearch-plugin": {
-              "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch"
+              "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch",
+              "Add filter availabilities": "patches/sylius_es_filter_availabilities.patch"
             },
             "setono/sylius-feed-plugin": {
                 "Add filter by brand and taxon for product feeds": "patches/setono_syliusfeed_brand_taxon_filter.patch"

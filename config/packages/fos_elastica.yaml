@@ -32,8 +32,6 @@ fos_elastica:
                 enabled: ~
                 brand:
                     property_path: esbrand
-                attribute_brand_fr_FR:
-                    property_path: esbrand
                 # brand: 
                 #     type: 'object'
                 #     properties: 

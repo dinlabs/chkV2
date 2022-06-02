@@ -329,7 +329,13 @@ services:
         '@sylius.repository.product_attribute_value'
     bitbag.sylius_elasticsearch_plugin.repository.product_attribute_value_repository:
         class: App\Overrides\SyliusElasticsearchPlugin\Repository\ProductAttributeValueRepository
-        
+
+    bitbag_sylius_elasticsearch_plugin.form.type.shop_products_availabilities_filter:
+        class: App\Overrides\SyliusElasticsearchPlugin\Form\Type\ProductAvailabilitiesFilterType
+        arguments:
+            - '@bitbag.sylius_elasticsearch_plugin.context.product_attributes'
+        tags:
+            - { name: form.type }
 
     # setono_sylius_feed
     setono_sylius_feed.feed_context.google.shopping.product_item_all:

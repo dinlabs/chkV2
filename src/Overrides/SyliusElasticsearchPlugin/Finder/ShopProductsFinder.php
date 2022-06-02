@@ -9,9 +9,12 @@ use BitBag\SyliusElasticsearchPlugin\Controller\RequestDataHandler\SortDataHandl
 use BitBag\SyliusElasticsearchPlugin\QueryBuilder\QueryBuilderInterface;
 use BitBag\SyliusElasticsearchPlugin\Finder\ShopProductsFinderInterface;
 use Elastica\Query;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\Range;
 use Elastica\Query\Terms;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Pagerfanta\Pagerfanta;
+use Sylius\Component\Core\Model\TaxonInterface;
 
 final class ShopProductsFinder implements ShopProductsFinderInterface
 {
@@ -29,6 +32,56 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
         $this->productFinder = $productFinder;
     }
 
+    public function findAvailabilitiesByTaxon(array $storeNames, TaxonInterface $taxon): array
+    {
+        $availabilities = [];
+        $storeCodes = array_keys($storeNames);
+
+        foreach ($storeCodes as $storeCode) {
+            $boolQuery = new BoolQuery();
+            $rangeQuery = new Range('availabilities.'. $storeCode, ['gt' => 0]);
+            $boolQuery->addMust($rangeQuery);
+
+            $taxonQuery = new Terms('product_taxons');
+            $taxonQuery->setTerms([$taxon->getCode()]);
+            $boolQuery->addMust($taxonQuery);
+
+            $query = new Query($boolQuery);
+            $res = $this->productFinder->find($query, 1);
+
+            if (count($res) > 0 && isset($storeNames[$storeCode])) {
+                $availabilities[$storeNames[$storeCode]] = $storeCode;
+            }
+        }
+
+        return $availabilities;
+    }
+
+    public function findAvailabilitiesByBrand(array $storeNames, string $brandCode): array
+    {
+        $availabilities = [];
+        $storeCodes = array_keys($storeNames);
+
+        foreach ($storeCodes as $storeCode) {
+            $boolQuery = new BoolQuery();
+            $rangeQuery = new Range('availabilities.'. $storeCode, ['gt' => 0]);
+            $boolQuery->addMust($rangeQuery);
+
+            $brandQuery = new Terms('brand');
+            $brandQuery->setTerms([$brandCode]);
+            $boolQuery->addMust($brandQuery);
+
+            $query = new Query($boolQuery);
+            $res = $this->productFinder->find($query, 1);
+
+            if (count($res) > 0 && isset($storeNames[$storeCode])) {
+                $availabilities[$storeNames[$storeCode]] = $storeCode;
+            }
+        }
+
+        return $availabilities;
+    }
+
     public function find(array $data): Pagerfanta
     {
         $boolQuery = $this->shopProductsQueryBuilder->buildQuery($data);
@@ -39,6 +92,13 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
             $brandQuery = new Terms($_key);
             $brandQuery->setTerms($data[ $_key ]);
             if($brandQuery !== null)  $boolQuery->addMust($brandQuery);
+        }
+
+        if (isset($data['availabilities']) && count($data['availabilities']) > 0) {
+            foreach ($data['availabilities'] as $availability) {
+                $rangeQuery = new Range('availabilities.'. $availability, ['gt' => 0]);
+                $boolQuery->addMust($rangeQuery);
+            }
         }
 
         $query = new Query($boolQuery);
