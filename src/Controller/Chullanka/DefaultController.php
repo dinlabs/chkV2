@@ -121,6 +121,8 @@ final class DefaultController extends AbstractController
         //print_r($return);
         foreach($return as $order)
         {
+            print_r($order);
+            echo "<h3>Détails :</h3>";
             $receiptId = $order['ReceiptID'];
             if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
             {
