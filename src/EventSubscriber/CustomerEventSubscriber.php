@@ -189,8 +189,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                                     $_date = str_replace('//', '/', $_date);
                                 }
                                 $_tmp = explode('/', $_date);// transformation en tableau
-                                rsort($_tmp);// inverse l'ordre
-                                $_date = new \Datetime( implode('-', $_tmp));// récupération au format ==> 2021-06-01
+                                $_date = new \Datetime( implode('-', array_reverse($_tmp)));// récupération au format ==> 2021-06-01
         
                                 $historic = new HistoricOrder();
                                 $historic   ->setCustomer($customer)
