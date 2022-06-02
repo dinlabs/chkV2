@@ -56,7 +56,7 @@ final class ProductAttributesContext implements ProductAttributesContextInterfac
     {
         $availabilities = [];
 
-        if($this->requestStack->getCurrentRequest()->get('slug'))
+        if ($this->requestStack->getCurrentRequest()->get('slug'))
         {
             $taxon = $this->taxonContext->getTaxon();
             $availabilities = $this->shopProductsFinder->findAvailabilitiesByTaxon(
@@ -65,7 +65,7 @@ final class ProductAttributesContext implements ProductAttributesContextInterfac
             );
         }
 
-        if($this->requestStack->getCurrentRequest()->get('code'))
+        if ($this->requestStack->getCurrentRequest()->get('code'))
         {
             $brandCode = $this->requestStack->getCurrentRequest()->get('code');
             $brandCode = str_replace('-', '', $brandCode);//cf. App\Chullanka\Brand::getEscode()
@@ -75,8 +75,20 @@ final class ProductAttributesContext implements ProductAttributesContextInterfac
             );
         }
 
-
         return $availabilities;
+    }
+
+    public function getBrands(): ?array
+    {
+        $brands = [];
+
+        if($this->requestStack->getCurrentRequest()->get('slug'))
+        {
+            $taxon = $this->taxonContext->getTaxon();
+            $brands = $this->shopProductsFinder->findBrandsByTaxon($taxon);
+        }
+
+        return $brands;
     }
 
     public function getAttributes(): ?array

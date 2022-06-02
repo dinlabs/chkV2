@@ -1,20 +1,22 @@
 diff --git a/src/Form/Type/ShopProductsFilterType.php b/src/Form/Type/ShopProductsFilterType.php
-index 648bdf4..3b945c0 100644
+index 648bdf4..28c3298 100644
 --- a/src/Form/Type/ShopProductsFilterType.php
 +++ b/src/Form/Type/ShopProductsFilterType.php
-@@ -10,6 +10,7 @@ declare(strict_types=1);
+@@ -10,6 +10,8 @@ declare(strict_types=1);
  
  namespace BitBag\SyliusElasticsearchPlugin\Form\Type;
  
 +use App\Overrides\SyliusElasticsearchPlugin\Form\Type\ProductAvailabilitiesFilterType;
++use App\Overrides\SyliusElasticsearchPlugin\Form\Type\ProductBrandsFilterType;
  use Symfony\Component\Form\FormBuilderInterface;
  
  final class ShopProductsFilterType extends AbstractFilterType
-@@ -27,6 +28,7 @@ final class ShopProductsFilterType extends AbstractFilterType
+@@ -27,6 +29,8 @@ final class ShopProductsFilterType extends AbstractFilterType
          $builder
              ->add($this->namePropertyPrefix, NameFilterType::class)
              ->add('options', ProductOptionsFilterType::class, ['required' => false, 'label' => false])
 +            ->add('availabilities', ProductAvailabilitiesFilterType::class,  ['required' => false, 'label' => false])
++            ->add('brands', ProductBrandsFilterType::class,  ['required' => false, 'label' => false])
              ->add('attributes', ProductAttributesFilterType::class, ['required' => false, 'label' => false])
              ->add('price', PriceFilterType::class, ['required' => false, 'label' => false])
          ;

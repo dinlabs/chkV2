@@ -57,6 +57,30 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
         return $availabilities;
     }
 
+    public function findBrandsByTaxon(TaxonInterface $taxon): array
+    {
+        $brands = [];
+        $boolQuery = new BoolQuery();
+        $taxonQuery = new Terms('product_taxons');
+        $taxonQuery->setTerms([$taxon->getCode()]);
+        $boolQuery->addMust($taxonQuery);
+
+        $query = new Query($boolQuery);
+        $products = $this->productFinder->find($query, 10000);
+
+        foreach ($products as $product) {
+            if ($product->getBrand() === null) {
+                continue;
+            }
+
+            if (!in_array($product->getBrand()->getCode(), $brands)) {
+                $brands[$product->getBrand()->getName()] = $product->getBrand()->getCode();
+            }
+        }
+
+        return $brands;
+    }
+
     public function findAvailabilitiesByBrand(array $storeNames, string $brandCode): array
     {
         $availabilities = [];

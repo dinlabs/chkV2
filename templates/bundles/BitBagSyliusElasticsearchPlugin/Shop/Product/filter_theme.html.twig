@@ -3,6 +3,7 @@
 {% block _options_row %}{{ form_widget(form) }}{% endblock %}
 {% block _attributes_row %}{{ form_widget(form) }}{% endblock %}
 {% block _availabilities_row %}{{ form_widget(form) }}{% endblock %}
+{% block _brands_row %}{{ form_widget(form) }}{% endblock %}
 {% block _options_widget %}
     {% for child in form %}
         {{ form_row(child) }}
@@ -14,6 +15,11 @@
     {% endfor %}
 {% endblock %}
 {% block _availabilities_widget %}
+     {% for child in form %}
+        {{ form_row(child) }}
+    {% endfor %}
+{% endblock %}
+{% block _brands_widget %}
      {% for child in form %}
         {{ form_row(child) }}
     {% endfor %}

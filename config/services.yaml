@@ -337,6 +337,13 @@ services:
         tags:
             - { name: form.type }
 
+    bitbag_sylius_elasticsearch_plugin.form.type.shop_products_brands_filter:
+        class: App\Overrides\SyliusElasticsearchPlugin\Form\Type\ProductBrandsFilterType
+        arguments:
+            - '@bitbag.sylius_elasticsearch_plugin.context.product_attributes'
+        tags:
+            - { name: form.type }
+
     # setono_sylius_feed
     setono_sylius_feed.feed_context.google.shopping.product_item_all:
         class: App\Overrides\SyliusFeedPlugin\FeedContext\ProductItemContextAll
