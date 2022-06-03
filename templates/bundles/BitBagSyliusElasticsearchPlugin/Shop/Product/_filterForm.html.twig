@@ -56,7 +56,9 @@
             <ul class="filterList">
                 {# {{ form_row(form.options) }} #}
                 {{ form_row(form.availabilities) }}
+                {% if form.brands is defined %}
                 {{ form_row(form.brands) }}
+                {% endif %}
                 {{ form_row(form.attributes) }}
                 {# {{ form_row(form.price) }} #}
             </ul>
