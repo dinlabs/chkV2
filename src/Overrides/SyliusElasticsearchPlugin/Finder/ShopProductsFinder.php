@@ -74,7 +74,7 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
             }
 
             if (!in_array($product->getBrand()->getCode(), $brands)) {
-                $brands[$product->getBrand()->getName()] = $product->getBrand()->getCode();
+                $brands[$product->getBrand()->getName()] = $product->getBrand()->getEscode();
             }
         }
 
