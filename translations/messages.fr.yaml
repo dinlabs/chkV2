@@ -122,6 +122,7 @@ sylius:
     access_your_store_account_or_create_a_new_one: Identifiez-vous ou créez un compte
     checkout: 'Valider mon panier'
     contact_us: 'Contactez-nous par e-mail'
+    create_an_account: "S'enregistrer"
     if_you_have_an_account_sign_in_with_your_email_address: Connectez-vous pour accéder à votre compte client
     new_customers: Vous n'avez jamais commandé sur notre site ?
     onhold: "Commande en défaut"
@@ -135,6 +136,13 @@ sylius:
     store_collected: "Récupérée en magasin"
     store_sent: "Livrée (Click&Collect)"
     your_shopping_cart: 'Mon panier'
+  form:
+    customer:
+      email: 'Adresse e-mail'
+      subscribed_to_newsletter: "Oui, je veux recevoir les communications des dernières nouveautés et conseils outdoor. Désinscription possible à tout moment."
+    user:
+      password:
+        confirmation: 'Confirmer le mot de passe'
     
 sylius_invoicing_plugin:
   ui:

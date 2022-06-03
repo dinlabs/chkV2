@@ -1086,7 +1086,7 @@ body.customer { background:var(--bg1); }
 .topage h1 { text-transform:uppercase; }
 .topage p { font-size:1.8em; }
 
-#page-contact .btn.primary { min-width:100%; }
+#page-contact .btn.primary, #page-register .btn.primary, #page-register hr { min-width:100%; }
 
 #page-contact .faq-section { padding-bottom:5em; }
 #page-contact .faq-section .header { /*background:url(../img/picto-faq.jpg) no-repeat left top;*/ padding-left:100px; }
@@ -1098,6 +1098,17 @@ body.customer { background:var(--bg1); }
 #page-contact form input, #page-contact form select { background-color:var(--bg1); }
 
 #page-contact .contactus { padding-bottom:5em; }
+
+
+#page-register { background:initial; }
+#page-register .autoMargin { padding-bottom:3em; }
+#page-register .notabene { font-size:.75em; }
+#page-register form { padding-bottom:2em; }
+#page-register form h3 { padding-bottom:1em; font-size:1.5em; }
+#page-register form input { background-color:var(--bg1); }
+#page-register form hr { margin-top:2em; border-top:2px dashed; padding-bottom:2.5em; }
+#page-register form #sylius_customer_registration_gender .grouped { display:flex; padding-bottom:1em; }
+#page-register form #sylius_customer_registration_gender .grouped .field + .field { margin-left:3em; }
 
 
 /* CUSTOMER */
@@ -1279,7 +1290,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     .checkout .ui.grid > .wide.column { padding:1rem !important; }
 
-    #page-contact .btn.primary { min-width:520px; }
+    #page-contact .btn.primary, #page-register .btn.primary, #page-register hr { min-width:520px; }
 }
 
 @media screen and (min-width:1050px) {

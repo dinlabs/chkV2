@@ -1,0 +1,35 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+{% block title %}{{ 'sylius.ui.register_in_the_store'|trans }} | {{ parent() }}{% endblock %}
+{% block bodyattr %}id="page-register"{% endblock %}
+
+{% block content %}
+<div class="topage">
+    <div class="insert">
+        <h1>Créer son compte</h1>
+        <p><em>Bienvenue parmi nous ! On fait connaissance ?</em></p>
+    </div>
+</div>
+{{ sylius_template_event('sylius.shop.register.after_content_header') }}
+
+<div class="autoMargin">
+    {{ sylius_template_event('sylius.shop.register.before_form') }}
+
+    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+        {% include '@SyliusShop/Register/_form.html.twig' %}
+
+        {{ sylius_template_event('sylius.shop.register.form', {'form': form}) }}
+
+        <p class="notabene">*Champs obligatoires</p>
+
+        <button type="submit" class="btn primary" {{ sylius_test_html_attribute('register-button') }}>
+            {{ 'sylius.ui.create_an_account'|trans }}
+        </button>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+
+    <p class="notabene">En créant votre compte, vous acceptez les Conditions générales de vente et la Politique de confidentialité de Chullanka.</p>
+</div>
+{% endblock %}

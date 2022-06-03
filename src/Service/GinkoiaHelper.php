@@ -62,7 +62,7 @@ class GinkoiaHelper
             {
                 // change les droits
                 chmod($exportFile, 0664);
-                chgrp($exportFile, 'ginkoia');
+                chgrp($exportFile, 'ginkoia');// pas l'air de fonctionner !
                 
                 $this->logger->info('Ginkoia :: Le fichier XML des ventes a été exporté : '.$exportPath);
                 

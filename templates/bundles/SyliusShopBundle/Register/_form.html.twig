@@ -1,0 +1,17 @@
+<h3>{{ 'sylius.ui.personal_information'|trans }}</h3>
+{{ form_widget(form.gender, sylius_test_form_attribute('gender')) }}
+<div class="two fields">
+    {{ form_row(form.firstName, sylius_test_form_attribute('first-name')) }}
+    {{ form_row(form.lastName, sylius_test_form_attribute('last-name')) }}
+</div>
+{{ form_row(form.birthday, sylius_test_form_attribute('birthday')) }}
+{{ form_row(form.phoneNumber, sylius_test_form_attribute('phone-number')) }}
+
+<hr>
+
+<h3>{{ 'sylius.ui.account_credentials'|trans }}</h3>
+{{ form_row(form.email, sylius_test_form_attribute('email')) }}
+{{ form_row(form.user.plainPassword.first, sylius_test_form_attribute('password-first')) }}
+{{ form_row(form.user.plainPassword.second, sylius_test_form_attribute('password-second')) }}
+
+{{ form_row(form.subscribedToNewsletter, sylius_test_form_attribute('subscribed-to-newsletter')) }}
