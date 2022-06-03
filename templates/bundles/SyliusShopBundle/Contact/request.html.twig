@@ -3,61 +3,74 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block title %}{{ 'sylius.ui.contact_us'|trans }} | {{ parent() }}{% endblock %}
+{% block bodyattr %}id="page-contact"{% endblock %}
 
 {% block content %}
-    <div class="ui hidden divider"></div>
-    <div class="ui two column centered stackable autoMargin">
-        <div class="column">
-            <h1 class="ui header">
-                <i class="circular mail icon"></i>
-                <div class="content">
-                    {{ 'sylius.ui.contact_us'|trans }}
-                    <div class="sub header">{{ 'sylius.ui.use_the_contact_form_below_to_send_us_a_message'|trans }}</div>
+<div class="topage">
+    <div class="insert">
+        <h1>Besoin d'aide ?</h1>
+        <p><em>Pas de panique, on a la solution !</em></p>
+    </div>
+</div>
 
-                    {{ sylius_template_event('sylius.shop.contact.request.after_content_header') }}
-                </div>
-            </h1>
-            <div class="ui segment">
-                {{ form_start(form, {'action': path('sylius_shop_contact_request'), 'attr': {'class': 'ui large loadable form', 'novalidate': 'novalidate', 'id': 'contact_form'}}) }}
-                {{ form_row(form.name, sylius_test_form_attribute('contact-name')) }}
-                {{ form_row(form.email, sylius_test_form_attribute('contact-email')) }}
-                {{ form_row(form.phone, sylius_test_form_attribute('contact-phone')) }}
-                {{ form_row(form.subject, sylius_test_form_attribute('contact-subject')) }}
-                <div id="sub-produits" class="field hidden">
-                    {{ form_row(form.producturl, sylius_test_form_attribute('contact-producturl')) }}
-                </div>
-                <div id="sub-sav" class="field hidden">
-                    {{ form_row(form.orderplace, sylius_test_form_attribute('contact-orderplace')) }}
-                    {{ form_row(form.number, sylius_test_form_attribute('contact-number')) }}
-                    {{ form_row(form.productname, sylius_test_form_attribute('contact-productname')) }}
-                </div>
-                <div id="sub-magasins" class="field hidden">
-                    {{ form_row(form.store, sylius_test_form_attribute('contact-store')) }}
-                </div>
-                <div id="sub-discount" class="field hidden">
-                    {{ form_row(form.subsubject, sylius_test_form_attribute('contact-subsubject')) }}
-                    <div id="subsub-code" class="hidden">
-                        {{ form_row(form.codepromo, sylius_test_form_attribute('contact-codepromo')) }}
-                    </div>
-                    <div id="subsub-partenaire" class="hidden">
-                        {{ form_row(form.storebis, sylius_test_form_attribute('contact-storebis')) }}
-                        {{ form_row(form.partenaire, sylius_test_form_attribute('contact-partenaire')) }}
-                    </div>
-                    <div id="subsub-devis" class="hidden">
-                        {{ form_row(form.storeter, sylius_test_form_attribute('contact-storeter')) }}
-                    </div>
-                </div>
-                {{ form_row(form.message, sylius_test_form_attribute('contact-message')) }}
+<div class="autoMargin">
+    <div class="faq-section">
+        <div class="header">
+            <h2>FAQ</h2>
+            <p>Consultez notre <strong>FAQ</strong> et trouvez vos réponses en ligne</p>
+        </div>
+        <a href="{{ path('bitbag_sylius_cms_plugin_shop_page_show', {'slug': 'faq-ca-peut-aider' }) }}" class="btn primary">Voir notre FAQ</a>
+    </div>
 
-                {{ sylius_template_event('sylius.shop.contact.request.form', {'form': form}) }}
+    <div class="contact-section">
+        <div class="header">
+            <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-newsletter"/></svg>
+            <h2>{{ 'sylius.ui.contact_us'|trans }}</h2>
+            <p>{{ 'sylius.ui.use_the_contact_form_below_to_send_us_a_message'|trans }}</p>
+        </div>
 
-                {{ form_row(form._token) }}
-                <button type="submit" class="ui fluid large primary submit button" {{ sylius_test_html_attribute('send-button') }}>{{ 'sylius.ui.send'|trans }}</button>
-                {{ form_end(form, {'render_rest': false}) }}
+        {{ sylius_template_event('sylius.shop.contact.request.after_content_header') }}
+        
+        {{ form_start(form, {'action': path('sylius_shop_contact_request'), 'attr': {'class': 'ui large loadable form', 'novalidate': 'novalidate', 'id': 'contact_form'}}) }}
+        {{ form_row(form.name, sylius_test_form_attribute('contact-name')) }}
+        {{ form_row(form.email, sylius_test_form_attribute('contact-email')) }}
+        {{ form_row(form.phone, sylius_test_form_attribute('contact-phone')) }}
+        {{ form_row(form.subject, sylius_test_form_attribute('contact-subject')) }}
+        <div id="sub-produits" class="field hidden">
+            {{ form_row(form.producturl, sylius_test_form_attribute('contact-producturl')) }}
+        </div>
+        <div id="sub-sav" class="field hidden">
+            {{ form_row(form.orderplace, sylius_test_form_attribute('contact-orderplace')) }}
+            {{ form_row(form.number, sylius_test_form_attribute('contact-number')) }}
+            {{ form_row(form.productname, sylius_test_form_attribute('contact-productname')) }}
+        </div>
+        <div id="sub-magasins" class="field hidden">
+            {{ form_row(form.store, sylius_test_form_attribute('contact-store')) }}
+        </div>
+        <div id="sub-discount" class="field hidden">
+            {{ form_row(form.subsubject, sylius_test_form_attribute('contact-subsubject')) }}
+            <div id="subsub-code" class="hidden">
+                {{ form_row(form.codepromo, sylius_test_form_attribute('contact-codepromo')) }}
+            </div>
+            <div id="subsub-partenaire" class="hidden">
+                {{ form_row(form.storebis, sylius_test_form_attribute('contact-storebis')) }}
+                {{ form_row(form.partenaire, sylius_test_form_attribute('contact-partenaire')) }}
+            </div>
+            <div id="subsub-devis" class="hidden">
+                {{ form_row(form.storeter, sylius_test_form_attribute('contact-storeter')) }}
             </div>
         </div>
+        {{ form_row(form.message, sylius_test_form_attribute('contact-message')) }}
+
+        {{ sylius_template_event('sylius.shop.contact.request.form', {'form': form}) }}
+
+        {{ form_row(form._token) }}
+        <button type="submit" class="btn primary" {{ sylius_test_html_attribute('send-button') }}>{{ 'sylius.ui.send'|trans }}</button>
+        {{ form_end(form, {'render_rest': false}) }}
     </div>
-    <br>
+
+    {% include '@SyliusShop/Checkout/_support.html.twig' %}
+</div>
 {% endblock %}
 
 {% block javascripts %}

@@ -120,20 +120,21 @@ app:
 sylius:
   ui:
     access_your_store_account_or_create_a_new_one: Identifiez-vous ou créez un compte
-    registered_customers: Vous avez déjà commandé sur notre site ?
+    checkout: 'Valider mon panier'
+    contact_us: 'Contactez-nous par e-mail'
     if_you_have_an_account_sign_in_with_your_email_address: Connectez-vous pour accéder à votre compte client
     new_customers: Vous n'avez jamais commandé sur notre site ?
-    pack_product: Produit packagé
-    your_shopping_cart: 'Mon panier'
-    products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
-    checkout: 'Valider mon panier'
     onhold: "Commande en défaut"
+    pack_product: Produit packagé
     preparation: "Préparation en cours"
+    products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
     ready_to_ship: "Prêt pour expédition"
+    registered_customers: Vous avez déjà commandé sur notre site ?
     store_available: "Disponible en magasin"
     store_trouble: "Problème de stock en magasin"
     store_collected: "Récupérée en magasin"
     store_sent: "Livrée (Click&Collect)"
+    your_shopping_cart: 'Mon panier'
     
 sylius_invoicing_plugin:
   ui:
