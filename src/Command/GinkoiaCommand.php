@@ -497,7 +497,11 @@ class GinkoiaCommand extends Command
             $this->addOrUpdateAttrValue($product, 'genre', $this->genre_ids[ $article['GENRE'] ]);
         }
         $this->addOrUpdateAttrValue($product, 'typologie', $article['CLASSEMENT1']);
-        $this->addOrUpdateAttrValue($product, 'cycle_vie', $article['CLASSEMENT2']);
+        if(array_key_exists($article['CLASSEMENT2'], $this->cycle_vie_ids))
+        {
+            $cycle_vie = $this->cycle_vie_ids[ $article['CLASSEMENT2'] ];
+            $this->addOrUpdateAttrValue($product, 'cycle_vie', $cycle_vie);
+        }
         //$this->addOrUpdateAttrValue($product, 'ginkoia_class3', $article['CLASSEMENT3']);
         $this->addOrUpdateAttrValue($product, 'annee', $article['CLASSEMENT4']);
         
