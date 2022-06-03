@@ -97,6 +97,11 @@ final class ShopProductListDataHandler implements DataHandlerInterface
             unset($requestData['promotions']);
         }
 
+        if (isset($requestData['newness']['newness']) && count($requestData['newness']['newness']) > 0) {
+            $data['new'] = true;
+            unset($requestData['newness']);
+        }
+
         $this->handleOptionsPrefixedProperty($requestData, $data);
         $this->handleAttributesPrefixedProperty($requestData, $data, $attributesDefinitions);
 
