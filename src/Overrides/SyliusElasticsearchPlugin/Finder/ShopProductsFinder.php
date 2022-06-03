@@ -79,6 +79,9 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
             }
         }
 
+        // order brands alphabetically
+        ksort($brands);
+
         return $brands;
     }
 
