@@ -59,6 +59,8 @@
                 {% if form.brands is defined %}
                 {{ form_row(form.brands) }}
                 {% endif %}
+                {{ form_row(form.promotions) }}
+                {{ form_row(form.newness)}}
                 {{ form_row(form.attributes) }}
                 {# {{ form_row(form.price) }} #}
             </ul>
@@ -73,8 +75,6 @@
             
             <ul class="sortList">
                 <li><a class="item{{ _order_by == 'sold_units' ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'sold_units', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.bestsellers'|trans }}</a></li>
-                <li><a class="item{{ (_order_by == 'product_created_at') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'product_created_at', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.newest'|trans }}</a></li>
-                <li><a class="item{{ (_order_by == 'product_created_at') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'product_created_at', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.oldest'|trans }}</a></li>
                 <li><a class="item{{ (_order_by == 'price') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.most_expensive'|trans }}</a></li>
                 <li><a class="item{{ (_order_by == 'price') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.cheapest'|trans }}</a></li>
             </ul>

@@ -37,7 +37,7 @@ final class ProductAvailabilitiesFilterType extends AbstractFilterType
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => $availabilities,
-                'attr' => ['preopened' => true]
+                'attr' => ['preopened' => false]
             ]);
         }
     }

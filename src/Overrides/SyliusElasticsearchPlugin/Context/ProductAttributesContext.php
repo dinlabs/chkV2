@@ -43,7 +43,7 @@ final class ProductAttributesContext implements ProductAttributesContextInterfac
     private function getAvailabilitiesChoices()
     {
         $stores = $this->em->getRepository(Store::class)->findByEnabled(true);
-        $choices = ['web' => 'Livraison à domicile / en point-relais'];
+        $choices = ['web' => 'Livraison domicile & relais'];
 
         foreach ($stores as $store) {
             $choices[$store->getCode()] = $store->getName();

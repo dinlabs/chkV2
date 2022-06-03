@@ -84,12 +84,22 @@ final class ShopProductListDataHandler implements DataHandlerInterface
 
         if (isset($requestData['availabilities']['availabilities']) && count($requestData['availabilities']['availabilities']) > 0) {
             $data['availabilities'] = $requestData['availabilities']['availabilities'];
-            unset($requestData['availabilities']['availabilities']);
+            unset($requestData['availabilities']);
         }
 
         if (isset($requestData['brands']['brands']) && count($requestData['brands']['brands']) > 0) {
             $data['brand'] = $requestData['brands']['brands'];
-            unset($requestData['brands']['brands']);
+            unset($requestData['brands']);
+        }
+
+        if (isset($requestData['promotions']['promotions']) && count($requestData['promotions']['promotions']) > 0) {
+            $data['promotion'] = true;
+            unset($requestData['promotions']);
+        }
+
+        if (isset($requestData['newness']['newness']) && count($requestData['newness']['newness']) > 0) {
+            $data['new'] = true;
+            unset($requestData['newness']);
         }
 
         $this->handleOptionsPrefixedProperty($requestData, $data);

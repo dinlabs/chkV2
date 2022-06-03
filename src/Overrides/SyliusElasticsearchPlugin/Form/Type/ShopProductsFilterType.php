@@ -26,6 +26,8 @@ final class ShopProductsFilterType extends AbstractFilterType
             //->add($this->namePropertyPrefix, NameFilterType::class)
             //->add('options', ProductOptionsFilterType::class, ['required' => false, 'label' => false])
             ->add('availabilities', ProductAvailabilitiesFilterType::class,  ['required' => false, 'label' => false])
+            ->add('promotions', ProductPromotionsFilterType::class,  ['required' => false, 'label' => false])
+            ->add('newness', ProductNewnessFilterType::class, ['required' => false, 'label' => false])
             ->add('attributes', ProductAttributesFilterType::class, ['required' => false, 'label' => false])
             //->add('price', PriceFilterType::class, ['required' => false, 'label' => false])
         ;
