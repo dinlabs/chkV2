@@ -17,6 +17,7 @@
 }
 
 * { margin:0; padding:0; border:0; list-style:none; box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:100px; }
 body { background:var(--bg0); color:var(--default); font-family:'Istok Web', Arial, sans-serif; font-size:.9375em; /*=15px*/ }
 body.overflow { overflow:hidden; }
 h2 { font-family:var(--altFont); font-size:1.867em; /*=28px*/ line-height:1.357em; text-transform:capitalize; }
@@ -1103,6 +1104,10 @@ body.customer { background:var(--bg1); }
 @media screen and (max-width:499px) {
     .wysiwyg iframe { height:auto; }
 }
+@media screen and (max-width:799px) {
+    header:not(.scroll-up) { position:relative; }
+}
+
 @media screen and (min-width:500px) {
     .prodList .background .autoMargin { left:-24px; }
     #socials .instagram li img { width:100px; }
@@ -1112,18 +1117,18 @@ body.customer { background:var(--bg1); }
         --menuWidth:600px;
         --navBottomHeight:0px;
     }
-    
+
     .deskOnly { display:initial; }
     header #findStore { display:grid; grid-template-columns:1fr 2fr; place-items:center; width:110px; color:inherit; text-decoration:none; }
 
     .prodList .list { grid-template-columns:repeat(6, 1fr); }
     
     .noMask .header { padding-top:50px; }
-
+    
     .glider { padding:0; overflow:hidden; }
-
+    
     #topAnnounce { font-size:inherit; }
-
+    
     header { padding:9px 0; }
     header.search-visible { height:initial; }
     header.search-visible .inside #searchBox .svg-icon { display:initial; }

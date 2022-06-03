@@ -98,7 +98,10 @@ window.funcStickyHeader = function()
     const $header = document.querySelector('header');
     if($header)
     {
-        var _scrollTop = 0;
+        var _scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var _lastScrollTop = _scrollTop;
+        var _scrollDir = 1;
+        var _lastScrollDir = _scrollDir;
         var _topLimit = 30;
         var $topAnnounce = document.querySelector('#topAnnounce');
 
@@ -115,7 +118,18 @@ window.funcStickyHeader = function()
                 _topLimit = 10;
             }
 
-            _scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+            //_scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+            _scrollTop = window.scrollY || document.documentElement.scrollTop;
+            _scrollDir = (_scrollTop < _lastScrollTop) ? -1 : 1;
+            _lastScrollTop = _scrollTop;
+            if(_scrollDir != _lastScrollDir)
+            {
+                if($header.classList.contains('scroll-up')) $header.classList.remove('scroll-up');
+                if($header.classList.contains('scroll-down')) $header.classList.remove('scroll-down');
+                $header.classList.add((_scrollDir == -1) ? 'scroll-up' : 'scroll-down');
+                _lastScrollDir = _scrollDir;
+            }
+
             if (_scrollTop > _topLimit) {
                 $header.classList.add('is-pinned');
             } else {
