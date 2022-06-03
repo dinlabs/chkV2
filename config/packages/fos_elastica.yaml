@@ -32,10 +32,10 @@ fos_elastica:
                 enabled: ~
                 brand:
                     property_path: esbrand
-                # brand: 
-                #     type: 'object'
-                #     properties: 
-                #         escode: ~
+                newFrom:
+                    type: date
+                newTo:
+                    type: date
             persistence:
                 driver: orm
                 model: "%sylius.model.product.class%"

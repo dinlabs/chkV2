@@ -15,30 +15,17 @@ use BitBag\SyliusElasticsearchPlugin\Form\Type\AbstractFilterType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-final class ProductBrandsFilterType extends AbstractFilterType
+final class ProductPromotionsFilterType extends AbstractFilterType
 {
-    /** @var ProductAttributesContextInterface */
-    private $productAttributesContext;
-
-    public function __construct(
-        ProductAttributesContextInterface $productAttributesContext
-    ) {
-        $this->productAttributesContext = $productAttributesContext;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $attributes): void
     {
-        $brands = $this->productAttributesContext->getBrands();
-
-        if (count($brands) > 0) {
-            $builder->add('brands', ChoiceType::class, [
-                'label' => 'Marques',
-                'required' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'choices' => $brands,
-                'attr' => ['preopened' => false]
-            ]);
-        }
+        $builder->add('promotions', ChoiceType::class, [
+            'label' => 'Promotions',
+            'required' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'choices' => ['Produits en promotion' => 'promotion'],
+            'attr' => ['preopened' => false]
+        ]);
     }
 }

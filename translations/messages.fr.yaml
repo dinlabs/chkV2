@@ -152,8 +152,8 @@ bitbag_sylius_elasticsearch_plugin:
     bestsellers: Meilleures ventes
     newest: Plus récent en premier
     oldest: Plus ancien en premier
-    most_expensive: Plus cher en premier
-    cheapest: Moins cher en premier
+    most_expensive: Prix décroissants
+    cheapest: Prix croissants
     per_page: Nombre de résultats
     search_header: Recherche
 

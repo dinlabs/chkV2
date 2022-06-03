@@ -11,6 +11,7 @@ use BitBag\SyliusElasticsearchPlugin\Finder\ShopProductsFinderInterface;
 use Elastica\Query;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Range;
+use Elastica\Query\Term;
 use Elastica\Query\Terms;
 use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
 use Pagerfanta\Pagerfanta;
@@ -123,6 +124,33 @@ final class ShopProductsFinder implements ShopProductsFinderInterface
                 $rangeQuery = new Range('availabilities.'. $availability, ['gt' => 0]);
                 $boolQuery->addMust($rangeQuery);
             }
+        }
+
+        if (isset($data['promotion']) && $data['promotion'] === true) {
+            $brandQuery = new Term();
+            $brandQuery->setTerm('promotion', true);
+            $boolQuery->addMust($brandQuery);
+        }
+
+        if (isset($data['new']) && $data['new'] === true) {
+            $dateTime = new \DateTime();
+            $dateTime->setTime(0, 0 ,0);
+            $date = $dateTime->format('c');
+
+            $rangeQuery = new Range('newFrom', ['lte' => $date]);
+            $boolQuery->addMust($rangeQuery);
+
+            $boolQueryNewToQuery = new BoolQuery();
+            $boolQueryNewToQuery->setMinimumShouldMatch(1);
+
+            $newToTimeQuery = new Range('newTo', ['gte' => $date]);
+            $boolQueryNewToQuery->addShould($newToTimeQuery);
+
+            $newToTimeEmptyQuery = new Term();
+            $newToTimeEmptyQuery->setTerm('newToEmpty', true);
+            $boolQueryNewToQuery->addShould($newToTimeEmptyQuery);
+
+            $boolQuery->addMust($boolQueryNewToQuery);
         }
 
         $query = new Query($boolQuery);
