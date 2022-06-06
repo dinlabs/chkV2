@@ -350,7 +350,15 @@ window.funcFoldable = function()
                     }
                 }
             }
-        })
+        });
+
+        var _hTitle = link.parentNode.querySelector('h2');
+        if(_hTitle)
+        {
+            bindEvent(_hTitle, 'click', function(e){
+                link.click();
+            });
+        };
     });
 }
 
