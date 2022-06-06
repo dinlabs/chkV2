@@ -36,6 +36,10 @@ window.displayAvailabilities = function(variantId)
                 var qty = variant[key];
                 if(key == 'web')
                 {
+                    var $storeInPop = $('#dispoMagPop #store10');
+                    $storeInPop.find('.infosup').addClass('hidden');
+                    $storeInPop.find('.infos div').addClass('hidden');
+
                     if(qty > 0)
                     {
                         inShip = true;
@@ -67,6 +71,16 @@ window.displayAvailabilities = function(variantId)
                         _deliveryTxt += (_delivery.getMonth()+1) + '/' + _delivery.getFullYear();
                         
                         $good.find('.date').html(_deliveryTxt);
+
+                        $storeInPop.find('.good').removeClass('hidden');
+                        if(qty <= 1)
+                        {
+                            $storeInPop.find('.infosup').removeClass('hidden');
+                        }
+                    }
+                    else
+                    {
+                        $storeInPop.find('.warning').removeClass('hidden');
                     }
                 }
                 else
