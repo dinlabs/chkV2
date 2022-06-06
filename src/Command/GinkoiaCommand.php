@@ -511,7 +511,7 @@ class GinkoiaCommand extends Command
 
     private function addOrUpdateAttrValue($product, $attr, $value)
     {
-        $this->output->writeln('addOrUpdateAttrValue');
+        $this->output->writeln('addOrUpdateAttrValue "' . $attr . '" : '.$value);
 
         // recherche l'attribute
         if(isset($this->_attributes[ $attr ]) && ($attribute = $this->_attributes[ $attr ]))
@@ -561,7 +561,7 @@ class GinkoiaCommand extends Command
                 
                 case 'text':
                 default:
-                    $attrValue->setValue($value);
+                    $attrValue->setValue( (string)$value );
             }
 
             $this->manager->persist($attrValue);
