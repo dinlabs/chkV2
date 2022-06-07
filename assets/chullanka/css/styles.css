@@ -1190,10 +1190,6 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     #lastnews { padding:50px 0; }
 
-    #searchWrapper #filters { position:relative; padding:20px 0; }
-    #filters .openFilters { margin:-20px 0 -40px 0; cursor:initial; }
-    #filters .deskReinit { display:block; padding-bottom:1em; }
-
     #testProducts { margin-top:60px; }
     #testProducts .header { display:grid; grid-template-columns: 1fr 1fr; gap:30px; max-width:80vw; margin:auto; }
     #testProducts .chullis { min-height:330px; }
@@ -1227,10 +1223,15 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #socials .instagram li img { width:150px; }
 
     #searchWrapper { display:grid; grid-template-columns:345px auto; gap:25px; }
+    #searchWrapper #filters { position:relative; padding:20px 0; }
     #filters .openFilters, #filters .mobileFilters .svg-icon-close { display:none; }
+    #filters .openFilters { margin:-20px 0 -40px 0; cursor:initial; }
+    #filters .deskReinit { display:block; padding-bottom:1em; }
     #filters .mobileFilters { display:block !important; position:sticky; top:91px; height:calc(100vh - 91px); overflow:auto; box-shadow:none; z-index:15; }
     #filters .mobileFilters .scroller { height:initial; overflow:initial; }
     #filters .mobileFilters .mobileFiltersFooter { display:none; }
+
+    #store #searchWrapper #filters { grid-column:1; grid-row:1; }
     
     #productTop { --gapWidth:20px; display:grid; grid-template-columns:calc(50% - (var(--gapWidth) / 2)) calc(50% - (var(--gapWidth) / 2)); gap:var(--gapWidth); }
     #illustration { /*max-width:calc((100vw - var(--gapWidth)) / 2);*/ justify-self:center; }

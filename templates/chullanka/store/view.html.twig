@@ -29,24 +29,6 @@
 
 <div class="autoMargin">
     <div id="searchWrapper">
-        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
-            <h2>
-                <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-affiner"/></svg>
-                {{ 'app.front.category.filter.affiner'|trans }}
-            </h2>
-            {% if store.taxons|length %}
-            <ul class="subCats">
-                {% for child in store.taxons %}
-                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
-                {% endfor %}
-            </ul>
-            <br>
-            {% endif %}
-
-            <div class="push_univers">
-                {{ render(path('get_blocks_by_section_store', {'sectionCode': 'cat_filters', 'storeCode': store.code})) }}
-            </div>
-        </div>
         <div id="productList" class="prodList">
             {% if store.otherProducts|length > 0 %}
                 <h2>Produits du magasin {{ store.name }}</h2>
@@ -173,16 +155,17 @@
                     <script>
                         window.addEventListener('load', function(){
                             new Glider(document.querySelector('#services .glider'), { 
-                                slidesToShow: 1,
+                                specialGlider: true,
+                                //slidesToShow: 1,
                                 slidesToScroll : 1,
                                 duration: 2,
                                 draggable: true,
                                 scrollLock: true,
                                 dots: '#services .dots',
-                                responsive: [
+                                /*responsive: [
                                     { breakpoint:500, settings: { slidesToShow:2 } },
                                     { breakpoint:1024, settings: { slidesToShow:3 } }
-                                ]
+                                ]*/
                             });
                         });
                     </script>
@@ -192,6 +175,24 @@
                 {% if store.advertising %}
                 {{ store.advertising|raw }}
                 {% endif %}
+            </div>
+        </div>
+        <div id="filters" {{ sylius_test_html_attribute('vertical-menu') }}>
+            <h2>
+                <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-affiner"/></svg>
+                {{ 'app.front.category.filter.affiner'|trans }}
+            </h2>
+            {% if store.taxons|length %}
+            <ul class="subCats">
+                {% for child in store.taxons %}
+                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
+                {% endfor %}
+            </ul>
+            <br>
+            {% endif %}
+
+            <div class="push_univers">
+                {{ render(path('get_blocks_by_section_store', {'sectionCode': 'cat_filters', 'storeCode': store.code})) }}
             </div>
         </div>
     </div>
