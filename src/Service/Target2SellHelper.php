@@ -202,11 +202,24 @@ class Target2SellHelper
                     if($attributeValue = $product->getAttributeByCodeAndLocale($code))
                     {
                         $attribute = $attributeValue->getAttribute();
+                        
                         $_value = $attributeValue->getValue();
                         if(is_array($_value)) $_value =  implode(' ', $attributeValue->getValue());
 
+                        $conf = $attribute->getConfiguration();
+                        if(isset($conf['choices']))
+                        {
+                            $choices = $conf['choices'];
+                            if(isset($choices[ $_value ]) 
+                            && isset($choices[ $_value ][ $localCode ])
+                            )
+                            {
+                                $_value =  $choices[ $_value ][ $localCode ];
+                            }
+                        }
+                        $_value = (string)$_value;
                         $attributesNode->appendChild(
-                            $this->addAttribute($code, $attribute->getName(), $_value)
+                            $this->addAttribute($code, $attribute->getName(), $_value, strtolower($_value))
                         );
                     }
                 }
