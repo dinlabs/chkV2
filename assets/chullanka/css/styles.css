@@ -914,6 +914,13 @@ body.checkout { background:var(--bg1); }
 .checkout .usp-widget-layout .usp-payment-layout-merge .usp-protocol-list-item.svelte-1v7vq23 { padding:0; }
 
 
+#confirmation h1 { font-size:1.25em; }
+#confirmation #sylius-thank-you { padding-bottom:1em; }
+#confirmation #sylius-thank-you p { padding-bottom:.5em; }
+#confirmation .btn.large { margin-bottom:2em; padding:.75em 3em; }
+#confirmation .bitbag-block { text-align:center; }
+#confirmation .bitbag-block a img { display:block; margin:auto; }
+
 
 /* CUSTOMER */
 body.customer { background:var(--bg1); }
