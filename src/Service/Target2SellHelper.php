@@ -76,6 +76,9 @@ class Target2SellHelper
      */
     public function exportCatalog()
     {
+        $context = $this->router->getContext();
+        $baseUrl = $context->getScheme() . '://' . $context->getHost();
+
         $localCode = 'fr_FR';
 
         $this->doc = new \DOMDocument('1.0', 'UTF-8');
@@ -190,6 +193,58 @@ class Target2SellHelper
                     }
                     $productNode->appendChild($prodCategoriesNode);
                 }
+
+                //attributes
+                $attributesNode = $this->doc->createElement('attributes');
+
+                foreach(['genre', 'cycle_vie', 'exclu_mag', 'exclu_web'] as $code)
+                {
+                    if($attributeValue = $product->getAttributeByCodeAndLocale($code))
+                    {
+                        $attribute = $attributeValue->getAttribute();
+                        $_value = $attributeValue->getValue();
+                        if(is_array($_value)) $_value =  implode(' ', $attributeValue->getValue());
+
+                        $attributesNode->appendChild(
+                            $this->addAttribute($code, $attribute->getName(), $_value)
+                        );
+                    }
+                }
+
+                if($brand = $product->getBrand())
+                {
+                    $attributesNode->appendChild(
+                        $this->addAttribute('brand', 'Brand', $brand->getName(), 'B_' . $brand->getId())
+                    );
+                    if($logo = $brand->getLogo())
+                    {
+                        $_logoUrl = $baseUrl . '/media/brand/logos/' . $logo;
+                        $attributesNode->appendChild(
+                            $this->addAttribute('logo_marque', 'logo_marque', $_logoUrl, '')
+                        );
+                    }
+                    $brandUrl = $this->router->generate(
+                        'brand_view',
+                        ['code' => $brand->getCode(), '_locale' => $localCode],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $attributesNode->appendChild(
+                        $this->addAttribute('lien_marque', 'lien_marque', $brandUrl, '')
+                    );
+                }
+
+                if($availabilities = $product->getAvailabilities())
+                {
+                    foreach($availabilities as $store => $availability)
+                    {
+                        if($store == 'web') continue;
+                        $attributesNode->appendChild(
+                            $this->addAttribute('Quantite_' . ucFirst($store), 'Quantite ' . ucFirst($store), (string)$availability)
+                        );
+                    }
+                }
+
+                $productNode->appendChild($attributesNode);
                 
                 if($product->isConfigurable() && (count($variants) > 1))
                 {
@@ -271,6 +326,35 @@ class Target2SellHelper
         $node->appendChild( $cdata ? $this->doc->createCDATASection($val) : $this->doc->createTextNode($val) );
         return $node;
     }
+    /**
+     * Return an XML node
+     */
+    private function addAttribute(string $code, string $name, mixed $val, string $val_id = null)
+    {
+        $node = $this->doc->createElement('attribute');
+        
+        $attrIdAttr = $this->doc->createAttribute('id');
+        $attrIdAttr->value = $code;
+        $node->appendChild($attrIdAttr);
+        $attrNameAttr = $this->doc->createAttribute('name');
+        $attrNameAttr->value = $name;
+        $node->appendChild($attrNameAttr);
+        $attrTypeAttr = $this->doc->createAttribute('type');
+        $attrTypeAttr->value = 'string';
+        $node->appendChild($attrTypeAttr);
+        
+        $val = trim((string)$val);
+        if($val != '')
+        {
+            $valueNode = $this->doc->createElement('value');
+            $attrValueNode = $this->doc->createAttribute('id');
+            $attrValueNode->value = !is_null($val_id) ? $val_id : $val;
+            $valueNode->appendChild($attrValueNode);
+            $valueNode->appendChild($this->doc->createCDATASection($val));
+            $node->appendChild($valueNode);
+        }
+        return $node;
+    }
 
 
     public function updateProductRanks()
@@ -298,7 +382,7 @@ class Target2SellHelper
                 extract($line);//fwProductID/rank1/rank2/.../rank6
 
                 // recherche le produit
-                if($product = $repoProduct->find($fwProductID))
+                if($product = $repoProduct->findOneByCode($fwProductID))
                 {
                     // recherche chaque attribut "rank"
                     foreach($_attributes as $rank => $attribute)
