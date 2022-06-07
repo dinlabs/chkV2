@@ -123,10 +123,12 @@ sylius:
     checkout: 'Valider mon panier'
     contact_us: 'Contactez-nous par e-mail'
     create_an_account: "S'enregistrer"
+    follow_an_order: Pour suivre votre commande, rendez-vous dans votre espace personnel.
     if_you_have_an_account_sign_in_with_your_email_address: Connectez-vous pour accéder à votre compte client
     new_customers: Vous n'avez jamais commandé sur notre site ?
     onhold: "Commande en défaut"
     pack_product: Produit packagé
+    placed_an_order: "Merci pour votre achat sur Chullanka.com, votre commande est confirmée. Maintenant, relaxez-vous, on s'occupe du reste !"
     preparation: "Préparation en cours"
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
     ready_to_ship: "Prêt pour expédition"
@@ -135,6 +137,8 @@ sylius:
     store_trouble: "Problème de stock en magasin"
     store_collected: "Récupérée en magasin"
     store_sent: "Livrée (Click&Collect)"
+    thank_you: "C'est dans la poche !"
+    view_order: "Voir votre commande"
     your_shopping_cart: 'Mon panier'
   form:
     customer:
