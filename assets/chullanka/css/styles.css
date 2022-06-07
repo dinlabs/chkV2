@@ -124,6 +124,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 /* ProdList */
 .prodList { position:relative; margin-top:30px; padding:20px 0; text-align:center; }
 .prodList .background { position:absolute; left:0; top:0; background:no-repeat center center / cover; width:100%; height:410px; text-align:left; overflow:hidden; z-index:-1; }
+.prodList.t2s .background { background-image:url(../img/bg-t2s-list.jpg); }
 .prodList .background .autoMargin { position:relative; left:-100px; }
 .prodList .background .autoMargin::before, .prodList .background .autoMargin::after { content:''; position:absolute; top:0; background:url(../img/mask_around.png) repeat-x; width:200vh; height:100%; }
 .prodList .background .autoMargin::before { transform:translateX(-100%); }
