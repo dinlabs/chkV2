@@ -107,16 +107,18 @@
                     <script>
                         window.addEventListener('load', function(){
                             new Glider(document.querySelector('#chullis .glider'), { 
-                                slidesToShow: 1,
+                                slidesToShow: 'auto',
+                                itemWidth: 320,
+                                exactWidth: 300,
                                 slidesToScroll : 1,
                                 duration: 2,
                                 draggable: true,
                                 scrollLock: true,
                                 dots: '#chullis .dots',
-                                responsive: [
+                                /*responsive: [
                                     { breakpoint:500, settings: { slidesToShow:2 } },
                                     { breakpoint:1024, settings: { slidesToShow:2 } }
-                                ]
+                                ]*/
                             });
                         });
                     </script>
@@ -153,16 +155,25 @@
                     <script>
                         window.addEventListener('load', function(){
                             new Glider(document.querySelector('#services .glider'), { 
-                                slidesToShow: 1,
+                                slidesToShow: 'auto',
+                                itemWidth: 320,
+                                exactWidth: 300,
                                 slidesToScroll: 1,
                                 duration: 2,
                                 draggable: true,
                                 scrollLock: true,
                                 dots: '#services .dots',
-                                responsive: [
+                                /*responsive: [
                                     { breakpoint:500, settings: { slidesToShow:2 } },
-                                    { breakpoint:1024, settings: { slidesToShow:'auto' } }
-                                ]
+                                    {
+                                        breakpoint:1024, 
+                                        settings: { 
+                                            slidesToShow:'auto',
+                                            itemWidth: 320,
+                                            exactWidth: 300
+                                        }
+                                    }
+                                ]*/
                             });
                         });
                     </script>
