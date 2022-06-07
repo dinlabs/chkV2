@@ -1232,7 +1232,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #filters .mobileFilters .mobileFiltersFooter { display:none; }
 
     #store #searchWrapper #filters { grid-column:1; grid-row:1; }
-    #store .insert { max-width:calc(100vw - 48px - 345px - 25px -); }
+    #store .insert { max-width:calc(100vw - 48px - 345px - 25px - 1em); }
     
     #productTop { --gapWidth:20px; display:grid; grid-template-columns:calc(50% - (var(--gapWidth) / 2)) calc(50% - (var(--gapWidth) / 2)); gap:var(--gapWidth); }
     #illustration { /*max-width:calc((100vw - var(--gapWidth)) / 2);*/ justify-self:center; }
