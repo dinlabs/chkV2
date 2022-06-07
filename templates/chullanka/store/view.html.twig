@@ -57,7 +57,7 @@
                 </div>
             {% endif %}
 
-            <div id="content">
+            <div class="content">
 
                 <div class="details" style="background-image:url({{ asset('build/chullanka/images/bg-category.jpg', 'chullanka') }})">
                     <div class="insert">
@@ -85,7 +85,9 @@
 
                 <div class="insert infos">
                     <h2>Le magasin</h2>
-                    {{ store.description|raw }}
+                    <div class="wysiwyg">
+                        {{ store.description|raw }}
+                    </div>
                 </div>
 
                 {% if store.chullis|length %}
@@ -179,7 +181,7 @@
                                 dots: '#services .dots',
                                 responsive: [
                                     { breakpoint:500, settings: { slidesToShow:2 } },
-                                    { breakpoint:1024, settings: { slidesToShow:2 } }
+                                    { breakpoint:1024, settings: { slidesToShow:3 } }
                                 ]
                             });
                         });
