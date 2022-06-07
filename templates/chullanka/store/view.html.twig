@@ -67,9 +67,7 @@
 
                 <div class="insert infos">
                     <h2>Le magasin</h2>
-                    <div class="wysiwyg">
-                        {{ store.description|raw }}
-                    </div>
+                    <div class="wysiwyg">{{ store.description|raw }}</div>
                 </div>
 
                 {% if store.chullis|length %}
@@ -145,7 +143,7 @@
                                     <span class="pict"></span>
                                     {% endif %}
 
-                                    <div>{{ service.content|raw }}</div>
+                                    <div class="wysiwyg">{{ service.content|raw }}</div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -155,17 +153,16 @@
                     <script>
                         window.addEventListener('load', function(){
                             new Glider(document.querySelector('#services .glider'), { 
-                                specialGlider: true,
-                                //slidesToShow: 1,
-                                slidesToScroll : 1,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
                                 duration: 2,
                                 draggable: true,
                                 scrollLock: true,
                                 dots: '#services .dots',
-                                /*responsive: [
+                                responsive: [
                                     { breakpoint:500, settings: { slidesToShow:2 } },
-                                    { breakpoint:1024, settings: { slidesToShow:3 } }
-                                ]*/
+                                    { breakpoint:1024, settings: { slidesToShow:'auto' } }
+                                ]
                             });
                         });
                     </script>
@@ -173,7 +170,7 @@
                 {% endif %}
                 
                 {% if store.advertising %}
-                {{ store.advertising|raw }}
+                <div class="wysiwyg">{{ store.advertising|raw }}</div>
                 {% endif %}
             </div>
         </div>
