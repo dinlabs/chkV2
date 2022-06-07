@@ -22,13 +22,13 @@
             </div>
         </div>
         {#{ sylius_template_event('sylius.shop.cart.suggestions', {'cart': cart}) }#}
-
-        <div id="{{ t2scID }}-1600-4"></div>
     {% else %}
         {{ messages.info('sylius.ui.your_cart_is_empty') }}
-
-        <div id="{{ t2scID }}-1600-19"></div>
     {% endif %}
+{% endblock %}
+
+{% block subcontent %}
+<div id="{{ t2scID }}-1600-{% if not cart.empty %}4{% else %}19{% endif %}"></div>
 {% endblock %}
 
 {% block javascripts %}
