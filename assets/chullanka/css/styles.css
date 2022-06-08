@@ -115,10 +115,12 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 .labels .madeinfrance::before { background:#fff; left:calc(100% / 3); }
 .labels .madeinfrance::after { background:#ce1126; right:0; }
 
-.contactus { background:url(../img/ico-portable.png) no-repeat -80px top; padding-bottom:1em; }
+.contactus { padding-bottom:1em; }
+.contactus .header { position:relative; padding-left:100px; padding-bottom:0 !important; }
 .contactus .content { padding-left:100px; }
-.contactus .content h2 { text-transform:uppercase; padding-bottom:1em; }
-.contactus .content p { padding-bottom:1em; }
+.contactus .svg-icon { position:absolute; left:0; top:-40px; width:60px; }
+.contactus h2 { text-transform:uppercase; padding-bottom:1em; }
+.contactus p { padding-bottom:1em; }
 
 
 /* ProdList */
@@ -1105,10 +1107,11 @@ body.customer { background:var(--bg1); }
 #page-contact .btn.primary, #page-register .btn.primary, #page-register hr { min-width:100%; }
 
 #page-contact .faq-section { padding-bottom:5em; }
-#page-contact .faq-section .header { /*background:url(../img/picto-faq.jpg) no-repeat left top;*/ padding-left:100px; }
+#page-contact .faq-section .header { padding-left:100px; }
 
 #page-contact .header { position:relative; padding-left:100px; min-height:100px; padding-bottom:3em; }
-#page-contact .header .svg-icon { position:absolute; left:0; top:-10px; width:130px; }
+#page-contact .faq-section .header .svg-icon { position:absolute; left:0; top:-40px; width:70px; }
+#page-contact .contact-section .header .svg-icon { position:absolute; left:0; top:-10px; width:130px; }
 #page-contact .header h2 { text-transform:uppercase; padding-bottom:.5em; }
 #page-contact form { padding-bottom:5em; }
 #page-contact form input, #page-contact form select { background-color:var(--bg1); }

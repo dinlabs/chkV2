@@ -1,9 +1,11 @@
 {% if sylius.channel.contactPhoneNumber %}
 <div class="contactus">
-    <div class="content">
+    <div class="header">
+        <svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-tel"/></svg>
         <h2>Appelez-nous</h2>
         <p>Appelez-nous<br><strong>{{ sylius.channel.contactPhoneNumber }}</strong></p>
-
+    </div>
+    <div class="content">
         {% if sylius.channel.description %}
         <p>{{ sylius.channel.description|nl2br }}</p>
         {% endif %}
