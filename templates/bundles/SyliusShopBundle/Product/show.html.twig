@@ -179,7 +179,7 @@
         </div>
     </div>
 
-    <div class="frame">
+    <div id="fullFeatures" class="frame">
         <h2>Caractéristiques techniques{% if product.isPack %} du pack{% endif %}</h2>
         <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
         <div class="foldable">
@@ -261,6 +261,8 @@
 
     $(document).ready(function() {
     {% if product.isPack %}
+        var $descFrameBtn = jQuery('#fullDescription .fold');
+        var $featFrameBtn = jQuery('#fullFeatures .fold');
         $('#packElements .packElement label').on('click', function(e) {
             var $this = $(this);
             $this.find('input[type=radio]').prop('checked', true); // force for IE !
@@ -287,14 +289,24 @@
             {
                 var _desc = $this.find('.product-description').html();
                 jQuery('#pack_sub_desc').html(_desc);
+                if($descFrameBtn.hasClass('on')) 
+                {
+                    $descFrameBtn.click();
+                    $descFrameBtn.click();
+                }
             }
 
+            // copy features
             if($this.find('.product-features').length)
             {
                 var _features = $this.find('.product-features').html();
                 jQuery('#pack_sub_features').html(_features);
+                if($featFrameBtn.hasClass('on')) 
+                {
+                    $featFrameBtn.click();
+                    $featFrameBtn.click();
+                }
             }
-
             
         });
     {% else %}
