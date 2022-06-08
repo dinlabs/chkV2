@@ -9,7 +9,13 @@
             {% if block.isTestblock %}
             {% include '@SyliusShop/Block/test_block.html.twig' %}
             {% else %}
-                {{ bitbag_cms_render_content(block) }}
+                <div style="position:relative;">
+                    {% if block.name and block.link %}
+                    <a href="{{ block.link }}" style="position:absolute; right:1em; top:1em;">{{ block.name }}</a>
+                    {% endif %}
+                    
+                    {{ bitbag_cms_render_content(block) }}
+                </div>
             {% endif %}
         </div>
         {% endfor %}
@@ -17,7 +23,8 @@
     <div role="tablist" class="dots"></div>
 </div>
 <script>
-    window.addEventListener('load', function(){
+    function initCarrousel()
+    {
         new Glider(document.querySelector('#promos_{{ _randId }} .glider'), { 
             slidesToShow: 1,
             slidesToScroll : 1,
@@ -35,5 +42,11 @@
                 }
             ]
         });
+    }
+    window.addEventListener('load', function(){
+        initCarrousel();
     });
+    {% if app.request.xmlHttpRequest == true %}
+        initCarrousel();
+    {% endif %}
 </script>
