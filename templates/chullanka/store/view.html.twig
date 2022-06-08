@@ -76,7 +76,7 @@
                     <div class="director">
                         {% if store.director and store.director.avatar %}
                         <div class="pichulli">
-                            <img src="{{ asset('media/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director }}">
+                            <img src="{{ asset('media/chullis/' ~ store.director.avatar) }}" width="60" height="60" alt="{{ store.director.firstname }}">
                             <svg class="svg-icon" role="img" style="width:64px; height:60px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
                         </div>
                         {% endif %}
