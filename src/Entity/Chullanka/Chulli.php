@@ -72,7 +72,8 @@ class Chulli implements ResourceInterface
 
     public function __toString()
     {
-        return $this->firstname . (!empty($this->lastname) ? ' ' . $this->lastname : '');
+        return $this->firstname;
+        //return $this->firstname . (!empty($this->lastname) ? ' ' . $this->lastname : '');
     }
 
     public function getId(): ?int

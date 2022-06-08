@@ -646,6 +646,9 @@ header + #breadcrumb { padding-top:0; }
 #productContent .frame ul.list { padding-left:1em; }
 /*#productContent .frame ul.list li { list-style:inside; }*/
 
+#productContent #pack_sub_desc, #productContent #pack_sub_features { padding-top:1em; }
+
+
 #productContent .frame table { border-collapse:collapse; max-width:100%; margin-top:1em; text-align:left; }
 #productContent .frame table tr th, #productContent .frame table tr td { border:1px solid; padding:.5em 1em; width:50%; font-size:.75em; }
 #productContent .frame table tr:nth-child(odd) th, #productContent .frame table tr:nth-child(odd) td { background:var(--bg0); }
