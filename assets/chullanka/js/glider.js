@@ -157,10 +157,9 @@
       __.style.height = 'auto'
       __.style.width = _itemWidth + 'px'
       width += _itemWidth
+      if(_.opt.specialGlider) console.log("track width : "+width);
       height = Math.max(__.offsetHeight, height)
     })
-    
-    if(_total > 1) width -= _interSpace;
 
     _.track.style.width = width + 'px'
     _.trackWidth = width
