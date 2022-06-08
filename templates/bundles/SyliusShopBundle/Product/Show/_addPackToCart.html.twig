@@ -38,9 +38,10 @@
                         {% set _uniqid = 'uniqid_' ~ random(12) %}
                         <section class="list" id="{{ _uniqid }}">
                             <div class="glider">
-                                {% for choice in element.products %}
+                            {% for choice in element.products %}
+                                {% set choiceVariant = choice|sylius_resolve_variant %}
+                                {% if choiceVariant.onHand > 0 %}
                                 <div>
-                                    {% set choiceVariant = choice|sylius_resolve_variant %}
                                     <label for="choice_{{ choice.id }}" class="prodInList">
                                         <svg class="svg-picto" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg>
                                         <div class="insert">
@@ -101,6 +102,7 @@
                                         </div>
                                     </label>
                                 </div>
+                                {% endif %}
                             {% endfor %}
                             </div>
                             <div role="tablist" class="dots"></div>
