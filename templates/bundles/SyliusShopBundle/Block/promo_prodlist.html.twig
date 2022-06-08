@@ -23,8 +23,7 @@
     <div role="tablist" class="dots"></div>
 </div>
 <script>
-    function initCarrousel()
-    {
+    window.addEventListener('load', function(){
         new Glider(document.querySelector('#promos_{{ _randId }} .glider'), { 
             slidesToShow: 1,
             slidesToScroll : 1,
@@ -42,11 +41,24 @@
                 }
             ]
         });
-    }
-    window.addEventListener('load', function(){
-        initCarrousel();
     });
     {% if app.request.xmlHttpRequest == true %}
-        initCarrousel();
+    new Glider(document.querySelector('#promos_{{ _randId }} .glider'), { 
+        slidesToShow: 1,
+        slidesToScroll : 1,
+        duration: 2,
+        draggable: true,
+        scrollLock: true,
+        dots: '#promos_{{ _randId }} .dots',
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    itemWidth: 330,
+                    slidesToShow: 'auto'
+                }
+            }
+        ]
+    });
     {% endif %}
 </script>
