@@ -92,11 +92,11 @@
                             <div>
                                 <div class="chulli">
                                     {% if chulli.avatar %}
-                                    <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" alt="{{ chulli }}" class="pict">
+                                    <img src="{{ asset('media/chullis/' ~ chulli.avatar) }}" alt="{{ chulli.firstname }}" class="pict">
                                     {% else %}
                                     <span class="pict"></span>
                                     {% endif %}
-                                    <p><strong>{{ chulli }}</strong>, {{ chulli.expertise }}</p>
+                                    <p><strong>{{ chulli.firstname }}</strong>, {{ chulli.expertise }}</p>
                                 </div>
                             </div>
                             {% endif %}
