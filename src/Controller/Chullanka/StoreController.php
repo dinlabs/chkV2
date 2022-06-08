@@ -9,7 +9,6 @@ use App\Entity\Order\Order;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductVariant;
 use BitBag\SyliusCmsPlugin\Entity\Block;
-use BitBag\SyliusElasticsearchPlugin\Form\Type\ShopProductsFilterType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;

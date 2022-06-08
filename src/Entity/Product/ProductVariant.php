@@ -73,7 +73,7 @@ class ProductVariant extends BaseProductVariant implements BaseProductVariantInt
         return $this;
     }
 
-    public function getStockByStore(Store $store): ?Stock
+    public function getStockByStore(Store $store): mixed
     {
         if($store->isWarehouse()) return false;
         foreach($this->stocks as $stock)
