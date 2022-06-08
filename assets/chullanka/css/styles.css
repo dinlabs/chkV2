@@ -502,7 +502,7 @@ header + #breadcrumb { padding-top:0; }
 #searchWrapper #productList .promos a img { border-radius:5px; }
 #searchWrapper #productList .glider-contain { max-width:100%; }
 #searchWrapper #productList .promos .glider-slide > a img { border-radius:5px; }
-#searchWrapper #productList .promos .getAdvice, #searchWrapper #productList .promos .testBlock { width:330px; height:330px; }
+#searchWrapper #productList .promos .getAdvice, #searchWrapper #productList .promos .testBlock { /*width:330px;*/ height:100%; }
 #searchWrapper #productList .promos .testBlock .inside .tested .head { width:initial; padding:initial; }
 #searchWrapper #productList .promos .testBlock .inside .tested .head img { margin:initial; }
 
@@ -512,7 +512,7 @@ header + #breadcrumb { padding-top:0; }
 #searchWrapper #productList .getAdvice input { margin:3em 0; }
 #searchWrapper #productList .list + .btn { width:320px; }
 
-.category #promos .glider.draggable .glider-slide img { border-radius:5px; }
+.univers #promos .glider.draggable .glider-slide img, .category #promos .glider.draggable .glider-slide img { border-radius:5px; }
 
 #catBrands .brandBox { display:flex; flex-wrap:wrap; justify-content:center; align-content:center; background:var(--bg0); border:1px solid var(--bg1); border-radius:5px; width:150px; height:233px; padding:1em; text-align:center; }
 #catBrands .brandBox strong { text-transform:uppercase; }
