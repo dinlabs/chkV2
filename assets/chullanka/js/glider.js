@@ -147,17 +147,12 @@
       {
         var _img = __.querySelector('img');
         _itemWidth = (_img.style != undefined && _img.style.width) ? parseInt(_img.style.width) : _img.width;
-        console.log("_itemWidth : "+_itemWidth);
-        console.log("_count : "+_count);
-        console.log("_total : "+_total);
         if(_count < _total) _itemWidth += _interSpace;
-        console.log("puis _itemWidth : "+_itemWidth);
       }
       // fin ajout Yannick
       __.style.height = 'auto'
       __.style.width = _itemWidth + 'px'
       width += _itemWidth
-      if(_.opt.specialGlider) console.log("track width : "+width);
       height = Math.max(__.offsetHeight, height)
     })
 

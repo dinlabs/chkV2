@@ -188,6 +188,7 @@ ul.ctaCats li a { display:inline-block; border:2px solid var(--primary); backgro
 
 /* Glider */
 .glider-contain { padding:2em 0; text-align:left; }
+.glider-slide { min-width:120px; }
 .glider:not(.draggable) { display:flex; }
 .glider-dots { padding-top:1em; }
 .glider-dot { border:1px solid var(--default); background:var(--bg0); width:8px; height:8px; margin:4px; }
