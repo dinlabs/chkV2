@@ -33,7 +33,7 @@
                 {# plusieurs choix possibles dans cet élement #}
 
                 {# pack ski+fixations ! #}
-                {% if _countElement == 1 and product.mounting %}
+                {#% if _countElement == 1 and product.mounting %#}
                     <div class="prodList">
                         {% set _uniqid = 'uniqid_' ~ random(12) %}
                         <section class="list" id="{{ _uniqid }}">
@@ -60,6 +60,21 @@
                                                     </ul>
                                                 </div>
                                                 {% endif %}
+
+                                                <span class="btn primary">Choisir</span>
+                                            </div>
+
+                                            <div class="more">
+                                                <a href="#fullDescription">Plus d'info</a>
+                                            </div>
+
+                                            <div class="product-description hidden">
+                                                <h3>{{ choice.name }}</h3>
+                                                {{ choice.description|raw }}
+                                            </div>
+                                            <div class="product-features hidden">
+                                                <h3>{{ choice.name }}</h3>
+                                                {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': choice } %}
                                             </div>
 
                                             {% if choice.simple %}
@@ -105,7 +120,7 @@
                             });
                         </script>
                     </div>
-                {% else %}
+                {#% else %}
                     {% for choice in element.products %}
                     <label for="choice_{{ choice.id }}">{{ choice }}</label>
                         {% if choice.simple %}
@@ -132,9 +147,9 @@
                             {% endfor %}
                         </select>
                         {% endif %}
-                    {% endfor %}{# for choice in element.products #}
+                    {% endfor %}
 
-                {% endif %}{# if _countElement == 1 and product.mounting #}
+                {% endif %#}{# if _countElement == 1 and product.mounting #}
             {% endif %}{# if element.products|length == 1 #}
             {% set _countElement = _countElement + 1 %}
         </div>

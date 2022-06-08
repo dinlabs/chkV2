@@ -155,23 +155,45 @@
     {% endif %}
 
     <div id="fullDescription" class="frame">
-        <h2>Description détaillée</h2>
+        <h2>Description détaillée{% if product.isPack %} du pack{% endif %}</h2>
         <button class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</button>
         <div class="foldable wysiwyg">
             {#{ sylius_template_event('sylius.shop.product.show.tab_details', _context) }#}
+        {% if product.isPack %}
+            {% set _firstProduct = product.packElements.first.products.first %}
+            <h3>{{ _firstProduct.name }}</h3>
+            {{ _firstProduct.description|raw }}
+
+            {% set _secondProduct = product.packElements[1].products.first %}
+            <div id="pack_sub_desc">
+                <h3>{{ _secondProduct.name }}</h3>
+                {{ _secondProduct.description|raw }}
+            </div>
+        {% else %}
             {% if product.description is not empty %}
                 {{ product.description|raw }}
             {% else %}
                 {{ 'sylius.ui.no_description'|trans }}.
             {% endif %}
+        {% endif %}
         </div>
     </div>
 
     <div class="frame">
-        <h2>Caractéristiques techniques</h2>
+        <h2>Caractéristiques techniques{% if product.isPack %} du pack{% endif %}</h2>
         <a href="#" class="pictoLink fold" data-on="Replier" data-off="Lire">Lire</a>
         <div class="foldable">
+        {% if product.isPack %}
+            <h3>{{ _firstProduct.name }}</h3>
+            {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': _firstProduct } %}
+            
+            <div id="pack_sub_features">
+                <h3>{{ _secondProduct.name }}</h3>
+                {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': _secondProduct } %}
+            </div>
+        {% else %}
             {{ sylius_template_event('sylius.shop.product.show.tab_attributes', _context) }}
+        {% endif %}
         </div>
     </div>
 
@@ -259,6 +281,21 @@
                 });
                 $('.subconfig').append($optionData);
             }
+
+            // copy description
+            if($this.find('.product-description').length)
+            {
+                var _desc = $this.find('.product-description').html();
+                jQuery('#pack_sub_desc').html(_desc);
+            }
+
+            if($this.find('.product-features').length)
+            {
+                var _features = $this.find('.product-features').html();
+                jQuery('#pack_sub_features').html(_features);
+            }
+
+            
         });
     {% else %}
         var _url = '{{ path('chk_ajax_prodstocks', {'id': product.id}) }}';
