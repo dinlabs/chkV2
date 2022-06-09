@@ -96,41 +96,49 @@ class GinkoiaHelper
 
         //todo:
         $creditmemo = new \stdClass();
+
+        // get further order infos
+        $further = $order->getFurther();
         
-        // paiement
+        // paiements
+        $payMethodDetails = [];
+        $codeName = '';
         $dateReglement = '';
         if($order->hasPayments())
         {
             $payment = $order->getPayments()->first();
-            $codeName = $payment->getMethod()->getCode();
-            switch($codeName)
+            
+            if($further && isset($further['upstreampay_return']) && !empty($further['upstreampay_return']))
             {
-                case 'be2bill':
-                case 'atos_standard':
-                    $codeName = 'CB';
-                    break;
-                case 'paypal_express':
-                case 'paypal_express_admin':
-                    $codeName = 'PayPal';
-                    break;
-                case 'cb3x':
-                    $codeName = 'CB3X';
-                    break;
-                case 'gift_card_payment':
-                    $codeName = 'Carte Cadeau';
-                    break;
-                case 'iziflux_purchaseorder':
-                    $codeName = 'IziFlux';
-                    break;
-                case 'shoppingflux_purchaseorder':
-                    $codeName = 'ShoppingFlux';
-                    break;
-                case 'ccsave':
-                    $codeName = 'ccsave';
-                    break;
+                foreach($further['upstreampay_return'] as $return)
+                {
+                    $codeName = '';
+                    switch($return['method'])
+                    {
+                        case 'creditcard':
+                            $codeName = 'CB';
+                            break;
+                        
+                        case 'paypal':
+                            $codeName = 'PAYPAL';
+                            break;
+                        
+                        case 'giftcard':
+                            $codeName = ($return['partner'] == 'illicado') ? 'CB3X' : 'Carte Cadeau';
+                            break;
+                    }
+                    
+                    if(!empty($codeName)) 
+                    {
+                        $payMethodDetails[] = $codeName . ' : ' . number_format($return['plugin_result']['amount'], 2, ',', '') . '€';
+                    }
+                }
             }
-            
-            
+
+            if(empty($codeName)) 
+            {
+                $codeName = $payment->getMethod()->getCode();//default
+            }
             // on prend la premiere facturation pour la date de reference
             //$invoice = $order->getInvoiceCollection()->getFirstItem();
             
@@ -162,12 +170,19 @@ class GinkoiaHelper
         $orderNode->appendChild($this->addKeyVal('CommandeNum', $realOrderId));
         $orderNode->appendChild($this->addKeyVal('CommandeId', $commandeId));
         $orderNode->appendChild($this->addKeyVal('CommandeDate', $commandeDate . '.00'));
-        $orderNode->appendChild($this->addKeyVal('Statut', 'PAYE'));        
+        $orderNode->appendChild($this->addKeyVal('Statut', 'PAYE'));
+
+        $commentaires = '';
+        if(count($payMethodDetails) > 1)
+        {
+            $codeName = 'Web règlement Mixte';
+            $commentaires = implode(' - ', $payMethodDetails);
+        }
         $orderNode->appendChild($this->addKeyVal('ModeReglement', $codeName));
         $orderNode->appendChild($this->addKeyVal('DateReglement', $dateReglement . '.00'));
         $orderNode->appendChild($this->addKeyVal('Export', 0));
         $orderNode->appendChild($this->addKeyVal('CodeSite', 1));
-        $orderNode->appendChild($this->addKeyVal('Commentaire', ''));
+        $orderNode->appendChild($this->addKeyVal('Commentaire', $commentaires));
         
         // Client
         $customer = $order->getCustomer();
@@ -241,7 +256,6 @@ class GinkoiaHelper
 
             if($shipping_method_type == 'pickup')
             {
-                $further = $order->getFurther();
                 if($further && isset($further['pickup_id']) && !empty($further['pickup_id']))
                 {
                     $codeRelais = $further['pickup_id'];
@@ -250,7 +264,6 @@ class GinkoiaHelper
             elseif($shipping_method == 'store')
             {
                 $shipping_method = 'Retrait en magasin';
-                $further = $order->getFurther();
                 if($further && isset($further['store']) && !empty($further['store']))
                 {
                     $store = $this->entityManager->getRepository(Store::class)->find($further['store']);
@@ -281,12 +294,12 @@ class GinkoiaHelper
         {
             $variant = $item->getVariant();
 
-            if($further = $item->getFurther())
+            if($itemFurther = $item->getFurther())
             {
-                if(isset($further['pack']) && !empty($further['pack']))
+                if(isset($itemFurther['pack']) && !empty($itemFurther['pack']))
                 {
                     // récupération des produits du pack
-                    foreach($further['pack'] as $ppvid => $unitPrice)
+                    foreach($itemFurther['pack'] as $ppvid => $unitPrice)
                     {
                         $ppVariant = $this->entityManager->getRepository(ProductVariant::class)->find($ppvid);
                         if($ligneNode = $this->getItemNode($unitPrice, $item->getQuantity(), $ppVariant))

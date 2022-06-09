@@ -1,5 +1,11 @@
 <!-- Numéros de cartes de test -->
 <!-- https://developer.dalenys.com/payment-methods/bank-card.html -->
+
+<div id="widget-payment-selection"></div>
+<div id="widget-payment-form"></div>
+
+<hr>
+
 <div id="widget-payment"></div>
 {#<button id="pay-button" class="ui huge primary fluid icon labeled button">
     <i class="check icon"></i> {{ 'sylius.ui.place_order'|trans }}
@@ -19,10 +25,31 @@
     const session = {{ chk_upstreampay|raw }};
     manager.setSession(session);
 
+    /*const widgetSelection = manager.createWidget({
+        ui:{
+            layout:{
+                name: "LIST", // GRID, LIST
+            }
+        },
+        interface: "SELECTION"
+    });
+    widgetSelection.mount("widget-payment-selection"); //can be called whenever you want
+
+    const widgetForm = manager.createWidget({
+        ui:{
+            layout:{
+                display: "WALLET", // BASIC, WALLET, BARE
+            }
+        },
+        interface: "FORM",
+    });
+    widgetForm.mount("widget-payment-form"); //can be called whenever you want*/
+
+
     const widget = manager.createWidget({
         ui:{
             layout:{
-                name: "GRID", // LIST, GRID
+                name: "LIST", // LIST, GRID
                 display: "WALLET", // BASIC, WALLET, BARE
             }
         },

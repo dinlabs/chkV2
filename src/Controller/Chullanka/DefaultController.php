@@ -797,23 +797,27 @@ final class DefaultController extends AbstractController
                 $successPay = 0;
                 foreach($infos as $return)
                 {
-                    $msg = 'Revenu avec succès de la plateforme de paiement ' . $return->partner . ' : ';
                     switch($return->method)
                     {
                         case 'creditcard':
+                            $msg = 'Carte bancaire';
                             if(isset($return->plugin_result->partner_reference))
-                                $msg .= $return->plugin_result->partner_reference;
+                                $msg .= ' : ' . $return->plugin_result->partner_reference;
                             break;
                         
                         case 'paypal':
+                            $msg = 'PayPal';
                             if(isset($return->plugin_result->cardHolder))
-                                $msg .= $return->plugin_result->cardHolder;
+                                $msg .= ' : ' . $return->plugin_result->cardHolder;
                             break;
                         
                         case 'giftcard':
+                            $msg = 'Carte Cadeau Easy2Play';
                             if(isset($return->plugin_result->partner_reference))
-                                $msg .= $return->plugin_result->partner_reference;
+                                $msg .= ' : ' . $return->plugin_result->partner_reference;
                             break;
+                        default:
+                            $msg = 'Paiment OK';
                     }
                     $notes[] = $msg;
 
@@ -823,10 +827,13 @@ final class DefaultController extends AbstractController
                     }
                 }
                 
-                // on commente temporairement pour les tests
                 if($successPay == count($infos))
                 {
-                    $order->setNotes(implode("\n", $notes));
+                    $_finalNote = 'Paiement ';
+                    if(count($notes) > 1) $_finalNote .= "Mixte ";
+                    $_finalNote .= "avec \n";
+                    $_finalNote .= implode("\n", $notes);
+                    $order->setNotes($_finalNote);
 
                     // changer le state
                     //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
