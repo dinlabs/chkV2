@@ -28,15 +28,13 @@ class UpstreamPayWidget
         $this->session = $session;
         $this->router = $router;
         
-        // à récupérer par rapport à la méthode de paiement ! dans `sylius_gateway_config`
-        $this->upstreampay_base_url = 'https://api.preprod.upstreampay.com/';
-        
         if(($gatewayConfig = $this->entityManager->getRepository(GatewayConfig::class)->findOneBy(['gatewayName' => 'upstream_pay'])) && ($config = $gatewayConfig->getConfig()))
         {
             $this->client_id = $config['client_id'];//'0oa2y332wdiqfYIje417';
             $this->client_secret = $config['client_secret'];//'5d67RZR3KgXg_5bJNYoXoC9IodZvrj98uxnNDj3q';
             $this->api_key = $config['api_key'];//'20d52d3a-f0de-434e-9b15-6c6d642faead';
             $this->entity_id = $config['entity_id'];//'ead278b3-8f52-4257-8e46-dea8813461a8';
+            $this->upstreampay_base_url = $config['base_url'];//'https://api.preprod.upstreampay.com/';
         }
     }
 

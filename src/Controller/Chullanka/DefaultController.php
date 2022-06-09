@@ -11,6 +11,7 @@ use App\Entity\Chullanka\RmaProduct;
 use App\Entity\Chullanka\StoreService;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
+use App\Entity\Payment\PaymentMethod;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductAttribute;
 use App\Entity\Product\ProductAttributeValue;
@@ -86,6 +87,12 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
     {
+
+        /*$order = $this->container->get('doctrine')->getRepository(Order::class)->find(48);
+        return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+            'order' => $order
+        ]);*/
+
         echo "<h2>Test Izypro</h2>";
         echo "<h3>Liste de fichiers du SFTP</h3>";
         $izyproHelper->showFiles();
@@ -99,13 +106,16 @@ final class DefaultController extends AbstractController
         print_r($return);
         echo "</pre>";
 
-        echo "<hr>";
         $exportPath = '/home/ginkoia/home/export/';
-        echo "<h2>XML dans $exportPath</h2>";
-        $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
-        echo "<pre>";
-        print_r($files);
-        echo "</pre>";
+        if(is_dir($exportPath))
+        {
+            echo "<hr>";
+            echo "<h2>XML dans $exportPath</h2>";
+            $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
+            echo "<pre>";
+            print_r($files);
+            echo "</pre>";
+        }
 
         echo "<hr>";
         echo "<h2>Points de fidélité ?</h2>";
@@ -636,6 +646,14 @@ final class DefaultController extends AbstractController
         $cart = $this->cartContext->getCart();
         $cart->setCustomerIp($request->getClientIp());
 
+        // force UPSTREAM_PAY payment method
+        if($payMethod = $this->container->get('doctrine')->getRepository(PaymentMethod::class)->findOneByCode('UPSTREAM_PAY'))
+        {
+            foreach($cart->getPayments() as $payment)
+            {
+                $payment->setMethod($payMethod);
+            }
+        }
         $upStreamSession = '{}';
         if(($userCustomer = $this->getCurrentCustomer()) && $userCustomer->hasOrder($cart))
         {

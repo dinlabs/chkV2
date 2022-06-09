@@ -23,7 +23,7 @@ final class UpstreamPayGatewayFactory extends GatewayFactory
 
         $config['payum.api'] = function(ArrayObject $config)
         {
-            return new UpstreamPayApi($config['client_id'], $config['client_secret'], $config['api_key'], $config['entity_id']);
+            return new UpstreamPayApi($config['client_id'], $config['client_secret'], $config['api_key'], $config['entity_id'], $config['base_url']);
         };
     }
 }

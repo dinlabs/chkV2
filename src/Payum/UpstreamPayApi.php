@@ -18,12 +18,16 @@ final class UpstreamPayApi
     /** @var string */
     private $entityId;
 
-    public function __construct(string $clientId, string $clientSecret, string $apiKey, string $entityId)
+    /** @var string */
+    private $baseUrl;
+
+    public function __construct(string $clientId, string $clientSecret, string $apiKey, string $entityId, string $baseUrl)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->apiKey = $apiKey;
         $this->entityId = $entityId;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -56,5 +60,13 @@ final class UpstreamPayApi
     public function getEntityId(): string
     {
         return $this->entityId;
+    }
+
+    /**
+     * Get the value of baseUrl
+     */ 
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
     }
 }

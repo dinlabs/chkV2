@@ -17,6 +17,7 @@ final class UpstreamPayGatewayConfigurationType extends AbstractType
             ->add('client_secret', TextType::class)
             ->add('api_key', TextType::class)
             ->add('entity_id', TextType::class)
+            ->add('base_url', TextType::class)
         ;
     }
 }
