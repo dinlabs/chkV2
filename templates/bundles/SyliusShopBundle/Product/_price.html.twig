@@ -2,8 +2,27 @@
 {% if variant is not defined %}
     {% set variant = product|sylius_resolve_variant %}
 {% endif %}
+
+{% if product.isPack %}
+    {% set _firstElement = product.packElements.first %}
+    {% set _firstProduct = _firstElement.products.first %}
+    {% set minPrice = null %}
+    {% for _variant in _firstProduct.variants %}
+        {% set _amount = _variant|sylius_calculate_price({'channel': sylius.channel}) %}
+        {% if minPrice is null %}
+            {% set minPrice = _amount %}
+            {% set variant = _variant %}
+        {% endif %}
+        {% if _amount < minPrice %}
+            {% set minPrice = _amount %}
+            {% set variant = _variant %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 {% if variant %}
 <div class="price">
+    {#% if product.isPack %}à partir de{% endif %#}
     {% if variant|sylius_has_discount({'channel': sylius.channel}) %}
     <del{% if productPage is defined %} id="product-original-price"{% endif %} {{ sylius_test_html_attribute('product-original-price', money.calculateOriginalPrice(variant)) }}>{{ money.calculateOriginalPrice(variant) }}</del>
     {% endif %}

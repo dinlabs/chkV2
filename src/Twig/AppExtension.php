@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Product\Product;
+use App\Entity\Product\ProductVariant;
 use App\Entity\Promotion\PromotionAction;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,6 +27,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('excerpt', [$this, 'getExcerpt'], ['is_safe' => ['html']]),
             new TwigFilter('getGift', [$this, 'getGift'], ['is_safe' => ['html']]),
+            new TwigFilter('maxPackItem', [$this, 'maxPackItem'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -115,6 +117,16 @@ class AppExtension extends AbstractExtension
             }
         }
         return false;
+    }
+
+    public function maxPackItem($variantId)
+    {
+        $maxQty = 0;
+        if($variant = $this->managerRegistry->getRepository(ProductVariant::class)->find($variantId))
+        {
+            $maxQty = $variant->getOnHand();
+        }
+        return $maxQty;
     }
 
     

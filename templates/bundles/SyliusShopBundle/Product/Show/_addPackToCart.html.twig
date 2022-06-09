@@ -168,6 +168,7 @@
         <div id="addToCart">
             <button type="submit" class="btn" style="font-weight:300;" {{ sylius_test_html_attribute('add-to-cart-button') }}>
                 <span>{{ 'sylius.ui.add_to_cart'|trans }}</span>
+                {% include '@SyliusShop/Product/_price.html.twig' %}
             </button>
         </div>
     </div>

@@ -23,15 +23,30 @@
         <div class="infos">
             {% include '@SyliusShop/Product/_info.html.twig' with {'item': item, 'variant': variant} %}
 
+            {% set maxQty = null %}
+            {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}
+                {% for variantId, variantPrice in item.further.pack %}
+                    {% set vMaxQty = variantId|maxPackItem %}
+                    {% if maxQty is null %}
+                        {% set maxQty = vMaxQty %}
+                    {% endif %}
+                    {% if vMaxQty < maxQty %}
+                        {% set maxQty = vMaxQty %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% set maxQty = variant.maxQty %}
+            {% endif %}
+
             {% if gift == false %}
             <div class="quantity">
                 <small>{{ 'sylius.ui.quantity'|trans }}</small>
                 <div class="sylius-quantity">
                     <button class="updateQuantity up">+</button>
-                    {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form, 'data-max-available': variant.maxQty}})) }}
+                    {{ form_widget(form.quantity, sylius_test_form_attribute('cart-item-quantity-input', item.productName)|sylius_merge_recursive({'attr': {'form': main_form, 'data-max-available': maxQty}})) }}
                     <button class="updateQuantity down">-</button>
                 </div>
-                <strong class="error{% if item.quantity <= variant.maxQty %} hidden{% endif %}">Quantité maximum&nbsp;: {{ variant.maxQty }}</strong>
+                <strong class="error{% if item.quantity <= maxQty %} hidden{% endif %}">Quantité maximum&nbsp;: {{ maxQty }}</strong>
             </div>
             
             <div class="total">
@@ -39,7 +54,7 @@
                 <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>
                     {{ money.convertAndFormat(item.subtotal) }}
                 
-                    {% if variant.storeStockOnly %}
+                    {% if product.isPack == false and variant.storeStockOnly %}
                     <span class="excluMag">cet article est <strong>uniquement disponible en magasin</strong></span>
                     {% endif %}
                 </div>

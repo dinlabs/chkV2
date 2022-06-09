@@ -170,15 +170,50 @@ class Order extends BaseOrder
         {
             $askQty = $item->getQuantity();
             $variant = $item->getVariant();
+            $product = $variant->getProduct();
 
-            // test si quantité dispo
-            if($askQty > $variant->getMaxQty()) 
-                $maxQtyByProducts[ $item->getId() ] = $variant->getMaxQty();    
+            // pour les packs
+            if($product->getIsPack() && ($further = $item->getFurther()) && isset($further['pack']) && count($further['pack']))
+            {
+                $allVariants = [];
+                foreach($product->getPackElements() as $elmt)
+                {
+                    foreach($elmt->getProducts() as $_prod)
+                    {
+                        $_variants = $_prod->getVariants();
+                        foreach($_variants as $_variant)
+                        {
+                            $allVariants[ $_variant->getId() ] = $_variant;
+                        }
+                    }
+                }
+
+                $_max = [];
+                foreach($further['pack'] as $vid => $price)
+                {
+                    $_variant = $allVariants[$vid];
+                    // test si quantité dispo
+                    if($askQty > $_variant->getMaxQty()) 
+                        $_max[$vid] = $_variant->getMaxQty();
+                }
+                if(count($_max) > 0)
+                {
+                    $maxQtyByProducts[ $item->getId() ] = min($_max);
+                }
+            }
+            else
+            {
+                // test si quantité dispo
+                if($askQty > $variant->getMaxQty()) 
+                    $maxQtyByProducts[ $item->getId() ] = $variant->getMaxQty();
+            }
+
         }
 
         // si des produits ne sont pas dispo en quantite demandee...
         if(count($maxQtyByProducts) > 0)
         {
+            error_log(print_r($maxQtyByProducts,true));
             return true;
         }
 
