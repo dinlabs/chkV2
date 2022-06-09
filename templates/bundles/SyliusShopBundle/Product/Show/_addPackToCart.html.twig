@@ -66,10 +66,14 @@
                                             {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': choice} %}
                                         </div>
                                         <div class="infos">
-                                            {% set _finalPrice = firstMinPrice + choiceVariant|sylius_calculate_price({'channel': sylius.channel}) %}
+                                            {% set _choicePrice = choiceVariant|sylius_calculate_price({'channel': sylius.channel})  %}
+                                            {% set _finalPrice = firstMinPrice + _choicePrice %}
+                                            <div class="price">
                                             {% if _finalPrice > minPackPrice %}
-                                            <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
+                                                {% set _supPrice = (_finalPrice - minPackPrice) %}
+                                                {{ '+ ' ~ money.convertAndFormat(_supPrice) }}
                                             {% endif %}
+                                            </div>
                                             {% if choice.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
                                             <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
                                             {% if choice.averageRating %}
