@@ -1,5 +1,25 @@
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 
+{% set minPackPrice = 0 %}
+{% set firstMinPrice = 0 %}
+{% for element in product.packElements %}
+    {% set minPrice = null %}
+    {% for _product in element.products %}
+        {% for _variant in _product.variants if _variant.onHand > 0 %}
+            {% set _amount = _variant|sylius_calculate_price({'channel': sylius.channel}) %}
+            {% if minPrice is null %}
+                {% set minPrice = _amount %}
+            {% endif %}
+            {% if _amount < minPrice %}
+                {% set minPrice = _amount %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% if loop.index == 1 %}
+        {% set firstMinPrice = minPrice %}
+    {% endif %}
+    {% set minPackPrice = minPackPrice + minPrice %}
+{% endfor %}
 <form action="{{ path('chk_ajax_addpacktocart') }}" method="post">
     {% set variant = product|sylius_resolve_variant %}
     <input type="hidden" name="sylius_add_to_cart[packId]" value="{{ variant.id }}">
@@ -31,127 +51,97 @@
                 {% endif %}
             {% else %}
                 {# plusieurs choix possibles dans cet élement #}
-
-                {# pack ski+fixations ! #}
-                {#% if _countElement == 1 and product.mounting %#}
-                    <div class="prodList">
-                        {% set _uniqid = 'uniqid_' ~ random(12) %}
-                        <section class="list" id="{{ _uniqid }}">
-                            <div class="glider">
-                            {% for choice in element.products %}
-                                {% set choiceVariant = choice|sylius_resolve_variant %}
-                                {% if choiceVariant.onHand > 0 %}
-                                <div>
-                                    <label for="choice_{{ choice.id }}" class="prodInList">
-                                        <svg class="svg-picto" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg>
-                                        <div class="insert">
-                                            <div class="picture">
-                                                {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': choice} %}
-                                            </div>
-                                            <div class="infos">
-                                                <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
-                                                {% if choice.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
-                                                <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
-                                                {% if choice.averageRating %}
-                                                <div class="clientRating">
-                                                    <ul class="rating">
-                                                        {% for n in 1..5  %}
-                                                        <li class="{{ (n <= choice.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-star"/></svg></li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </div>
-                                                {% endif %}
-
-                                                <span class="btn primary">Choisir</span>
-                                            </div>
-
-                                            <div class="more">
-                                                <a href="#fullDescription">Plus d'info</a>
-                                            </div>
-
-                                            <div class="product-description hidden">
-                                                <h3>{{ choice.name }}</h3>
-                                                {{ choice.description|raw }}
-                                            </div>
-                                            <div class="product-features hidden">
-                                                <h3>{{ choice.name }}</h3>
-                                                {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': choice } %}
-                                            </div>
-
-                                            {% if choice.simple %}
-                                            <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
-                                            {% else %}
-                                            <div class="product-option-data hidden">
-                                                <div class="pack-conf-products">
-                                                    <label>Titre de l'option</label>
-                                                    <select data-name="sylius_add_to_cart[packItem][{{ _countElement }}]">
-                                                        <option value="">Choisir</option>
-                                                        {% for choiceVariant in choice.variants %}
-                                                        {% set _label = choiceVariant.name %}
-                                                        {% if choiceVariant.optionValues %}
-                                                            {% for option in choiceVariant.optionValues %}
-                                                            {% set _label = option.value %}
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                        <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
+                <div class="prodList">
+                    {% set _uniqid = 'uniqid_' ~ random(12) %}
+                    <section class="list" id="{{ _uniqid }}">
+                        <div class="glider">
+                        {% for choice in element.products %}
+                            {% set choiceVariant = choice|sylius_resolve_variant %}
+                            {% if choiceVariant.onHand > 0 %}
+                            <div>
+                                <label for="choice_{{ choice.id }}" class="prodInList">
+                                    <svg class="svg-picto" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#notation"/></svg>
+                                    <div class="insert">
+                                        <div class="picture">
+                                            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': choice} %}
+                                        </div>
+                                        <div class="infos">
+                                            {% set _finalPrice = firstMinPrice + choiceVariant|sylius_calculate_price({'channel': sylius.channel}) %}
+                                            {% if _finalPrice > minPackPrice %}
+                                            <div class="price">{{ '+ ' ~ money.calculatePrice(choiceVariant) }}</div>
+                                            {% endif %}
+                                            {% if choice.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': choice.brand.code}) }}">{{ choice.brand.name }}</a></div>{% endif %}
+                                            <div class="title" {{ sylius_test_html_attribute('product-name', choice.name) }}>{{ choice.name }}</div>
+                                            {% if choice.averageRating %}
+                                            <div class="clientRating">
+                                                <ul class="rating">
+                                                    {% for n in 1..5  %}
+                                                    <li class="{{ (n <= choice.averageRating|round) ? 'on' : 'off' }}"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-star"/></svg></li>
+                                                    {% endfor %}
+                                                </ul>
                                             </div>
                                             {% endif %}
+
+                                            <span class="btn primary">Choisir</span>
                                         </div>
-                                    </label>
-                                </div>
-                                {% endif %}
-                            {% endfor %}
+
+                                        <div class="more">
+                                            <a href="#fullDescription">Plus d'info</a>
+                                        </div>
+
+                                        <div class="product-description hidden">
+                                            <h3>{{ choice.name }}</h3>
+                                            {{ choice.description|raw }}
+                                        </div>
+                                        <div class="product-features hidden">
+                                            <h3>{{ choice.name }}</h3>
+                                            {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': choice } %}
+                                        </div>
+
+                                        {% if choice.simple %}
+                                        <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
+                                        {% else %}
+                                        <div class="product-option-data hidden">
+                                            <div class="pack-conf-products">
+                                                <label>Titre de l'option</label>
+                                                <select data-name="sylius_add_to_cart[packItem][{{ _countElement }}]">
+                                                    <option value="">Choisir</option>
+                                                    {% for choiceVariant in choice.variants %}
+                                                    {% set _label = choiceVariant.name %}
+                                                    {% if choiceVariant.optionValues %}
+                                                        {% for option in choiceVariant.optionValues %}
+                                                        {% set _label = option.value %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </label>
                             </div>
-                            <div role="tablist" class="dots"></div>
-                        </section>
-                        <script>
-                            window.addEventListener('load', function(){
-                                new Glider(document.querySelector('#packElements #{{ _uniqid }} .glider'), { 
-                                    slidesToShow: 'auto',
-                                    itemWidth: 180,
-                                    exactWidth: 155,
-                                    slidesToScroll : 1,
-                                    duration: 2,
-                                    draggable: true,
-                                    scrollLock: true,
-                                    dots: '#packElements #{{ _uniqid }} .dots'
-                                });
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <div role="tablist" class="dots"></div>
+                    </section>
+                    <script>
+                        window.addEventListener('load', function(){
+                            new Glider(document.querySelector('#packElements #{{ _uniqid }} .glider'), { 
+                                slidesToShow: 'auto',
+                                itemWidth: 180,
+                                exactWidth: 155,
+                                slidesToScroll : 1,
+                                duration: 2,
+                                draggable: true,
+                                scrollLock: true,
+                                dots: '#packElements #{{ _uniqid }} .dots'
                             });
-                        </script>
-                    </div>
-                {#% else %}
-                    {% for choice in element.products %}
-                    <label for="choice_{{ choice.id }}">{{ choice }}</label>
-                        {% if choice.simple %}
-                        {% set choiceVariant = choice|sylius_resolve_variant %}
-                        
-                            {% if element.products|length == 1 %}
-                                <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}"> {{ money.calculatePrice(choiceVariant) }}
-                            {% else %}
-                            
-                            <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}"> {{ money.calculatePrice(choiceVariant) }}
-                            {% endif %}
-
-                        {% else %}
-                        <select id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]">
-                            <option value="">Choisir</option>
-                            {% for choiceVariant in choice.variants %}
-                            {% set _label = choiceVariant.name %}
-                            {% if choiceVariant.optionValues %}
-                                {% for option in choiceVariant.optionValues %}
-                                    {% set _label = option.value %}
-                                {% endfor %}
-                            {% endif %}
-                            <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
-                            {% endfor %}
-                        </select>
-                        {% endif %}
-                    {% endfor %}
-
-                {% endif %#}{# if _countElement == 1 and product.mounting #}
+                        });
+                    </script>
+                </div>
             {% endif %}{# if element.products|length == 1 #}
             {% set _countElement = _countElement + 1 %}
         </div>
