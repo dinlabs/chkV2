@@ -812,7 +812,7 @@ final class DefaultController extends AbstractController
                             break;
                         
                         case 'giftcard':
-                            $msg = 'Carte Cadeau Easy2Play';
+                            $msg = ($return->partner == 'illicado') ? 'Paiement en 3X' : 'Carte Cadeau Easy2Play';
                             if(isset($return->plugin_result->partner_reference))
                                 $msg .= ' : ' . $return->plugin_result->partner_reference;
                             break;
