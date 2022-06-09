@@ -496,8 +496,32 @@ class EventSubscriber implements EventSubscriberInterface
     public function onSyliusOrderPostComplete(GenericEvent $event)
     {
         $order = $event->getSubject();
-        $this->ginkoiaHelper->export($order);
-        $this->izyproHelper->export($order);
+
+        // test if C&C
+        $isClickAndCollect = false;
+        if($order->hasShipments())
+        {
+            $shipment = $order->getShipments()->first();
+            $shipping_method = $shipment->getMethod()->getCode();
+            if($shipping_method == 'store')
+            {
+                $isClickAndCollect = true;
+                $further = $order->getFurther();
+                if($further && isset($further['store']) && !empty($further['store']))
+                {
+                    $store = $this->entityManager->getRepository(Store::class)->find($further['store']);
+                    if($store->isWarehouse())
+                    {
+                        $isClickAndCollect = false;
+                    }
+                }
+            }
+        }
+        if($isClickAndCollect != false)
+        {
+            $this->ginkoiaHelper->export($order);
+            $this->izyproHelper->export($order);
+        }
     }
 
 
