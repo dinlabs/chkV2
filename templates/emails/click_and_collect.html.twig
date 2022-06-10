@@ -1,4 +1,3 @@
-{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 {% extends '@SyliusShop/Email/layout.html.twig' %}
 
 {% block subject %}
@@ -10,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
     <p><strong>Bonjour {{ store.name }}</strong></p>
     <p>La commande n°{{ order.number }} vient d'être passée pour un retrait en magasin. Votre mission si vous l'acceptez : préparer ce Click&amp;Collect dans les 3 heures !</p>
 

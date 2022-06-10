@@ -8,6 +8,7 @@ use App\Entity\Chullanka\HistoricOrder;
 use App\Entity\Chullanka\Parameter;
 use App\Entity\Chullanka\Rma;
 use App\Entity\Chullanka\RmaProduct;
+use App\Entity\Chullanka\Store;
 use App\Entity\Chullanka\StoreService;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
@@ -88,10 +89,34 @@ final class DefaultController extends AbstractController
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
     {
 
-        /*$order = $this->container->get('doctrine')->getRepository(Order::class)->find(48);
-        return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+        //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(44);
+        /*return $this->render('@SyliusShop/Order/thankYou.html.twig', [
             'order' => $order
         ]);*/
+
+        /*$shipment = $order->getShipments()->first();
+        $shipping_method = $shipment->getMethod()->getCode();
+        if($shipping_method == 'store')
+        {
+            $inStore = true;
+            $further = $order->getFurther();
+            if($further && isset($further['store']) && !empty($further['store']))
+            {
+                $store = $this->container->get('doctrine')->getRepository(Store::class)->find($further['store']);
+                $inStore = $store->isWarehouse() ? false : $store;
+            }
+        }
+        if($inStore != false)
+        {
+            $this->emailSender->send('click_and_collect', ['yannick.lepetit@gmail.com'], ['order' => $order, 'store' => $inStore]);
+        }
+        die;*/
+
+        /*return $this->render('emails/click_and_collect.html.twig', [
+            'order' => $order,
+            'store' => $inStore
+        ]);*/
+
 
         echo "<h2>Test Izypro</h2>";
         echo "<h3>Liste de fichiers du SFTP</h3>";
@@ -919,6 +944,7 @@ final class DefaultController extends AbstractController
 
         return $this->render('@SyliusShop/Order/failure.html.twig', [
             'cart' => $order,
+            'order' => $order,
             'infos' => $infos,
         ]);
     }
