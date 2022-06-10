@@ -23,7 +23,12 @@
         </div>
         {#{ sylius_template_event('sylius.shop.cart.suggestions', {'cart': cart}) }#}
     {% else %}
-        {{ messages.info('sylius.ui.your_cart_is_empty') }}
+        {#{ messages.info('sylius.ui.your_cart_is_empty') }#}
+        <p>C'est bien vide par ici...</p>
+        <p><strong>Malheureusement, il n'y a aucun article dans votre panier.</strong></p>
+        <br>
+        <p>Et si l'on remédiait à ça ?</p>
+        <a href="{{ path('sylius_shop_homepage') }}" class="btn primary">Commencer vos achats</a>
     {% endif %}
 {% endblock %}
 
