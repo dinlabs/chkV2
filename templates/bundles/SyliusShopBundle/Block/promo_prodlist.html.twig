@@ -11,7 +11,7 @@
             {% else %}
                 <div style="position:relative;">
                     {% if block.name and block.link %}
-                    <a href="{{ block.link }}" style="position:absolute; right:1em; top:1em;">{{ block.name }}</a>
+                    <a href="{{ block.link }}" style="position:absolute; left:1em; top:1em;">{{ block.name }}</a>
                     {% endif %}
                     
                     {{ bitbag_cms_render_content(block) }}
