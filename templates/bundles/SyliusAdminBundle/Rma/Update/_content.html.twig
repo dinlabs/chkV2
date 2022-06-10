@@ -45,8 +45,8 @@
         {{ form_row(form.address) }}
 
         {% if rma.returnSlip %}
-        <div style="padding-top:1em">
-            <a href="{{ path('rma_return_slip', {'id': rma.id}) }}">Télécharger le bordereau de retour produit</a>
+        <div style="padding-bottom:2em; text-align:center;">
+            <a href="{{ path('rma_return_slip', {'id': rma.id}) }}" class="ui button">Télécharger le bordereau de retour produit</a>
         </div>
         {% endif %}
 
