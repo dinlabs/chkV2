@@ -113,7 +113,7 @@ class GinkoiaHelper
                 foreach($further['upstreampay_return'] as $return)
                 {
                     $codeName = '';
-                    switch($return['method'])
+                    switch($return->method)
                     {
                         case 'creditcard':
                             $codeName = 'CB';
@@ -124,13 +124,13 @@ class GinkoiaHelper
                             break;
                         
                         case 'giftcard':
-                            $codeName = ($return['partner'] == 'illicado') ? 'CB3X' : 'Carte Cadeau';
+                            $codeName = ($return->partner == 'illicado') ? 'CB3X' : 'Carte Cadeau';
                             break;
                     }
                     
                     if(!empty($codeName)) 
                     {
-                        $payMethodDetails[] = $codeName . ' : ' . number_format($return['plugin_result']['amount'], 2, ',', '') . '€';
+                        $payMethodDetails[] = $codeName . ' : ' . number_format($return->plugin_result->amount, 2, ',', '') . '€';
                     }
                 }
             }
