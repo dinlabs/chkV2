@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface as SMFactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,6 +27,7 @@ class EventSubscriber implements EventSubscriberInterface
     private $logger;
     private $session;
     private $slugger;
+    private $emailSender;
     private $ginkoiaHelper;
     private $izyproHelper;
     private $stateMachineFactory;
@@ -33,12 +35,13 @@ class EventSubscriber implements EventSubscriberInterface
     private $orderItemQuantityModifier;
     private $adjustmentFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, SessionInterface $session, SluggerInterface $slugger, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, SessionInterface $session, SluggerInterface $slugger, SenderInterface $emailSender, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->session = $session;
         $this->slugger = $slugger;
+        $this->emailSender = $emailSender;
         $this->ginkoiaHelper = $ginkoiaHelper;
         $this->izyproHelper = $izyproHelper;
         $this->stateMachineFactory = $stateMachineFactory;
@@ -498,29 +501,36 @@ class EventSubscriber implements EventSubscriberInterface
         $order = $event->getSubject();
 
         // test if C&C
-        $isClickAndCollect = false;
+        $inStore = false;
         if($order->hasShipments())
         {
             $shipment = $order->getShipments()->first();
             $shipping_method = $shipment->getMethod()->getCode();
             if($shipping_method == 'store')
             {
-                $isClickAndCollect = true;
+                $inStore = true;
                 $further = $order->getFurther();
                 if($further && isset($further['store']) && !empty($further['store']))
                 {
                     $store = $this->entityManager->getRepository(Store::class)->find($further['store']);
-                    if($store->isWarehouse())
-                    {
-                        $isClickAndCollect = false;
-                    }
+                    $inStore = $store->isWarehouse() ? false : $store;
                 }
             }
         }
-        if($isClickAndCollect != false)
+        if($inStore == false)
         {
             $this->ginkoiaHelper->export($order);
             $this->izyproHelper->export($order);
+        }
+        else
+        {
+            // envoi d'un email au magasin
+            if($email = $inStore->getEmail())
+            {
+                $emails = explode(',', $email);//sépare les emails
+                $emails = array_map('trim', $emails);//retire les éventuels espaces
+                //$this->emailSender->send('click_and_collect', $emails, ['order' => $order, 'store' => $inStore]);
+            }
         }
     }
 
