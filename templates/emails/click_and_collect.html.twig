@@ -1,0 +1,77 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+{% extends '@SyliusShop/Email/layout.html.twig' %}
+
+{% block subject %}
+    Nouvelle commande Click&amp;Collect
+{% endblock %}
+
+{% block heademail %}
+    À vous de jouer !<br>Nouvelle commande Click&amp;Collect
+{% endblock %}
+
+{% block content %}
+    <p><strong>Bonjour {{ store.name }}</strong></p>
+    <p>La commande n°{{ order.number }} vient d'être passée pour un retrait en magasin. Votre mission si vous l'acceptez : préparer ce Click&amp;Collect dans les 3 heures !</p>
+
+    <p>Voici les informations :</p>
+    <table style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="562" cellspacing="0" cellpadding="0" border="0">
+        <thead>
+            <tr>
+                <th bgcolor="#EAEAEA" align="left"><span style="font-size:14px">Item</span></th>
+                <th bgcolor="#EAEAEA" align="left"><span style="font-size:14px">Sku</span></th>
+                <th bgcolor="#EAEAEA" align="center"><span style="font-size:14px">Qty</span></th>
+                <th bgcolor="#EAEAEA" align="right"><span style="font-size:14px">Subtotal</span></th>
+            </tr>
+        </thead>
+        <tbody bgcolor="#F6F6F6">
+            {% for item in order.items %}
+            <tr>
+                {% set variant = item.variant %}
+                {% set product = variant.product %}
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="left"><span style="font-size:14px"><strong>{{ variant.name }}</strong></span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="left"><span style="font-size:14px">{{ variant.code }}</span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="center"><span style="font-size:14px">{{ item.quantity }}</span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="right"><span style="font-size:14px">{{ money.convertAndFormat(item.total) }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tbody>
+            <tr>
+                <td colspan="3" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">Sous-total</span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">{{ money.convertAndFormat(order.itemsTotal) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">Frais de port</span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">{{ money.convertAndFormat(order.shippingTotal) }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">TVA normale (20%)</span></td>
+                <td rowspan="1" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px">{{ money.convertAndFormat(order.taxTotal) }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px"><strong>Total</strong></span></td>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px"><strong>{{ money.convertAndFormat(order.total) }}</strong></span></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="mcnDividerContent" style="min-width: 100%;border-top: 2px solid #EAEAEA;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+            <tr>
+                <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;"><span></span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="text-align:center;">
+        <strong>Faux stock ? Erreur de taille ou de coloris ?</strong>
+        <br>
+        N'hésitez pas à contacter le client pour trouver une solution avant d'annuler la commande.
+    </p>
+    
+    <p style="text-align:center;">
+        <strong>À vous de jouer !</strong>
+        <br>
+        Ce message ne s'autodétruira pas dans cinq secondes 😉
+    </p>
+{% endblock %}

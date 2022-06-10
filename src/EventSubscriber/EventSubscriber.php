@@ -529,7 +529,7 @@ class EventSubscriber implements EventSubscriberInterface
             {
                 $emails = explode(',', $email);//sépare les emails
                 $emails = array_map('trim', $emails);//retire les éventuels espaces
-                //$this->emailSender->send('click_and_collect', $emails, ['order' => $order, 'store' => $inStore]);
+                $this->emailSender->send('click_and_collect', $emails, ['order' => $order, 'store' => $inStore]);
             }
         }
     }
