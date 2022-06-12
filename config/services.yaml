@@ -423,3 +423,22 @@ services:
             - '@setono_sylius_feed.data_provider.product'
             - '@setono_sylius_feed.feed_context.google.shopping'
             - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
+
+    app.service.cartsguru:
+        class: App\Service\CartsGuruService
+        arguments:
+            - {'site_id': '%env(CARTS_GURU_SITE_ID)%', 'auth_key': '%env(CARTS_GURU_AUTH_KEY)%'}
+
+    App\EventListener\CartsGuruListener:
+        arguments:
+            - '@logger'
+            - '@translator'
+            - '@app.service.cartsguru'
+            - '@liip_imagine.cache.manager'
+            - '@router'
+            - '%env(BASE_URI)%'
+            - '%env(bool:CARTS_GURU_ACTIVE)%'
+        tags:
+            - { name: kernel.event_listener, event: sylius.order.post_create, method: onOrderPostCreate }
+            - { name: kernel.event_listener, event: sylius.order.post_update, method: onOrderPostUpdate }
+            - { name: kernel.event_listener, event: sylius.order_item.pre_remove, method: onOrderItemPreRemove }

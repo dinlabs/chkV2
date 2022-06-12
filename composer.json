@@ -22,6 +22,7 @@
         "bitbag/elasticsearch-plugin": "^2.0",
         "bitbag/mailchimp-plugin": "^1.2",
         "bitbag/wishlist-plugin": "^1.9",
+        "cartsguru/cartsguru": "^1.0",
         "cloudflare/sdk": "1.1.6",
         "cweagans/composer-patches": "^1.7",
         "odiseoteam/sylius-rbac-plugin": "^1.5",
