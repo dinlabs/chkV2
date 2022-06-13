@@ -27,7 +27,7 @@
 {% if customer.connections <= 0 %}
 <div id="welcomePop" class="popin hidden">
     <div class="popinside">
-        <button class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg></button>
+        <a href="{{ path('chk_ajax_hideonboard') }}" class="closePopin" alt="Fermer"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-close-alt"/></svg></a>
         <h2 class="popin-title">Bienvenue</h2>
         <div class="section">
             <div class="entete">
@@ -113,7 +113,7 @@
 
             $('#welcomePop').removeClass('hidden');//show pop
 
-            $('.actionBtns .closePop').on('click', function(e) {
+            $('#welcomePop .closePopin, .actionBtns .closePop').on('click', function(e) {
                 e.preventDefault();
 
                 var _ajaxCall = $(this).attr('href');
