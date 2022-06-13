@@ -46,6 +46,9 @@
     "bitbag/cms-plugin": {
         "version": "v3.0.8"
     },
+    "bitbag/coding-standard": {
+        "version": "v1.0.1"
+    },
     "bitbag/elasticsearch-plugin": {
         "version": "v1.7.3"
     },
@@ -58,11 +61,11 @@
             "ref": "e82b0c7d3beca9559de77494eb20bd7bb96c0f90"
         },
         "files": [
-            "config/routes/bitbag_sylius_mailchimp_plugin.yaml"
+            "./config/routes/bitbag_sylius_mailchimp_plugin.yaml"
         ]
     },
-    "cartsguru/cartsguru": {
-        "version": "1.0.0"
+    "bitbag/wishlist-plugin": {
+        "version": "v1.9.0"
     },
     "cloudflare/sdk": {
         "version": "1.1.6"
@@ -79,11 +82,14 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
+    "composer/pcre": {
+        "version": "1.0.1"
+    },
     "composer/semver": {
-        "version": "1.4.2"
+        "version": "3.2.7"
     },
     "composer/xdebug-handler": {
-        "version": "1.2.0"
+        "version": "3.0.1"
     },
     "container-interop/container-interop": {
         "version": "1.2.0"
@@ -221,13 +227,16 @@
         "version": "v1.1.0"
     },
     "friendsofphp/php-cs-fixer": {
-        "version": "2.2",
+        "version": "3.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "2.2",
-            "ref": "81dee417d2cc60cd1c9d6208dff2ec22a1103e93"
-        }
+            "version": "3.0",
+            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
+        },
+        "files": [
+            "./.php-cs-fixer.dist.php"
+        ]
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
@@ -304,9 +313,6 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
-    "jean85/pretty-package-versions": {
-        "version": "1.2"
-    },
     "jms/metadata": {
         "version": "1.6.0"
     },
@@ -337,11 +343,29 @@
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
     },
+    "knplabs/knp-snappy": {
+        "version": "v1.4.1"
+    },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        },
+        "files": [
+            "./config/packages/knp_snappy.yaml"
+        ]
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
     "laminas/laminas-eventmanager": {
         "version": "3.3.0"
+    },
+    "laminas/laminas-stdlib": {
+        "version": "3.7.1"
     },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.1.1"
@@ -433,6 +457,9 @@
     "myclabs/deep-copy": {
         "version": "1.8.1"
     },
+    "myclabs/php-enum": {
+        "version": "1.8.3"
+    },
     "namshi/jose": {
         "version": "7.2.3"
     },
@@ -445,20 +472,14 @@
             "ref": "5ef2976310e8f9621c1a722a73bfbe115c1559a3"
         }
     },
-    "nette/finder": {
-        "version": "v2.4.2"
-    },
-    "nette/robot-loader": {
-        "version": "v3.0.4"
-    },
-    "nette/utils": {
-        "version": "v2.5.2"
-    },
     "nikic/php-parser": {
         "version": "v4.10.4"
     },
     "nyholm/append-query-string": {
         "version": "0.1.1"
+    },
+    "nyholm/dsn": {
+        "version": "2.0.1"
     },
     "ocramius/package-versions": {
         "version": "1.3.0"
@@ -500,7 +521,7 @@
         "version": "7.3"
     },
     "php-cs-fixer/diff": {
-        "version": "v1.3.0"
+        "version": "v2.0.2"
     },
     "php-http/client-common": {
         "version": "1.7.0"
@@ -562,6 +583,9 @@
     "phpstan/phpstan-doctrine": {
         "version": "0.11.5"
     },
+    "phpstan/phpstan-strict-rules": {
+        "version": "0.12.11"
+    },
     "phpstan/phpstan-symfony": {
         "version": "0.10.1"
     },
@@ -616,9 +640,6 @@
     "psr/log": {
         "version": "1.0.2"
     },
-    "psr/simple-cache": {
-        "version": "1.0.1"
-    },
     "ralouphie/getallheaders": {
         "version": "2.0.5"
     },
@@ -666,6 +687,18 @@
     },
     "sebastian/version": {
         "version": "2.0.1"
+    },
+    "sensio/framework-extra-bundle": {
+        "version": "6.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
+        },
+        "files": [
+            "./config/packages/sensio_framework_extra.yaml"
+        ]
     },
     "sensiolabs/security-checker": {
         "version": "4.0",
@@ -757,11 +790,37 @@
     "sylius/grid-bundle": {
         "version": "v1.5.1"
     },
+    "sylius/invoicing-plugin": {
+        "version": "0.19",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.5",
+            "ref": "4720bdeb3db9f81932523a640184244cf75da7f0"
+        },
+        "files": [
+            "./config/packages/sylius_invoicing.yaml",
+            "./config/routes/sylius_invoicing.yaml"
+        ]
+    },
     "sylius/mailer-bundle": {
         "version": "v1.4.4"
     },
     "sylius/paypal-plugin": {
         "version": "v1.0.1"
+    },
+    "sylius/refund-plugin": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "0.4",
+            "ref": "a3f813f608c6f04bd7d0b4cefd73a96bf378c390"
+        },
+        "files": [
+            "./config/packages/sylius_refund.yaml",
+            "./config/routes/sylius_refund.yaml"
+        ]
     },
     "sylius/registry": {
         "version": "v1.4.1"
@@ -904,7 +963,7 @@
             "ref": "bbfc7e27257d3a3f12a6fb0a42540a42d9623a37"
         },
         "files": [
-            "config/packages/mailer.yaml"
+            "./config/packages/mailer.yaml"
         ]
     },
     "symfony/maker-bundle": {
@@ -972,9 +1031,6 @@
     },
     "symfony/polyfill-php56": {
         "version": "v1.17.1"
-    },
-    "symfony/polyfill-php70": {
-        "version": "v1.9.0"
     },
     "symfony/polyfill-php72": {
         "version": "v1.9.0"
@@ -1123,6 +1179,28 @@
             "ref": "6bdfa1a95f6b2e677ab985cd1af2eae35d62e0f6"
         }
     },
+    "symfony/webpack-encore-bundle": {
+        "version": "1.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.9",
+            "ref": "d2d1e09675fff3fa4193aa9950a7c39934524a25"
+        },
+        "files": [
+            "./assets/app.js",
+            "./assets/bootstrap.js",
+            "./assets/controllers.json",
+            "./assets/controllers/hello_controller.js",
+            "./assets/styles/app.css",
+            "./config/packages/assets.yaml",
+            "./config/packages/prod/webpack_encore.yaml",
+            "./config/packages/test/webpack_encore.yaml",
+            "./config/packages/webpack_encore.yaml",
+            "./package.json",
+            "./webpack.config.js"
+        ]
+    },
     "symfony/workflow": {
         "version": "5.4",
         "recipe": {
@@ -1132,35 +1210,14 @@
             "ref": "3b2f8ca32a07fcb00f899649053943fa3d8bbfb6"
         },
         "files": [
-            "config/packages/workflow.yaml"
+            "./config/packages/workflow.yaml"
         ]
     },
     "symfony/yaml": {
         "version": "v4.1.3"
     },
-    "symplify/autowire-array-parameter": {
-        "version": "8.3.23"
-    },
-    "symplify/coding-standard": {
-        "version": "v4.6.1"
-    },
-    "symplify/console-color-diff": {
-        "version": "8.3.23"
-    },
     "symplify/easy-coding-standard": {
         "version": "v4.6.1"
-    },
-    "symplify/package-builder": {
-        "version": "v4.6.1"
-    },
-    "symplify/set-config-resolver": {
-        "version": "v7.1.3"
-    },
-    "symplify/smart-file-system": {
-        "version": "v7.1.3"
-    },
-    "symplify/symplify-kernel": {
-        "version": "8.3.48"
     },
     "textalk/websocket": {
         "version": "1.3.1"
