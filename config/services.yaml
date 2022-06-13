@@ -273,7 +273,22 @@ services:
         arguments: ['@sylius.repository.product']
         tags:
             - { name: form.type }
+    # custom promotion rules
+    app.promotion_rule_checker.has_brand:
+        class: App\Promotion\Checker\Rule\HasBrandRuleChecker
+        tags:
+            - { name: sylius.promotion_rule_checker, type: has_brand, form_type: App\Form\Type\Action\HasBrandConfigurationType, label: Marques }
 
+    app.form.type.promotion_action.has_brand_configuration:
+        class: App\Form\Type\Action\HasBrandConfigurationType
+        arguments: ['@app.form.type.data_transformer.brands_to_codes']
+        tags:
+            - { name: form.type }
+
+    app.form.type.data_transformer.brands_to_codes:
+        class: App\Form\DataTransformer\BrandsToCodesTransformer
+        arguments:
+            - '@app.repository.brand'
 
     #ndY: Overrides
     sylius.available_product_option_values_resolver:

@@ -2,12 +2,14 @@
 
 namespace App\Controller\Chullanka;
 
+use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Parameter;
 use App\Entity\Product\Product;
 use App\Entity\Shipping\Shipment;
 use Cloudflare\API\Auth\APIKey as CFAPIKey;
 use Cloudflare\API\Adapter\Guzzle as CFGuzzle;
 use Cloudflare\API\Endpoints\Zones as CFZones;
+use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderShippingTransitions;
 use Sylius\Component\Shipping\ShipmentTransitions;
@@ -40,6 +42,47 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/ajax/brands/search", name="chk_admin_ajax_brand_by_name_phrase")
+     */
+    public function searchBrandByPhrase(Request $request, EntityManagerInterface $em)
+    {
+        $phrase = $request->get('phrase');
+
+        $brands = $em->getRepository(Brand::class)->findByPhrase($phrase);
+        $datas = [];
+
+        foreach ($brands as $brand) {
+            $datas[] = [
+                'id' => $brand->getId(),
+                'name' => $brand->getName(),
+                'code' => $brand->getCode()
+            ];
+        }
+
+        return new JsonResponse($datas);
+    }
+
+    /**
+     * @Route("/ajax/brands/code", name="chk_admin_ajax_brand_by_code")
+     */
+    public function searchBrandByCode(Request $request, EntityManagerInterface $em)
+    {
+        $code = $request->get('code');
+        $brand = $em->getRepository(Brand::class)->findOneByCode($code);
+
+        if ($brand === null) {
+            return new JsonResponse([]);
+        }
+
+        $data = [
+            'id' => $brand->getId(),
+            'name' => $brand->getName(),
+            'code' => $brand->getCode()
+        ];
+
+        return new JsonResponse($data);
+    }
 
     /**
      * @Route("/ordershipstate/{id}", name="chk_admin_change_order_ship_state")
