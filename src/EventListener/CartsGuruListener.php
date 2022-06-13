@@ -5,7 +5,6 @@ namespace App\EventListener;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderItem;
-use App\Overrides\SyliusFeedPlugin\FeedContext\ProductItemContext;
 use App\Service\CartsGuruService;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Psr\Log\LoggerInterface;
@@ -31,10 +30,12 @@ class CartsGuruListener
 
     private bool $cartsGuruActive;
 
+    private string $cartsGuruSiteId;
+
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator,
                                 CartsGuruService $cartsGuruService, CacheManager $cacheManager,
                                 UrlGeneratorInterface $router, string $baseUri,
-                                bool $cartsGuruActive)
+                                bool $cartsGuruActive, string $cartsGuruSiteId)
     {
         $this->logger = $logger;
         $this->translator = $translator;
@@ -43,6 +44,7 @@ class CartsGuruListener
         $this->router = $router;
         $this->baseUri = $baseUri;
         $this->cartsGuruActive = $cartsGuruActive;
+        $this->cartsGuruSiteId = $cartsGuruSiteId;
     }
 
     public function onOrderPostCreate(GenericEvent $event)
@@ -132,7 +134,7 @@ class CartsGuruListener
             }
 
             $data = [
-                'siteId' => 'test',
+                'siteId' => $this->cartsGuruSiteId,
                 'id' => $order->getId(),
                 'totalATI' => $order->getTotal() / 100,
                 'totalET' => $order->getItemsTotal() / 100,
@@ -179,9 +181,15 @@ class CartsGuruListener
 
             $responseInfo = 'Event Origin: '. $function. ', ';
             $responseInfo .= 'Body: '. json_encode($data). ', ';
-            $responseInfo .= 'Reponse: '. $response->decoded_response. ', ';
+            $responseInfo .= 'Response: '. $response->decoded_response. ', ';
+            $responseInfo .= 'Response Code:'. $response->info->http_code. ', ';
             $responseInfo .= 'Response Error: '. $response->error;
-            $this->logger->info($responseInfo);
+
+            if ($response->info->http_code === 200) {
+                $this->logger->info($responseInfo);
+            } else {
+                $this->logger->error($responseInfo);
+            }
         } catch (\Throwable $throwable) {
             $msg = "Error: {$throwable->getMessage()}, ";
             $msg .= "line: {$throwable->getLine()}, ";
