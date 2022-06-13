@@ -890,9 +890,9 @@ body.checkout { background:var(--bg1); }
 .checkout #getPickups .form input { width:100%; padding:.5em 1em; }
 
 .checkout #getPickups #pickupList { padding:1em 0; }
-.checkout #getPickups #pickupList .pickupElement { position:relative; margin-bottom:1em; }
+.checkout #getPickups #pickupList .pickupElement { position:relative; margin-bottom:1em; padding-bottom:5em; }
 .checkout #getPickups #pickupList .pickupElement .head { position:relative; margin-top:-1em; padding-bottom:1em; }
-.checkout #sylius-shipping-methods .pickupElement .head input[type='radio'] + label { position:absolute; right:0; top:0; }
+.checkout #sylius-shipping-methods .pickupElement .head input[type='radio'] + label.btn { margin-bottom:1em; }
 .checkout #sylius-shipping-methods .pickupElement .head input[type='radio']:checked + label.btn { background:var(--primary); }
 
 .checkout #getPickups #pickupList .pickupElement .fold { position:absolute; right:30px; bottom:30px; }
@@ -1302,6 +1302,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     .checkout .timeline li { min-width:160px; }
     .checkout #cartProducts .cartItem .inside { grid-template-columns:250px auto; gap:10px; }
     .checkout #getPickups .form { display:grid; grid-template-columns:3fr 1fr 2fr 1fr; }
+    .checkout #sylius-shipping-methods .pickupElement .head input[type='radio'] + label { position:absolute; right:0; top:0; }
 
     .customer .dashboard { column-count:2; }
     .customer .dashboard > * { display:inline-block; }
