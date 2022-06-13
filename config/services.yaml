@@ -448,6 +448,7 @@ services:
             - '@router'
             - '%env(BASE_URI)%'
             - '%env(bool:CARTS_GURU_ACTIVE)%'
+            - '%env(string:CARTS_GURU_SITE_ID)%'
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_create, method: onOrderPostCreate }
             - { name: kernel.event_listener, event: sylius.order.post_update, method: onOrderPostUpdate }

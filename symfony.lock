@@ -67,6 +67,9 @@
     "bitbag/wishlist-plugin": {
         "version": "v1.9.0"
     },
+    "cartsguru/cartsguru": {
+        "version": "1.0.0"
+    },
     "cloudflare/sdk": {
         "version": "1.1.6"
     },
