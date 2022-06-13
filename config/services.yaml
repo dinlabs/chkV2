@@ -424,10 +424,20 @@ services:
             - '@setono_sylius_feed.feed_context.google.shopping'
             - '@setono_sylius_feed.feed_context.google.shopping.product_item_in_stock'
 
+    # we set a custom CURL_TIMEOUT for Carts Guru
+    # cant use PHP CURL_TIMEOUT constant here so we use its value number 13
     app.service.cartsguru:
         class: App\Service\CartsGuruService
         arguments:
-            - {'site_id': '%env(CARTS_GURU_SITE_ID)%', 'auth_key': '%env(CARTS_GURU_AUTH_KEY)%'}
+            - {
+                'site_id': '%env(CARTS_GURU_SITE_ID)%',
+                'auth_key': '%env(CARTS_GURU_AUTH_KEY)%',
+                'api_options': {
+                    'curl_options': {
+                        13: '%env(int:CARTS_GURU_TIMEOUT)%'
+                    }
+                }
+              }
 
     App\EventListener\CartsGuruListener:
         arguments:
