@@ -144,7 +144,7 @@ class CartsGuruListener
                 'recoverUrl' => $this->baseUri. $this->router->generate('sylius_shop_cart_summary'),
                 'civility' => $this->getCustomerCivility($order->getCustomer()),
                 'lastname' => ($order->getCustomer()) ? $order->getCustomer()->getLastName() : '',
-                'firstname' => ($order->getCustomer()) ? $order->getCustomer()->getLastName() : '',
+                'firstname' => ($order->getCustomer()) ? $order->getCustomer()->getFirstName() : '',
                 'email' => ($order->getCustomer()) ? $order->getCustomer()->getEmail() : '',
                 'homePhoneNumber' => '',
                 'mobilePhoneNumber' => '',
