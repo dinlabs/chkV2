@@ -58,8 +58,12 @@
                 {% if form.brands is defined %}
                     {{ form_row(form.brands) }}
                 {% endif %}
-                {{ form_row(form.promotions) }}
-                {{ form_row(form.newness)}}
+                {% if hasPromotion %}
+                    {{ form_row(form.promotions) }}
+                {% endif %}
+                {% if hasNewness %}
+                    {{ form_row(form.newness)}}
+                {% endif %}
                 {{ form_row(form.attributes) }}
                 {% if form.options is defined %}
                     {{ form_row(form.options) }}

@@ -158,10 +158,22 @@ final class BrandController extends AbstractController
 
             $products = $shopProductsFinder->find($data);
 
+            // check if we have at least one promotion / one newness
+            $hasNewness = (count($shopProductsFinder->find(array_merge($data, ['new' => true, 'limit' => 1]))) > 0) ?
+                true :
+                false
+            ;
+            $hasPromotion = (count($shopProductsFinder->find(array_merge($data, ['promotion' => true, 'limit' => 1]))) > 0) ?
+                true :
+                false
+            ;
+
             return new Response($this->twig->render('chullanka/brand/view.html.twig', [
                 'brand' => $brand,
                 'form' => $form->createView(),
                 'products' => $products,
+                'hasNewness' => $hasNewness,
+                'hasPromotion' => $hasPromotion
             ]));
         }
         else throw $this->createNotFoundException();
