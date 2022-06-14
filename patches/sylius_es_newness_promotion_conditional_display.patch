@@ -1,0 +1,26 @@
+diff --git a/src/Controller/Action/Shop/ListProductsAction.php b/src/Controller/Action/Shop/ListProductsAction.php
+index 13aed37..d2a960f 100644
+--- a/src/Controller/Action/Shop/ListProductsAction.php
++++ b/src/Controller/Action/Shop/ListProductsAction.php
+@@ -81,10 +81,22 @@ final class ListProductsAction
+         $template = $request->get('template');
+         $products = $this->shopProductsFinder->find($data);
+ 
++        // check if we have at least one promotion / one newness
++            $hasNewness = (count($this->shopProductsFinder->find(array_merge($data, ['new' => true, 'limit' => 1]))) > 0) ? 
++            true :
++            false
++        ;
++        $hasPromotion = (count($this->shopProductsFinder->find(array_merge($data, ['promotion' => true, 'limit' => 1]))) > 0) ? 
++            true :
++            false
++        ;
++
+         return new Response($this->twig->render($template, [
+             'form' => $form->createView(),
+             'products' => $products,
+             'taxon' => $data['taxon'],
++            'hasNewness' => $hasNewness,
++            'hasPromotion' => $hasPromotion
+         ]));
+     }
