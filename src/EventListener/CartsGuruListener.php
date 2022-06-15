@@ -2,10 +2,12 @@
 
 namespace App\EventListener;
 
+use App\Entity\Chullanka\Parameter;
 use App\Entity\Customer\Customer;
 use App\Entity\Order\Order;
 use App\Entity\Order\OrderItem;
 use App\Service\CartsGuruService;
+use Doctrine\ORM\EntityManagerInterface;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\OrderCheckoutStates;
@@ -24,27 +26,28 @@ class CartsGuruListener
 
     private CacheManager $cacheManager;
 
-    private string $baseUri;
-
     private UrlGeneratorInterface $router;
+
+    private EntityManagerInterface $em;
+
+    private string $baseUri;
 
     private bool $cartsGuruActive;
 
-    private string $cartsGuruSiteId;
 
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator,
                                 CartsGuruService $cartsGuruService, CacheManager $cacheManager,
-                                UrlGeneratorInterface $router, string $baseUri,
-                                bool $cartsGuruActive, string $cartsGuruSiteId)
+                                UrlGeneratorInterface $router, EntityManagerInterface $em,
+                                string $baseUri, bool $cartsGuruActive)
     {
         $this->logger = $logger;
         $this->translator = $translator;
         $this->cartsGuruService = $cartsGuruService;
         $this->cacheManager = $cacheManager;
         $this->router = $router;
+        $this->em = $em;
         $this->baseUri = $baseUri;
         $this->cartsGuruActive = $cartsGuruActive;
-        $this->cartsGuruSiteId = $cartsGuruSiteId;
     }
 
     public function onOrderPostCreate(GenericEvent $event)
@@ -107,6 +110,12 @@ class CartsGuruListener
     {
         try {
             $isCart = ($order->getState() === OrderCheckoutStates::STATE_CART) ? true : false;
+            $siteId = $this->em->getRepository(Parameter::class)->getCartsGuruSiteId();
+
+            if ($siteId === null) {
+                $this->logger->info('CartsGuru SiteId is missing');
+                return;
+            }
 
             /** OrderItem $item */
             $items = [];
@@ -134,7 +143,7 @@ class CartsGuruListener
             }
 
             $data = [
-                'siteId' => $this->cartsGuruSiteId,
+                'siteId' => $siteId,
                 'id' => $order->getId(),
                 'totalATI' => $order->getTotal() / 100,
                 'totalET' => $order->getItemsTotal() / 100,
