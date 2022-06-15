@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\AdjustmentInterface;
+use Sylius\RefundPlugin\Entity\CreditMemo;
 
 class GinkoiaHelper
 {
@@ -77,14 +78,52 @@ class GinkoiaHelper
         }
         else $this->logger->error('Ginkoia :: Issue to generate file: ' . $filename);
     }
+
+    public function exportRefund(CreditMemo $creditMemo)
+    {
+        $order = $creditMemo->getOrder();
+
+        // création du XML
+        $this->doc = $this->xmlOrder($order, $creditMemo);
+        
+        $filename = 'GINK_' . $creditMemo->getIssuedAt()->format('YmdHis') . '.xml';
+        $file = $this->tmpDir . DIRECTORY_SEPARATOR . $filename;
+        if (file_exists($file)) { unlink ($file); }
+
+        if(file_put_contents($file, $this->doc->saveXML(), FILE_APPEND))
+        {
+            //envoyer le XML par FTP
+            $exportPath = $this->chkParameter('ginkoia-path-export');
+            $exportFile = $exportPath . DIRECTORY_SEPARATOR . $filename;
+            if(copy($file, $exportFile))
+            {
+                // change les droits
+                chmod($exportFile, 0664);
+                //chgrp($exportFile, 'ginkoia');// pas l'air de fonctionner !
+                
+                $this->logger->info('Ginkoia :: Le fichier XML de remboursement a été exporté : '.$exportPath);
+                
+                // We move the tmp file in a logfiles dir
+                if(!rename($file, $this->ginkoiaDir . DIRECTORY_SEPARATOR . basename($file)))
+                    $this->logger->error('Ginkoia :: ERROR : File "'.$file.'" not moved to chkfiles/ginkoia');
+            }
+            else
+            {
+                $this->logger->error('Ginkoia :: Le fichier XML n\a pas pu être copié dans : '.$exportPath);
+            }
+        }
+        else $this->logger->error('Ginkoia :: Issue to generate file: ' . $filename);
+    }
     
     /**
      * Generate XML node of an order
      * @param Order $order
      * @return DOMDocument
      */
-    private function xmlOrder(Order $order, int $coef = 1): \DOMDocument
+    private function xmlOrder(Order $order, $creditMemo = null): \DOMDocument
     {
+        $coef = is_null($creditMemo) ? 1 : -1;
+
         $this->doc = new \DOMDocument('1.0', 'UTF-8');
         $this->doc->xmlStandalone = true;
         $this->doc->formatOutput = true;
@@ -93,9 +132,6 @@ class GinkoiaHelper
         $realOrderId = $order->getNumber();
         $commandeId = $order->getId();
         $commandeDate = $order->getCheckoutCompletedAt()->format('Y-m-d H:i:s');
-
-        //todo:
-        $creditmemo = new \stdClass();
 
         // get further order infos
         $further = $order->getFurther();
@@ -146,24 +182,13 @@ class GinkoiaHelper
         }
         
         // si remboursement
-        /*if($coef < 0)
-        {
-            // on prend le dernier (au cas où il y en aurait eu avant)
-            $creditmemo = $order->getCreditmemosCollection()->getLastItem();
-            $refundArray = array();
-            foreach($creditmemo->getAllItems() as $item)
-            {
-                //$refundArray[] = $item->getProductId();
-                if($item->getPrice() != 0)
-                    $refundArray[] = $item->getSku();
-            }
-            
-            $realOrderId .= '-' . $creditmemo->getIncrementId() . '-'. count($refundArray);
-            
-            $commandeId = $creditmemo->getId();
-            $commandeDate = $creditmemo->getCreatedAtStoreDate()->toString('yyyy-MM-dd HH:mm:ss');
-            $dateReglement = $creditmemo->getCreatedAtStoreDate()->toString('yyyy-MM-dd HH:mm:ss');
-        }*/
+        if($coef < 0)
+        {   
+            $realOrderId = $creditMemo->getNumber();
+            $commandeId = $creditMemo->getId();
+            $commandeDate = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
+            $dateReglement = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
+        }
         
         // Order
         $orderNode = $this->doc->createElement('Commande');
@@ -289,31 +314,46 @@ class GinkoiaHelper
 
         // Lignes produits
         $lignesNode = $this->doc->createElement('Lignes');
-        $orderedItems = $order->getItems();
-        foreach($orderedItems as $item)
-        {
-            $variant = $item->getVariant();
 
-            if($itemFurther = $item->getFurther())
+        if($coef > 0)
+        {
+            $orderedItems = $order->getItems();
+            foreach($orderedItems as $item)
             {
-                if(isset($itemFurther['pack']) && !empty($itemFurther['pack']))
+                $variant = $item->getVariant();
+                
+                if($itemFurther = $item->getFurther())
                 {
-                    // récupération des produits du pack
-                    foreach($itemFurther['pack'] as $ppvid => $unitPrice)
+                    if(isset($itemFurther['pack']) && !empty($itemFurther['pack']))
                     {
-                        $ppVariant = $this->entityManager->getRepository(ProductVariant::class)->find($ppvid);
-                        if($ligneNode = $this->getItemNode($unitPrice, $item->getQuantity(), $ppVariant))
+                        // récupération des produits du pack
+                        foreach($itemFurther['pack'] as $ppvid => $unitPrice)
                         {
-                            $lignesNode->appendChild($ligneNode);
+                            $ppVariant = $this->entityManager->getRepository(ProductVariant::class)->find($ppvid);
+                            if($ligneNode = $this->getItemNode($unitPrice, $item->getQuantity(), $ppVariant))
+                            {
+                                $lignesNode->appendChild($ligneNode);
+                            }
                         }
+                        continue;//on ne prend pas en compte les infos du pack lui-même
                     }
-                    continue;//on ne prend pas en compte les infos du pack lui-même
+                }
+                
+                if($ligneNode = $this->getItemNode($item->getUnitPrice(), $item->getQuantity(), $variant))
+                {
+                    $lignesNode->appendChild($ligneNode);
                 }
             }
-            
-            if($ligneNode = $this->getItemNode($item->getUnitPrice(), $item->getQuantity(), $variant))
+        }
+        else
+        {
+            $refundItems = $creditMemo->getLineItems();
+            foreach($refundItems as $item)
             {
-                $lignesNode->appendChild($ligneNode);
+                if($ligneNode = $this->getRefundItemNode($item))
+                {
+                    $lignesNode->appendChild($ligneNode);
+                }
             }
         }
 
@@ -485,19 +525,23 @@ class GinkoiaHelper
         
         
         // Fin
-        $taxAmount = .2;
-        //$shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
-        $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
-        $shipping = $shipInclTax / (1 + $taxAmount);
-        $shipTVA = $shipInclTax - $shipping;
-        
-        $totHT += $shipping;
-        $totTVA += $shipTVA;
-        $totTTC += $shipInclTax;
+        if($coef > 1)
+        {
+            $taxAmount = .2;
+            //$shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
+            $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
+            $shipping = $shipInclTax / (1 + $taxAmount);
+            $shipTVA = $shipInclTax - $shipping;
+            
+            $totHT += $shipping;
+            $totTVA += $shipTVA;
+            $totTTC += $shipInclTax;
+            
+            $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
+        }
         
         $netPayer = ($coef > 0) ? (float)$payment->getAmount()/100 : $totTTC;
         
-        $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
         $orderNode->appendChild($this->addKeyVal('TotalHT', number_format($totHT, 2, '.', '')));
         $orderNode->appendChild($this->addKeyVal('MontantTVA', number_format($totTVA, 2, '.', '')));
         $orderNode->appendChild($this->addKeyVal('TotalTTC', number_format($totTTC, 2, '.', '')));
@@ -546,6 +590,49 @@ class GinkoiaHelper
             $ligneNode->appendChild($this->addKeyVal('Code', $variant->getCode()));
             $ligneNode->appendChild($this->addKeyVal('CodeEAN', ''));
             $ligneNode->appendChild($this->addKeyVal('Designation', $variant->getName()));
+            $ligneNode->appendChild($this->addKeyVal('PUBrutHT', number_format($valPUBrutHT, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('PUBrutTTC', number_format($valPUBrutTTC, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('PUHT', number_format($valPUHT, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('PUTTC', number_format($valPUTTC, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('TxTva', number_format($valTxTva, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('Qte', $qty));
+            $ligneNode->appendChild($this->addKeyVal('PXHT', number_format($valPXHT, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('PXTTC', number_format($valPXTTC, 2, '.', '')));
+            $ligneNode->appendChild($this->addKeyVal('Fidelite', 0));
+        
+        
+        // transformation en chaine de caractères
+        // pour utiliser en tant que clé de tableau
+        $valTxTva = (string)$valTxTva;
+        
+        // totalHT et totalTTC par taux de TVA
+        if(!isset($this->totaux[ $valTxTva ]))
+        {
+            $this->totaux[ $valTxTva ] = [
+                'ht' => 0,
+                'ttc' => 0
+            ];
+        }
+        $this->totaux[ $valTxTva ]['ht'] += $valPXHT;
+        $this->totaux[ $valTxTva ]['ttc'] += $valPXTTC;
+
+        return $ligneNode;
+    }
+
+    private function getRefundItemNode($lineItem): \DOMElement
+    {
+        $valPUTTC = $valPUBrutTTC = $lineItem->unitGrossPrice() / 100;//Sylius enregistre les prix en centimes
+        $valPUHT = $valPUBrutHT = $lineItem->unitNetPrice() / 100;
+        $valPXTTC = ($lineItem->grossValue() / 100) * -1;
+        $valPXHT = ($lineItem->netValue() / 100) * -1;
+        $qty = $lineItem->quantity() * -1;
+        $valTxTva = (float)$lineItem->taxRate();
+        
+        $ligneNode = $this->doc->createElement('Ligne');
+            $ligneNode->appendChild($this->addKeyVal('TypeLigne', 'Ligne'));
+            $ligneNode->appendChild($this->addKeyVal('Code', ''));
+            $ligneNode->appendChild($this->addKeyVal('CodeEAN', ''));
+            $ligneNode->appendChild($this->addKeyVal('Designation', $lineItem->name()));
             $ligneNode->appendChild($this->addKeyVal('PUBrutHT', number_format($valPUBrutHT, 2, '.', '')));
             $ligneNode->appendChild($this->addKeyVal('PUBrutTTC', number_format($valPUBrutTTC, 2, '.', '')));
             $ligneNode->appendChild($this->addKeyVal('PUHT', number_format($valPUHT, 2, '.', '')));

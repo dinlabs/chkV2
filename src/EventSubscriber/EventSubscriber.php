@@ -14,6 +14,7 @@ use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\RefundPlugin\Event\CreditMemoGenerated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -67,6 +68,10 @@ class EventSubscriber implements EventSubscriberInterface
             'sylius.order_item.pre_remove' => 'onSyliusOrderItemRemove',
             'sylius.order.post_select_shipping' => 'onSyliusOrderPostSelectShipping',
             'sylius.order.post_complete' => 'onSyliusOrderPostComplete',
+            
+            CreditMemoGenerated::class => 'onSyliusRefundCreditMemoPostCreate',
+            //'sylius_refund.credit_memo.pre_create' => 'onSyliusRefundCreditMemoPreCreate',
+            //'sylius_refund.credit_memo.post_create' => 'onSyliusRefundCreditMemoPostCreate',
 
             'app.brand.pre_create' => 'onAppBrandPreCreUpdate',
             'app.brand.pre_update' => 'onAppBrandPreCreUpdate',
@@ -532,6 +537,22 @@ class EventSubscriber implements EventSubscriberInterface
                 $this->emailSender->send('click_and_collect', $emails, ['order' => $order, 'store' => $inStore]);
             }
         }
+    }
+
+    public function onSyliusRefundCreditMemoPreCreate(GenericEvent $event)
+    {
+        error_log("Credit memo Precreate");
+        $creditMemo = $event->getSubject();
+        error_log(" ID : ".$creditMemo->getId());
+        //$this->ginkoiaHelper->exportRefund($creditMemo);
+    }
+    public function onSyliusRefundCreditMemoPostCreate(GenericEvent $event)
+    {
+        $this->logger->info('onSyliusRefundCreditMemoPostCreate');
+        error_log("Credit memo postCreate");
+        $creditMemo = $event->getSubject();
+        error_log(" ID : ".$creditMemo->getId());
+        $this->ginkoiaHelper->exportRefund($creditMemo);
     }
 
 
