@@ -9,9 +9,9 @@
             {% if block.isTestblock %}
             {% include '@SyliusShop/Block/test_block.html.twig' %}
             {% else %}
-                <div style="position:relative;">
+                <div class="cmsBlock">
                     {% if block.name and block.link %}
-                    <a href="{{ block.link }}" style="position:absolute; left:1em; top:1em;">{{ block.name }}</a>
+                    <a href="{{ block.link }}" class="link">{{ block.name }}</a>
                     {% endif %}
                     
                     {{ bitbag_cms_render_content(block) }}

@@ -6,7 +6,13 @@
     <div class="glider-contain">
         <div class="glider">
             {% for block in blocks %}
-                {{ bitbag_cms_render_content(block) }}
+                <div class="cmsBlock">
+                    {% if block.name and block.link %}
+                    <a href="{{ block.link }}" class="link">{{ block.name }}</a>
+                    {% endif %}
+                    
+                    {{ bitbag_cms_render_content(block) }}
+                </div>
             {% endfor %}
         </div>
         <div role="tablist" class="dots"></div>

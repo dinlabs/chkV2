@@ -20,11 +20,21 @@
             </div>
         </div>
         {% else %}
-        <div>{{ bitbag_cms_render_content(block) }}</div>
+        <div class="cmsBlock">
+            {% if block.name and block.link %}
+            <a href="{{ block.link }}" class="link">{{ block.name }}</a>
+            {% endif %}
+            
+            {{ bitbag_cms_render_content(block) }}
+        </div>
         {% endif %}
     </div>
     {% else %}
-    <div class="inside">
+    <div class="inside cmsBlock">
+        {% if block.name and block.link %}
+        <a href="{{ block.link }}" class="link">{{ block.name }}</a>
+        {% endif %}
+        
         {{ bitbag_cms_render_content(block) }}
     </div>
     {% endif %}

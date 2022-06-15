@@ -62,6 +62,16 @@ ul.list li::before { content:''; position:absolute; left:0; top:5px; background:
 .btnCall .pichulli { position:absolute; top:-10px; left:-20px; }
 .btnCall strong { text-transform:uppercase; color:#FFF; }
 
+.style-grid .ui.table thead th { background:var(--primary) !important; color:var(--bg0); text-transform:uppercase; }
+.style-grid .ui.celled.table tr td, .style-grid .ui.celled.table tr th { border:none; }
+.style-grid .ui.table thead th a { color:var(--bg0); text-decoration:none; }
+.style-grid .ui.table thead th:hover { color:var(--bg0); }
+.style-grid .ui.sortable.table thead th.sorted { color:var(--bg0); }
+.style-grid .ui.label { background:none !important; color:var(--default) !important; }
+.style-grid .ui.label .icon { display:none; }
+.style-grid .ui.buttons .labeled { background:none; padding-left:1.5em; }
+.style-grid .ui.buttons .labeled .icon { display:none; }
+
 .popin { position:fixed; top:0; left:0; bottom:0; right:0; width:100vw; height:100vh; display:grid; place-items:center; opacity:1; z-index:9999; }
 .popin::before { position:absolute; content: ''; top: 0; left: 0; background:rgba(0,0,0,.5); width:100%; height:100%; }
 .popin:not(.hidden) { transition:opacity 500ms ease-in-out; }
@@ -857,8 +867,8 @@ body.checkout { background:var(--bg1); }
 .checkout.cart .getAdvice .btnCall { background:var(--default); }
 
 .checkout form input[type='text'], .checkout form input[type='email'], .checkout form input[type='password'], .checkout form select { border:2px solid var(--default) !important; padding:.5em 2em; }
-.checkout #sylius-billing-address { padding-bottom:1em; }
-.checkout #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em; }
+.checkout #sylius_checkout_address #sylius-billing-address { padding-bottom:1em; }
+.checkout #sylius_checkout_address #sylius-shipping-address { background:var(--bg3); margin:1em -1em; padding:1em; }
 
 .checkout .ui.fluid.dropdown { background:var(--primary) !important; color: #fff !important; }
 .checkout .ui.fluid.dropdown > .text, .checkout .ui.active.search.dropdown input.search, .checkout .ui.active.search.dropdown input.search:focus + .text { color: #fff !important; }
@@ -1036,6 +1046,22 @@ body.customer { background:var(--bg1); }
 .customer #welcomePop .actionBtns .btn { padding:1em 2.5em; }
 
 
+.ui.vertical.menu.fluid { background:var(--bg0) url(../img/ico-montagne-chull.png) no-repeat right 1em; padding:1em; }
+.ui.vertical.menu .item { border-radius:5px; padding:.5em; margin:1em 0; }
+.ui.vertical.menu a.item:hover { background:#F1F1F1; color:var(--primary); }
+.ui.vertical.menu .item::before { content:none; }
+.ui.vertical.menu .item > i.icon { display:none; }
+
+.customer h1.ui.header { text-transform:capitalize; }
+.customer h1.ui.header .sub.header { font-style:italic; }
+.customer .ui.form input, .customer .ui.form select { background-color:#eceaeb; border:none; }
+.customer .ui.form .ui.primary.button { text-transform:uppercase; }
+.customer #sylius-default-address address, .customer #sylius-addresses .address address { background:#eceaeb; border-radius:5px; padding:.5em; margin-bottom:.5em; }
+.customer #sylius-default-address .buttons, .customer #sylius-addresses .address .buttons { display:grid; grid-template-columns:1fr 1fr; gap:50px; }
+.customer #sylius-default-address .buttons .button, .customer #sylius-addresses .address .buttons .button { border-radius:5px; background:var(--primary); padding-left: 1.5em !important; color:var(--bg0); }
+.customer #sylius-default-address .buttons .button .icon, .customer #sylius-addresses .address .buttons .button .icon { display:none; }
+
+
 /* MAGASINS */
 #stores .framap { display:flex; justify-content:center; gap:2em; flex-wrap:wrap; }
 
@@ -1148,6 +1174,8 @@ body.customer { background:var(--bg1); }
 
 
 /* WYSIWYG */
+.cmsBlock { position:relative; }
+.cmsBlock .link { position:absolute; left:1em; top:1em; color:var(--default); }
 .wysiwyg h2 { padding-bottom:1em; }
 .wysiwyg p { padding-bottom:1.5em; }
 .wysiwyg ul, .wysiwyg ol { padding:0 0 .5em .5em; }
