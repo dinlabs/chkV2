@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Document;
 use Elastica\Index;
 use FOS\ElasticaBundle\Event\PostTransformEvent;
-use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Product\Model\ProductOptionInterface;
 
 final class OptionTaxonsBuilder extends AbstractBuilder
 {
@@ -49,32 +49,32 @@ final class OptionTaxonsBuilder extends AbstractBuilder
     {
         $documentAttribute = $event->getObject();
 
-        if (!$documentAttribute instanceof ProductInterface
+        if (!$documentAttribute instanceof ProductOptionInterface
             || in_array($documentAttribute->getCode(), $this->excludedAttributes)
         ) {
             return;
         }
 
-        foreach ($documentAttribute->getOptions() as $option) {
-            $taxons = $this->taxonRepository->getTaxonsByOptionViaProduct($option);
-            $optionId = (string) $option->getId();
-        
-            foreach ($taxons as $taxon) {
-                $taxonCodes[] = str_replace('-', '', $taxon->getCode());
-            }
+        $taxons = $this->taxonRepository->getTaxonsByOptionViaProduct($documentAttribute);
+        $optionId = (string) $documentAttribute->getId();
+        $taxonCodes = [];
 
-            $brands = $this->brandRepository->getBrandsByOptionViaProduct($option);
-            $brandCodes = [];
-            foreach($brands as $brand) {
-                $brandCodes[] = $brand->getEscode();
-            }
-
-            $this->elasticaIndexBitbagOptionTaxons->addDocument(
-                new Document($optionId, [
-                    'option_taxons' => $taxonCodes,
-                    'option_brands' => $brandCodes
-                ])
-            );
+        foreach ($taxons as $taxon) {
+            $taxonCodes[] = str_replace('-', '', $taxon->getCode());
         }
+
+        $brands = $this->brandRepository->getBrandsByOptionViaProduct($documentAttribute);
+        $brandCodes = [];
+
+        foreach($brands as $brand) {
+            $brandCodes[] = $brand->getEscode();
+        }
+
+        $this->elasticaIndexBitbagOptionTaxons->addDocument(
+            new Document($optionId, [
+                $this->taxonsProperty => $taxonCodes,
+                'option_brands' => $brandCodes
+            ])
+        );
     }
 }
