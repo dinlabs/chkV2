@@ -41,6 +41,7 @@ use Sylius\Component\Core\OrderShippingTransitions;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Order\Context\CartContextInterface;
 use Sylius\Component\Shipping\ShipmentTransitions;
+use Sylius\RefundPlugin\Entity\CreditMemo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -88,6 +89,24 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
     {
+        //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
+        //dd($order);
+
+        /*$creditMemos = $this->container->get('doctrine')->getRepository(CreditMemo::class)->findAll();
+        foreach($creditMemos as $creditMemo)
+        {
+            dd($creditMemo);
+        }*/
+
+        /*$creditMemos = $this->container->get('doctrine')->getRepository(CreditMemo::class)->findByOrderId((string)$order->getId());
+        foreach($creditMemos as $creditMemo)
+        {
+            $ginkoiaHelper->exportRefund($creditMemo);
+            dd($creditMemo);
+
+            //$items = $creditMemo->getLineItems();
+        }*/
+
 
         //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(44);
         /*return $this->render('@SyliusShop/Order/thankYou.html.twig', [
@@ -852,8 +871,31 @@ final class DefaultController extends AbstractController
                     }
                 }
                 
-                if($successPay == count($infos))
+                // s'il n'y a pas autant de SUCCESS que de méthodes de paiement...
+                if($successPay < count($infos))
                 {
+                    foreach($infos as $return)
+                    {
+                        if($return->status && ($return->status->state == 'SUCCESS'))
+                        {
+                            if($return->status->action == 'AUTHORIZE')
+                            {
+                                //on annule la transation 
+                                $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
+                            }
+
+                            if($return->status->action == 'CHARGE')
+                            {
+                                //on rembourse la transaction
+                                $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
+                            }
+                            error_log(print_r($_return, true));
+                        }
+                    }
+                }
+                else
+                {
+                    // sinon c'est bon !
                     $_finalNote = 'Paiement ';
                     if(count($notes) > 1) $_finalNote .= "Mixte ";
                     $_finalNote .= "avec \n";

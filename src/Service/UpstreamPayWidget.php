@@ -145,6 +145,48 @@ class UpstreamPayWidget
         return false;
     }
 
+    public function cancelOrRefund($infos, $action)
+    {
+        $transactionId = $infos->transaction_id;
+        $amount = $infos->plugin_result->amount;
+
+        $cancelUrl = $this->upstreampay_base_url . $this->entity_id . '/transactions/' . $transactionId . '/' . $action;
+        $ch = curl_init($cancelUrl);
+        $customHeaders = [
+            'Content-Type: application/json',
+            'x-api-key: '.$this->api_key,
+            'Authorization: Bearer '.$this->getToken()
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
+        
+        $data = [
+            'amount' => $amount,
+            'order' => [
+                'amount' => $amount,
+                'currency_code' => 'EUR'
+            ]
+        ];
+        $data = json_encode($data);
+        error_log($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        
+        $json_response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        error_log("http_code : $http_code");
+        curl_close($ch);
+        
+        $response = json_decode($json_response);
+        if(isset($response->id))
+        {
+            return $json_response;
+        }
+        else error_log($json_response);
+
+        return;
+    }
+
     public function getFormattedData($order)
     {
         $data = [];
