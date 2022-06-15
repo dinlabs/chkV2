@@ -31,6 +31,7 @@ return [
     League\FlysystemBundle\FlysystemBundle::class => ['all' => true],
     Setono\DoctrineORMBatcherBundle\SetonoDoctrineORMBatcherBundle::class => ['all' => true],
     Setono\SyliusFeedPlugin\SetonoSyliusFeedPlugin::class => ['all' => true],
+    Setono\SyliusRedirectPlugin\SetonoSyliusRedirectPlugin::class => ['all' => true],
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
     winzou\Bundle\StateMachineBundle\winzouStateMachineBundle::class => ['all' => true],
     Sonata\BlockBundle\SonataBlockBundle::class => ['all' => true],
