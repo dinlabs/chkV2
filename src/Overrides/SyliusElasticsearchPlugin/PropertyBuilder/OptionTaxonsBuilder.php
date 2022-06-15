@@ -9,11 +9,9 @@ use BitBag\SyliusElasticsearchPlugin\PropertyBuilder\AbstractBuilder;
 use BitBag\SyliusElasticsearchPlugin\Repository\TaxonRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Elastica\Document;
-use Elastica\Exception\NotFoundException;
 use Elastica\Index;
 use FOS\ElasticaBundle\Event\PostTransformEvent;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Product\Model\ProductOptionInterface;
 
 final class OptionTaxonsBuilder extends AbstractBuilder
 {
@@ -29,16 +27,14 @@ final class OptionTaxonsBuilder extends AbstractBuilder
     /** @var BrandRepository */
     protected $brandRepository;
 
-    private EntityManagerInterface $em;
-
     private $elasticaIndexBitbagOptionTaxons;
 
     public function __construct(
         TaxonRepositoryInterface $taxonRepository,
         BrandRepository $brandRepository,
         EntityManagerInterface $em,
+        Index $elasticaIndexBitbagOptionTaxons,
         string $taxonsProperty = 'option_taxons',
-        $elasticaIndexBitbagOptionTaxons,
         array $excludedAttributes = [],
     ) {
         $this->taxonRepository = $taxonRepository;

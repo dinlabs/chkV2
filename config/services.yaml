@@ -454,8 +454,7 @@ services:
         class: App\Service\CartsGuruService
         arguments:
             - {
-                'site_id': '%env(CARTS_GURU_SITE_ID)%',
-                'auth_key': '%env(CARTS_GURU_AUTH_KEY)%',
+                'entity_manager': '@doctrine.orm.entity_manager',
                 'api_options': {
                     'curl_options': {
                         13: '%env(int:CARTS_GURU_TIMEOUT)%'
@@ -470,9 +469,9 @@ services:
             - '@app.service.cartsguru'
             - '@liip_imagine.cache.manager'
             - '@router'
+            - '@doctrine.orm.entity_manager'
             - '%env(BASE_URI)%'
             - '%env(bool:CARTS_GURU_ACTIVE)%'
-            - '%env(string:CARTS_GURU_SITE_ID)%'
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_create, method: onOrderPostCreate }
             - { name: kernel.event_listener, event: sylius.order.post_update, method: onOrderPostUpdate }

@@ -31,6 +31,41 @@ class ParameterRepository extends EntityRepository
         return is_null($result) ? null : $result->getValue();
     }
 
+    public function getCartsGuruAuths()
+    {
+        $slugs = [
+            'cartsguru-site-id',
+            'cartsguru-auth-key'
+        ];
+
+        $result = $this->createQueryBuilder('p')
+            ->andWhere('p.slug IN (:slugs)')
+            ->setParameter('slugs', $slugs)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        return array_column($result, 'value', 'slug');
+    }
+
+    public function getCartsGuruSiteId()
+    {
+        try {
+            $slug = 'cartsguru-site-id';
+            $result = $this->createQueryBuilder('p')
+                ->select('p.value')
+                ->andWhere('p.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->getQuery()
+                ->getSingleScalarResult()
+            ;
+
+            return $result;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     // /**
     //  * @return Parameter[] Returns an array of Parameter objects
     //  */
