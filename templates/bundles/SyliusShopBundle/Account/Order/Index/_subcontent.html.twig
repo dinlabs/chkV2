@@ -1,7 +1,10 @@
 {% if app.user and app.user.customer and app.user.customer.historicOrders %}
-    <div style="padding:1em 0; border:2px dashed; border-width:2px 0;">
+    <div style="padding:1em 0; border:2px dashed; border-width:2px 0; margin-bottom:1em;">
         <p><strong>Retrouvez vos anciennes commandes passées directement en magasin Chullanka ou sur le site Approach Outdoor</strong> <a href="{{ path('chk_historic_orders') }}">en cliquant ici</a></p>
     </div>
 {% endif %}
 
-{{ sylius_grid_render(resources, '@SyliusShop/Grid/_default.html.twig') }}
+<div class="style-grid">
+    {{ sylius_grid_render(resources, '@SyliusShop/Grid/_default.html.twig') }}
+</div>
+    

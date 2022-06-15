@@ -15,5 +15,10 @@
 {% set state = '' %}
 {% for shipment in order.shipments %}{% set state = shipment.state %}{% endfor %}
 {% if state and state == 'shipped' %}
-<p style="padding:2em; text-align:center;"><a href="{{ path('rma_ask_return', {'order_id': order.id}) }}">Retourner un article</a></p>
+<div class="ui segment">
+    <p><strong>Vous souhaitez nous retourner un des produits de votre commmande ? Effectuez une demande en cliquant sur le bouton ci-dessous</strong></p>
+    <p>&nbsp;</p>
+    <a href="{{ path('rma_ask_return', {'order_id': order.id}) }}" class="btn primary">Faire une demande de retour produit</a>
+</div>
+<br>
 {% endif %}

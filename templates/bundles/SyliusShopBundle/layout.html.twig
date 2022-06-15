@@ -40,6 +40,10 @@
     {% endif %}
 {% elseif _controller == 'sylius.controller.customer' %}
     {% set body_class = 'customer' %}
+{% elseif _controller == 'sylius.controller.shop_user' %}
+    {% set body_class = 'customer' %}
+{% elseif _controller == 'sylius.controller.address' %}
+    {% set body_class = 'customer' %}
 {% endif %}
 
 <body {% block bodyattr %}{% endblock %}{% if body_class %}class="{{ body_class }}"{% endif %}>
