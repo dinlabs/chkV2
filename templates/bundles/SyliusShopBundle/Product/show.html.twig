@@ -76,9 +76,6 @@
 </div>
 {% endif %}
 
-<div id="{{ t2scID }}-1200-2"></div>
-{#<div id="{{ t2scID }}-1200-17"></div>#}
-
 <div id="productContent" class="autoMargin">
     {#% set chulli_test_date = product.getAttributeByCodeAndLocale('chulli_test_date', configuration.request.locale) %#}
     {% if product.chulltest and product.chulltest.date and product.chulltest.description %}
@@ -234,6 +231,9 @@
         </div>
     </div>
 </div>
+
+<div id="{{ t2scID }}-1200-2"></div>
+{#<div id="{{ t2scID }}-1200-17"></div>#}
 
 <div id="panierPop" class="popin hidden" data-url="{{ path('chk_ajax_popaddtocart') }}">
     <div class="popinside">
