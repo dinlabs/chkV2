@@ -77,6 +77,22 @@ class BrandRepository extends EntityRepository
         ;
     }
 
+    public function getBrandsByOptionViaProduct($option): array
+    {
+        return $this
+            ->createQueryBuilder('b')
+            ->distinct(true)
+            ->select('b')
+            ->leftJoin(Product::class, 'p', Join::WITH, 'b=p.brand')
+            ->join('p.variants', 'v')
+            ->join('v.optionValues', 'ov')
+            ->where('ov.option = :option')
+            ->setParameter(':option', $option)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Brand[] Returns an array of Brand objects
     //  */

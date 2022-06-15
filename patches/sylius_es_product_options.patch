@@ -1,0 +1,67 @@
+diff --git a/src/Form/Type/ProductOptionsFilterType.php b/src/Form/Type/ProductOptionsFilterType.php
+index 5bc9f07..bbed3ba 100644
+--- a/src/Form/Type/ProductOptionsFilterType.php
++++ b/src/Form/Type/ProductOptionsFilterType.php
+@@ -40,17 +40,19 @@ final class ProductOptionsFilterType extends AbstractFilterType
+     public function buildForm(FormBuilderInterface $builder, array $options): void
+     {
+         foreach ($this->productOptionsContext->getOptions() as $productOption) {
++
+             $name = $this->optionNameResolver->resolvePropertyName($productOption->getCode());
+-            $choices = $this->productOptionsMapper->mapToChoices($productOption);
+-            $choices = array_unique($choices);
+-
+-            $builder->add($name, ChoiceType::class, [
+-                'label' => $productOption->getName(),
+-                'required' => false,
+-                'multiple' => true,
+-                'expanded' => true,
+-                'choices' => $choices,
+-            ]);
++            $choices = $this->productOptionsContext->getOptionValues($productOption);
++
++            if (count($choices) > 0) {
++                $builder->add($name, ChoiceType::class, [
++                    'label' => $productOption->getName(),
++                    'required' => false,
++                    'multiple' => true,
++                    'expanded' => true,
++                    'choices' => $choices,
++                ]);
++            }
+         }
+     }
+ }
+diff --git a/src/Repository/TaxonRepository.php b/src/Repository/TaxonRepository.php
+index 594be95..50edacc 100644
+--- a/src/Repository/TaxonRepository.php
++++ b/src/Repository/TaxonRepository.php
+@@ -64,4 +64,28 @@ class TaxonRepository implements TaxonRepositoryInterface
+             ->getResult()
+         ;
+     }
++
++    public function getTaxonsByOptionViaProduct($option): array
++    {
++        return $this->baseTaxonRepository
++            ->createQueryBuilder('t')
++            ->distinct(true)
++            ->select('t')
++            ->leftJoin($this->productTaxonEntityClass, 'pt', Join::WITH, 'pt.taxon = t.id')
++            ->where(
++                'pt.product IN(' .
++                $this
++                    ->productRepository->createQueryBuilder('p')
++                    ->join('p.variants', 'v')
++                    ->join('v.optionValues', 'ov')
++                    ->where('ov.option = :option')
++                    ->getQuery()
++                    ->getDQL()
++                . ')'
++            )
++            ->setParameter(':option', $option)
++            ->getQuery()
++            ->getResult()
++        ;
++    }
+ }

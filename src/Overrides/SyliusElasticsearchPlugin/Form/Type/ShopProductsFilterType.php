@@ -8,6 +8,7 @@ use App\Overrides\SyliusElasticsearchPlugin\Form\Type\ProductAvailabilitiesFilte
 use BitBag\SyliusElasticsearchPlugin\Form\Type\AbstractFilterType;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\ProductAttributesFilterType;
 use BitBag\SyliusElasticsearchPlugin\Form\Type\PriceFilterType;
+use BitBag\SyliusElasticsearchPlugin\Form\Type\ProductOptionsFilterType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 final class ShopProductsFilterType extends AbstractFilterType
@@ -24,7 +25,7 @@ final class ShopProductsFilterType extends AbstractFilterType
     {
         $builder
             //->add($this->namePropertyPrefix, NameFilterType::class)
-            //->add('options', ProductOptionsFilterType::class, ['required' => false, 'label' => false])
+            ->add('options', ProductOptionsFilterType::class, ['required' => false, 'label' => false])
             ->add('availabilities', ProductAvailabilitiesFilterType::class,  ['required' => false, 'label' => false])
             ->add('promotions', ProductPromotionsFilterType::class,  ['required' => false, 'label' => false])
             ->add('newness', ProductNewnessFilterType::class, ['required' => false, 'label' => false])

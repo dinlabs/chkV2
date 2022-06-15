@@ -23,7 +23,10 @@ services:
         #ndY: permet d'avoir cette variable dans tous les Services
         bind:
             $projectDir: "%kernel.project_dir%"
-
+            $elasticaIndexBitbagOptionTaxons: '@fos_elastica.index.bitbag_option_taxons'
+            $productOptionsByTaxonQueryBuilder: '@bitbag_sylius_elasticsearch_plugin.query_builder.product_options_by_taxon'
+            $fosElasticaFinderBitbagOptionTaxons: '@fos_elastica.finder.bitbag_option_taxons'
+            $fosElasticaFinderBitbagAttributeTaxons: '@fos_elastica.finder.bitbag_attribute_taxons'
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
             autowire: false
@@ -299,13 +302,15 @@ services:
         '@bitbag.sylius_elasticsearch_plugin.repository.taxon_repository'
     bitbag_sylius_elasticsearch_plugin.property_builder.attribute_taxons:
         class: App\Overrides\SyliusElasticsearchPlugin\PropertyBuilder\AttributeTaxonsBuilder
+    bitbag_sylius_elasticsearch_plugin.property_builder.option_taxons:
+        class: App\Overrides\SyliusElasticsearchPlugin\PropertyBuilder\OptionTaxonsBuilder
 
-    FOS\ElasticaBundle\Finder\FinderInterface:
-        '@fos_elastica.finder.bitbag_attribute_taxons'
     BitBag\SyliusElasticsearchPlugin\QueryBuilder\QueryBuilderInterface:
         '@bitbag_sylius_elasticsearch_plugin.query_builder.product_attributes_by_taxon'
     bitbag_sylius_elasticsearch_plugin.finder.product_attributes:
         class: App\Overrides\SyliusElasticsearchPlugin\Finder\ProductAttributesFinder
+    bitbag_sylius_elasticsearch_plugin.finder.product_options:
+        class: App\Overrides\SyliusElasticsearchPlugin\Finder\ProductOptionsFinder
 
     App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder:
         class: App\Overrides\SyliusElasticsearchPlugin\Finder\ShopProductsFinder
@@ -324,7 +329,11 @@ services:
         '@bitbag_sylius_elasticsearch_plugin.finder.product_attributes'
     bitbag.sylius_elasticsearch_plugin.context.product_attributes:
         class: App\Overrides\SyliusElasticsearchPlugin\Context\ProductAttributesContext
-    
+    bitbag.sylius_elasticsearch_plugin.context.product_options:
+        class: App\Overrides\SyliusElasticsearchPlugin\Context\ProductOptionsContext
+    BitBag\SyliusElasticsearchPlugin\Finder\ProductOptionsFinderInterface:
+        '@bitbag_sylius_elasticsearch_plugin.finder.product_options'
+
     bitbag_sylius_elasticsearch_plugin.controller.request_data_handler.shop_product_list:
         class: App\Overrides\SyliusElasticsearchPlugin\Controller\RequestDataHandler\ShopProductListDataHandler
     

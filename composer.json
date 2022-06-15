@@ -132,7 +132,8 @@
             "bitbag/elasticsearch-plugin": {
               "Surcharges pour SyliusElasticsearchPlugin": "patches/sylius_es.patch",
               "Add filter availabilities": "patches/sylius_es_filter_availabilities.patch",
-              "Conditional display for filter newness / promotion": "patches/sylius_es_newness_promotion_conditional_display.patch"
+              "Conditional display for filter newness / promotion": "patches/sylius_es_newness_promotion_conditional_display.patch",
+              "Custom ProductOptions": "patches/sylius_es_product_options.patch"
             },
             "setono/sylius-feed-plugin": {
                 "Add filter by brand and taxon for product feeds": "patches/setono_syliusfeed_brand_taxon_filter.patch"

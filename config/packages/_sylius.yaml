@@ -145,6 +145,7 @@ sylius_product:
         product_variant:
             classes:
                 model: App\Entity\Product\ProductVariant
+                repository: App\Repository\ProductVariantRepository
             translation:
                 classes:
                     model: App\Entity\Product\ProductVariantTranslation

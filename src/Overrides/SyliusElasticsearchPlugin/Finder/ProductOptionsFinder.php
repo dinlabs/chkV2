@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Overrides\SyliusElasticsearchPlugin\Finder;
 
-use BitBag\SyliusElasticsearchPlugin\Finder\ProductAttributesFinderInterface;
+use BitBag\SyliusElasticsearchPlugin\Finder\ProductOptionsFinderInterface;
 use BitBag\SyliusElasticsearchPlugin\QueryBuilder\QueryBuilderInterface;
 use Elastica\Query\BoolQuery;
 use Elastica\Query\Terms;
 use FOS\ElasticaBundle\Finder\FinderInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 
-final class ProductAttributesFinder implements ProductAttributesFinderInterface
+final class ProductOptionsFinder implements ProductOptionsFinderInterface
 {
     /** @var FinderInterface */
-    private $fosElasticaFinderBitbagAttributeTaxons;
+    private $fosElasticaFinderBitbagOptionTaxons;
 
     /** @var QueryBuilderInterface */
-    private $attributesByTaxonQueryBuilder;
+    private $productOptionsByTaxonQueryBuilder;
 
     /** @var string */
     private $taxonsProperty;
@@ -27,12 +27,12 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
     private const LIMIT = 10000;
 
     public function __construct(
-        FinderInterface $fosElasticaFinderBitbagAttributeTaxons,
-        QueryBuilderInterface $attributesByTaxonQueryBuilder,
-        string $taxonsProperty = 'attribute_taxons'
+        FinderInterface $fosElasticaFinderBitbagOptionTaxons,
+        QueryBuilderInterface $productOptionsByTaxonQueryBuilder,
+        string $taxonsProperty = 'option_taxons'
     ) {
-        $this->fosElasticaFinderBitbagAttributeTaxons = $fosElasticaFinderBitbagAttributeTaxons;
-        $this->attributesByTaxonQueryBuilder = $attributesByTaxonQueryBuilder;
+        $this->fosElasticaFinderBitbagOptionTaxons = $fosElasticaFinderBitbagOptionTaxons;
+        $this->productOptionsByTaxonQueryBuilder = $productOptionsByTaxonQueryBuilder;
         $this->taxonsProperty = $taxonsProperty;
     }
 
@@ -41,14 +41,14 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
         $data = [];
         $data[$this->taxonsProperty] = strtolower($taxon->getCode());
 
-        $query = $this->attributesByTaxonQueryBuilder->buildQuery($data);
+        $query = $this->productOptionsByTaxonQueryBuilder->buildQuery($data);
 
-        return $this->fosElasticaFinderBitbagAttributeTaxons->find($query, self::LIMIT);
+        return $this->fosElasticaFinderBitbagOptionTaxons->find($query, self::LIMIT);
     }
 
     public function findByBrand($brandCode): ?array
     {
-        $brandProperty = 'attribute_brands';
+        $brandProperty = 'option_brands';
         
         $query = new BoolQuery();
         $brandQuery = new Terms($brandProperty);
@@ -56,6 +56,6 @@ final class ProductAttributesFinder implements ProductAttributesFinderInterface
 
         $query->addMust($brandQuery);
 
-        return $this->fosElasticaFinderBitbagAttributeTaxons->find($query, self::LIMIT);
+        return $this->fosElasticaFinderBitbagOptionTaxons->find($query, self::LIMIT);
     }
 }
