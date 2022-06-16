@@ -1,5 +1,16 @@
 {% if error %}
+    {% if error == 'paniermixte' %}
+    <div class="error paniermixte">
+        <h2 class="popin-title">Oups... Vous ne pouvez pas ajouter ce produit à votre panier !</h2>
+        <p>En ajoutant cet article à votre panier, celui-ci contiendra plusieurs modes de livraison non compatibles.</p>
+        <p><span class="primary">Au préalable, finissez votre panier en cours ou supprimez des articles.</span></p>
+
+        <a href="{{ path('sylius_shop_cart_summary') }}" class="btn primary">Voir mon panier en cours</a>
+
+    </div>
+    {% else %}
     <div class="error">
+        <h2 class="popin-title">Erreur</h2>
         {% if app.session is not null and app.session.started %}
             {% for flash in app.session.flashbag.get('error') %}
             <div class="message sylius-flash-message">
@@ -14,7 +25,10 @@
             {% endfor %}
         {% endif %}
     </div>
+    {% endif %}
 {% else %}
+    <h2 class="popin-title">Ajouter au panier</h2>
+    
     {% include '@SyliusShop/Layout/_target2Sell.html.twig' %}
     {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'loadable', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
     {{ form_errors(form) }}

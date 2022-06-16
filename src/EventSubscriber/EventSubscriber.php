@@ -181,7 +181,7 @@ class EventSubscriber implements EventSubscriberInterface
                 //todo; retirer le message "bien ajouté"!
                 $flash = $this->session->getFlashBag()->get('success');
                 
-                $this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
+                //$this->session->getFlashBag()->add('error', 'C\'est un panier mixte');
                 
                 $order->removeItem($orderItem);
                 $this->entityManager->persist($order);

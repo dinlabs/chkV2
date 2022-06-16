@@ -710,7 +710,7 @@ header + #breadcrumb { padding-top:0; }
 
 /* Popin ajouter au panier */
 #panierPop .popinside { padding:1em; min-width:340px; }
-#panierPop h2 { padding-bottom:1em; font-size:1.2em; }
+#panierPop h2 { padding:0 2em 1em 2em; font-size:1.2em; }
 #panierPop .infos small { font-weight:700; }
 #panierPop .quantity { padding-top:1em; }
 #panierPop .sylius-quantity { display:flex; padding:1em 0; }
@@ -722,6 +722,11 @@ header + #breadcrumb { padding-top:0; }
 #panierPop .btn { display:flex; justify-content:space-between; align-items:center; background:var(--primary); width:100%; height:50px; line-height:20px; margin-bottom:1em; padding:.5em 1.1em; text-align:left; }
 #panierPop .btn .price { float:right; line-height:1em; text-align:right; }
 #panierPop .btn .price strong { color:inherit; }
+
+#panierPop .paniermixte { text-align:center; font-weight:700; }
+#panierPop .paniermixte p { padding-bottom:1em; }
+#panierPop .paniermixte span.primary { color:var(--primary); }
+#panierPop .paniermixte .btn.primary { justify-content:center; }
 
 
 /* Produits "Pack" */
