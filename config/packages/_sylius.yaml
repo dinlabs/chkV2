@@ -273,6 +273,10 @@ sylius_grid:
                     type: string
                     label: Marque
                     sortable: ~
+                totalQuantities:
+                    position: 6
+                    type: string
+                    label: 'Stock'
             actions:
                 main:
                     create:
