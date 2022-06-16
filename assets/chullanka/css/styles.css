@@ -922,7 +922,11 @@ body.checkout { background:var(--bg1); }
     --usp-button-bg-hovered:var(--primary);
     --usp-card-input-min-height:3em;
     --usp-protocol-icon-size-sm:300px;
+    
+    --usp-checkbox-selected-bg-color:var(--primary);
+    --usp-box-border-radius:5px;
 }
+/*
 .checkout .usp-widget-layout > div.usp-flex, .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible > div { background:var(--bg0); border-radius:5px; padding:1em; }
 .checkout .usp-widget-layout .usp-protocol-item[testid='easy2play-giftcard-protocol'] { cursor:pointer; }
 .checkout .usp-widget-layout .usp-widget-display-switcher-container-visible { margin-top:1em; }
@@ -932,6 +936,12 @@ body.checkout { background:var(--bg1); }
 
 .checkout .usp-widget-layout .usp-secondary-token-form-header-row.svelte-1ivwvss { visibility:hidden; }
 .checkout .usp-widget-layout .usp-payment-layout-merge .usp-protocol-list-item.svelte-1v7vq23 { padding:0; }
+*/
+#widget-payment .usp-accordion-secondary-item, #widget-payment .usp-accordion-item { border:none; }
+
+#widget-payment .usp-accordion-item-checkbox { display:block !important; }
+#widget-payment .usp-accordion-secondary-item-header-icons .usp-checkbox-inner, #widget-payment .usp-accordion-item-checkbox .usp-checkbox-inner { background-color:var(--primary); }
+#widget-payment .usp-accordion-item-header-icon { display:block !important; }
 
 
 #confirmation h1 { font-size:1.25em; }
