@@ -37,7 +37,7 @@ final class ProductBrandsFilterType extends AbstractFilterType
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => $brands,
-                'attr' => ['preopened' => false]
+                'attr' => ['preopened' => true]
             ]);
         }
     }
