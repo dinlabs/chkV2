@@ -20,7 +20,11 @@ class CartsGuruService extends CartsGuru
                 'site_id' => $cartsGuruAuths['cartsguru-site-id'],
                 'auth_key' => $cartsGuruAuths['cartsguru-auth-key']
             ]);
+        } else {
+            // if no parameters found, do not send to carts guru
+            return;
         }
+
         unset($params['entity_manager']);
 
         parent::__construct($params);
