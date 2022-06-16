@@ -23,7 +23,6 @@ services:
         #ndY: permet d'avoir cette variable dans tous les Services
         bind:
             $projectDir: "%kernel.project_dir%"
-            $elasticaIndexBitbagOptionTaxons: '@fos_elastica.index.bitbag_option_taxons'
             $productOptionsByTaxonQueryBuilder: '@bitbag_sylius_elasticsearch_plugin.query_builder.product_options_by_taxon'
             $fosElasticaFinderBitbagOptionTaxons: '@fos_elastica.finder.bitbag_option_taxons'
             $fosElasticaFinderBitbagAttributeTaxons: '@fos_elastica.finder.bitbag_attribute_taxons'

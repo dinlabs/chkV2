@@ -27,13 +27,10 @@ final class OptionTaxonsBuilder extends AbstractBuilder
     /** @var BrandRepository */
     protected $brandRepository;
 
-    private $elasticaIndexBitbagOptionTaxons;
-
     public function __construct(
         TaxonRepositoryInterface $taxonRepository,
         BrandRepository $brandRepository,
         EntityManagerInterface $em,
-        Index $elasticaIndexBitbagOptionTaxons,
         string $taxonsProperty = 'option_taxons',
         array $excludedAttributes = [],
     ) {
@@ -41,7 +38,6 @@ final class OptionTaxonsBuilder extends AbstractBuilder
         $this->taxonsProperty = $taxonsProperty;
         $this->excludedAttributes = $excludedAttributes;
         $this->brandRepository = $brandRepository;
-        $this->elasticaIndexBitbagOptionTaxons = $elasticaIndexBitbagOptionTaxons;
         $this->em = $em;
     }
 
@@ -55,8 +51,8 @@ final class OptionTaxonsBuilder extends AbstractBuilder
             return;
         }
 
+        $document = $event->getDocument();
         $taxons = $this->taxonRepository->getTaxonsByOptionViaProduct($documentAttribute);
-        $optionId = (string) $documentAttribute->getId();
         $taxonCodes = [];
 
         foreach ($taxons as $taxon) {
@@ -70,11 +66,7 @@ final class OptionTaxonsBuilder extends AbstractBuilder
             $brandCodes[] = $brand->getEscode();
         }
 
-        $this->elasticaIndexBitbagOptionTaxons->addDocument(
-            new Document($optionId, [
-                $this->taxonsProperty => $taxonCodes,
-                'option_brands' => $brandCodes
-            ])
-        );
+        $document->set($this->taxonsProperty, $taxonCodes);
+        $document->set('option_brands', $brandCodes);
     }
 }

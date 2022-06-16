@@ -87,7 +87,6 @@ final class ProductOptionsContext implements ProductOptionsContextInterface
 
         foreach ($optionValuesRaw as $optionValue) {
             $optionValues[$optionValue] = $this->stringFormatter->formatToLowercaseWithoutSpaces($optionValue);
-
         }
 
         return $optionValues;
