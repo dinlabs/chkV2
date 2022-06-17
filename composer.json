@@ -138,6 +138,9 @@
             },
             "setono/sylius-feed-plugin": {
                 "Add filter by brand and taxon for product feeds": "patches/setono_syliusfeed_brand_taxon_filter.patch"
+            },
+            "sylius/refund-plugin": {
+                "Add export Ginkoia": "patches/refund_export_ginkoia.patch"
             }
         }
     }

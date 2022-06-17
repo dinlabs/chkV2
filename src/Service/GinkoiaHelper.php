@@ -59,7 +59,7 @@ class GinkoiaHelper
             //envoyer le XML par FTP
             $exportPath = $this->chkParameter('ginkoia-path-export');
             $exportFile = $exportPath . DIRECTORY_SEPARATOR . $filename;
-            if(copy($file, $exportFile))
+            if(is_dir($exportPath) && copy($file, $exportFile))
             {
                 // change les droits
                 chmod($exportFile, 0664);
@@ -95,7 +95,7 @@ class GinkoiaHelper
             //envoyer le XML par FTP
             $exportPath = $this->chkParameter('ginkoia-path-export');
             $exportFile = $exportPath . DIRECTORY_SEPARATOR . $filename;
-            if(copy($file, $exportFile))
+            if(is_dir($exportPath) && copy($file, $exportFile))
             {
                 // change les droits
                 chmod($exportFile, 0664);
