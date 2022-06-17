@@ -2,7 +2,7 @@
     <div class="insert">
         <strong>Un question sur votre achat ?</strong>
     {% if allIsGood %}
-        <p>Votre demande a été enregistrée ; nous allons vous appeler !</p>
+        <p>Votre demande a été enregistrée. Nous vous rappellerons rapidement, promis !</p>
     {% else %}
         {{ form_start(form) }}
             {{ form_widget(form.phone_number, {'attr': {'placeholder': 'Votre numéro de téléphone'}}) }}
