@@ -197,6 +197,24 @@ class Target2SellHelper
                 //attributes
                 $attributesNode = $this->doc->createElement('attributes');
 
+                // news from / to
+                if($product->getNewFrom())
+                {
+                    $code = 'news_from_date';
+                    $_value = $product->getNewFrom()->format('Y-m-d');
+                    $attributesNode->appendChild(
+                        $this->addAttribute($code, $code, $_value, strtolower($_value))
+                    );
+                }
+                if($product->getNewTo())
+                {
+                    $code = 'news_to_date';
+                    $_value = $product->getNewTo()->format('Y-m-d');
+                    $attributesNode->appendChild(
+                        $this->addAttribute($code, $code, $_value, strtolower($_value))
+                    );
+                }
+
                 foreach(['genre', 'cycle_vie', 'exclu_mag', 'exclu_web'] as $code)
                 {
                     if($attributeValue = $product->getAttributeByCodeAndLocale($code))

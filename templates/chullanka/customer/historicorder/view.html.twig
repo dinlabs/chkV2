@@ -65,8 +65,12 @@
             <dt>Quantité</dt>
             <dd>{{ item.quantity }}</dd>
 
-            <dt>Prix total</dt>
+            <dt>Prix unitaire</dt>
             <dd>{{ money.convertAndFormat(item.price) }}</dd>
+
+            <dt>Prix total</dt>
+            {% set _total = item.price * item.quantity %}
+            <dd>{{ money.convertAndFormat(_total) }}</dd>
         </dl>
     </li>
 {% endfor %}
