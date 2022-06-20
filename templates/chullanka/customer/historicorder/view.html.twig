@@ -44,7 +44,7 @@
 
     {% if order.invoice %}
     <dt>Facture</dt>
-    <dd><a href="#">{{ order.invoice }} </a></dd>
+    <dd><a href="/media/approach/{{ order.invoice }}.pdf" target="_blank">{{ order.invoice }}</a></dd>
     {% endif %}
 </dl>
 <br>

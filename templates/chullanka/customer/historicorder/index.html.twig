@@ -68,7 +68,7 @@
             <td>{{ order.orderId }}</td>
             <td>{{ order.sku }}</td>
             <td>{{ order.orderDate|format_date('medium') }}</td>
-            <td>{% if order.invoice %}{{ order.invoice }}{% else %}n/a{% endif %}</td>
+            <td>{% if order.invoice %}<a href="/media/approach/{{ order.invoice }}.pdf" target="_blank">{{ order.invoice }}</a>{% else %}n/a{% endif %}</td>
             <td><a href="{{ path('chk_historic_order_view', {'id': order.id}) }}">Voir</a></td>
         </tr>
         {% endfor %}
