@@ -69,10 +69,7 @@ class EventSubscriber implements EventSubscriberInterface
             'sylius.order.post_select_shipping' => 'onSyliusOrderPostSelectShipping',
             'sylius.order.post_complete' => 'onSyliusOrderPostComplete',
             
-            CreditMemoGenerated::class => 'onSyliusRefundCreditMemoPostCreate',
-            //'sylius_refund.credit_memo.pre_create' => 'onSyliusRefundCreditMemoPreCreate',
-            //'sylius_refund.credit_memo.post_create' => 'onSyliusRefundCreditMemoPostCreate',
-
+            
             'app.brand.pre_create' => 'onAppBrandPreCreUpdate',
             'app.brand.pre_update' => 'onAppBrandPreCreUpdate',
             'app.chulli.pre_create' => 'onAppChulliPreCreUpdate',
@@ -524,8 +521,8 @@ class EventSubscriber implements EventSubscriberInterface
         }
         if($inStore == false)
         {
-            $this->ginkoiaHelper->export($order);
             $this->izyproHelper->export($order);
+            //$this->ginkoiaHelper->export($order);// à faire au retour d'Izypro
         }
         else
         {
@@ -538,23 +535,6 @@ class EventSubscriber implements EventSubscriberInterface
             }
         }
     }
-
-    public function onSyliusRefundCreditMemoPreCreate(GenericEvent $event)
-    {
-        error_log("Credit memo Precreate");
-        $creditMemo = $event->getSubject();
-        error_log(" ID : ".$creditMemo->getId());
-        //$this->ginkoiaHelper->exportRefund($creditMemo);
-    }
-    public function onSyliusRefundCreditMemoPostCreate(GenericEvent $event)
-    {
-        $this->logger->info('onSyliusRefundCreditMemoPostCreate');
-        error_log("Credit memo postCreate");
-        $creditMemo = $event->getSubject();
-        error_log(" ID : ".$creditMemo->getId());
-        $this->ginkoiaHelper->exportRefund($creditMemo);
-    }
-
 
     /**
      * Gère l'upload du logo et de l'image de fond d'une marque

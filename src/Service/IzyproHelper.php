@@ -28,6 +28,7 @@ class IzyproHelper
     private $entityManager;
     private $logger;
     private $stateMachineFactory;
+    private $ginkoiaHelper;
     private $eventBus;
     private $projectDir;
     private $izyproDir;
@@ -40,11 +41,12 @@ class IzyproHelper
     private $dpdfrrelais = false;
     private $totaux;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, FactoryInterface $stateMachineFactory, MessageBusInterface $eventBus, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, MessageBusInterface $eventBus, string $projectDir)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->stateMachineFactory = $stateMachineFactory;
+        $this->ginkoiaHelper = $ginkoiaHelper;
         $this->eventBus = $eventBus;
         $this->projectDir = $projectDir;
         $this->izyproDir = $this->projectDir . '/var/chkfiles/izypro/';
@@ -307,6 +309,10 @@ class IzyproHelper
                     case 1:
                         $this->changeOrderInStoreState($shipmentId, 'stock_trouble');
                         break;
+                        
+                    case 2:
+                        $this->ginkoiaHelper->export($order);
+                        break;
 
                     case 7:
                         $this->changeOrderInStoreState($shipmentId, 'in_preparation');
@@ -330,7 +336,6 @@ class IzyproHelper
                         $this->eventBus->dispatch(new SendShipmentConfirmationEmail($shipmentId), [new DispatchAfterCurrentBusStamp()]);
                         break;
                         
-                        case 2:
                         case 120:
                         case 150:
                         case 200:
