@@ -245,4 +245,16 @@ class HistoricOrder
 
         return $this;
     }
+
+    /** Twig */
+    public function getInvoiceUrl(): ?string
+    {
+        $url = '#';
+        if(!empty($this->invoice))
+        {
+            $file = str_replace('#', '', $this->invoice);
+            $url = '/media/approach/' . $file . '.pdf';
+        }
+        return $url;
+    }
 }
