@@ -30,7 +30,7 @@ class HistoricOrderRepository extends ServiceEntityRepository
             ->andWhere('h.origin = :origin')
             ->setParameter('customer', $customer)
             ->setParameter('origin', $origin)
-            ->orderBy('h.orderDate', 'DESC')
+            ->orderBy('h.order_date', 'DESC')
             ->getQuery()
             ->getResult()
         ;
