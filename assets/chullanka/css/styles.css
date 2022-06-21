@@ -420,6 +420,7 @@ header + #breadcrumb { padding-top:0; }
 .home #entreprise .framap ul { margin-bottom:2em; }
 .home #entreprise .framap ul li { display:inline; }
 .home #entreprise .framap ul li + li::before { content:', '; color:var(--primary); }
+.home #entreprise .framap #zemap { position:relative; top:-20px; }
 .home #entreprise .team .header { height:150px; }
 .home #entreprise .team h3 { color:#fff; text-shadow:0px 0 5px #000; }
 .home #entreprise .team .pichulli { width:50px; }
@@ -1335,6 +1336,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     #entreprise .inside { display:grid; grid-template-columns:2fr 3fr; gap:100px; }
     #entreprise .framap { justify-self:end; }
+    .home #entreprise .framap #zemap { left:-20px; }
     .home #entreprise .team h3 { max-width:320px; color:inherit; text-shadow:none; }
     #entreprise .team img { width:100%; }
 
