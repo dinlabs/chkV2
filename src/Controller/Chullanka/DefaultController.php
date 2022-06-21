@@ -33,6 +33,7 @@ use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
 use BitBag\SyliusCmsPlugin\Entity\Page;
 use BitBag\SyliusCmsPlugin\Entity\Section;
+use Knp\Snappy\Pdf as GeneratorInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
@@ -66,13 +67,17 @@ final class DefaultController extends AbstractController
     /** @var SenderInterface */
     private $emailSender;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender)
+    /** @var GeneratorInterface */
+    private $pdfGenerator;
+
+    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender, GeneratorInterface $pdfGenerator)
     {
         $this->cartContext = $cartContext;
         $this->twig = $twig;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->eventDispatcher = $eventDispatcher;
         $this->emailSender = $emailSender;
+        $this->pdfGenerator = $pdfGenerator;
     }
 
     /**
@@ -1163,6 +1168,48 @@ final class DefaultController extends AbstractController
                 header('Content-Disposition: attachment; filename='.$filename);
                 echo $pdfContent;
             }
+        }
+        
+        //else 
+        return $this->redirectToRoute('rma_request_view', ['id' => $id]);
+    }
+
+    /**
+     * @Route("/rma/bonretour/{id}", name="rma_bonretour")
+     */
+    public function rmaGetBonretour(string $id)
+    {
+        $rma = $this->container->get('doctrine')->getRepository(Rma::class)->find($id);
+        if($rma->getReturnSlip())
+        {
+            $html = $this->render('chullanka/rma/bon_retour.html.twig', [
+                'rma' => $rma
+            ]);
+            //return $html;
+            
+            $filename = 'bon_retour_' . $rma->getNumber() . '.pdf';
+            return new Response(
+                $this->pdfGenerator->getOutputFromHtml($html, [
+                    //'orientation' => 'landscape', 
+                    //'enable-javascript' => true, 
+                    //'javascript-delay' => 1000, 
+                    //'no-stop-slow-scripts' => true, 
+                    'no-background' => false, 
+                    //'lowquality' => false,
+                    'encoding' => 'utf-8',
+                    //'images' => true,
+                    //'cookie' => array(),
+                    //'dpi' => 300,
+                    //'image-dpi' => 300,
+                    //'enable-external-links' => true,
+                    //'enable-internal-links' => true
+                ]),
+                200,
+                [
+                    'Content-Type'          => 'application/pdf',
+                    'Content-Disposition'   => 'attachment; filename="'.$filename.'"'
+                ]
+            );
         }
         
         //else 

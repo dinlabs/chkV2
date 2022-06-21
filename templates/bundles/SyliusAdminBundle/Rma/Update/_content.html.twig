@@ -46,7 +46,8 @@
 
         {% if rma.returnSlip %}
         <div style="padding-bottom:2em; text-align:center;">
-            <a href="{{ path('rma_return_slip', {'id': rma.id}) }}" class="ui button">Télécharger le bordereau de retour produit</a>
+            <a href="{{ path('rma_bonretour', {'id': rma.id}) }}" class="ui button">Télécharger le bon de de retour produit</a>
+            <a href="{{ path('rma_return_slip', {'id': rma.id}) }}" class="ui button">Télécharger le bordereau prépayé</a>
         </div>
         {% endif %}
 
