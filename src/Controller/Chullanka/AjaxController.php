@@ -202,6 +202,28 @@ class AjaxController extends AbstractController
                 
                 $packVariantId = $sylius_add_to_cart['packId'];
                 $variantPack = $this->productVariantRepository->find($packVariantId);
+                $productPack = $variantPack->getProduct();
+
+                // test nbr packItem
+                $setted = [];
+                foreach($sylius_add_to_cart['packItem'] as $vid)
+                {
+                    if(!empty($vid)) $setted[] = $vid;
+                }
+
+                if($productPack->getIsPack() 
+                    && $productPack->getPackElements() 
+                    && $productPack->getPackElements()->count() 
+                    && (count($setted) < $productPack->getPackElements()->count()))
+                {
+                    $this->addFlash('error', 'Veuillez sélectionner vos produits');
+
+                    // retour à la page
+                    $referer = $request->headers->get('referer');
+                    return $this->redirect($referer);
+                }
+
+
                 
                 /** @var OrderItemInterface $orderItem */
                 $orderItem = $this->orderItemFactory->createNew();

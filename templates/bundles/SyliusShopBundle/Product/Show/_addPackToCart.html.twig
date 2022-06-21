@@ -20,10 +20,10 @@
     {% endif %}
     {% set minPackPrice = minPackPrice + minPrice %}
 {% endfor %}
-<form action="{{ path('chk_ajax_addpacktocart') }}" method="post">
+<form id="formaddpacktocart" action="{{ path('chk_ajax_addpacktocart') }}" method="post">
     {% set variant = product|sylius_resolve_variant %}
     <input type="hidden" name="sylius_add_to_cart[packId]" value="{{ variant.id }}">
-    <div id="packElements" class="configurability">
+    <div id="packElements" class="configurability" data-length="{{ product.packElements|length }}">
         {% set _countElement = 0 %}
         {% for element in product.packElements %}
         <div class="packElement">
