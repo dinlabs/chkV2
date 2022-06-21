@@ -998,12 +998,12 @@ final class DefaultController extends AbstractController
     {
         if(($customer = $this->getCurrentCustomer()) && $customer->getHistoricOrders()->count())
         {
-            $magasinOrders = $this->container->get('doctrine')->getRepository(HistoricOrder::class)->findBy([
+            $magasinOrders = $this->container->get('doctrine')->getRepository(HistoricOrder::class)->getLastHistoricOrders([
                 'customer' => $customer,
                 'origin' => 'magasin'
             ]);
 
-            $approachOrders = $this->container->get('doctrine')->getRepository(HistoricOrder::class)->findBy([
+            $approachOrders = $this->container->get('doctrine')->getRepository(HistoricOrder::class)->getLastHistoricOrders([
                 'customer' => $customer,
                 'origin' => 'approach'
             ]);

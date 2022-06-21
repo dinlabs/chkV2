@@ -19,6 +19,23 @@ class HistoricOrderRepository extends ServiceEntityRepository
         parent::__construct($registry, HistoricOrder::class);
     }
 
+    public function getLastHistoricOrders($params)
+    {
+        $customer = $params['customer'];
+        $origin = $params['origin'];
+        if(!$customer) return null;
+
+        return $this->createQueryBuilder('h')
+            ->where('h.customer = :customer')
+            ->andWhere('h.origin = :origin')
+            ->setParameter('customer', $customer)
+            ->setParameter('origin', $origin)
+            ->orderBy('h.orderDate', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return HistoricOrder[] Returns an array of HistoricOrder objects
     //  */
