@@ -64,6 +64,7 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
         if(isset($_COOKIE) && isset($_COOKIE['t2s-rank']))
         {
             $rank = $_COOKIE['t2s-rank'] ?: 'rank1';
+            error_log("Rank : $rank");
             //$orderBy = $rank;
             $orderBy = 'attribute_' . $rank . '_fr_FR'; // hack!
             for($r=1; $r<=6; $r++)
@@ -75,6 +76,7 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
         }
         // fin default
 
+        
         if($requestData['slug'])
         {
             $positionSortingProperty = $this->getPositionSortingProperty();
@@ -85,7 +87,7 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
             $availableSorters[] = $positionSortingProperty;
         }
         $availableSorters = array_merge($availableSorters, [$this->soldUnitsProperty, $this->createdAtProperty, $this->pricePropertyPrefix]);
-
+        
         // au cas où...
         if(!in_array($orderBy, $availableSorters))
         {
@@ -95,18 +97,20 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
         //$sort = $requestData[self::SORT_INDEX] ?? self::SORT_ASC_INDEX;
         $sort = $requestData[self::SORT_INDEX] ?? ($sort ?: self::SORT_ASC_INDEX);
         $availableSorting = [self::SORT_ASC_INDEX, self::SORT_DESC_INDEX];
-
+        
         if (!in_array($orderBy, $availableSorters) || !in_array($sort, $availableSorting)) {
             throw new \UnexpectedValueException();
         }
-
+        
         if ($this->pricePropertyPrefix === $orderBy) {
             $channelCode = $this->channelContext->getChannel()->getCode();
             $orderBy = $this->channelPricingNameResolver->resolvePropertyName($channelCode);
         }
-
+        
         $data['sort'] = [$orderBy => ['order' => strtolower($sort), 'unmapped_type' => 'keyword']];
-
+        
+        //error_log(print_r($availableSorters,true));
+        error_log("orderBy : $orderBy");
         //error_log(print_r($data,true));
         return $data;
     }
