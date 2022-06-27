@@ -21,6 +21,18 @@
                 </ul>
             </div>
             {% endif %}
+
+            <div>
+                <h4>DEBUG T2S :</h4>
+                <ul>
+                    <li>Rank1 : {{ product.getAttributeByCodeAndLocale('rank1') ? product.getAttributeByCodeAndLocale('rank1').value : '-' }}</li>
+                    <li>Rank2 : {{ product.getAttributeByCodeAndLocale('rank2') ? product.getAttributeByCodeAndLocale('rank2').value : '-' }}</li>
+                    <li>Rank3 : {{ product.getAttributeByCodeAndLocale('rank3') ? product.getAttributeByCodeAndLocale('rank3').value : '-' }}</li>
+                    <li>Rank4 : {{ product.getAttributeByCodeAndLocale('rank4') ? product.getAttributeByCodeAndLocale('rank4').value : '-' }}</li>
+                    <li>Rank5 : {{ product.getAttributeByCodeAndLocale('rank5') ? product.getAttributeByCodeAndLocale('rank5').value : '-' }}</li>
+                    <li>Rank6 : {{ product.getAttributeByCodeAndLocale('rank6') ? product.getAttributeByCodeAndLocale('rank6').value : '-' }}</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
