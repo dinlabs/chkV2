@@ -88,7 +88,6 @@ class UpstreamPayWidget
         curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
         
         $data = $this->getFormattedData($order);
-        //error_log($data);
         $this->logger->info('getUpStreamPaySession | DATA : '.$data);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -97,7 +96,6 @@ class UpstreamPayWidget
         $json_response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->logger->info('http_code : '.$http_code);
-        error_log("http_code : $http_code");
         curl_close($ch);
         
         if(self::isJSON($json_response))
@@ -111,7 +109,6 @@ class UpstreamPayWidget
             }
         }
         $this->logger->info('json_response : '.$json_response);
-        error_log($json_response);
 
         return '{}';
     }
