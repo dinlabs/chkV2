@@ -8,27 +8,20 @@
 
     {% set minPackPrice = 0 %}
     {% for element in product.packElements %}
-        <debug>Packelement : {{ loop.index }}</debug>
         {% set minPrice = null %}
         {% for _product in element.products %}
-            <debug>PID : {{ _product.id }}</debug>
-            {% for _variant in _product.variants if _variant.onHand > 0 %}
-                <debug>VID : {{ _variant.id }}</debug>
+            {% for _variant in _product.variants %}
                 {% set _amount = _variant|sylius_calculate_price({'channel': sylius.channel}) %}
-                <debug>Montant : {{ _amount }}</debug>
                 {% if minPrice is null %}
                     {% set minPrice = _amount %}
                 {% endif %}
                 {% if _amount < minPrice %}
                     {% set minPrice = _amount %}
                 {% endif %}
-                <debug>MinPrice : {{ minPrice }}</debug>
             {% endfor %}
         {% endfor %}
         {% set minPackPrice = minPackPrice + minPrice %}
-        <debug>MinPackPrice : {{ minPackPrice }}</debug>
     {% endfor %}
-    <debug>Final MinPackPrice : {{ minPackPrice }}</debug>
 <div class="price">
     à partir de
     <strong{% if productPage is defined %} id="product-price"{% endif %}>

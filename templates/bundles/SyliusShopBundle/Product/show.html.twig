@@ -161,7 +161,15 @@
             <h3>{{ _firstProduct.name }}</h3>
             {{ _firstProduct.description|raw }}
 
-            <div id="pack_sub_desc"></div>
+            
+            <div id="pack_sub_desc">
+            {% set _secondProduct = null %}
+            {% if product.packElements[1].products|length == 1 %}
+                {% set _secondProduct = product.packElements[1].products.first %}
+                <h3>{{ _secondProduct.name }}</h3>
+                {{ _secondProduct.description|raw }}
+            {% endif %}
+            </div>
         {% else %}
             {% if product.description is not empty %}
                 {{ product.description|raw }}
@@ -180,7 +188,12 @@
             <h3>{{ _firstProduct.name }}</h3>
             {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': _firstProduct } %}
             
-            <div id="pack_sub_features"></div>
+            <div id="pack_sub_features">
+            {% if _secondProduct %}
+            <h3>{{ _secondProduct.name }}</h3>
+            {{ _secondProduct.description|raw }}
+            {% endif %}
+            </div>
         {% else %}
             {{ sylius_template_event('sylius.shop.product.show.tab_attributes', _context) }}
         {% endif %}
