@@ -191,7 +191,7 @@
             <div id="pack_sub_features">
             {% if _secondProduct %}
             <h3>{{ _secondProduct.name }}</h3>
-            {{ _secondProduct.description|raw }}
+            {% include '@SyliusShop/Product/Show/_attributes_list.html.twig' with { 'product': _secondProduct } %}
             {% endif %}
             </div>
         {% else %}
