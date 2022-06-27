@@ -61,6 +61,8 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
 
         // sorting Target2Sell
         //if(true)
+        error_log("_COOKIES");
+        error_log(print_r($_COOKIE,true));
         if(isset($_COOKIE) && isset($_COOKIE['t2s-rank']))
         {
             $rank = $_COOKIE['t2s-rank'] ?: 'rank1';
