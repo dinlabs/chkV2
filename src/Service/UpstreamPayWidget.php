@@ -95,16 +95,19 @@ class UpstreamPayWidget
         error_log("http_code : $http_code");
         curl_close($ch);
         
-        $response = json_decode($json_response);
-        if((json_last_error() === JSON_ERROR_NONE) && isset($response->id))
+        if($http_code == 200)
         {
-            $this->upstreampay_session = $json_response;
-            $this->session->set('upstreampay_session_id', $response->id);
-            return $json_response;
+            $response = json_decode($json_response);
+            if((json_last_error() === JSON_ERROR_NONE) && isset($response->id))
+            {
+                $this->upstreampay_session = $json_response;
+                $this->session->set('upstreampay_session_id', $response->id);
+                return $json_response;
+            }
+            else error_log($json_response);
         }
-        else error_log($json_response);
 
-        return;
+        return '{}';
     }
     
     public function getSessionId()
