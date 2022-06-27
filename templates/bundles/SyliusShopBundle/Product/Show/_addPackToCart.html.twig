@@ -34,7 +34,7 @@
                 {% if choice.simple %}
                 <label for="choice_{{ choice.id }}">{{ choice }}</label>
                 {% set choiceVariant = choice|sylius_resolve_variant %}
-                <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}">
+                <input type="hidden" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" data-price="{{ choiceVariant|sylius_calculate_price({'channel': sylius.channel}) }}">
                 {% else %}
                 <select id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]">
                     <option value="">Choisir</option>
@@ -45,7 +45,7 @@
                             {% set _label = option.value %}
                         {% endfor %}
                     {% endif %}
-                    <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                    <option value="{{ choiceVariant.id }}" data-price="{{ choiceVariant|sylius_calculate_price({'channel': sylius.channel}) }}">{{ _label }}</option>
                     {% endfor %}
                 </select>
                 {% endif %}
@@ -103,7 +103,7 @@
                                         </div>
 
                                         {% if choice.simple %}
-                                        <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" class="hidden">
+                                        <input type="radio" id="choice_{{ choice.id }}" name="sylius_add_to_cart[packItem][{{ _countElement }}]" value="{{ choiceVariant.id }}" data-price="{{ choiceVariant|sylius_calculate_price({'channel': sylius.channel}) }}" class="hidden">
                                         {% else %}
                                         <div class="product-option-data hidden">
                                             <div class="pack-conf-products">
@@ -117,7 +117,7 @@
                                                         {% set _label = option.value %}
                                                         {% endfor %}
                                                     {% endif %}
-                                                    <option value="{{ choiceVariant.id }}" data-price="{{ money.calculatePrice(choiceVariant) }}">{{ _label }}</option>
+                                                    <option value="{{ choiceVariant.id }}" data-price="{{ choiceVariant|sylius_calculate_price({'channel': sylius.channel}) }}">{{ _label }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
