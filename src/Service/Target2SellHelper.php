@@ -169,8 +169,13 @@ class Target2SellHelper
                 {
                     if($channelPricing = $variant->getChannelPricings()->first())
                     {
+                        $orig = $channelPricing->getOriginalPrice() / 100;
+                        $productNode->appendChild($this->addKeyVal('price', $orig));
                         $price = $channelPricing->getPrice() / 100;
-                        $productNode->appendChild($this->addKeyVal('price', $price));
+                        if($price != $orig)
+                        {
+                            $productNode->appendChild($this->addKeyVal('promotion', $price));
+                        }
                     }
                 }
                 $productNode->appendChild($this->addKeyVal('salable', (int)$product->isEnabled()));
