@@ -96,7 +96,7 @@ class UpstreamPayWidget
         curl_close($ch);
         
         $response = json_decode($json_response);
-        if(isset($response->id))
+        if((json_last_error() === JSON_ERROR_NONE) && isset($response->id))
         {
             $this->upstreampay_session = $json_response;
             $this->session->set('upstreampay_session_id', $response->id);
