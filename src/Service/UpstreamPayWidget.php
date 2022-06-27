@@ -7,6 +7,7 @@ namespace App\Service;
 use App\Entity\Payment\GatewayConfig;
 use App\Entity\Product\ProductVariant;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -14,6 +15,7 @@ class UpstreamPayWidget
 {
     private $entityManager;
     private $session;
+    private $logger;
     private $router;
     private $client_id;
     private $client_secret;
@@ -22,10 +24,11 @@ class UpstreamPayWidget
     public $api_key;
     public $entity_id;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, LoggerInterface $logger, UrlGeneratorInterface $router)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
+        $this->logger = $logger;
         $this->router = $router;
         
         if(($gatewayConfig = $this->entityManager->getRepository(GatewayConfig::class)->findOneBy(['gatewayName' => 'upstream_pay'])) && ($config = $gatewayConfig->getConfig()))
@@ -85,27 +88,30 @@ class UpstreamPayWidget
         curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
         
         $data = $this->getFormattedData($order);
-        error_log($data);
+        //error_log($data);
+        $this->logger->info('getUpStreamPaySession | DATA : '.$data);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         
         $json_response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->logger->info('http_code : '.$http_code);
         error_log("http_code : $http_code");
         curl_close($ch);
         
-        if($http_code == 200)
+        if(self::isJSON($json_response))
         {
             $response = json_decode($json_response);
-            if((json_last_error() === JSON_ERROR_NONE) && isset($response->id))
+            if(isset($response->id))
             {
                 $this->upstreampay_session = $json_response;
                 $this->session->set('upstreampay_session_id', $response->id);
                 return $json_response;
             }
-            else error_log($json_response);
         }
+        $this->logger->info('json_response : '.$json_response);
+        error_log($json_response);
 
         return '{}';
     }
@@ -688,5 +694,13 @@ Shipments
         ;
         return $datavalid;
     }
+
+    /**
+     * Test if string is a valid JSON
+     */
+    public static function isJSON($string)
+    {
+        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() === JSON_ERROR_NONE) ? true : false;
+     }
     
 }
