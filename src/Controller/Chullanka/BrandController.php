@@ -159,11 +159,11 @@ final class BrandController extends AbstractController
             $products = $shopProductsFinder->find($data);
 
             // check if we have at least one promotion / one newness
-            $hasNewness = (count($shopProductsFinder->find(array_merge($data, ['new' => true, 'limit' => 1]))) > 0) ?
+            $hasNewness = (count($shopProductsFinder->find(array_merge($data, ['page' => 1, 'new' => true, 'limit' => 1]))) > 0) ?
                 true :
                 false
             ;
-            $hasPromotion = (count($shopProductsFinder->find(array_merge($data, ['promotion' => true, 'limit' => 1]))) > 0) ?
+            $hasPromotion = (count($shopProductsFinder->find(array_merge($data, ['page' => 1, 'promotion' => true, 'limit' => 1]))) > 0) ?
                 true :
                 false
             ;
@@ -176,6 +176,9 @@ final class BrandController extends AbstractController
                 'hasPromotion' => $hasPromotion
             ]));
         }
-        else throw $this->createNotFoundException();
+        else {
+            die('2');
+            throw $this->createNotFoundException();
+        }
     }
 }
