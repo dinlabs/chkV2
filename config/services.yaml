@@ -7,6 +7,7 @@ parameters:
     mailchimp.webhook_secret: '%env(resolve:MAIL_CHIMP_WEBHOOK_SECRET)%'
     router.request_context.scheme: 'https'
     sylius.invoicing.template.logo_file: '%kernel.project_dir%/assets/chullanka/img/logo-chullanka.png'
+    sylius.sitemap.path: '%kernel.project_dir%/var/chkfiles/sitemap'
 
 services:
     # Default configuration for services in *this* file
