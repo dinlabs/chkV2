@@ -177,7 +177,6 @@ final class BrandController extends AbstractController
             ]));
         }
         else {
-            die('2');
             throw $this->createNotFoundException();
         }
     }
