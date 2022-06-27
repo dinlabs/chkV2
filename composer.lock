@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4999da63b0a23652a04290a59e4a5fc",
+    "content-hash": "a4c915fa3e4c49d6ab67f674c7e75682",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -9477,6 +9477,87 @@
                 "source": "https://github.com/stefandoorn/google-tag-manager-plugin/tree/v1.0.1"
             },
             "time": "2021-12-23T13:26:52+00:00"
+        },
+        {
+            "name": "stefandoorn/sitemap-plugin",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefandoorn/sitemap-plugin.git",
+                "reference": "d008431d04d1ac35faed66aba9baf1638f8171ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefandoorn/sitemap-plugin/zipball/d008431d04d1ac35faed66aba9baf1638f8171ef",
+                "reference": "d008431d04d1ac35faed66aba9baf1638f8171ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0",
+                "sylius/sylius": "~1.9.0 || ~1.10.0 || ~1.11.0"
+            },
+            "require-dev": {
+                "behat/behat": "^3.6.1",
+                "behat/mink-selenium2-driver": "^1.4",
+                "dmore/behat-chrome-extension": "^1.3",
+                "dmore/chrome-mink-driver": "^2.7",
+                "friends-of-behat/mink": "^1.8",
+                "friends-of-behat/mink-browserkit-driver": "^1.4",
+                "friends-of-behat/mink-extension": "^2.4",
+                "friends-of-behat/page-object-extension": "^0.3",
+                "friends-of-behat/suite-settings-extension": "^1.0",
+                "friends-of-behat/symfony-extension": "^2.1",
+                "friends-of-behat/variadic-extension": "^1.3",
+                "friendsofsymfony/oauth-server-bundle": "^1.6 || >2.0.0-alpha.0 ^2.0@dev",
+                "lakion/mink-debug-extension": "^2.0.0",
+                "lchrusciel/api-test-case": "^5.1",
+                "matthiasnoback/symfony-dependency-injection-test": "^4.3",
+                "phpspec/phpspec": "^7.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^1.2",
+                "phpstan/phpstan-doctrine": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "phpstan/phpstan-symfony": "^1.0",
+                "phpstan/phpstan-webmozart-assert": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "sensiolabs/security-checker": "^6.0",
+                "sylius-labs/coding-standard": "^4.0",
+                "symfony/browser-kit": "^4.4 || ^5.2",
+                "symfony/debug-bundle": "^4.4 || ^5.2",
+                "symfony/dotenv": "^4.4 || ^5.2",
+                "symfony/intl": "^4.4 || ^5.2",
+                "symfony/web-profiler-bundle": "^4.4 || ^5.2",
+                "vimeo/psalm": "4.22.0"
+            },
+            "type": "sylius-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SitemapPlugin\\": "src/",
+                    "Tests\\SitemapPlugin\\": [
+                        "tests/",
+                        "tests/Application/src"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Sitemap Plugin for Sylius",
+            "keywords": [
+                "sylius",
+                "sylius-plugin"
+            ],
+            "support": {
+                "issues": "https://github.com/stefandoorn/sitemap-plugin/issues",
+                "source": "https://github.com/stefandoorn/sitemap-plugin/tree/v2.0.0"
+            },
+            "time": "2022-02-28T08:30:08+00:00"
         },
         {
             "name": "stefandoorn/sylius-google-tag-manager-enhanced-ecommerce-plugin",

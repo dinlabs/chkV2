@@ -721,6 +721,9 @@
     "setono/sylius-feed-plugin": {
         "version": "v0.6.9"
     },
+    "setono/sylius-redirect-plugin": {
+        "version": "v2.1.5"
+    },
     "slevomat/coding-standard": {
         "version": "6.4.1"
     },
@@ -747,6 +750,19 @@
     },
     "stefandoorn/google-tag-manager-plugin": {
         "version": "v1.0.1"
+    },
+    "stefandoorn/sitemap-plugin": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "1793537db1cc9b0618d53f60bb3962930cdc3bed"
+        },
+        "files": [
+            "./config/packages/sitemap_plugin.yaml",
+            "./config/routes/sitemap_plugin.yaml"
+        ]
     },
     "stefandoorn/sylius-google-tag-manager-enhanced-ecommerce-plugin": {
         "version": "v1.2.1"
@@ -1224,6 +1240,9 @@
     },
     "textalk/websocket": {
         "version": "1.3.1"
+    },
+    "thecodingmachine/safe": {
+        "version": "v1.3.3"
     },
     "theofidry/alice-data-fixtures": {
         "version": "1.0",
