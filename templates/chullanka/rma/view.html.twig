@@ -26,7 +26,7 @@
     <dd>
         {% include 'chullanka/rma/grid_state.html.twig' with {'data': rma.state} %}
         {% if rma.returnSlip %}
-        &ndash; <a href="{{ path('rma_return_slip', {'id': rma.id}) }}">Télécharger le bordereau de retour produit</a>
+        &ndash; Télécharger <a href="{{ path('rma_bonretour', {'id': rma.id}) }}">le bon de retour produit</a> et <a href="{{ path('rma_return_slip', {'id': rma.id}) }}">le bordereau de retour prépayé</a>
         {% endif %}
     </dd>
 

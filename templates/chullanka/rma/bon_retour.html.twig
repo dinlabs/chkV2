@@ -1,74 +1,85 @@
-{% extends '@SyliusShop/layout_ajax.html.twig' %}
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            #header { color:#D82130; text-align:center; }
+            #header img { display:block; margin:auto; margin-bottom:1em; }
+            table { border:2px solid #000000; border-collapse:collapse; margin-bottom:20px; }
+            td { border:2px solid #000000; padding:20px; }
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <img src="{{ absolute_url('/logo-chullanka.png') }}" alt="Logo Chullanka">
+            {#<strong>Chullanka</strong>#}
+        </div>
+        <div>
+            <h1>Retour produit n°{{ rma.number }}</h1>
+        </div>
+        <table width="100%">
+            <tr>
+                <td width="50%">Date : {{ rma.createdAt|date('d/m/Y') }}</td>
+                <td width="50%">Commande : {{ rma.order.number }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        Retour Produit :
+                        <br>CHULLANKA
+                        <br>RETOUR WEB
+                        <br>1 CHEMIN DE LA COUME
+                        <br>09300 LAVELANET
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        {{ rma.customer }}
+                        <br>{{ rma.address }}
+                        <br>T: {{ rma.phoneNumber }}
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <h2>Produits</h2>
+        <table width="100%" border="1" cellspacing="2" cellpadding="2">
+        {% for rmaProduct in rma.rmaProducts %}
+            <tr>
+                {% set orderItem = rmaProduct.orderItem %}
+                {% set product = orderItem.variant.product %}
+                <td style="text-align:center;">
+                    {% if product.imagesByType('thumbnail') is not empty %}
+                        {% set path = product.imagesByType('thumbnail').first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+                    {% elseif product.images.first %}
+                        {% set path = product.images.first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
+                    {% endif %}
+                    <img src="{{ path }}" {{ sylius_test_html_attribute('main-image') }} alt="{{ product.name }}" class="ui bordered image" style="max-width:100px;" />
+                </td>
+                <td>
+                    {% if orderItem.further|length and orderItem.further.pack is defined and orderItem.further.pack|length %}
+                        <h3>Pack : {{ orderItem.variant.product.name }}</h3>
+                        {% for variantId, variantPrice in orderItem.further.pack %}
+                            {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
+                        {% endfor %}
+                    {% else %}
+                    <h3>{{ orderItem.variantName }} - {{ orderItem.id }} -- {{ orderItem.variant.id }}</h3>
+                
+                    <dl class="datas">
+                        <dt>Quantité</dt>
+                        <dd>{{ rmaProduct.quantity }}</dd>
 
-{% block content %}
-<div>
-    <h1>Retour produit n°{{ rma.number }}</h1>
-</div>
-<table width="100%">
-    <tr>
-        <td width="50%">
-            <p>Date : {{ rma.createdAt|date('d/m/Y') }}</p>
-            <div>
-                <p>
-                    Retour Produit :
-                    <br>CHULLANKA
-                    <br>RETOUR WEB
-                    <br>1 CHEMIN DE LA COUME
-                    <br>09300 LAVELANET
-                </p>
-            </div>
-        </td>
-        <td width="50%">
-            <p>Commande : {{ rma.order.number }}</p>
-            <div>
-                <p>
-                    {{ rma.customer }}
-                    <br>{{ rma.address }}
-                    <br>T: {{ rma.phoneNumber }}
-                </p>
-            </div>
-        </td>
-    </tr>
-</table>
-
-<h2>Produits</h2>
-<table>
-{% for rmaProduct in rma.rmaProducts %}
-    <tr>
-        {% set orderItem = rmaProduct.orderItem %}
-        {% set product = orderItem.variant.product %}
-        <td>
-            {% if product.imagesByType('thumbnail') is not empty %}
-                {% set path = product.imagesByType('thumbnail').first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
-            {% elseif product.images.first %}
-                {% set path = product.images.first.path|imagine_filter(filter|default('sylius_shop_product_thumbnail')) %}
-            {% endif %}
-            <img src="{{ path }}" {{ sylius_test_html_attribute('main-image') }} alt="{{ product.name }}" class="ui bordered image" style="max-width:100px;" />
-        </td>
-        <td>
-            {% if orderItem.further|length and orderItem.further.pack is defined and orderItem.further.pack|length %}
-                <h3>Pack : {{ orderItem.variant.product.name }}</h3>
-                {% for variantId, variantPrice in orderItem.further.pack %}
-                    {{ render(url('chk_ajax_showpackitem', {'variantId': variantId})) }}
-                {% endfor %}
-            {% else %}
-            <h3>{{ orderItem.variantName }} - {{ orderItem.id }} -- {{ orderItem.variant.id }}</h3>
-        
-            <dl class="datas">
-                <dt>Quantité</dt>
-                <dd>{{ rmaProduct.quantity }}</dd>
-
-                <dt>Raison</dt>
-                <dd>{{ rmaProduct.reason }}</dd>
-            </dl>
-        </td>
-        {% endif %}
-    </tr>
-{% endfor %}
-</table>
-
-<hr>
-<p>N.B. Merci de mettre ce coupon dans le carton, et de noter sur celui-ci le numéro de Retour Produit à 11 chiffres.</p>
-<p>N.B. Lors de la réception de votre produit NEUF, il sera expertisé par nos chullis.
-<br>Si celui-ci ne présente aucune trace d’utilisation, nous procéderons au remboursement.</p>
-{% endblock %}
+                        <dt>Raison</dt>
+                        <dd>{{ rmaProduct.reason }}</dd>
+                    </dl>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+        <br>
+        <hr>
+        <p>N.B. Merci de mettre ce coupon dans le carton, et de noter sur celui-ci le numéro de Retour Produit à 11 chiffres.</p>
+        <p>N.B. Lors de la réception de votre produit NEUF, il sera expertisé par nos chullis.
+        <br>Si celui-ci ne présente aucune trace d’utilisation, nous procéderons au remboursement.</p>
+    </body>
+</html>
