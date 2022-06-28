@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,9 +24,14 @@ class RmaType extends AbstractType
         $this->customer = $builder->getData()->getCustomer();
 
         $builder
-            ->add('phone_number')
-            ->add('customer_email', EmailType::class)
+            ->add('phone_number', TextType::class, [
+                'label' => 'Votre numéro de téléphone'
+            ])
+            ->add('customer_email', EmailType::class, [
+                'label' => 'Votre email'
+            ])
             ->add('address', EntityType::class, [
+                'label' => 'Votre adresse',
                 'class' => Address::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er	->createQueryBuilder('a')

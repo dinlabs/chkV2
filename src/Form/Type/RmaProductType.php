@@ -6,6 +6,7 @@ use App\Entity\Chullanka\RmaProduct;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -21,10 +22,13 @@ class RmaProductType extends AbstractType
                 $entity = $event->getData();
                 $qty = ($entity instanceof RmaProduct) ? $entity->getOrderitem()->getQuantity() : 1;
                 $form->add('quantity', ChoiceType::class, [
+                    'label' => 'Quantité',
                     'choices' => range(0, $qty),
                 ]);
             })
-            ->add('reason')
+            ->add('reason', TextareaType::class, [
+                'label' => 'Pour quelle raison ?'
+            ])
         ;
     }
 

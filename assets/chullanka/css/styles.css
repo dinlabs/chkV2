@@ -1104,6 +1104,19 @@ body.customer { background:var(--bg1); }
 .customer #sylius-default-address .buttons .button .icon, .customer #sylius-addresses .address .buttons .button .icon { display:none; }
 
 
+#askrma form { padding-bottom:2em; }
+#askrma form label { display:inline-block; width:200px; }
+#askrma form label::after { content:' : '; }
+#askrma form input[type='text'], #askrma form input[type='email'] { width:100%; max-width:500px; padding:.5em 1em; }
+#askrma form select { border-radius:5px; padding:.5em 1em; }
+#askrma form textarea { border-radius:5px; border:1px solid var(--default); width:100%; max-width:500px; height:150px; padding:.5em 1em; vertical-align:top; }
+#askrma .contact { padding-top:2em; padding-bottom:3em; }
+#askrma .contact select { width:100%; max-width:500px; }
+#askrma .contact > div, #askrma .products ul li > div { padding-bottom:1em; }
+#askrma .products { padding-bottom:1em; }
+#askrma .products ul li { padding-bottom:2em; border-bottom:1px dashed; margin-bottom:2em; }
+
+
 /* MAGASINS */
 #stores .framap { display:flex; justify-content:center; gap:2em; flex-wrap:wrap; }
 
