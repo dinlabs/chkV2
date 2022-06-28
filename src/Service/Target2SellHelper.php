@@ -256,7 +256,7 @@ class Target2SellHelper
                     {
                         $_logoUrl = $baseUrl . '/media/brand/logos/' . $logo;
                         $attributesNode->appendChild(
-                            $this->addAttribute('logo_marque', 'logo_marque', $_logoUrl, '')
+                            $this->addAttribute('logo_marque', 'logo_marque', $_logoUrl, 'LOGO_' . $brand->getId())
                         );
                     }
                     $brandUrl = $this->router->generate(
@@ -265,7 +265,7 @@ class Target2SellHelper
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     $attributesNode->appendChild(
-                        $this->addAttribute('lien_marque', 'lien_marque', $brandUrl, '')
+                        $this->addAttribute('lien_marque', 'lien_marque', $brandUrl, 'LNK_' . $brand->getId())
                     );
                 }
 
