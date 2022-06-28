@@ -1,10 +1,17 @@
-<h2>Ajouter à une liste d'envie</h2>
-<div>
-    <p>Ajoute des produits à tes listes d’envies pour les retrouver plus tard, tu pourras ainsi les partager avec tes compagnons d'aventure et vous pourrez préparer votre prochaine expedition.  </p>
-</div>
 {% if notuser is defined %}
-    <p>Il faut être connecté pour utiliser cette fonctionnalité</p>
+<h2>Pas si vite !</h2>
+<div class="centered">
+    <p>Pour ajouter ce produit à votre liste d'envie, connectez-vous ou créez votre compte d'abord.</p>
+    <div class="actions">
+        <a href="{{ path('sylius_shop_login') }}" class="btn primary">Se connecter</a>
+        <a href="{{ path('sylius_shop_register') }}" class="btn primary sub">Créer son compte</a>
+    </div>
+</div>
 {% else %}
+<h2>Un produit qui donne envie !</h2>
+<div>
+    <p>Ce produit vous fait de l’œil ? Sauvegardez-le dans votre liste d’envie et retrouvez-le plus tard dans votre espace personnel. <br>Simple et efficace !</p>
+</div>
 <form action="{{ path('chk_wishlist_add_product', {'variant_id': variant_id}) }}" method="post">
     <ul>
         {% for item in wishlists %}

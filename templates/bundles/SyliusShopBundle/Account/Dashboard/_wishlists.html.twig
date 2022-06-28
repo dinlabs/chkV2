@@ -5,7 +5,7 @@
             <img src="{{ asset('build/chullanka/images/chulli_5.jpg', 'chullanka') }}" width="66" height="66" alt="Chulli">
             <svg class="svg-icon" role="img" style="width:66px; height:66px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
         </div>
-        <p>Ajoute des produits à tes listes d’envies pour les retrouver plus tard, tu pourras ainsi les partager avec tes compagnons d’aventure et vous pourrez préparer votre prochaine expedition.</p>
+        <p>Des produits vous font de l’œil ? Ajoutez-les à votre liste d’envie pour les sauvegarder, les retrouver facilement et même les partager avec vos compagnons d’aventure ! Pas mal non ?</p>
     </div>
 
     {% if customer.wishlists|length %}
@@ -17,7 +17,7 @@
         {% endfor %}
 
         <div class="newishlist">
-            <a href="#" class="btn primary">Créer une nouvelle liste</a>
+            <a href="{{ path('chk_wishlist_create') }}" class="btn primary">Créer une nouvelle liste</a>
         </div>
     {% else %}
         <div class="docu">

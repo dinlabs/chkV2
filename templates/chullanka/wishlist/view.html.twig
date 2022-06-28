@@ -3,7 +3,7 @@
 {% block bodyattr %}id="wishlistmanage"{% endblock %}
 
 {% block content %}
-<div class="autoMargin">
+<div class="content autoMargin">
     {% block breadcrumb %}
     <ul id="breadcrumb">
         <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
@@ -14,45 +14,74 @@
 
     <h2>{{ wishlist }}</h2>
     
-    <div class="intro">
-        <div class="pichulli">
-            <img src="{{ asset('build/chullanka/images/chulli_5.jpg', 'chullanka') }}" width="66" height="66" alt="Chulli">
-            <svg class="svg-icon" role="img" style="width:66px; height:66px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
+    {% if wishlist.wishlistProducts|length %}
+        <div class="intro">
+            <div class="pichulli">
+                <img src="{{ asset('build/chullanka/images/chulli_5.jpg', 'chullanka') }}" width="66" height="66" alt="Chulli">
+                <svg class="svg-icon" role="img" style="width:66px; height:66px"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#over-chulli"/></svg>
+            </div>
+            <h3>Waouh, belle liste !</h3>
+            <p>Contactez-nous pour bénéficier d'une réduction sur votre panier.</p>
         </div>
-        <h3>Waouh, belle liste !</h3>
-        <p>Contactez-nous pour bénéficier d'une réduction sur votre panier.</p>
-    </div>
-    
-    {{ render(path('chk_ajax_getadviceform', {'title': ''})) }}
+        
+        {{ render(path('chk_ajax_getadviceform', {'title': ''})) }}
 
-    <h3>Les produits de votre liste</h3>
-    {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
-    <ul>
-    {% for item in wishlist.wishlistProducts %}
-        <li>
-            {% set variant = item.variant %}
-            {% set product = item.product %}
-            <div class="picture">
-                {% if variant.hasImages %}
-                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
-                {% else %}
-                    {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
-                {% endif %}
-            </div>
-            <div class="infos">
-                <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', product.name) }}>
-                    {% if product.brand %}<a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
-                    {% if variant is not null %}
-                        {{ variant }}
-                    {% else %}
-                        {{ product.name }}
-                    {% endif %}
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Supprimer la liste" onclick="return confirm('Voulez-vous vraiment supprimer cette liste ?')">
+        {{ form_end(delete_form) }}
+
+        <h3>Les produits de votre liste</h3>
+        {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+        <ul class="prodlist">
+        {% for item in wishlist.wishlistProducts %}
+            <li>
+                <div class="inner">
+                    {% set variant = item.variant %}
+                    {% set product = item.product %}
+                    <div class="picture">
+                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">
+                        {% if variant.hasImages %}
+                            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                        {% else %}
+                            {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product, 'filter': 'sylius_shop_product_small_thumbnail'} %}
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div class="infos">
+                        <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', product.name) }}>
+                            {% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
+
+                            <div class="sylius-product-name">
+                                <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">{% if variant is not null %}{{ variant }}{% else %}{{ product.name }}{% endif %}</a>
+                            </div>
+                        </div>
+
+                        <small>{{ 'sylius.ui.unit_price'|trans }}</small>
+                        <div class="price">
+                            <div class="promo">
+                                {% if variant|sylius_has_discount({'channel': sylius.channel}) %}
+                                <del {{ sylius_test_html_attribute('product-original-price', money.calculateOriginalPrice(variant)) }}>{{ money.calculateOriginalPrice(variant) }}</del>
+                                {% endif %}
+                            </div>
+                            
+                            <strong class="sylius-unit-price">{{ money.calculatePrice(variant) }}</strong>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.calculatePrice(variant) }}</div>
-            </div>
-        </li>    
-    {% endfor %}
-    </ul>
+                <div class="actions">
+                    {{ form_start(item.delete_form) }}
+                    <input type="submit" value="Supprimer">
+                    {{ form_end(item.delete_form) }}
+                    <!--a href="#">Ajouter au panier</!a-->
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Vous n'avez pas encore de produit dans cette liste.</p>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="Supprimer la liste" onclick="return confirm('Voulez-vous vraiment supprimer cette liste ?')">
+        {{ form_end(delete_form) }}
+    {% endif %}
 </div>
 {% endblock %}

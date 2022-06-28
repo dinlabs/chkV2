@@ -92,8 +92,10 @@ class AjaxController extends AbstractController
     {
         $data = ['cart_items' => 0, 'notifications' => 0]; // default
 
-        $cart = $this->cartContext->getCart();
-        $data['cart_items'] = $cart->getItems()->count();
+        if($cart = $this->cartContext->getCart())
+        {
+            $data['cart_items'] = $cart->getItems()->count();
+        }
         
         if($customer = $this->getCurrentCustomer())
         {

@@ -1,0 +1,24 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block bodyattr %}id="newishlist"{% endblock %}
+
+{% block content %}
+<div class="content autoMargin">
+    {% block breadcrumb %}
+    <ul id="breadcrumb">
+        <li><a href="{{ path('sylius_shop_homepage') }}">{{ 'sylius.ui.home'|trans }}</a></li>
+        <li><a href="{{ path('sylius_shop_account_dashboard') }}">{{ 'sylius.ui.my_account'|trans }}</a></li>
+        <li>Créer une liste d'envie</li>
+    </ul>
+    {% endblock %}
+
+    <h2>Créer une liste d'envie</h2>
+    <p>Donnez un nom à vos envies !</p>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn primary">Créer cette liste</button>
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}
