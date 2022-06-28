@@ -117,7 +117,7 @@ class WishlistController extends AbstractController
                 $em->flush();
 
                 $flashBag = $request->getSession()->getBag('flashes');
-                $flashBag->add('success', 'Le produit a été ajouté à votre liste !');
+                $flashBag->add('success', 'Ce produit a bien été ajouté à votre liste d\'envie');
 
                 return $this->redirectToRoute('sylius_shop_product_show', ['slug' => $product->getSlug(), '_locale' => $product->getTranslation()->getLocale()]);
             }
