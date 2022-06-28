@@ -45,7 +45,7 @@ class UpstreamPayWidget
     {
         if(is_null($this->session->get('upstreampay_token')) || empty($this->session->get('upstreampay_token')) || ($this->session->get('upstreampay_token_expire') < time()))
         {
-            $authUrl = $this->upstreampay_base_url . 'oauth/token';
+            $authUrl = $this->upstreampay_base_url . '/oauth/token';
             $basic_auth = base64_encode($this->client_id . ':' . $this->client_secret);
 
             $ch = curl_init($authUrl);
@@ -78,7 +78,7 @@ class UpstreamPayWidget
     public function getUpStreamPaySession($order = null)
     {
         error_log("getUpStreamPaySession");
-        $createSessionUrl = $this->upstreampay_base_url . $this->entity_id . '/sessions/create';
+        $createSessionUrl = $this->upstreampay_base_url . '/' . $this->entity_id . '/sessions/create';
         error_log("createSessionUrl : $createSessionUrl");
         $ch = curl_init($createSessionUrl);
         $customHeaders = [
@@ -102,7 +102,7 @@ class UpstreamPayWidget
         if(self::isJSON($json_response))
         {
             $response = json_decode($json_response);
-            $this->logger->info('response : '.print_r($response,true));
+            //$this->logger->info('response : '.print_r($response,true));
             if(isset($response->id))
             {
                 $this->upstreampay_session = $json_response;
@@ -129,7 +129,7 @@ class UpstreamPayWidget
     {
         if($sessionId = $this->getSessionId())
         {
-            $askSessionUrl = $this->upstreampay_base_url . $this->entity_id . '/sessions/' . $sessionId;
+            $askSessionUrl = $this->upstreampay_base_url . '/' . $this->entity_id . '/sessions/' . $sessionId;
             $ch = curl_init($askSessionUrl);
             $customHeaders = [
                 'x-api-key: '.$this->api_key,
@@ -158,7 +158,7 @@ class UpstreamPayWidget
         $transactionId = $infos->transaction_id;
         $amount = $infos->plugin_result->amount;
 
-        $cancelUrl = $this->upstreampay_base_url . $this->entity_id . '/transactions/' . $transactionId . '/' . $action;
+        $cancelUrl = $this->upstreampay_base_url . '/' . $this->entity_id . '/transactions/' . $transactionId . '/' . $action;
         $ch = curl_init($cancelUrl);
         $customHeaders = [
             'Content-Type: application/json',
