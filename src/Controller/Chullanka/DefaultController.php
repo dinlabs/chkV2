@@ -993,6 +993,7 @@ final class DefaultController extends AbstractController
         if($request->get('failure'))
         {
             $infos = $upstreamPayWidget->getSessionInfos();
+            $this->logger->info(print_r($infos, true));
         }
 
         return $this->render('@SyliusShop/Order/failure.html.twig', [
