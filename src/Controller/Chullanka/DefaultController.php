@@ -34,6 +34,7 @@ use BitBag\SyliusCmsPlugin\Entity\Block;
 use BitBag\SyliusCmsPlugin\Entity\Page;
 use BitBag\SyliusCmsPlugin\Entity\Section;
 use Knp\Snappy\Pdf as GeneratorInterface;
+use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
@@ -55,10 +56,13 @@ final class DefaultController extends AbstractController
 {
     /** @var CartContextInterface */
     private $cartContext;
-
+    
     /** @var Environment */
     private $twig;
-
+    
+    /** @var LoggerInterface */
+    private $logger;
+    
     /** @var GinkoiaCustomerWs */
     private $ginkoiaCustomerWs;
 
@@ -70,10 +74,11 @@ final class DefaultController extends AbstractController
     /** @var GeneratorInterface */
     private $pdfGenerator;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender, GeneratorInterface $pdfGenerator)
+    public function __construct(CartContextInterface $cartContext, Environment $twig, LoggerInterface $logger, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender, GeneratorInterface $pdfGenerator)
     {
         $this->cartContext = $cartContext;
         $this->twig = $twig;
+        $this->logger = $logger;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->eventDispatcher = $eventDispatcher;
         $this->emailSender = $emailSender;
@@ -747,6 +752,7 @@ final class DefaultController extends AbstractController
             if($infos = $upstreamPayWidget->getSessionInfos())
             {
                 error_log(print_r($infos, true));
+                $this->logger->info(print_r($infos, true));
 
                 $further = $order->getFurther();
                 $further['upstreampay_return'] = $infos;
