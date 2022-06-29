@@ -142,7 +142,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                         {
                             $defaultAddress->setCountryCode($value);
                         }
-                        else $defaultAddress->setCountryCode('-');
+                        else $defaultAddress->setCountryCode('FR');
                     }
 
                     // fidélité
