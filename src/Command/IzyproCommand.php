@@ -44,10 +44,10 @@ class IzyproCommand extends Command
             '',
         ]);
         
-        $order = $this->manager->getRepository(Order::class)->find(37);
-        if($this->izyproHelper->export($order)) $output->writeln('C good');
+        //$order = $this->manager->getRepository(Order::class)->find(37);
+        //if($this->izyproHelper->export($order)) $output->writeln('C good');
 
-        //if(!$this->izyproHelper->updateOrderStates()) $output->writeln('PB SFTP');
+        if(!$this->izyproHelper->updateOrderStates()) $output->writeln('PB SFTP');
         
         
         //$this->izyproHelper->changeOrderInStoreState(19, 'in_preparation');
