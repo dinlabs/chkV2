@@ -737,17 +737,17 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
+        $order = $this->cartContext->getCart();
+
         $infos = [];
 
         /*if($request->get('hook'))
         {
             echo "HOOK !";
         }*/
-
+        
         if($request->get('success'))
         {
-            $order = $this->cartContext->getCart();
-            
             error_log('SUCCESS !');
             if($infos = $upstreamPayWidget->getSessionInfos())
             {

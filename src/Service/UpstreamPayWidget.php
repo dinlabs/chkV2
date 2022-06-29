@@ -319,6 +319,10 @@ class UpstreamPayWidget
 
                     $tax_amount = round($total_amount - $net_amount, 2);
                     $shipAddr = $order->getShippingAddress();
+
+                    $shipStreet = $shipAddr->getStreet();
+                    if(strlen($shipStreet) > 32) $shipStreet = substr($shipStreet, 0, 32);
+
                     $shipment_line = [
                         'amount' => $total_amount,
                         'net_amount' => round($net_amount, 2),
@@ -326,7 +330,7 @@ class UpstreamPayWidget
                         'shipping_address' => [
                             'first_name' => $shipAddr->getFirstname(),
                             'last_name' => $shipAddr->getLastname(),
-                            'address_lines' => [ $shipAddr->getStreet() ],
+                            'address_lines' => [ $shipStreet ],
                             'city' => $shipAddr->getCity(),
                             'postal_code' => $shipAddr->getPostcode(),
                             'country_code' => $shipAddr->getCountryCode(),
@@ -347,6 +351,11 @@ class UpstreamPayWidget
                     }
 
                     $address = $order->getBillingAddress();
+
+                    $billStreet = $address->getStreet();
+                    //order.customer.billing_address.address_lines[0] length cannot be greater than 32 or less than 0
+                    if(strlen($billStreet) > 32) $billStreet = substr($billStreet, 0, 32);
+
                     $customer_lines = [
                         'reference' => 'chk_customer_' . $customer->getId(), //utilisé pour réafficher des paiements la deuxième fois
                         'type_code' => 'customer',
@@ -361,7 +370,7 @@ class UpstreamPayWidget
                             'gender_code' => $gender,
                             'first_name' => $address->getFirstname(),
                             'last_name' => $address->getLastname(),
-                            'address_lines' => [ $address->getStreet() ],
+                            'address_lines' => [ $billStreet ],
                             'city' => $address->getCity(),
                             'postal_code' => $address->getPostcode(),
                             'country_code' => $address->getCountryCode(),
