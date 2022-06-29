@@ -61,12 +61,9 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
 
         // sorting Target2Sell
         //if(true)
-        error_log("_COOKIES");
-        error_log(print_r($_COOKIE,true));
         if(isset($_COOKIE) && isset($_COOKIE['t2s-rank']))
         {
             $rank = $_COOKIE['t2s-rank'] ?: 'rank1';
-            error_log("Rank : $rank");
             //$orderBy = $rank;
             $orderBy = 'attribute_' . $rank . '_fr_FR'; // hack!
             for($r=1; $r<=6; $r++)
@@ -111,8 +108,7 @@ final class ShopProductsSortDataHandler implements SortDataHandlerInterface
         
         $data['sort'] = [$orderBy => ['order' => strtolower($sort), 'unmapped_type' => 'keyword']];
         
-        //error_log(print_r($availableSorters,true));
-        error_log("orderBy : $orderBy");
+        //error_log("orderBy : $orderBy");
         //error_log(print_r($data,true));
         return $data;
     }
