@@ -1,7 +1,7 @@
 <div class="colorVars">
     <p>{{ product_association.type.name }} :</p>
     <ul>
-        {% for product in product_association.associatedProducts %}
+        {% for product in product_association.associatedProducts if product.enabled %}
         <li><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">{% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}</a></li>
         {% endfor %}
     </ul>
