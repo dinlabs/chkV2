@@ -738,6 +738,13 @@ final class DefaultController extends AbstractController
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
         $order = $this->cartContext->getCart();
+        $further = $order->getFurther();
+        
+        $sessionUspId = null;
+        if(isset($further['upstreampay_session_id']) && !empty($further['upstreampay_session_id']))
+        {
+            $sessionUspId = $further['upstreampay_session_id'];
+        }
 
         $infos = [];
 
@@ -749,12 +756,11 @@ final class DefaultController extends AbstractController
         if($request->get('success'))
         {
             error_log('SUCCESS !');
-            if($infos = $upstreamPayWidget->getSessionInfos())
+            if($infos = $upstreamPayWidget->getSessionInfos($sessionUspId))
             {
                 error_log(print_r($infos, true));
                 $this->logger->info(print_r($infos, true));
 
-                $further = $order->getFurther();
                 $further['upstreampay_return'] = $infos;
                 $order->setFurther($further);
 
@@ -992,7 +998,7 @@ final class DefaultController extends AbstractController
 
         if($request->get('failure'))
         {
-            $infos = $upstreamPayWidget->getSessionInfos();
+            $infos = $upstreamPayWidget->getSessionInfos($sessionUspId);
             $this->logger->info(print_r($infos, true));
         }
 

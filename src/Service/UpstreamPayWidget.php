@@ -117,7 +117,7 @@ class UpstreamPayWidget
     
     public function getSessionId()
     {
-        if(is_null($this->session->get('upstreampay_session_id')) || empty($this->session->get('upstreampay_session_id')))
+        if((is_null($this->session->get('upstreampay_session_id')) || empty($this->session->get('upstreampay_session_id'))) && self::isJSON($this->upstreampay_session))
         {
             $upstreampay_session = json_decode($this->upstreampay_session);
             $this->session->set('upstreampay_session_id', $upstreampay_session->id);
@@ -125,9 +125,11 @@ class UpstreamPayWidget
         return $this->session->get('upstreampay_session_id');
     }
 
-    public function getSessionInfos()
+    public function getSessionInfos($sessionId = null)
     {
-        if($sessionId = $this->getSessionId())
+        if(is_null($sessionId)) $sessionId = $this->getSessionId();
+
+        if($sessionId)
         {
             $askSessionUrl = $this->upstreampay_base_url . '/' . $this->entity_id . '/sessions/' . $sessionId;
             $ch = curl_init($askSessionUrl);
