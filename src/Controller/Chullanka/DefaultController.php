@@ -969,11 +969,11 @@ final class DefaultController extends AbstractController
                     }
 
                     // hack
-                    if($number = $order->getNumber())
+                    /*if($number = $order->getNumber())
                     {
                         $number = '1' . substr($number, 1);
                         $order->setNumber($number);
-                    }
+                    }*/
                     
                     $em->persist($order);
                     $em->flush();
