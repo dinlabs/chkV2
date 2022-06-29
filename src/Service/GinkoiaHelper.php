@@ -557,7 +557,7 @@ class GinkoiaHelper
         
         
         // Fin
-        if($coef > 1)
+        if($coef > 0)
         {
             $taxAmount = .2;
             //$shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;

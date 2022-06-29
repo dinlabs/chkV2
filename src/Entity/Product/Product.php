@@ -552,4 +552,14 @@ class Product extends BaseProduct
 
         return $availability;
     }
+    
+    public function getOverAllQuantities(): int
+    {
+        $total = 0;
+        foreach($this->getAvailabilities() as $where => $qty)
+        {
+            $total += $qty;
+        }
+        return $total;
+    }
 }
