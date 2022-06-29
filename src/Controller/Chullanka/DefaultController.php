@@ -738,7 +738,9 @@ final class DefaultController extends AbstractController
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
         $order = $this->cartContext->getCart();
+        error_log('ORDER ID : '.$order->getId());
         $further = $order->getFurther();
+        error_log('FURTHER : '.$further);
         
         $sessionUspId = null;
         if(isset($further['upstreampay_session_id']) && !empty($further['upstreampay_session_id']))
