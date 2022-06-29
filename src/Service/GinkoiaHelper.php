@@ -149,24 +149,56 @@ class GinkoiaHelper
                 foreach($further['upstreampay_return'] as $return)
                 {
                     $codeName = '';
-                    switch($return->method)
+                    if(is_array($return))
                     {
-                        case 'creditcard':
-                            $codeName = 'CB';
-                            break;
-                        
-                        case 'paypal':
-                            $codeName = 'PAYPAL';
-                            break;
-                        
-                        case 'giftcard':
-                            $codeName = ($return->partner == 'illicado') ? 'CB3X' : 'Carte Cadeau';
-                            break;
+                        switch($return['method'])
+                        {
+                            case 'creditcard':
+                                $codeName = 'CB';
+                                break;
+                            
+                            case 'paypal':
+                                $codeName = 'PAYPAL';
+                                break;
+                            
+                            case 'cb3x':
+                                $codeName = 'CB3X';
+                                break;
+                            
+                            case 'giftcard':
+                                $codeName = ($return['partner'] == 'illicado') ? 'CB3X' : 'Carte Cadeau';
+                                break;
+                        }
+                        if(!empty($codeName)) 
+                        {
+                            $payMethodDetails[] = $codeName . ' : ' . number_format($return['plugin_result']['amount'], 2, ',', '') . '€';
+                        }
+
                     }
-                    
-                    if(!empty($codeName)) 
+                    else
                     {
-                        $payMethodDetails[] = $codeName . ' : ' . number_format($return->plugin_result->amount, 2, ',', '') . '€';
+                        switch($return->method)
+                        {
+                            case 'creditcard':
+                                $codeName = 'CB';
+                                break;
+                            
+                            case 'paypal':
+                                $codeName = 'PAYPAL';
+                                break;
+                            
+                            case 'cb3x':
+                                $codeName = 'CB3X';
+                                break;
+                            
+                            case 'giftcard':
+                                $codeName = ($return->partner == 'illicado') ? 'CB3X' : 'Carte Cadeau';
+                                break;
+                        }
+                        if(!empty($codeName)) 
+                        {
+                            $payMethodDetails[] = $codeName . ' : ' . number_format($return->plugin_result->amount, 2, ',', '') . '€';
+                        }
                     }
                 }
             }
