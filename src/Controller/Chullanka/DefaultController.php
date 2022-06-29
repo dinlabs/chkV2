@@ -853,6 +853,31 @@ final class DefaultController extends AbstractController
                                     [logs] => stdClass Object
                                     [cardHolder] => payer@example.com
                                     [status] => authorized
+
+                     [0] => stdClass Object
+                        (
+                            [id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
+                            [session_id] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
+                            [partner] => floa
+                            [method] => cb3x
+                            [status] => stdClass Object
+                                (
+                                    [action] => CAPTURE
+                                    [state] => SUCCESS
+                                    [code] => SUCCEEDED
+                                )
+
+                            [date] => 2022-06-29T12:46:31.912810546Z
+                            [transaction_id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
+                            [plugin_result] => stdClass Object
+                                (
+                                    [status] => success
+                                    [amount] => 347.49
+                                    [partner_reference] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
+                                    [logs] => stdClass Object
+                                        (
+                                            [schedule_2_initial_amount] =>
+
                 */
                 //dd($infos);
 
@@ -872,6 +897,12 @@ final class DefaultController extends AbstractController
                             $msg = 'PayPal';
                             if(isset($return->plugin_result->cardHolder))
                                 $msg .= ' : ' . $return->plugin_result->cardHolder;
+                            break;
+                        
+                        case 'cb3x':
+                            $msg = 'Paiement en 3X';
+                            if(isset($return->plugin_result->partner_reference))
+                                $msg .= ' : ' . $return->plugin_result->partner_reference;
                             break;
                         
                         case 'giftcard':
