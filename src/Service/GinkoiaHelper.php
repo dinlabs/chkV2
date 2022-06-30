@@ -543,7 +543,8 @@ class GinkoiaHelper
         
         
         // Règlements
-        if($payment)
+        //https://bugs.dinlabs.fr/view.php?id=3265#c16663
+        /*if($payment)
         {
             $reglementsNode = $this->doc->createElement('Reglements');
                 $reglementNode = $this->doc->createElement('Reglement');
@@ -553,7 +554,7 @@ class GinkoiaHelper
             $reglementsNode->appendChild($reglementNode);
             
             $orderNode->appendChild($reglementsNode);
-        }
+        }*/
         
         
         // Fin
