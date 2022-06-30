@@ -103,7 +103,7 @@
         });
 
         // sorting
-        $('.sortList').on('click', 'a.item', function(e) {
+        $('#searchWrapper').on('click', '.sortList a.item', function(e) {
             e.preventDefault();
 
             var _target = $(this).attr('href');
@@ -111,7 +111,7 @@
             var _orderBy = $(this).data('orderby');
             var _sort = $(this).data('sort');
             _target = _targetArr[0] + '?order_by=' + _orderBy + '&sort=' + _sort;
-            
+
             $('#js-loader').addClass('loading');
             //document.location.href = _target;
             $.ajax({
