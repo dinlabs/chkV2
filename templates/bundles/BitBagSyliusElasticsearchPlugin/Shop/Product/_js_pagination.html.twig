@@ -101,5 +101,57 @@
                 },
             });
         });
+
+        // sorting
+        $('.sortList').on('click', 'a.item', function(e) {
+            e.preventDefault();
+
+            var _target = $(this).attr('href');
+            _targetArr = _target.split('?');
+            var _orderBy = $(this).data('orderby');
+            var _sort = $(this).data('sort');
+            _target = _targetArr[0] + '?order_by=' + _orderBy + '&sort=' + _sort;
+            
+            $('#js-loader').addClass('loading');
+            //document.location.href = _target;
+            $.ajax({
+                type: 'GET',
+                url: _target,
+                data: $form.serialize(),
+                dataType: 'html',
+                error() {
+                    $('#js-loader').removeClass('loading');
+                },
+                success(response) {
+                    $('#searchWrapper').html(response);
+                    $('#js-loader').removeClass('loading');
+
+                    var _text = 'Aucun produit';
+                    if($('#searchWrapper #products').length && $('#showProducts').length)
+                    {
+                        // nbr total de produits
+                        var _total = $('#searchWrapper #products').data('total');
+                        if(_total > 0)
+                        {
+                            _text = 'Voir le';
+                            if(_total > 1) _text += 's ' + _total;
+                            _text += ' produit';
+                            if(_total > 1) _text += 's ';
+                        }
+                    }
+                    $('#showProducts').html(_text);
+
+                    // reload JS events
+                    funcFoldable();
+                    funcOpenFilters();
+                    funcLoadMoreProds();
+                    _manageButtonMore();
+                    window.scrollTo({
+                        top: $anchor.offsetTop - _topDecay,
+                        behavior: 'smooth'
+                    });
+                },
+            });
+        })
     });
 </script>

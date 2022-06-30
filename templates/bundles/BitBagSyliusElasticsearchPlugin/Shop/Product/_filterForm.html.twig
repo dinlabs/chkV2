@@ -80,9 +80,12 @@
             {% set queryParameters = app.request.query.all|unset_elements(['order_by', 'sort', 'page']) %}
             
             <ul class="sortList">
-                <li><a class="item{{ _order_by == 'sold_units' ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'sold_units', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.bestsellers'|trans }}</a></li>
-                <li><a class="item{{ (_order_by == 'price') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.most_expensive'|trans }}</a></li>
-                <li><a class="item{{ (_order_by == 'price') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.cheapest'|trans }}</a></li>
+                {#<li><a class="item{{ _order_by == 'sold_units' ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'sold_units', 'sort': 'desc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.bestsellers'|trans }}</a></li>#}
+                <li><a class="item{{ _order_by == 'sold_units' ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code}) }}" data-orderby="sold_units" data-sort="desc">{{ 'bitbag_sylius_elasticsearch_plugin.ui.bestsellers'|trans }}</a></li>
+                {#<li><a class="item{{ (_order_by == 'price') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'desc'}|merge(queryParameters)) }}" data-orderby="price" data-sort="desc">{{ 'bitbag_sylius_elasticsearch_plugin.ui.most_expensive'|trans }}</a></li>#}
+                <li><a class="item{{ (_order_by == 'price') and (_sort == 'desc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code}) }}" data-orderby="price" data-sort="desc">{{ 'bitbag_sylius_elasticsearch_plugin.ui.most_expensive'|trans }}</a></li>
+                {#<li><a class="item{{ (_order_by == 'price') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code, 'order_by': 'price', 'sort': 'asc'}|merge(queryParameters)) }}">{{ 'bitbag_sylius_elasticsearch_plugin.ui.cheapest'|trans }}</a></li>#}
+                <li><a class="item{{ (_order_by == 'price') and (_sort == 'asc') ? ' active' : ''}}" href="{{ path(route, {'slug': slug, 'code': code}) }}" data-orderby="price" data-sort="asc">{{ 'bitbag_sylius_elasticsearch_plugin.ui.cheapest'|trans }}</a></li>
             </ul>
         </div>
 
