@@ -15,7 +15,7 @@
             </a>
             {% else %}
             {% set _slug = taxon.redirection ? taxon.redirection.slug : taxon.slug %}
-            <a href="{{ path('sylius_shop_product_index', {'slug': _slug, '_locale': taxon.translation.locale}) }}"{% if taxon.isUnivers and _bgCat %} class="withBgImg" style="background-image:url({{ _bgCat }});"{% endif %}>
+            <a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': _slug, '_locale': taxon.translation.locale}) }}"{% if taxon.isUnivers and _bgCat %} class="withBgImg" style="background-image:url({{ _bgCat }});"{% endif %}>
                 <span>{{ taxon.name }}</span>
             </a>
             {% endif %}
@@ -27,7 +27,7 @@
                 <strong class="name">{{ taxon.name }}</strong>
             </div>
             <div class="catLink">
-                <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
+                <a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
                     <span>Voir {% if taxon.isUnivers %}cet univers{% else %}tous les produits{% endif %}</span>
                 </a> 
                 <br>{{ taxon.name }}

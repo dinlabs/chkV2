@@ -16,7 +16,7 @@
     {% if block.taxons %}
     <ul class="ctaCats">
         {% for taxon in block.taxons %}
-        <li><a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">{{ taxon.name }}</a></li>
+        <li><a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">{{ taxon.name }}</a></li>
         {% endfor %}
     </ul>
     {% endif %}

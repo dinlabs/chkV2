@@ -9,7 +9,7 @@
     <h2>Et si vous regardiez aussi</h2>
     <ul>
         {% for item in taxon.otherTaxons %}
-        <li><a href="{{ path('sylius_shop_product_index', {'slug': item.slug, '_locale': item.translation.locale}) }}">{{ item.name }}</a></li>
+        <li><a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': item.slug, '_locale': item.translation.locale}) }}">{{ item.name }}</a></li>
         {% endfor %}
     </ul>
 </div>

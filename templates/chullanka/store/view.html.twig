@@ -193,7 +193,7 @@
             {% if store.taxons|length %}
             <ul class="subCats">
                 {% for child in store.taxons %}
-                <li><a href="{{ path('sylius_shop_product_index', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
+                <li><a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': child.slug, '_locale': child.translation.locale}) }}" class="item" {{ sylius_test_html_attribute('vertical-menu-item') }}><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-caret-right"/></svg> {{ child.name }}</a></li>
                 {% endfor %}
             </ul>
             <br>
