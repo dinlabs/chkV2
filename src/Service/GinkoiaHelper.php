@@ -574,7 +574,7 @@ class GinkoiaHelper
             $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
         }
         
-        $netPayer = ($coef > 0) ? (float)$payment->getAmount()/100 : $totTTC;
+        $netPayer = (($coef > 0) && $payment) ? (float)$payment->getAmount()/100 : $totTTC;
         
         $orderNode->appendChild($this->addKeyVal('TotalHT', number_format($totHT, 2, '.', '')));
         $orderNode->appendChild($this->addKeyVal('MontantTVA', number_format($totTVA, 2, '.', '')));
