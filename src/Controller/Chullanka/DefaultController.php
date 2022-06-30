@@ -1228,7 +1228,7 @@ final class DefaultController extends AbstractController
         $rma = $this->container->get('doctrine')->getRepository(Rma::class)->find($id);
         if($rma->getReturnSlip())
         {
-            $html = $this->render('chullanka/rma/bon_retour.html.twig', [
+            $html = $this->renderView('chullanka/rma/bon_retour.html.twig', [
                 'rma' => $rma
             ]);
             //return $html;
