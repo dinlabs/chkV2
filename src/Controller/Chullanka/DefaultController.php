@@ -754,6 +754,9 @@ final class DefaultController extends AbstractController
         {
             echo "HOOK !";
         }*/
+
+        // il faut attendre 2 sec pour que Dalenys ait le temps de traiter l'infos
+        sleep(2);
         
         if($request->get('success'))
         {
