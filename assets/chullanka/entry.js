@@ -26,6 +26,7 @@ import './img/favsport_6.jpg';
 import './img/favsport_7.jpg';
 import './img/favsport_8.jpg';
 import './img/favsport_9.jpg';
+import './img/favsport_10.jpg';
 import './img/ico-adresse.png';
 import './img/ico-coeur.png';
 import './img/ico-gift.png';

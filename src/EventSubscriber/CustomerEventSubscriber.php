@@ -138,7 +138,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
                         }
                         else $defaultAddress->setCity('-');
 
-                        if(isset($_user['Adresse']['CodePays']) && ($value = trim($_user['Adresse']['CodePays'])) && !empty($value))
+                        if(isset($_user['Adresse']['CodePays']) && ($value = trim($_user['Adresse']['CodePays'])) && !empty($value) && ($value != '-'))
                         {
                             $defaultAddress->setCountryCode($value);
                         }
