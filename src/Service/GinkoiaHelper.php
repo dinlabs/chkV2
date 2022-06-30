@@ -34,8 +34,6 @@ class GinkoiaHelper
         if(!is_dir($this->ginkoiaDir)) mkdir($this->ginkoiaDir);
         $this->tmpDir = $this->ginkoiaDir . 'tmp/';
         if(!is_dir($this->tmpDir)) mkdir($this->tmpDir);
-
-        $this->totaux = [];
     }
     private function chkParameter($slug)
     {
@@ -123,6 +121,8 @@ class GinkoiaHelper
     private function xmlOrder(Order $order, $creditMemo = null): \DOMDocument
     {
         $coef = is_null($creditMemo) ? 1 : -1;
+        
+        $this->totaux = [];
 
         $this->doc = new \DOMDocument('1.0', 'UTF-8');
         $this->doc->xmlStandalone = true;
@@ -158,7 +158,7 @@ class GinkoiaHelper
                                 break;
                             
                             case 'paypal':
-                                $codeName = 'PAYPAL';
+                                $codeName = 'PayPal';
                                 break;
                             
                             case 'cb3x':
@@ -184,7 +184,7 @@ class GinkoiaHelper
                                 break;
                             
                             case 'paypal':
-                                $codeName = 'PAYPAL';
+                                $codeName = 'PayPal';
                                 break;
                             
                             case 'cb3x':
@@ -516,6 +516,7 @@ class GinkoiaHelper
         
         $orderNode->appendChild($lignesNode);
         
+        $this->logger->info('GinkoiaTotaux : '.print_r($this->totaux, true));
         $totHT = $totTTC = 0;
         foreach($this->totaux as $mnt)
         {
