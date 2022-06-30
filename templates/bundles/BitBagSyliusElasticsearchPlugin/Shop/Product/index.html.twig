@@ -39,9 +39,9 @@
 {% if taxon.isUnivers %}
     {% include '@SyliusShop/Taxon/_univers.html.twig' %}
 {% else %}
+    {% set ajax_pagination = app.request.get('page') %}
 
     {% if app.request.xmlHttpRequest == false %}
-        {% set ajax_pagination = false %}
         <div id="js-loader" class="ui form"></div>
 
         {{ render(url('sylius_shop_partial_taxon_show_by_slug', {
@@ -52,8 +52,6 @@
     <div id="cat_content" class="autoMargin">
         {{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }}
         <div id="searchWrapper">
-    {% else %}
-        {% set ajax_pagination = app.request.get('page') %}
     {% endif %}
 
             {% if ajax_pagination == false %}
