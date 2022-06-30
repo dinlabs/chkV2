@@ -29,6 +29,7 @@
         "sensio/framework-extra-bundle": "^6.2",
         "setono/sylius-feed-plugin": "^0.6.9",
         "setono/sylius-redirect-plugin": "^2.1",
+        "setono/sylius-trustpilot-plugin": "^1.2",
         "stefandoorn/google-tag-manager-plugin": "^1.0",
         "stefandoorn/sitemap-plugin": "^2.0",
         "stefandoorn/sylius-google-tag-manager-enhanced-ecommerce-plugin": "^1.2",

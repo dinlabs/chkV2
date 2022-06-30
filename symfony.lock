@@ -724,6 +724,9 @@
     "setono/sylius-redirect-plugin": {
         "version": "v2.1.5"
     },
+    "setono/sylius-trustpilot-plugin": {
+        "version": "v1.2.1"
+    },
     "slevomat/coding-standard": {
         "version": "6.4.1"
     },

@@ -4,6 +4,7 @@
 /public/media
 !/public/media/image/.gitkeep
 
+/private
 /node_modules
 
 /etc/build/*

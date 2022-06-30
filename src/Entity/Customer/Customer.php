@@ -13,14 +13,18 @@ use App\Entity\Chullanka\Wishlist;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Setono\SyliusTrustpilotPlugin\Model\CustomerTrustpilotAwareInterface;
+use Setono\SyliusTrustpilotPlugin\Model\CustomerTrait as TrustpilotCustomerTrait;
 use Sylius\Component\Core\Model\Customer as BaseCustomer;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="sylius_customer")
  */
-class Customer extends BaseCustomer
+class Customer extends BaseCustomer implements CustomerTrustpilotAwareInterface
 {
+    use TrustpilotCustomerTrait;
+    
     /**
      * @ORM\Column(type="integer", nullable=true)
      */

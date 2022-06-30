@@ -8,6 +8,8 @@ use App\Entity\Chullanka\Rma;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Setono\SyliusTrustpilotPlugin\Model\OrderTrustpilotAwareInterface;
+use Setono\SyliusTrustpilotPlugin\Model\OrderTrait as TrustpilotOrderTrait;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use Sylius\InvoicingPlugin\Entity\Invoice;
@@ -16,8 +18,10 @@ use Sylius\InvoicingPlugin\Entity\Invoice;
  * @ORM\Entity
  * @ORM\Table(name="sylius_order")
  */
-class Order extends BaseOrder
+class Order extends BaseOrder implements OrderTrustpilotAwareInterface
 {
+    use TrustpilotOrderTrait;
+    
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="order")
      */

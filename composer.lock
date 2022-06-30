@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4c915fa3e4c49d6ab67f674c7e75682",
+    "content-hash": "32e929c558e849d8963e3de3ab050654",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -8664,6 +8664,64 @@
                 "source": "https://github.com/Setono/SyliusRedirectPlugin/tree/v2.1.5"
             },
             "time": "2021-11-24T10:48:51+00:00"
+        },
+        {
+            "name": "setono/sylius-trustpilot-plugin",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setono/SyliusTrustpilotPlugin.git",
+                "reference": "4f66a884d81aa1f306fb60f9f2ff767c8065f6a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setono/SyliusTrustpilotPlugin/zipball/4f66a884d81aa1f306fb60f9f2ff767c8065f6a0",
+                "reference": "4f66a884d81aa1f306fb60f9f2ff767c8065f6a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4",
+                "sylius/resource-bundle": "^1.8",
+                "sylius/sylius": "^1.3",
+                "symfony/config": "^4.4 || ^5.0",
+                "thecodingmachine/safe": "^1.1"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "^6.1",
+                "roave/security-advisories": "dev-latest",
+                "setono/code-quality-pack": "^1.4.1",
+                "setono/sylius-behat-pack": "^0.1",
+                "symfony/debug-bundle": "^4.4 || ^5.0",
+                "symfony/dotenv": "^4.4 || ^5.0",
+                "symfony/intl": "^4.4 || ^5.0",
+                "symfony/web-profiler-bundle": "^4.4 || ^5.0"
+            },
+            "type": "sylius-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Setono\\SyliusTrustpilotPlugin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Trustpilot plugin for Sylius.",
+            "keywords": [
+                "Trustpilot",
+                "sylius",
+                "sylius-plugin"
+            ],
+            "support": {
+                "issues": "https://github.com/Setono/SyliusTrustpilotPlugin/issues",
+                "source": "https://github.com/Setono/SyliusTrustpilotPlugin/tree/v1.2.1"
+            },
+            "time": "2022-01-24T14:05:41+00:00"
         },
         {
             "name": "slevomat/coding-standard",
