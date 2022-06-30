@@ -10,7 +10,7 @@
         </a>
         <div class="infos">
             {% include '@SyliusShop/Product/_price.html.twig' %}
-            {% if product.brand %}<div class="brand"><a href="{{ absolute_url(path('brand_view', {'code': product.brand.code})) }}">{{ product.brand.name }}</a></div>{% endif %}
+            {% if product.brand %}<div class="brand">{{ product.brand.name }}</div>{% endif %}
             <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">{{ product.name }}</a></div>
             {% if product.averageRating %}
             <div class="clientRating">
@@ -21,8 +21,7 @@
                 </ul>
             </div>
             {% endif %}
-
-            <div class="hidden">
+            {#<div class="hidden">
                 <h4>DEBUG T2S :</h4>
                 <ul>
                     <li>Rank1 : {{ product.getAttributeByCodeAndLocale('rank1') ? product.getAttributeByCodeAndLocale('rank1').value : '-' }}</li>
@@ -32,7 +31,7 @@
                     <li>Rank5 : {{ product.getAttributeByCodeAndLocale('rank5') ? product.getAttributeByCodeAndLocale('rank5').value : '-' }}</li>
                     <li>Rank6 : {{ product.getAttributeByCodeAndLocale('rank6') ? product.getAttributeByCodeAndLocale('rank6').value : '-' }}</li>
                 </ul>
-            </div>
+            </div>#}
         </div>
     </div>
 </div>

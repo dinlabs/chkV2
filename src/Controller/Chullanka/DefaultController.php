@@ -937,7 +937,7 @@ final class DefaultController extends AbstractController
                                 $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
                             }
 
-                            if($return->status->action == 'CHARGE')
+                            if($return->status->action == 'CAPTURE')
                             {
                                 //on rembourse la transaction
                                 $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
