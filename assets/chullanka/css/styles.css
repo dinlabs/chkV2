@@ -369,7 +369,7 @@ header + #breadcrumb { padding-top:0; }
 #breadcrumb li a { color:inherit; }
 
 
-#announces .glider-slide > a, #promos .glider-slide > a, #guideList .glider-slide > a { display:block; }
+#announces .glider-slide > a, #announces .glider-slide > div > a, #promos .glider-slide > a, #promos .glider-slide > div > a, #guideList .glider-slide > a, #guideList .glider-slide > div > a { display:block; }
 
 
 /* HomePage */
