@@ -10,11 +10,11 @@
             {% include '@SyliusShop/Block/test_block.html.twig' %}
             {% else %}
                 <div class="cmsBlock">
+                    {{ bitbag_cms_render_content(block) }}
+                    
                     {% if block.name and block.link %}
                     <a href="{{ block.link }}" class="link">{{ block.name }}</a>
                     {% endif %}
-                    
-                    {{ bitbag_cms_render_content(block) }}
                 </div>
             {% endif %}
         </div>
