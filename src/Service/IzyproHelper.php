@@ -149,18 +149,21 @@ class IzyproHelper
             
             if($TRtype == 'showall')
             {
+                $allFiles = [];
                 foreach([$importDir, $exportDir] as $_dir)
                 {
-                    echo "<p>Dir : $_dir</p>";
+                    $_files = [];
                     $files = $sftp->scanFilesystem($_dir);// liste des fichiers
                     sort($files);
                     for($i = 0; isset($files[$i]); $i++)
                     {
                         if(strpos($files[$i], 'ARCHIVE') > -1) continue;
-                        
-                        echo '<p>Fichier courant : '.$files[$i].'</p>';
+
+                        $_files[] = $files[$i];
                     }
+                    $allFiles[] = ['dir' => $_dir, 'files' => $_files];
                 }
+                return $allFiles;
             }
             elseif($TRtype == 'sendxml')
             {

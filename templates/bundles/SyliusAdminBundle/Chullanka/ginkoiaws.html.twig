@@ -1,0 +1,21 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% block content %}
+    <h1>Test WS Ginkoia</h1>
+    <form action="/admin/chullanka/test/ginkoiaws">
+        <input name="email" value="{{ email }}" style="width:300px">
+        <input type="submit" value="tester cet email">
+    </form>
+    
+    <br><hr>
+    <h2>Pour l'email : {{ email }}</h2>
+    {{ dump(infos) }}
+
+    <br><hr>
+    <h2>Points de fidélité ?</h2>
+    {{ dump(loyalties) }}
+
+    <br><hr>
+    <h2>Commandes en magasins</h2>
+    {{ dump(shoporders) }}
+{% endblock %}

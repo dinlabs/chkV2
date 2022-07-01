@@ -27,8 +27,6 @@ use App\Form\Type\RmaType;
 use App\Service\ChronolabelHelper;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\GinkoiaHelper;
-use App\Service\IzyproHelper;
-use App\Service\Target2SellHelper;
 use App\Service\UpstreamPayWidget;
 use BitBag\SyliusCmsPlugin\Entity\Block;
 use BitBag\SyliusCmsPlugin\Entity\Page;
@@ -49,6 +47,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
@@ -56,6 +55,9 @@ final class DefaultController extends AbstractController
 {
     /** @var CartContextInterface */
     private $cartContext;
+
+    /** @var SessionInterface */
+    private $session;
     
     /** @var Environment */
     private $twig;
@@ -74,9 +76,10 @@ final class DefaultController extends AbstractController
     /** @var GeneratorInterface */
     private $pdfGenerator;
 
-    public function __construct(CartContextInterface $cartContext, Environment $twig, LoggerInterface $logger, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender, GeneratorInterface $pdfGenerator)
+    public function __construct(CartContextInterface $cartContext, SessionInterface $session, Environment $twig, LoggerInterface $logger, GinkoiaCustomerWs $ginkoiaCustomerWs, EventDispatcherInterface $eventDispatcher, SenderInterface $emailSender, GeneratorInterface $pdfGenerator)
     {
         $this->cartContext = $cartContext;
+        $this->session = $session;
         $this->twig = $twig;
         $this->logger = $logger;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
@@ -97,7 +100,7 @@ final class DefaultController extends AbstractController
     /**
      * @Route("/test", name="default_test")
      */
-    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, GinkoiaCustomerWs $ginkoiaCustomerWs, Target2SellHelper $target2SellHelper, IzyproHelper $izyproHelper, Request $request)
+    public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Request $request)
     {
         //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
         //dd($order);
@@ -146,59 +149,6 @@ final class DefaultController extends AbstractController
             'store' => $inStore
         ]);*/
 
-
-        echo "<h2>Test Izypro</h2>";
-        echo "<h3>Liste de fichiers du SFTP</h3>";
-        $izyproHelper->showFiles();
-
-        echo "<hr>";
-        $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
-        echo "<h2>Test WS Ginkoia</h2>";
-        echo "<h3>Email : $email</h3>";
-        $return = $ginkoiaCustomerWs->getCustomerInfos($email);
-        echo "<pre>";
-        print_r($return);
-        echo "</pre>";
-
-        $exportPath = '/home/ginkoia/home/export/';
-        if(is_dir($exportPath))
-        {
-            echo "<hr>";
-            echo "<h2>XML dans $exportPath</h2>";
-            $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
-            echo "<pre>";
-            print_r($files);
-            echo "</pre>";
-        }
-
-        echo "<hr>";
-        echo "<h2>Points de fidélité ?</h2>";
-        $return = $ginkoiaCustomerWs->getCustomerLoyalties($email);
-        echo "<pre>";
-        print_r($return);
-        echo "</pre>";
-
-        echo "<hr>";
-        echo "<h2>Commandes en magasins</h2>";
-        $return = $ginkoiaCustomerWs->getCustomerShopOrders($email);
-        echo "<pre>";
-        //print_r($return);
-        foreach($return as $order)
-        {
-            echo "<h3>Order :</h3>";
-            print_r($order);
-            echo "<h3>Détails :</h3>";
-            $receiptId = $order['ReceiptID'];
-            if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
-            {
-                print_r($orderItems);
-            }
-            echo "<br><br>";
-        }
-        echo "</pre>";
-
-        //$target2SellHelper->exportCatalog();
-        //$target2SellHelper->updateProductRanks();
         die("Fin");
 
         $order = $this->container->get('doctrine')->getRepository(Order::class)->find(48);
@@ -700,6 +650,9 @@ final class DefaultController extends AbstractController
         $cart = $this->cartContext->getCart();
         $cart->setCustomerIp($request->getClientIp());
 
+        // sauvegarde l'ID en session pour le récupérer au retour d'USP
+        $this->session->set('upstreampay_orderid', $cart->getId());
+
         // force UPSTREAM_PAY payment method
         if($payMethod = $this->container->get('doctrine')->getRepository(PaymentMethod::class)->findOneByCode('UPSTREAM_PAY'))
         {
@@ -737,8 +690,13 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
+        $sessionUspId = $upstreamPayWidget->getSessionId();
+        error_log("SyliuSession : ".$sessionUspId);
+
         //$order = $this->cartContext->getCart();
-        $orderId = $request->get('orderid');
+        $orderId = $this->session->get('upstreampay_orderid');
+        //$orderId = $request->get('orderid');
+        error_log("orderId : ".$orderId);
         if($orderId && !empty($orderId))
         {
             if($order = $this->container->get('doctrine')->getRepository(Order::class)->find($orderId))
@@ -766,121 +724,6 @@ final class DefaultController extends AbstractController
         
                         $further['upstreampay_return'] = $infos;
                         $order->setFurther($further);
-        
-                        /*
-                            [0] => stdClass Object
-                                (
-                                    [id] => 5238c014-9d80-4316-bc2d-78a59ea57069
-                                    [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
-                                    [partner] => dalenys
-                                    [method] => creditcard
-                                    [status] => stdClass Object
-                                        (
-                                            [action] => AUTHORIZE
-                                            [state] => SUCCESS
-                                            [code] => SUCCEEDED
-                                        )
-                                    [date] => 2022-05-13T10:31:32.337632232
-                                    [transaction_id] => 5238c014-9d80-4316-bc2d-78a59ea57069
-                                    [plugin_result] => stdClass Object
-                                        (
-                                            [status] => 0000
-                                            [amount] => 1
-                                            [integrated_token] => Array
-                                                (
-                                                    [0] => stdClass Object
-                                                        (
-                                                            [id] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
-                                                            [uniqueness_token] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
-                                                            [expiration_date] => 2022-12-01T00:00:00Z
-                                                            [description] => stdClass Object
-                                                                (
-                                                                    [brand_name] => cb
-                                                                    [display_token] => 423460XXXXXX0000
-                                                                )
-                                                            [owner] => chk_customer_2
-                                                        )
-                                                )
-                                            [partner_reference] => A19428176
-                                            [logs] => stdClass Object
-                                                (
-                                                    [optional_details] => Successful operation
-                                                )
-                                        )
-                                )
-        
-                            [1] => stdClass Object
-                                (
-                                    [id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
-                                    [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
-                                    [partner] => easy2play
-                                    [method] => giftcard
-                                    [status] => stdClass Object
-                                        (
-                                            [action] => AUTHORIZE
-                                            [state] => SUCCESS
-                                            [code] => SUCCEEDED
-                                        )
-                                    [date] => 2022-05-13T10:31:31.911981167
-                                    [transaction_id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
-                                    [plugin_result] => stdClass Object
-                                        (
-                                            [status] => 1
-                                            [amount] => 1.5
-                                            [integrated_token] => Array
-                                                (
-                                                    [0] => 
-                                                )
-                                            [partner_reference] => 1de6cc084d13b
-                                        )
-                                )
-                            )
-        
-                            [2] => stdClass Object
-                                (
-                                    [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                                    [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
-                                    [partner] => braintree
-                                    [method] => paypal
-                                    [status] => stdClass Object
-                                            [action] => AUTHORIZE
-                                            [state] => SUCCESS
-                                            [code] => SUCCEEDED
-                                    [date] => 2022-02-23T16:52:15.646668501
-                                    [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                                    [plugin_result] => stdClass Object
-                                            [status] => 1000
-                                            [amount] => 16
-                                            [logs] => stdClass Object
-                                            [cardHolder] => payer@example.com
-                                            [status] => authorized
-        
-                             [0] => stdClass Object
-                                (
-                                    [id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
-                                    [session_id] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
-                                    [partner] => floa
-                                    [method] => cb3x
-                                    [status] => stdClass Object
-                                        (
-                                            [action] => CAPTURE
-                                            [state] => SUCCESS
-                                            [code] => SUCCEEDED
-                                        )
-        
-                                    [date] => 2022-06-29T12:46:31.912810546Z
-                                    [transaction_id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
-                                    [plugin_result] => stdClass Object
-                                        (
-                                            [status] => success
-                                            [amount] => 347.49
-                                            [partner_reference] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
-                                            [logs] => stdClass Object
-                                                (
-                                                    [schedule_2_initial_amount] =>
-        
-                        */
-                        //dd($infos);
         
                         $notes = [];
                         $successPay = 0;

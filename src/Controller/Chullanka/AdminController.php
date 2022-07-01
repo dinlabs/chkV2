@@ -6,6 +6,9 @@ use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Parameter;
 use App\Entity\Product\Product;
 use App\Entity\Shipping\Shipment;
+use App\Service\GinkoiaCustomerWs;
+use App\Service\IzyproHelper;
+use App\Service\Target2SellHelper;
 use Cloudflare\API\Auth\APIKey as CFAPIKey;
 use Cloudflare\API\Adapter\Guzzle as CFGuzzle;
 use Cloudflare\API\Endpoints\Zones as CFZones;
@@ -115,6 +118,79 @@ class AdminController extends AbstractController
         $referer = $request->headers->get('referer');
         return $this->redirect($referer);
 
+    }
+
+    /**
+     *
+     * @Route("/test/izypro", name="test_izypro")
+     */
+    public function testSftpIzypro(Request $request, IzyproHelper $izyproHelper)
+    {
+        $files = $izyproHelper->showFiles();
+        return $this->render('@SyliusAdmin/Chullanka/izypro.html.twig', [
+            'files' => $files,
+        ]);
+    }
+
+    /**
+     *
+     * @Route("/test/ginkoia", name="test_ginkoia")
+     */
+    public function testExportsGinkoia(Request $request)
+    {
+        $msg = '';
+        $files = [];
+        $exportPath = $this->chkParameter('ginkoia-path-export');
+        if(is_dir($exportPath))
+        {
+            $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
+        }
+        else $msg  = "Ce répertoire n'existe pas";
+        
+        return $this->render('@SyliusAdmin/Chullanka/ginkoiaexports.html.twig', [
+            'exportpath' => $exportPath,
+            'files' => $files,
+            'msg' => $msg,
+        ]);
+    }
+
+    /**
+     *
+     * @Route("/test/ginkoiaws", name="test_ginkoiaws")
+     */
+    public function testWSGinkoia(Request $request, GinkoiaCustomerWs $ginkoiaCustomerWs)
+    {
+        
+        $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
+        $infos = $ginkoiaCustomerWs->getCustomerInfos($email);
+        $loyalties = $ginkoiaCustomerWs->getCustomerLoyalties($email);
+
+        $shoporders = [];
+        $return = $ginkoiaCustomerWs->getCustomerShopOrders($email);
+        foreach($return as $order)
+        {
+            $datas = ['Order' => $order];
+            $receiptId = $order['ReceiptID'];
+            if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
+            {
+                $datas['Details'] = $orderItems;
+            }
+            $shoporders[] = $datas;
+        }
+
+        return $this->render('@SyliusAdmin/Chullanka/ginkoiaws.html.twig', [
+            'email' => $email,
+            'infos' => $infos,
+            'loyalties' => $loyalties,
+            'shoporders' => $shoporders,
+        ]);
+    }
+
+    public function exportCatalogT2S(Request $request, Target2SellHelper $target2SellHelper)
+    {
+        //$target2SellHelper->exportCatalog();
+        //$target2SellHelper->updateProductRanks();
+        die;
     }
 
     /**

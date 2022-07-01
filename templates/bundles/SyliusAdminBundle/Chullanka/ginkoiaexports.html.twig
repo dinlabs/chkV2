@@ -1,0 +1,12 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% block content %}
+    <h1>Test Exports Ginkoia</h1>
+
+    <h2>XML dans : {{ exportpath }}</h2>
+    {% if files|length %}
+        {{ dump(files) }}
+    {% else %}
+        {{ msg }}
+    {% endif %}
+{% endblock %}
