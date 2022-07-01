@@ -5,7 +5,7 @@
 
     <h2>XML dans : {{ exportpath }}</h2>
     {% if files|length %}
-        {{ dump(files) }}
+        {{ pr(files) }}
     {% else %}
         {{ msg }}
     {% endif %}
