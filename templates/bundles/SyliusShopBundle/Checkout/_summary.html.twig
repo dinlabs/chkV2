@@ -12,7 +12,7 @@
             {% set product = variant.product %}
             <tr class="withPicture">
                 <td class="picture">
-                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">
+                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">
                     {% if variant.hasImages %}
                         {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': variant, 'filter': 'sylius_shop_product_small_thumbnail'} %}
                     {% else %}

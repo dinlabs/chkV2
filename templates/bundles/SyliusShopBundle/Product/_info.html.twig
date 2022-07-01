@@ -6,7 +6,7 @@
 {% if product.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a></div>{% endif %}
 
 <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
-    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}">{{ item.productName }}</a>
+    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">{{ item.productName }}</a>
     {#<span class="sub header sylius-product-variant-code" {{ sylius_test_html_attribute('product-variant-code') }}>{{ variant.code }}</span>#}
 </div>
 

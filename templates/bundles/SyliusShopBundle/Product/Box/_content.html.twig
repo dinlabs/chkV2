@@ -4,14 +4,14 @@
 <div class="prodInList">
     <svg class="svg-picto" role="img"><use xlink:href="{{ absolute_url(asset('build/chullanka/images/sprites.svg', 'chullanka')) }}#notation"/></svg>
     <div class="insert">
-        <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture">
+        <a href="{{ absolute_url(path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale})) }}" class="picture" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">
             {% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}
             {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
         </a>
         <div class="infos">
             {% include '@SyliusShop/Product/_price.html.twig' %}
             {% if product.brand %}<div class="brand">{{ product.brand.name }}</div>{% endif %}
-            <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">{{ product.name }}</a></div>
+            <div class="title" {{ sylius_test_html_attribute('product-name', product.name) }}><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">{{ product.name }}</a></div>
             {% if product.averageRating %}
             <div class="clientRating">
                 <ul class="rating">

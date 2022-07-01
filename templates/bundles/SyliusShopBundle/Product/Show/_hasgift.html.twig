@@ -10,7 +10,7 @@
         <div class="infos">
             {% if gift.brand %}<div class="brand"><a href="{{ path('brand_view', {'code': gift.brand.code}) }}">{{ gift.brand.name }}</a></div>{% endif %}
             <div class="sylius-product-name">
-                <a href="{{ path('sylius_shop_product_show', {'slug': gift.slug}) }}">{{ gift.name }}</a>
+                <a href="{{ path('sylius_shop_product_show', {'slug': gift.slug}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">{{ gift.name }}</a>
             </div>
             <div class="notabene">Offert en achetant ce produit</div>
         </div>
