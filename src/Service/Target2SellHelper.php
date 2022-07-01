@@ -76,6 +76,8 @@ class Target2SellHelper
      */
     public function exportCatalog()
     {
+        //https://freemarker.apache.org/
+        
         $context = $this->router->getContext();
         $baseUrl = $context->getScheme() . '://' . $context->getHost();
 

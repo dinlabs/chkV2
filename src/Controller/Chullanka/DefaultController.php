@@ -737,312 +737,314 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
-        $order = $this->cartContext->getCart();
-        error_log('ORDER ID : '.$order->getId());
-        $further = $order->getFurther();
-        error_log('FURTHER : '.$further);
-        
-        $sessionUspId = null;
-        if(isset($further['upstreampay_session_id']) && !empty($further['upstreampay_session_id']))
+        //$order = $this->cartContext->getCart();
+        $orderId = $request->get('orderid');
+        if($orderId && !empty($orderId))
         {
-            $sessionUspId = $further['upstreampay_session_id'];
-        }
-
-        $infos = [];
-
-        /*if($request->get('hook'))
-        {
-            echo "HOOK !";
-        }*/
-
-        // il faut attendre 2 sec pour que Dalenys ait le temps de traiter l'infos
-        sleep(2);
-        
-        if($request->get('success'))
-        {
-            error_log('SUCCESS !');
-            if($infos = $upstreamPayWidget->getSessionInfos($sessionUspId))
+            if($order = $this->container->get('doctrine')->getRepository(Order::class)->find($orderId))
             {
-                error_log(print_r($infos, true));
-                $this->logger->info(print_r($infos, true));
+                $further = $order->getFurther();
 
-                $further['upstreampay_return'] = $infos;
-                $order->setFurther($further);
-
-                /*
-                    [0] => stdClass Object
-                        (
-                            [id] => 5238c014-9d80-4316-bc2d-78a59ea57069
-                            [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
-                            [partner] => dalenys
-                            [method] => creditcard
-                            [status] => stdClass Object
+                $sessionUspId = null;
+                if(isset($further['upstreampay_session_id']) && !empty($further['upstreampay_session_id']))
+                {
+                    $sessionUspId = $further['upstreampay_session_id'];
+                }
+        
+                $infos = [];
+        
+                // il faut attendre 2 sec pour que Dalenys ait le temps de traiter l'infos
+                sleep(2);
+                
+                if($request->get('success') || $request->get('hook'))
+                {
+                    error_log('SUCCESS !');
+                    if($infos = $upstreamPayWidget->getSessionInfos($sessionUspId))
+                    {
+                        error_log(print_r($infos, true));
+                        $this->logger->info(print_r($infos, true));
+        
+                        $further['upstreampay_return'] = $infos;
+                        $order->setFurther($further);
+        
+                        /*
+                            [0] => stdClass Object
                                 (
-                                    [action] => AUTHORIZE
-                                    [state] => SUCCESS
-                                    [code] => SUCCEEDED
-                                )
-                            [date] => 2022-05-13T10:31:32.337632232
-                            [transaction_id] => 5238c014-9d80-4316-bc2d-78a59ea57069
-                            [plugin_result] => stdClass Object
-                                (
-                                    [status] => 0000
-                                    [amount] => 1
-                                    [integrated_token] => Array
+                                    [id] => 5238c014-9d80-4316-bc2d-78a59ea57069
+                                    [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
+                                    [partner] => dalenys
+                                    [method] => creditcard
+                                    [status] => stdClass Object
                                         (
-                                            [0] => stdClass Object
+                                            [action] => AUTHORIZE
+                                            [state] => SUCCESS
+                                            [code] => SUCCEEDED
+                                        )
+                                    [date] => 2022-05-13T10:31:32.337632232
+                                    [transaction_id] => 5238c014-9d80-4316-bc2d-78a59ea57069
+                                    [plugin_result] => stdClass Object
+                                        (
+                                            [status] => 0000
+                                            [amount] => 1
+                                            [integrated_token] => Array
                                                 (
-                                                    [id] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
-                                                    [uniqueness_token] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
-                                                    [expiration_date] => 2022-12-01T00:00:00Z
-                                                    [description] => stdClass Object
+                                                    [0] => stdClass Object
                                                         (
-                                                            [brand_name] => cb
-                                                            [display_token] => 423460XXXXXX0000
+                                                            [id] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
+                                                            [uniqueness_token] => A1-f89a3cde-d621-4652-be51-e7b66ddb90b2
+                                                            [expiration_date] => 2022-12-01T00:00:00Z
+                                                            [description] => stdClass Object
+                                                                (
+                                                                    [brand_name] => cb
+                                                                    [display_token] => 423460XXXXXX0000
+                                                                )
+                                                            [owner] => chk_customer_2
                                                         )
-                                                    [owner] => chk_customer_2
+                                                )
+                                            [partner_reference] => A19428176
+                                            [logs] => stdClass Object
+                                                (
+                                                    [optional_details] => Successful operation
                                                 )
                                         )
-                                    [partner_reference] => A19428176
-                                    [logs] => stdClass Object
+                                )
+        
+                            [1] => stdClass Object
+                                (
+                                    [id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
+                                    [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
+                                    [partner] => easy2play
+                                    [method] => giftcard
+                                    [status] => stdClass Object
                                         (
-                                            [optional_details] => Successful operation
+                                            [action] => AUTHORIZE
+                                            [state] => SUCCESS
+                                            [code] => SUCCEEDED
+                                        )
+                                    [date] => 2022-05-13T10:31:31.911981167
+                                    [transaction_id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
+                                    [plugin_result] => stdClass Object
+                                        (
+                                            [status] => 1
+                                            [amount] => 1.5
+                                            [integrated_token] => Array
+                                                (
+                                                    [0] => 
+                                                )
+                                            [partner_reference] => 1de6cc084d13b
                                         )
                                 )
-                        )
-
-                    [1] => stdClass Object
-                        (
-                            [id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
-                            [session_id] => 488ae8ad-272f-4e44-9099-285c31827b1f
-                            [partner] => easy2play
-                            [method] => giftcard
-                            [status] => stdClass Object
+                            )
+        
+                            [2] => stdClass Object
                                 (
-                                    [action] => AUTHORIZE
-                                    [state] => SUCCESS
-                                    [code] => SUCCEEDED
-                                )
-                            [date] => 2022-05-13T10:31:31.911981167
-                            [transaction_id] => 979b30d7-8c5e-43b3-bc2c-d2954f9c03a0
-                            [plugin_result] => stdClass Object
+                                    [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                                    [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
+                                    [partner] => braintree
+                                    [method] => paypal
+                                    [status] => stdClass Object
+                                            [action] => AUTHORIZE
+                                            [state] => SUCCESS
+                                            [code] => SUCCEEDED
+                                    [date] => 2022-02-23T16:52:15.646668501
+                                    [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
+                                    [plugin_result] => stdClass Object
+                                            [status] => 1000
+                                            [amount] => 16
+                                            [logs] => stdClass Object
+                                            [cardHolder] => payer@example.com
+                                            [status] => authorized
+        
+                             [0] => stdClass Object
                                 (
-                                    [status] => 1
-                                    [amount] => 1.5
-                                    [integrated_token] => Array
+                                    [id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
+                                    [session_id] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
+                                    [partner] => floa
+                                    [method] => cb3x
+                                    [status] => stdClass Object
                                         (
-                                            [0] => 
+                                            [action] => CAPTURE
+                                            [state] => SUCCESS
+                                            [code] => SUCCEEDED
                                         )
-                                    [partner_reference] => 1de6cc084d13b
-                                )
-                        )
-                    )
-
-                    [2] => stdClass Object
-                        (
-                            [id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                            [session_id] => dd28a0d9-c68a-43a6-8699-a7bae0d69ae3
-                            [partner] => braintree
-                            [method] => paypal
-                            [status] => stdClass Object
-                                    [action] => AUTHORIZE
-                                    [state] => SUCCESS
-                                    [code] => SUCCEEDED
-                            [date] => 2022-02-23T16:52:15.646668501
-                            [transaction_id] => b9dddf66-fa2a-44e4-a718-2bda34d2b90f
-                            [plugin_result] => stdClass Object
-                                    [status] => 1000
-                                    [amount] => 16
-                                    [logs] => stdClass Object
-                                    [cardHolder] => payer@example.com
-                                    [status] => authorized
-
-                     [0] => stdClass Object
-                        (
-                            [id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
-                            [session_id] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
-                            [partner] => floa
-                            [method] => cb3x
-                            [status] => stdClass Object
-                                (
-                                    [action] => CAPTURE
-                                    [state] => SUCCESS
-                                    [code] => SUCCEEDED
-                                )
-
-                            [date] => 2022-06-29T12:46:31.912810546Z
-                            [transaction_id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
-                            [plugin_result] => stdClass Object
-                                (
-                                    [status] => success
-                                    [amount] => 347.49
-                                    [partner_reference] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
-                                    [logs] => stdClass Object
+        
+                                    [date] => 2022-06-29T12:46:31.912810546Z
+                                    [transaction_id] => 689cdfdc-3e14-4f6f-997a-5b1a88051ba5
+                                    [plugin_result] => stdClass Object
                                         (
-                                            [schedule_2_initial_amount] =>
-
-                */
-                //dd($infos);
-
-                $notes = [];
-                $successPay = 0;
-                foreach($infos as $return)
-                {
-                    switch($return->method)
-                    {
-                        case 'creditcard':
-                            $msg = 'Carte bancaire';
-                            if(isset($return->plugin_result->partner_reference))
-                                $msg .= ' : ' . $return->plugin_result->partner_reference;
-                            break;
-                        
-                        case 'paypal':
-                            $msg = 'PayPal';
-                            if(isset($return->plugin_result->cardHolder))
-                                $msg .= ' : ' . $return->plugin_result->cardHolder;
-                            break;
-                        
-                        case 'cb3x':
-                            $msg = 'Paiement en 3X';
-                            if(isset($return->plugin_result->partner_reference))
-                                $msg .= ' : ' . $return->plugin_result->partner_reference;
-                            break;
-                        
-                        case 'giftcard':
-                            $msg = ($return->partner == 'illicado') ? 'Paiement en 3X' : 'Carte Cadeau Easy2Play';
-                            if(isset($return->plugin_result->partner_reference))
-                                $msg .= ' : ' . $return->plugin_result->partner_reference;
-                            break;
-                        default:
-                            $msg = 'Paiment OK';
-                    }
-                    $notes[] = $msg;
-
-                    if($return->status && ($return->status->state == 'SUCCESS'))
-                    {
-                        $successPay++;
-                    }
-                }
-                
-                // s'il n'y a pas autant de SUCCESS que de méthodes de paiement...
-                if($successPay < count($infos))
-                {
-                    foreach($infos as $return)
-                    {
-                        if($return->status && ($return->status->state == 'SUCCESS'))
+                                            [status] => success
+                                            [amount] => 347.49
+                                            [partner_reference] => c4eedec0-875a-4e95-bb2c-426c6b0a74bc
+                                            [logs] => stdClass Object
+                                                (
+                                                    [schedule_2_initial_amount] =>
+        
+                        */
+                        //dd($infos);
+        
+                        $notes = [];
+                        $successPay = 0;
+                        foreach($infos as $return)
                         {
-                            if($return->status->action == 'AUTHORIZE')
+                            switch($return->method)
                             {
-                                //on annule la transation 
-                                $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
+                                case 'creditcard':
+                                    $msg = 'Carte bancaire';
+                                    if(isset($return->plugin_result->partner_reference))
+                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                    break;
+                                
+                                case 'paypal':
+                                    $msg = 'PayPal';
+                                    if(isset($return->plugin_result->cardHolder))
+                                        $msg .= ' : ' . $return->plugin_result->cardHolder;
+                                    break;
+                                
+                                case 'cb3x':
+                                    $msg = 'Paiement en 3X';
+                                    if(isset($return->plugin_result->partner_reference))
+                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                    break;
+                                
+                                case 'giftcard':
+                                    $msg = ($return->partner == 'illicado') ? 'Paiement en 3X' : 'Carte Cadeau Easy2Play';
+                                    if(isset($return->plugin_result->partner_reference))
+                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                    break;
+                                default:
+                                    $msg = 'Paiment OK';
                             }
-
-                            if($return->status->action == 'CAPTURE')
+                            $notes[] = $msg;
+        
+                            if($return->status && ($return->status->state == 'SUCCESS'))
                             {
-                                //on rembourse la transaction
-                                $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
+                                $successPay++;
                             }
-                            error_log(print_r($_return, true));
                         }
-                    }
-                }
-                else
-                {
-                    // sinon c'est bon !
-                    $_finalNote = 'Paiement ';
-                    if(count($notes) > 1) $_finalNote .= "Mixte ";
-                    $_finalNote .= "avec \n";
-                    $_finalNote .= implode("\n", $notes);
-                    $order->setNotes($_finalNote);
-
-                    // changer le state
-                    //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
-                    $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-                    //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
-                    $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-
-                    
-                    //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
-                    $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                    $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
-                    
-                    $payment = $order->getPayments()->first();
-                    $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
-                    $paymentStateMachine->apply('complete');
-
-
-                    // update notification
-                    $customer = $order->getCustomer();
-                    $customer->setNotice(1);
-
-
-                    // EntityManager
-                    $em = $this->container->get('doctrine')->getManager();
-
-                    
-                    // IP
-                    $order->setCustomerIp($request->getClientIp());
-
-                    //Chullpoints
-                    $fidelityUsed = false;
-                    foreach($order->getAdjustments() as $adjustement)
-                    {
-                        if($adjustement->getOriginCode() == 'chk_chullpoints')
-                        {
-                            $fidelityUsed = true;
-                        }
-                    }
-                    if($fidelityUsed)
-                    {
-                        $chullz = $customer->getChullpoints(); //nbr de points sur le site
-                        $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
-                        $points = ($nbrReduc * 500);// on déduit le nombre de points
                         
-                        //on met à jour sur le WS
-                        $webserv = $this->ginkoiaCustomerWs;
-                        $email = $customer->getEmail();
-                        if($webserv->usePoints($points, $email))
+                        // s'il n'y a pas autant de SUCCESS que de méthodes de paiement...
+                        if($successPay < count($infos))
                         {
-                            // on met à jour sur le site
-                            $chullz -= $points;
-                            $customer->setChullpoints($chullz);
-                            $em->persist($customer);
+                            foreach($infos as $return)
+                            {
+                                if($return->status && ($return->status->state == 'SUCCESS'))
+                                {
+                                    if($return->status->action == 'AUTHORIZE')
+                                    {
+                                        //on annule la transation 
+                                        $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
+                                    }
+        
+                                    if($return->status->action == 'CAPTURE')
+                                    {
+                                        //on rembourse la transaction
+                                        $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
+                                    }
+                                    error_log(print_r($_return, true));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // sinon c'est bon !
+                            $_finalNote = 'Paiement ';
+                            if(count($notes) > 1) $_finalNote .= "Mixte ";
+                            $_finalNote .= "avec \n";
+                            $_finalNote .= implode("\n", $notes);
+                            $order->setNotes($_finalNote);
+        
+                            // changer le state
+                            //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
+                            $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+                            //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+                            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        
+                            
+                            //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
+                            $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                            $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                            
+                            $payment = $order->getPayments()->first();
+                            $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
+                            $paymentStateMachine->apply('complete');
+        
+        
+                            // update notification
+                            $customer = $order->getCustomer();
+                            $customer->setNotice(1);
+        
+        
+                            // EntityManager
+                            $em = $this->container->get('doctrine')->getManager();
+        
+                            
+                            // IP
+                            $order->setCustomerIp($request->getClientIp());
+        
+                            //Chullpoints
+                            $fidelityUsed = false;
+                            foreach($order->getAdjustments() as $adjustement)
+                            {
+                                if($adjustement->getOriginCode() == 'chk_chullpoints')
+                                {
+                                    $fidelityUsed = true;
+                                }
+                            }
+                            if($fidelityUsed)
+                            {
+                                $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                                $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+                                $points = ($nbrReduc * 500);// on déduit le nombre de points
+                                
+                                //on met à jour sur le WS
+                                $webserv = $this->ginkoiaCustomerWs;
+                                $email = $customer->getEmail();
+                                if($webserv->usePoints($points, $email))
+                                {
+                                    // on met à jour sur le site
+                                    $chullz -= $points;
+                                    $customer->setChullpoints($chullz);
+                                    $em->persist($customer);
+                                }
+                            }
+        
+                            // hack
+                            /*if($number = $order->getNumber())
+                            {
+                                $number = '1' . substr($number, 1);
+                                $order->setNumber($number);
+                            }*/
+                            
+                            $em->persist($order);
+                            $em->flush();
+                            
+                            // dispatch event
+                            $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
+        
+                            return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+                                'order' => $order
+                            ]);
                         }
                     }
-
-                    // hack
-                    /*if($number = $order->getNumber())
-                    {
-                        $number = '1' . substr($number, 1);
-                        $order->setNumber($number);
-                    }*/
-                    
-                    $em->persist($order);
-                    $em->flush();
-                    
-                    // dispatch event
-                    $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
-
-                    return $this->render('@SyliusShop/Order/thankYou.html.twig', [
-                        'order' => $order
-                    ]);
+                    //return $this->redirectToRoute('sylius_shop_order_thank_you');
+                    //==> quelque chose fait que le controller nous renvoie ensuite sur la home
                 }
+        
+                if($request->get('failure'))
+                {
+                    $infos = $upstreamPayWidget->getSessionInfos($sessionUspId);
+                    $this->logger->info(print_r($infos, true));
+                }
+        
+                return $this->render('@SyliusShop/Order/failure.html.twig', [
+                    'cart' => $order,
+                    'order' => $order,
+                    'infos' => $infos,
+                ]);
             }
-            //return $this->redirectToRoute('sylius_shop_order_thank_you');
-            //==> quelque chose fait que le controller nous renvoie ensuite sur la home
         }
 
-        if($request->get('failure'))
-        {
-            $infos = $upstreamPayWidget->getSessionInfos($sessionUspId);
-            $this->logger->info(print_r($infos, true));
-        }
-
-        return $this->render('@SyliusShop/Order/failure.html.twig', [
-            'cart' => $order,
-            'order' => $order,
-            'infos' => $infos,
-        ]);
+        return $this->render('@SyliusShop/Order/failure.html.twig');
     }
 
     /**

@@ -209,9 +209,9 @@ class UpstreamPayWidget
                 $payMethod = $payment->getMethod();
                 if($payMethod->getCode() == 'UPSTREAM_PAY')
                 {
-                    $urlHook = $this->router->generate('chk_upstream_payment_return', ['hook' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $urlSuccess = $this->router->generate('chk_upstream_payment_return', ['success' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $urlFailure = $this->router->generate('chk_upstream_payment_return', ['failure' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $urlHook = $this->router->generate('chk_upstream_payment_return', ['orderid' => $order->getId(), 'hook' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $urlSuccess = $this->router->generate('chk_upstream_payment_return', ['orderid' => $order->getId(), 'success' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $urlFailure = $this->router->generate('chk_upstream_payment_return', ['orderid' => $order->getId(), 'failure' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
 
                     $total_amount = $payment->getAmount() / 100;
                     $net_amount = 0;
