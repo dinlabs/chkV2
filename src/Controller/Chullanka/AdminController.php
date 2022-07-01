@@ -160,7 +160,6 @@ class AdminController extends AbstractController
      */
     public function testWSGinkoia(Request $request, GinkoiaCustomerWs $ginkoiaCustomerWs)
     {
-        
         $email = $request->query->get('email') ?: 'quentmaes@gmail.com'; //bestrenov@hotmail.com
         $infos = $ginkoiaCustomerWs->getCustomerInfos($email);
         $loyalties = $ginkoiaCustomerWs->getCustomerLoyalties($email);

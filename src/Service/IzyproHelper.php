@@ -117,7 +117,7 @@ class IzyproHelper
 
     public function showFiles()
     {
-        $this->doSftp('showall');
+        return $this->doSftp('showall');
     }
 
     public function updateOrderStates()
