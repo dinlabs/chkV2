@@ -35,20 +35,22 @@
     {% set t2spID = 2200 %}
 {% elseif routeName == 'chk_upstream_payment_return' or routeName == 'sylius_shop_order_thank_you' %}
     {% set t2spID = 2400 %}
-    {% set t2soID = order.id %}
-    {% if order.items|length %}
-        {% set t2siID = [] %}
-        {% set t2sqTE = [] %}
-        {% set t2spriceL = [] %}
-        {% for item in order.items %}
-            {% set t2siID = t2siID|merge([item.product.code|trans]) %}
-            {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
-            {% set t2spriceL = t2spriceL|merge([item.total / 100]) %}
-        {% endfor %}
-        {% set t2siID = t2siID|join('|') %}
-        {% set t2sqTE = t2sqTE|join('|') %}
-        {% set t2sbS = order.total / 100 %}
-        {% set t2spriceL = t2spriceL|join('|') %}
+    {% if order %}
+        {% set t2soID = order.id %}
+        {% if order.items|length %}
+            {% set t2siID = [] %}
+            {% set t2sqTE = [] %}
+            {% set t2spriceL = [] %}
+            {% for item in order.items %}
+                {% set t2siID = t2siID|merge([item.product.code|trans]) %}
+                {% set t2sqTE = t2sqTE|merge([item.quantity|trans]) %}
+                {% set t2spriceL = t2spriceL|merge([item.total / 100]) %}
+            {% endfor %}
+            {% set t2siID = t2siID|join('|') %}
+            {% set t2sqTE = t2sqTE|join('|') %}
+            {% set t2sbS = order.total / 100 %}
+            {% set t2spriceL = t2spriceL|join('|') %}
+        {% endif %}
     {% endif %}
     {% if app.user and app.user.customer and app.user.customer.email %}
         {% set t2suEM = t2sHash(app.user.customer.email) %}
