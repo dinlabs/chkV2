@@ -102,6 +102,21 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Request $request)
     {
+        echo "<h1>Test de session</h1>";
+
+        echo "<h2>Précédemment ?</h2>";
+        $recup = $this->session->get('testsession');
+        echo "<p>valeur : <strong>$recup</strong></p>";
+
+        echo "<hr>";
+
+        echo "<h2>Nouvelle uniqid</h2>";
+        $alea = uniqid();
+        $this->session->set('testsession', $alea);
+        echo "<p>valeur : <strong>$alea</strong></p>";
+        echo '<a href="https://www.nowaunet.fr/_pro/goback.php">Tester d\'aller-retour sur un autre site</a>';
+
+
         //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
         //dd($order);
 
@@ -695,6 +710,12 @@ final class DefaultController extends AbstractController
 
         //$order = $this->cartContext->getCart();
         $orderId = $this->session->get('upstreampay_orderid');
+        if(empty($orderId))
+        {
+            error_log("orderId empty");
+            $cart = $this->cartContext->getCart();
+            $orderId = $cart->getId();
+        }
         //$orderId = $request->get('orderid');
         error_log("orderId : ".$orderId);
         if($orderId && !empty($orderId))
