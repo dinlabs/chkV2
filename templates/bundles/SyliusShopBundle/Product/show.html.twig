@@ -45,7 +45,7 @@
     </div>
 </div>
 
-{% if product.complementaryProduct %}
+{% if product.complementaryProduct and product.complementaryProduct.enabled %}
 {% set complementary = product.complementaryProduct %}
 <div id="otherProducts" class="prodList">
     <div class="background"{% if complementary.background %} style="background-image:url({{ asset('media/complementary/backgrounds/' ~ complementary.background) }});"{% endif %}>
