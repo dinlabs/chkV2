@@ -772,6 +772,7 @@ final class DefaultController extends AbstractController
                             {
                                 if($return->status && ($return->status->state == 'SUCCESS'))
                                 {
+                                    $_return = null;
                                     if($return->status->action == 'AUTHORIZE')
                                     {
                                         //on annule la transation 
@@ -783,7 +784,7 @@ final class DefaultController extends AbstractController
                                         //on rembourse la transaction
                                         $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
                                     }
-                                    error_log(print_r($_return, true));
+                                    if($_return) error_log(print_r($_return, true));
                                 }
                             }
                         }

@@ -685,11 +685,11 @@ sylius_ui:
 
 
 winzou_state_machine:
-    sylius_order:
-        callbacks:
-            after:
-                sylius_save_addresses_on_customer:
-                    disabled: true
+    # sylius_order:
+    #     callbacks:
+    #         after:
+    #             sylius_save_addresses_on_customer:
+    #                 disabled: true
     sylius_shipment:
         states:
             onhold: ~

@@ -295,6 +295,10 @@ services:
             - '@app.repository.brand'
 
     #ndY: Overrides
+    sylius.customer_order_addresses_saver:
+        class: App\Component\Core\Customer\CustomerOrderAddressesSaver
+        public: true
+
     sylius.available_product_option_values_resolver:
         class: App\Overrides\Resolver\AvailableProductOptionValuesResolver
 
