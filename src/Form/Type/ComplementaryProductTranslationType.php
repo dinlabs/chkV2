@@ -16,6 +16,7 @@ class ComplementaryProductTranslationType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
+                'required' => false
             ])
             ->add('description', WysiwygType::class, [
                 'label' => 'Mini texte',
