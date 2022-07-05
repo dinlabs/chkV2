@@ -706,6 +706,10 @@ final class DefaultController extends AbstractController
      */
     public function UpstreamPaymentAction(Request $request, UpstreamPayWidget $upstreamPayWidget, FactoryInterface $stateMachineFactory)
     {
+        if($request->get('success')) error_log('SUCCESS !');
+        if($request->get('failure')) error_log('FAILURE !');
+        if($request->get('hook')) error_log('HOOK !');
+
         $sessionUspId = $upstreamPayWidget->getSessionId();
         error_log("SyliuSession : ".$sessionUspId);
 
@@ -732,175 +736,166 @@ final class DefaultController extends AbstractController
                 }
         
                 $infos = [];
-        
+                
                 // il faut attendre 2 sec pour que Dalenys ait le temps de traiter l'infos
                 sleep(2);
-                
-                if($request->get('success') || $request->get('hook'))
+
+                if($infos = $upstreamPayWidget->getSessionInfos($sessionUspId))
                 {
-                    error_log('SUCCESS !');
-                    if($infos = $upstreamPayWidget->getSessionInfos($sessionUspId))
+                    error_log(print_r($infos, true));
+                    $this->logger->info(print_r($infos, true));
+    
+                    $further['upstreampay_return'] = $infos;
+                    $order->setFurther($further);
+    
+                    $notes = [];
+                    $successPay = 0;
+                    foreach($infos as $return)
                     {
-                        error_log(print_r($infos, true));
-                        $this->logger->info(print_r($infos, true));
-        
-                        $further['upstreampay_return'] = $infos;
-                        $order->setFurther($further);
-        
-                        $notes = [];
-                        $successPay = 0;
-                        foreach($infos as $return)
+                        switch($return->method)
                         {
-                            switch($return->method)
-                            {
-                                case 'creditcard':
-                                    $msg = 'Carte bancaire';
-                                    if(isset($return->plugin_result->partner_reference))
-                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
-                                    break;
-                                
-                                case 'paypal':
-                                    $msg = 'PayPal';
-                                    if(isset($return->plugin_result->cardHolder))
-                                        $msg .= ' : ' . $return->plugin_result->cardHolder;
-                                    break;
-                                
-                                case 'cb3x':
-                                    $msg = 'Paiement en 3X';
-                                    if(isset($return->plugin_result->partner_reference))
-                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
-                                    break;
-                                
-                                case 'giftcard':
-                                    $msg = ($return->partner == 'illicado') ? 'Paiement en 3X' : 'Carte Cadeau Easy2Play';
-                                    if(isset($return->plugin_result->partner_reference))
-                                        $msg .= ' : ' . $return->plugin_result->partner_reference;
-                                    break;
-                                default:
-                                    $msg = 'Paiment OK';
-                            }
-                            $notes[] = $msg;
-        
-                            if($return->status && ($return->status->state == 'SUCCESS'))
-                            {
-                                $successPay++;
-                            }
+                            case 'creditcard':
+                                $msg = 'Carte bancaire';
+                                if(isset($return->plugin_result->partner_reference))
+                                    $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                break;
+                            
+                            case 'paypal':
+                                $msg = 'PayPal';
+                                if(isset($return->plugin_result->cardHolder))
+                                    $msg .= ' : ' . $return->plugin_result->cardHolder;
+                                break;
+                            
+                            case 'cb3x':
+                                $msg = 'Paiement en 3X';
+                                if(isset($return->plugin_result->partner_reference))
+                                    $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                break;
+                            
+                            case 'giftcard':
+                                $msg = ($return->partner == 'illicado') ? 'Paiement en 3X' : 'Carte Cadeau Easy2Play';
+                                if(isset($return->plugin_result->partner_reference))
+                                    $msg .= ' : ' . $return->plugin_result->partner_reference;
+                                break;
+                            default:
+                                $msg = 'Paiment OK';
                         }
-                        
-                        // s'il n'y a pas autant de SUCCESS que de méthodes de paiement...
-                        if($successPay < count($infos))
+                        $notes[] = $msg;
+    
+                        if($return->status && ($return->status->state == 'SUCCESS'))
                         {
-                            foreach($infos as $return)
-                            {
-                                if($return->status && ($return->status->state == 'SUCCESS'))
-                                {
-                                    $_return = null;
-                                    if($return->status->action == 'AUTHORIZE')
-                                    {
-                                        //on annule la transation 
-                                        $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
-                                    }
-        
-                                    if($return->status->action == 'CAPTURE')
-                                    {
-                                        //on rembourse la transaction
-                                        $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
-                                    }
-                                    if($_return) error_log(print_r($_return, true));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // sinon c'est bon !
-                            $_finalNote = 'Paiement ';
-                            if(count($notes) > 1) $_finalNote .= "Mixte ";
-                            $_finalNote .= "avec \n";
-                            $_finalNote .= implode("\n", $notes);
-                            $order->setNotes($_finalNote);
-        
-                            // changer le state
-                            //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
-                            $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-                            //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
-                            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-        
-                            
-                            //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
-                            $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                            $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
-                            
-                            $payment = $order->getPayments()->first();
-                            $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
-                            $paymentStateMachine->apply('complete');
-        
-        
-                            // update notification
-                            $customer = $order->getCustomer();
-                            $customer->setNotice(1);
-        
-        
-                            // EntityManager
-                            $em = $this->container->get('doctrine')->getManager();
-        
-                            
-                            // IP
-                            $order->setCustomerIp($request->getClientIp());
-        
-                            //Chullpoints
-                            $fidelityUsed = false;
-                            foreach($order->getAdjustments() as $adjustement)
-                            {
-                                if($adjustement->getOriginCode() == 'chk_chullpoints')
-                                {
-                                    $fidelityUsed = true;
-                                }
-                            }
-                            if($fidelityUsed)
-                            {
-                                $chullz = $customer->getChullpoints(); //nbr de points sur le site
-                                $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
-                                $points = ($nbrReduc * 500);// on déduit le nombre de points
-                                
-                                //on met à jour sur le WS
-                                $webserv = $this->ginkoiaCustomerWs;
-                                $email = $customer->getEmail();
-                                if($webserv->usePoints($points, $email))
-                                {
-                                    // on met à jour sur le site
-                                    $chullz -= $points;
-                                    $customer->setChullpoints($chullz);
-                                    $em->persist($customer);
-                                }
-                            }
-        
-                            // hack
-                            /*if($number = $order->getNumber())
-                            {
-                                $number = '1' . substr($number, 1);
-                                $order->setNumber($number);
-                            }*/
-                            
-                            $em->persist($order);
-                            $em->flush();
-                            
-                            // dispatch event
-                            $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
-        
-                            return $this->render('@SyliusShop/Order/thankYou.html.twig', [
-                                'order' => $order
-                            ]);
+                            $successPay++;
                         }
                     }
-                    //return $this->redirectToRoute('sylius_shop_order_thank_you');
-                    //==> quelque chose fait que le controller nous renvoie ensuite sur la home
+                    
+                    // s'il n'y a pas autant de SUCCESS que de méthodes de paiement...
+                    if($successPay < count($infos))
+                    {
+                        foreach($infos as $return)
+                        {
+                            if($return->status && ($return->status->state == 'SUCCESS'))
+                            {
+                                $_return = null;
+                                if($return->status->action == 'AUTHORIZE')
+                                {
+                                    //on annule la transation 
+                                    $_return = $upstreamPayWidget->cancelOrRefund($return, 'void');
+                                }
+    
+                                if($return->status->action == 'CAPTURE')
+                                {
+                                    //on rembourse la transaction
+                                    $_return = $upstreamPayWidget->cancelOrRefund($return, 'refund');
+                                }
+                                if($_return) error_log(print_r($_return, true));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // sinon c'est bon !
+                        $_finalNote = 'Paiement ';
+                        if(count($notes) > 1) $_finalNote .= "Mixte ";
+                        $_finalNote .= "avec \n";
+                        $_finalNote .= implode("\n", $notes);
+                        $order->setNotes($_finalNote);
+    
+                        // changer le state
+                        //cf. https://docs.sylius.com/en/latest/book/orders/checkout.html#finalizing
+                        $stateMachine = $stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+                        //$stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+                        $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+    
+                        
+                        //cf. https://docs.sylius.com/en/latest/book/orders/orders.html#how-to-add-a-payment-to-an-order
+                        $stateMachineBis = $stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                        $stateMachineBis->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                        
+                        $payment = $order->getPayments()->first();
+                        $paymentStateMachine = $stateMachineFactory->get($payment, 'sylius_payment');
+                        $paymentStateMachine->apply('complete');
+    
+    
+                        // update notification
+                        $customer = $order->getCustomer();
+                        $customer->setNotice(1);
+    
+    
+                        // EntityManager
+                        $em = $this->container->get('doctrine')->getManager();
+    
+                        
+                        // IP
+                        $order->setCustomerIp($request->getClientIp());
+    
+                        //Chullpoints
+                        $fidelityUsed = false;
+                        foreach($order->getAdjustments() as $adjustement)
+                        {
+                            if($adjustement->getOriginCode() == 'chk_chullpoints')
+                            {
+                                $fidelityUsed = true;
+                            }
+                        }
+                        if($fidelityUsed)
+                        {
+                            $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                            $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+                            $points = ($nbrReduc * 500);// on déduit le nombre de points
+                            
+                            //on met à jour sur le WS
+                            $webserv = $this->ginkoiaCustomerWs;
+                            $email = $customer->getEmail();
+                            if($webserv->usePoints($points, $email))
+                            {
+                                // on met à jour sur le site
+                                $chullz -= $points;
+                                $customer->setChullpoints($chullz);
+                                $em->persist($customer);
+                            }
+                        }
+    
+                        // hack
+                        /*if($number = $order->getNumber())
+                        {
+                            $number = '1' . substr($number, 1);
+                            $order->setNumber($number);
+                        }*/
+                        
+                        $em->persist($order);
+                        $em->flush();
+                        
+                        // dispatch event
+                        $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
+    
+                        return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+                            'order' => $order
+                        ]);
+                    }
                 }
-        
-                if($request->get('failure'))
-                {
-                    $infos = $upstreamPayWidget->getSessionInfos($sessionUspId);
-                    $this->logger->info(print_r($infos, true));
-                }
+                //return $this->redirectToRoute('sylius_shop_order_thank_you');
+                //==> quelque chose fait que le controller nous renvoie ensuite sur la home
+                
         
                 return $this->render('@SyliusShop/Order/failure.html.twig', [
                     'cart' => $order,
@@ -909,7 +904,6 @@ final class DefaultController extends AbstractController
                 ]);
             }
         }
-
         return $this->render('@SyliusShop/Order/failure.html.twig');
     }
 
