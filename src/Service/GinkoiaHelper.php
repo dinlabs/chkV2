@@ -84,7 +84,7 @@ class GinkoiaHelper
         // création du XML
         $this->doc = $this->xmlOrder($order, $creditMemo);
         
-        $filename = 'GINK_' . $creditMemo->getIssuedAt()->format('YmdHis') . '.xml';
+        $filename = 'GINK_' . $creditMemo->getIssuedAt()->format('YmdHis') . '_refund.xml';
         $file = $this->tmpDir . DIRECTORY_SEPARATOR . $filename;
         if (file_exists($file)) { unlink ($file); }
 
@@ -214,9 +214,26 @@ class GinkoiaHelper
         }
         
         // si remboursement
+        $shipRefund = [];
         if($coef < 0)
         {   
-            $realOrderId = $creditMemo->getNumber();
+            $realOrderId = '-' . str_replace('/', '', $creditMemo->getNumber());
+
+            $refundArray = [];
+            foreach($creditMemo->getLineItems() as $item)
+            {
+                // on ne compte pas les frais de port ici...
+                if(strpos($item->getName(), 'Livraison :') > -1)
+                {
+                    $shipRefund[] = $item;
+                    continue;
+                }
+
+                if($item->unitNetPrice() != 0)
+                    $refundArray[] = $item->getId();
+            }
+            $realOrderId .= '-'. count($refundArray);
+
             $commandeId = $creditMemo->getId();
             $commandeDate = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
             $dateReglement = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
@@ -382,6 +399,9 @@ class GinkoiaHelper
             $refundItems = $creditMemo->getLineItems();
             foreach($refundItems as $item)
             {
+                // on ne compte pas les frais de port ici...
+                if(strpos($item->getName(), 'Livraison :') > -1) continue;
+
                 if($ligneNode = $this->getRefundItemNode($item))
                 {
                     $lignesNode->appendChild($ligneNode);
@@ -558,22 +578,32 @@ class GinkoiaHelper
         }*/
         
         
-        // Fin
-        if($coef > 0)
+        // Frais de port
+        if($coef < 0)
         {
-            $taxAmount = .2;
-            //$shipInclTax = ($coef > 0) ? (float)$order->getAdjustmentsTotal() / 100 : (float)$creditmemo->getShippingInclTax() * $coef;
+            $shipInclTax = 0;
+            foreach($shipRefund as $shipItem)
+            {
+                $shipInclTax += ($shipItem->grossValue() / 100) * -1;
+            }
+        }
+        else
+        {
             $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
-            $shipping = $shipInclTax / (1 + $taxAmount);
-            $shipTVA = $shipInclTax - $shipping;
-            
-            $totHT += $shipping;
-            $totTVA += $shipTVA;
-            $totTTC += $shipInclTax;
-            
-            $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
         }
         
+        $taxAmount = .2;
+        $shipping = $shipInclTax / (1 + $taxAmount);
+        $shipTVA = $shipInclTax - $shipping;
+        
+        $totHT += $shipping;
+        $totTVA += $shipTVA;
+        $totTTC += $shipInclTax;
+        
+        $orderNode->appendChild($this->addKeyVal('FraisPort', number_format($shipInclTax, 2, '.', '')));
+
+
+        // Fin
         $netPayer = (($coef > 0) && $payment) ? (float)$payment->getAmount()/100 : $totTTC;
         
         $orderNode->appendChild($this->addKeyVal('TotalHT', number_format($totHT, 2, '.', '')));
