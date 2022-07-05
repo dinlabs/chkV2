@@ -562,6 +562,7 @@ header + #breadcrumb { padding-top:0; }
 /* Product page */
 /*#productTop { }*/
 #illustration { position:relative; max-width:100%; padding-bottom:2em; }
+#illustration .stickIt img { aspect-ratio:1; object-fit:contain; }
 
 #productInfos .clientRating { padding:0 0 1em 0; }
 
@@ -1340,7 +1341,6 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #productTop { --gapWidth:20px; display:grid; grid-template-columns:calc(50% - (var(--gapWidth) / 2)) calc(50% - (var(--gapWidth) / 2)); gap:var(--gapWidth); }
     #illustration { /*max-width:calc((100vw - var(--gapWidth)) / 2);*/ justify-self:center; }
     #illustration .stickIt { position:sticky; top:105px; }
-    #illustration .stickIt img { aspect-ratio:1; object-fit:contain; }
     #illustration .thumbnails { display:flex; justify-content:space-between; }
     #illustration .thumbnails li img { display:block; border-radius:5px; }
     
