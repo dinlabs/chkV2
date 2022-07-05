@@ -107,4 +107,26 @@ class Wishlist
 
         return $this;
     }
+
+    /**
+     * Pour Twig
+     */
+
+     public function totalPrice()
+     {
+        $total = 0;
+        foreach($this->wishlistProducts as $wp)
+        {
+            if($productVariant = $wp->getVariant())
+            {
+                if($priceChannels = $productVariant->getChannelPricings())
+                {
+                    $priceChannel = $priceChannels->first();
+
+                    $total += $priceChannel->getPrice();
+                }
+            }
+        }
+        return $total;
+     }
 }

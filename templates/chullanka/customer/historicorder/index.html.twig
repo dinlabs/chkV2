@@ -24,7 +24,7 @@
 {% block subcontent %}
 <h1>Liste de vos anciennes commandes passées...</h1>
 
-{% if magasin_orders|length %}
+{% if magasin_orders and magasin_orders|length %}
 <h2>...directement en boutiques Chullanka</h2>
 <table class="datas">
     <thead>
@@ -50,7 +50,7 @@
 
 <div style="margin-top:3em; border-top:2px dashed; padding-top:1em"></div>
 
-{% if approach_orders|length %}
+{% if approach_orders and approach_orders|length %}
 <h2>...sur le site d'Approach Outdoor</h2>
 <table class="datas">
     <thead>

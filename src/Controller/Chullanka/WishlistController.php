@@ -7,6 +7,10 @@ use App\Entity\Chullanka\WishlistProduct;
 use App\Entity\Product\ProductVariant;
 use App\Form\Type\WishlistType;
 use Doctrine\Persistence\ManagerRegistry;
+use Sylius\Component\Core\Context\ShopperContextInterface;
+use Sylius\Component\Order\Context\CartContextInterface;
+use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +19,30 @@ use Twig\Environment;
 
 class WishlistController extends AbstractController
 {
+    /** @var CartContextInterface */
+    private $cartContext;
+
+    /** @var FactoryInterface */
+    private $orderItemFactory;
+
+    /** @var OrderItemQuantityModifierInterface */
+    private $orderItemQuantityModifier;
+
+    /** @var ShopperContextInterface */
+    private $shopperContext;
+    
     /** @var ManagerRegistry */
     private $managerRegistry;
-
+    
     /** @var Environment */
     private $twig;
 
-    public function __construct(ManagerRegistry $managerRegistry, Environment $twig)
+    public function __construct(CartContextInterface $cartContext, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, ShopperContextInterface $shopperContext, ManagerRegistry $managerRegistry, Environment $twig)
     {
+        $this->cartContext = $cartContext;
+        $this->orderItemFactory = $orderItemFactory;
+        $this->orderItemQuantityModifier = $orderItemQuantityModifier;
+        $this->shopperContext = $shopperContext;
         $this->managerRegistry = $managerRegistry;
         $this->twig = $twig;
     }
@@ -156,6 +176,79 @@ class WishlistController extends AbstractController
             }
         }
         return $this->redirectToRoute('sylius_shop_homepage');
+    }
+
+    #[Route('/addlisttocart/{id}', name: 'chk_wishlist_add_list_to_cart')]
+    public function addListToCart(Request $request, string $id): Response
+    {
+        $doctrine = $this->container->get('doctrine');
+        $wishlist = $doctrine->getRepository(Wishlist::class)->find($id);
+        if($wishlist)
+        {
+            if($wishlist->getCustomer() == $this->getCurrentCustomer())
+            {
+                /** @var OrderInterface $order */
+                $cart = $this->cartContext->getCart();
+                $channel = $this->shopperContext->getChannel();
+
+                foreach($wishlist->getWishlistProducts() as $wp)
+                {
+                    if($productVariant = $wp->getVariant())
+                    {
+                        $orderItem = $this->orderItemFactory->createNew();
+                        $orderItem->setVariant($productVariant);
+                        $price = $productVariant->getChannelPricingForChannel($channel)->getPrice();
+                        $orderItem->setUnitPrice($price);
+                        $this->orderItemQuantityModifier->modify($orderItem, 1);
+                        $cart->addItem($orderItem);
+                    }
+                }
+
+                $em = $doctrine->getManager();
+                $em->persist($cart);
+                $em->flush();
+
+                $flashBag = $request->getSession()->getBag('flashes');
+                $flashBag->add('success', 'Les produits de votre liste d\'envie ont été ajoutés au panier.');
+            }
+        }
+        return $this->redirectToRoute('chk_wishlist_view', ['id' => $id]);
+    }
+
+    #[Route('/additemtocart/{id}', name: 'chk_wishlist_add_item_to_cart')]
+    public function addProdToCart(Request $request, string $id): Response
+    {
+        $doctrine = $this->container->get('doctrine');
+        $wp = $doctrine->getRepository(WishlistProduct::class)->find($id);
+        if($wp)
+        {
+            $wishlist = $wp->getWishlist();
+            if($wishlist->getCustomer() == $this->getCurrentCustomer())
+            {
+                /** @var OrderInterface $order */
+                $cart = $this->cartContext->getCart();
+                $channel = $this->shopperContext->getChannel();
+
+                if($productVariant = $wp->getVariant())
+                {
+                    $orderItem = $this->orderItemFactory->createNew();
+                    $orderItem->setVariant($productVariant);
+                    $price = $productVariant->getChannelPricingForChannel($channel)->getPrice();
+                    $orderItem->setUnitPrice($price);
+                    $this->orderItemQuantityModifier->modify($orderItem, 1);
+                    $cart->addItem($orderItem);
+                }
+
+                $em = $doctrine->getManager();
+                $em->persist($cart);
+                $em->flush();
+                $flashBag = $request->getSession()->getBag('flashes');
+                $flashBag->add('success', 'Le produit a été ajouté au panier.');
+                
+                return $this->redirectToRoute('chk_wishlist_view', ['id' => $wishlist->getId()]);
+            }
+        }
+        return $this->redirectToRoute('sylius_shop_account_dashboard');
     }
 
     /**

@@ -16,6 +16,7 @@
 
     <ul class="items">
         {% for item in order.items %}
+        {% if loop.index < 5 %}
         {% set variant = item.variant %}
         {% set product = variant.product %}
         <li>
@@ -60,6 +61,7 @@
                 <div class="sylius-total" {{ sylius_test_html_attribute('cart-product-subtotal') }}>{{ money.convertAndFormat(item.subtotal) }}</div>
             </div>
         </li>
+        {% endif %}
         {% endfor %}
     </ul>
 

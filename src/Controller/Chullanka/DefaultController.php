@@ -102,6 +102,7 @@ final class DefaultController extends AbstractController
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Request $request)
     {
+        /*
         echo "<h1>Test de session</h1>";
 
         echo "<h2>Précédemment ?</h2>";
@@ -115,7 +116,7 @@ final class DefaultController extends AbstractController
         $this->session->set('testsession', $alea);
         echo "<p>valeur : <strong>$alea</strong></p>";
         echo '<a href="https://www.nowaunet.fr/_pro/goback.php">Tester d\'aller-retour sur un autre site</a>';
-
+        */
 
         //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
         //dd($order);
