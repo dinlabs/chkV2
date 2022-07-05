@@ -1,0 +1,15 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% block title %}Test Info Session UpStreamPay | Chullanka{% endblock %}
+
+{% block content %}
+    <h1>Test Info Session UpStreamPay</h1>
+    <form action="/admin/chullanka/test/uspsession">
+        <input name="sessionid" value="{{ sessionid }}" style="width:300px" placeholder="session_id">
+        <input type="submit" value="tester cet ID de session">
+    </form>
+    
+    <br><hr>
+    <h2>Pour SessionId : {{ sessionid }}</h2>
+    {{ pr(infos) }}
+{% endblock %}

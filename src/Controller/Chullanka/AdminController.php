@@ -9,6 +9,7 @@ use App\Entity\Shipping\Shipment;
 use App\Service\GinkoiaCustomerWs;
 use App\Service\IzyproHelper;
 use App\Service\Target2SellHelper;
+use App\Service\UpstreamPayWidget;
 use Cloudflare\API\Auth\APIKey as CFAPIKey;
 use Cloudflare\API\Adapter\Guzzle as CFGuzzle;
 use Cloudflare\API\Endpoints\Zones as CFZones;
@@ -182,6 +183,24 @@ class AdminController extends AbstractController
             'infos' => $infos,
             'loyalties' => $loyalties,
             'shoporders' => $shoporders,
+        ]);
+    }
+
+    /**
+     *
+     * @Route("/test/uspsession", name="test_uspsession")
+     */
+    public function testUspSession(Request $request, UpstreamPayWidget $upstreamPayWidget)
+    {
+        $sessionUspId = '';
+        $infos = [];
+        if($sessionUspId = $request->query->get('sessionid'))
+        {
+            $infos = $upstreamPayWidget->getSessionInfos($sessionUspId);
+        }
+        return $this->render('@SyliusAdmin/Chullanka/uspsession.html.twig', [
+            'sessionid' => $sessionUspId,
+            'infos' => $infos
         ]);
     }
 
