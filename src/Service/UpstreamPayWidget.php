@@ -410,7 +410,7 @@ class UpstreamPayWidget
                         $shipment_line
                     ];
                     $order = [
-                        'reference' => 'chk_' . $order->getId(),
+                        'reference' => 'chk_' . $order->getId() . '_' . uniqid(),
                         'success' =>  $urlSuccess,
                         'failure' => $urlFailure,
                         'amount' => $total_amount,
