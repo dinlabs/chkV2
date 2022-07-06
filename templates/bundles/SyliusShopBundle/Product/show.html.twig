@@ -36,7 +36,6 @@
 <div id="productTop" class="autoMargin">
     <div id="illustration">
         <div class="stickIt">
-            {% include '@SyliusShop/Product/_labels.html.twig' with {'product': product} %}
             {{ sylius_template_event('sylius.shop.product.show.left_sidebar', _context) }}
         </div>
     </div>

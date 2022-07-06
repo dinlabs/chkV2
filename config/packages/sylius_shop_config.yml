@@ -49,13 +49,13 @@ liip_imagine:
                 thumbnail: { size: [64, 64], mode: outbound }
         sylius_shop_product_small_thumbnail:
             filters:
-                thumbnail: { size: [150, 112], mode: outbound }
+                thumbnail: { size: [150, 150], mode: outbound }
         sylius_shop_product_thumbnail:
             filters:
                 thumbnail: { size: [260, 260], mode: outbound }
         sylius_shop_product_large_thumbnail:
             filters:
-                thumbnail: { size: [550, 412], mode: outbound }
+                thumbnail: { size: [520, 520], mode: outbound }
 
 sonata_block:
     default_contexts: ~

@@ -562,7 +562,11 @@ header + #breadcrumb { padding-top:0; }
 /* Product page */
 /*#productTop { }*/
 #illustration { position:relative; max-width:100%; padding-bottom:2em; }
-#illustration .stickIt img { aspect-ratio:1; object-fit:contain; }
+#illustration .productimages { position:relative; }
+#illustration .productimages .glider-contain { padding:0; }
+#illustration .productimages img { aspect-ratio:1; object-fit:contain; }
+#illustration .productimages .main img { width:100%; }
+#illustration .productimages .small.images { display:none; }
 
 #productInfos .clientRating { padding:0 0 1em 0; }
 
@@ -1341,6 +1345,8 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #productTop { --gapWidth:20px; display:grid; grid-template-columns:calc(50% - (var(--gapWidth) / 2)) calc(50% - (var(--gapWidth) / 2)); gap:var(--gapWidth); }
     #illustration { /*max-width:calc((100vw - var(--gapWidth)) / 2);*/ justify-self:center; }
     #illustration .stickIt { position:sticky; top:105px; }
+    #illustration .productimages .main img { margin-left:auto; }
+    
     #illustration .thumbnails { display:flex; justify-content:space-between; }
     #illustration .thumbnails li img { display:block; border-radius:5px; }
     
@@ -1443,6 +1449,11 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
 
     #checkThat > ul { grid-template-columns:1fr 1fr 1fr; }
     #checkThat ul ul { padding:0; }
+
+
+    #illustration .productimages .main { margin-left:auto; max-width:calc(100% - 180px); }
+    #illustration .productimages .small.images { display:block; position:absolute; top:0; left:0; width:150px; max-height:100%; overflow-y:auto; padding-right:.5rem; }
+    #illustration .productimages .small.images .image { margin:0 0 .5rem 0; }
 
     .customer .dashboard { column-count:3; }
 }
