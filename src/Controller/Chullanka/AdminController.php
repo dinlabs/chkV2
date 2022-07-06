@@ -167,15 +167,18 @@ class AdminController extends AbstractController
 
         $shoporders = [];
         $return = $ginkoiaCustomerWs->getCustomerShopOrders($email);
-        foreach($return as $order)
+        if(!is_string($return))
         {
-            $datas = ['Order' => $order];
-            $receiptId = $order['ReceiptID'];
-            if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
+            foreach($return as $order)
             {
-                $datas['Details'] = $orderItems;
+                $datas = ['Order' => $order];
+                $receiptId = $order['ReceiptID'];
+                if($orderItems = $ginkoiaCustomerWs->getCustomerReceiptDetail($receiptId))
+                {
+                    $datas['Details'] = $orderItems;
+                }
+                $shoporders[] = $datas;
             }
-            $shoporders[] = $datas;
         }
 
         return $this->render('@SyliusAdmin/Chullanka/ginkoiaws.html.twig', [
