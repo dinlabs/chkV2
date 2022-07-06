@@ -50,11 +50,11 @@ liip_imagine:
         sylius_shop_product_small_thumbnail:
             filters:
                 thumbnail: { size: [150, 150], mode: inset }
-                background: { size: [150, 150], position: top, color: '#FFFFFF' }
+                background: { size: [150, 150], position: center, color: '#FFFFFF' }
         sylius_shop_product_thumbnail:
             filters:
                 thumbnail: { size: [260, 260], mode: inset }
-                background: { size: [260, 260], position: top, color: '#FFFFFF' }
+                background: { size: [260, 260], position: center, color: '#FFFFFF' }
         sylius_shop_product_large_thumbnail:
             filters:
                 thumbnail: { size: [520, 520], mode: inset }
