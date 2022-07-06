@@ -79,6 +79,28 @@ final class ContactController
 
             $contactEmail = $channel->getContactEmail();
 
+            switch($data['subject'])
+            {
+                case 'produits':
+                case 'discount':
+                    $contactEmail = 'contact.vente@chullanka.com';
+                    break;
+                
+                case 'sav':
+                    $contactEmail = 'contact.sav@chullanka.com';
+                    break;
+
+                case 'sponsor':
+                    $contactEmail = 'sponsoring@chullanka.com';
+                    break;
+                    
+                case 'magasins':
+                case 'site':
+                case 'autre':
+                    $contactEmail = 'contact@chullanka.com';
+                    break;
+            }
+
             if (null === $contactEmail) {
                 $errorMessage = $this->getSyliusAttribute(
                     $request,
