@@ -25,9 +25,8 @@
             <h3>Waouh, belle liste !</h3>
             <p>Contactez-nous pour bénéficier d'une réduction sur votre panier.</p>
         </div>
-        {% endif %}
-        
         {{ render(path('chk_ajax_getadviceform', {'title': ''})) }}
+        {% endif %}
 
         <p><a href="{{ path('chk_wishlist_add_list_to_cart', {'id': wishlist.id}) }}"><strong>Tout ajouter au panier</strong></a></p>
         <br>
