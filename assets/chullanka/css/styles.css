@@ -1304,7 +1304,7 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #testProducts .header { display:grid; grid-template-columns: 1fr 1fr; gap:30px; max-width:80vw; margin:auto; }
     #testProducts .chullis { min-height:330px; }
     #testProducts .chullis .chulli { transform:scale(1);  }
-    #testProducts .chullis .chulli .info { display:initial; position:absolute; background:var(--bg0); border-radius:5px; padding:.5em; width:126px; text-align:left; font-size:.75em; }
+    #testProducts .chullis .chulli .info { display:initial; position:absolute; background:var(--bg0); border-radius:5px; padding:.5em; width:150px; text-align:left; font-size:.75em; }
     #testProducts .chullis .chulli:nth-child(1) { left:-100px; top:-100px; }
     #testProducts .chullis .chulli:nth-child(1) .info { left:40px; bottom:20px; }
     #testProducts .chullis .chulli:nth-child(2) { left:130px; top:130px; }
@@ -1312,9 +1312,9 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     #testProducts .chullis .chulli:nth-child(3) { left:200px; top:-80px; }
     #testProducts .chullis .chulli:nth-child(3) .info { left:55px; bottom:5px; }
     #testProducts .chullis .chulli:nth-child(4) { left:380px; top:100px; }
-    #testProducts .chullis .chulli:nth-child(4) .info { bottom:-10px; right:-60px; }
+    #testProducts .chullis .chulli:nth-child(4) .info { bottom:-10px; right:-100px; }
     #testProducts .chullis .chulli:nth-child(5) { left:400px; top:-40px; }
-    #testProducts .chullis .chulli:nth-child(5) .info { left:40px; bottom:-20px; }
+    #testProducts .chullis .chulli:nth-child(5) .info { left:40px; bottom:-40px; }
 
     #testProducts .header .content { padding:60px 20px 0 100px; }
     #testProducts .glider-contain { margin-top:-10px!important; }
