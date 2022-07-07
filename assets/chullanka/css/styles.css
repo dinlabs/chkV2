@@ -561,7 +561,7 @@ header + #breadcrumb { padding-top:0; }
 
 /* Product page */
 /*#productTop { }*/
-#illustration { position:relative; max-width:100%; padding-bottom:2em; }
+#illustration { position:relative; width:100%; padding-bottom:2em; }
 #illustration .productimages { position:relative; }
 #illustration .productimages .glider-contain { padding:0; }
 #illustration .productimages img { aspect-ratio:1; object-fit:contain; }

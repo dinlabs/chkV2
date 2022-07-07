@@ -21,6 +21,7 @@
         </div>
         <div role="tablist" class="dots"></div>
     </div>
+    {#% if product.orderedImages|length > 1 %#}
     <script>
         window.addEventListener('load', function(){
             new Glider(document.querySelector('.productimages .glider'), { 
@@ -33,6 +34,7 @@
             });
         });
     </script>
+    {#% endif %#}
   </div>
   <div class="ui small images">
     {{ sylius_template_event('sylius.shop.product.show.before_thumbnails', {'product': product}) }}
