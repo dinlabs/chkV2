@@ -2,7 +2,7 @@
     <p>{{ product_association.type.name }} :</p>
     <ul>
         {% for product in product_association.associatedProducts if product.enabled %}
-        <li><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}">{% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}</a></li>
+        <li><a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}" class="gtm-eh-track-product-click">{% include '@SyliusShop/Product/_mainImage.html.twig' with {'product': product} %}</a></li>
         {% endfor %}
     </ul>
 </div>

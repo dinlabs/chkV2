@@ -23,7 +23,7 @@
             <li><a href="{{ path('sylius_shop_account_change_password') }}">{{ 'sylius.ui.change_password'|trans }}</a></li>
         </ul>
 
-        <p>Pensez à les vérifier au moins une fois en détails 🧐</p>
+        <p>Pensez à les vérifier au moins une fois en détail 🧐</p>
         
         {% if not customer.user.verified %}
             <form class="item" id="verification-form" {{ sylius_test_html_attribute('verification-form') }} action="{{ path('sylius_shop_user_request_verification_token') }}" method="post">

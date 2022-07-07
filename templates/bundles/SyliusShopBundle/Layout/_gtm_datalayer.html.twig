@@ -1,0 +1,49 @@
+{% set pageTemplate = '' %}
+{% set pageCategoryLevels = [] %}
+{% set routeName = app.request.get('_route') %}
+{#{ dump(app.request.get('_route')) }#}
+{% set _where = app.request.attributes.get('_controller')|split(':') %}
+{% set _controller = _where[0] %}
+{# SWITCH ROUTE NAME #}
+{% if routeName == 'sylius_shop_homepage' %}
+    {% set pageTemplate = 'Homepage' %}
+{% elseif routeName == 'sylius_shop_product_show' %}
+    {% set pageTemplate = 'Fiche produit' %}
+{% elseif routeName == 'sylius_shop_product_index' or routeName == 'bitbag_sylius_elasticsearch_plugin_shop_list_products' %}
+    {% set pageTemplate = 'Page catégorie' %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() %}
+        {% set pageCategoryLevels = pageCategoryLevels|merge([ancestor.name]) %}
+        {% endif %}
+    {% endfor %}
+    {% set pageCategoryLevels = pageCategoryLevels|merge([taxon.name]) %}
+{% elseif routeName == 'sylius_shop_cart_summary' %}
+    {% set pageTemplate = 'Funnel' %}
+{% elseif routeName == 'sylius_shop_checkout_address' %}
+    {% set pageTemplate = 'Funnel' %}
+{% elseif routeName == 'sylius_shop_checkout_select_shipping' or routeName == 'sylius_shop_checkout_select_payment' %}
+    {% set pageTemplate = 'Funnel' %}
+{% elseif routeName == 'chk_upstream_payment_return' or routeName == 'sylius_shop_order_thank_you' %}
+    {% set pageTemplate = 'Transaction' %}
+{% elseif routeName == 'chk_wishlist_view' %}
+    {% set pageTemplate = 'Wishlist' %}
+{% elseif _controller == 'sylius.controller.customer' or _controller == 'sylius.controller.shop_user' or _controller == 'sylius.controller.address' %}
+    {% set pageTemplate = 'Espace perso' %}
+{% elseif _controller == 'App\\Controller\\Chullanka\\StoreController' %}
+    {% set pageTemplate = 'Magasins' %}
+{% elseif _controller == 'App\\Controller\\Chullanka\\BrandController' %}
+    {% set pageTemplate = 'Marques' %}
+{% else %}
+    {% set pageTemplate = 'Autres' %}
+{% endif %}
+<script type="text/javascript">
+    dataLayer = [{
+        dataLayer = [{
+            "pageTemplate": "{{ pageTemplate }}",
+{% for pageCategoryLevel in pageCategoryLevels %}
+            "pageCategoryLevel{{ loop.index }}": "{{ pageCategoryLevel }}",
+{% endfor %}
+        }]
+    }]
+</script>

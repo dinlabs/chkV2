@@ -1,0 +1,117 @@
+diff --git a/src/Object/ProductDetail.php b/src/Object/ProductDetail.php
+index 953aa3f..cb370b9 100644
+--- a/src/Object/ProductDetail.php
++++ b/src/Object/ProductDetail.php
+@@ -15,6 +15,10 @@ final class ProductDetail implements ProductDetailInterface
+     private string $category = '';
+ 
+     private string $variant = '';
++    
++    private string $brand = '';
++    
++    private string $univers = '';
+ 
+     public function getName(): string
+     {
+@@ -66,6 +70,26 @@ final class ProductDetail implements ProductDetailInterface
+         $this->variant = $variant;
+     }
+ 
++    public function getBrand(): string
++    {
++        return $this->brand;
++    }
++
++    public function setBrand(string $brand)
++    {
++        $this->brand = $brand;
++    }
++
++    public function getUnivers(): string
++    {
++        return $this->univers;
++    }
++
++    public function setUnivers(string $univers)
++    {
++        $this->univers = $univers;
++    }
++
+     public function toArray(): array
+     {
+         return [
+@@ -74,6 +98,8 @@ final class ProductDetail implements ProductDetailInterface
+             'price' => $this->price,
+             'category' => $this->category,
+             'variant' => $this->variant,
++            'brand' => $this->brand,
++            'univers' => $this->univers,
+         ];
+     }
+ }
+diff --git a/src/Object/ProductDetailInterface.php b/src/Object/ProductDetailInterface.php
+index 9f62aae..17114d0 100644
+--- a/src/Object/ProductDetailInterface.php
++++ b/src/Object/ProductDetailInterface.php
+@@ -32,5 +32,13 @@ interface ProductDetailInterface
+ 
+     public function setVariant(string $variant);
+ 
++    public function getBrand(): string;
++
++    public function setBrand(string $brand);
++
++    public function getUnivers(): string;
++
++    public function setUnivers(string $univers);
++
+     public function toArray(): array;
+ }
+diff --git a/src/Resolver/ProductDetailImpressionDataResolver.php b/src/Resolver/ProductDetailImpressionDataResolver.php
+index 4acf53f..22a5541 100644
+--- a/src/Resolver/ProductDetailImpressionDataResolver.php
++++ b/src/Resolver/ProductDetailImpressionDataResolver.php
+@@ -73,6 +73,30 @@ final class ProductDetailImpressionDataResolver implements ProductDetailImpressi
+         $vo->setPrice($this->getPrice($productVariant));
+         $vo->setCategory(null !== $product->getMainTaxon() ? $product->getMainTaxon()->getName() : '');
+         $vo->setVariant($productVariant->getCode());
++        
++        $brandName = $univers = $categorie = '';
++        if($product->getBrand() && !empty($product->getBrand()))
++        {
++            $brandName = $product->getBrand()->getName();
++        }
++        $vo->setBrand($brandName);
++
++        $productTaxons = $product->getProductTaxons();
++        foreach($productTaxons as $productTaxon)
++        {
++            $_taxon = $productTaxon->getTaxon();
++            if($_taxon->getLevel() == 1)
++            {
++                $univers = $_taxon->getName();
++            }
++            else
++            {
++                $categorie = $_taxon->getName();
++            }
++        }
++
++        $vo->setUnivers($univers);
++        if(!empty($categorie)) $vo->setCategory($categorie);
+ 
+         return $vo;
+     }
+diff --git a/src/Resources/views/ProductDetail/variant.html.twig b/src/Resources/views/ProductDetail/variant.html.twig
+index 5f6cc86..403dafa 100644
+--- a/src/Resources/views/ProductDetail/variant.html.twig
++++ b/src/Resources/views/ProductDetail/variant.html.twig
+@@ -4,6 +4,8 @@
+         'name': '{{ product.name }}',
+         'id': '{{ product.id }}',
+         'price': {{ product.price }},
++        'brand': '{{ product.brand }}',
++        'univers': '{{ product.univers }}',
+         'category': '{{ product.category }}',
+         'variant': '{{ product.variant }}'
+     });
