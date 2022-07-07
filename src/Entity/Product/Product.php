@@ -106,10 +106,16 @@ class Product extends BaseProduct
         if(empty($this->orderedImages))
         {
             $_images = [];
+            $_videos = [];
             foreach(parent::getImages() as $_image)
             {
                 $type = $_image->getType();
                 if($type == 'main') $type = 1;
+                if($type == 'video') 
+                {
+                    $_videos[] = $_image;
+                    continue;
+                }
                 $_images[ $type ][] = $_image;
             }
             ksort($_images);
@@ -121,6 +127,11 @@ class Product extends BaseProduct
                 {
                     $this->orderedImages->add($img);
                 }
+            }
+
+            foreach($_videos as $img)
+            {
+                $this->orderedImages->add($img);
             }
         }
 
