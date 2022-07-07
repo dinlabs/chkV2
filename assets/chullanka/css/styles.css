@@ -1255,6 +1255,7 @@ body.customer { background:var(--bg1); }
 }
 
 @media screen and (min-width:500px) {
+    #searchWrapper #productList .list { grid-template-columns:repeat(3, 1fr); }
     .prodList .background .autoMargin { left:-24px; }
     #socials .instagram li img { width:100px; }
 }
@@ -1267,7 +1268,7 @@ body.customer { background:var(--bg1); }
     .deskOnly { display:initial; }
     header #findStore { display:grid; grid-template-columns:1fr 2fr; place-items:center; width:110px; color:inherit; text-decoration:none; }
 
-    .prodList .list { grid-template-columns:repeat(6, 1fr); }
+    /*.prodList .list { grid-template-columns:repeat(6, 1fr); }*/
     
     .noMask .header { padding-top:50px; }
     
@@ -1406,6 +1407,10 @@ header nav #navBlock .wrapper a:hover::before { background:linear-gradient(to ri
     .checkout .ui.grid > .wide.column { padding:1rem !important; }
 
     #page-contact .btn.primary, #page-register .btn.primary, #page-register hr { min-width:520px; }
+}
+
+@media screen and (min-width:1023px) {
+    #searchWrapper #productList .list { grid-template-columns:repeat(4, 1fr); }
 }
 
 @media screen and (min-width:1050px) {
