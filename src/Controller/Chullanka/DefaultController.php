@@ -98,6 +98,22 @@ final class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/afterregister", name="chullanka_after_register")
+     */
+    public function afterRegisterAction()
+    {
+        if($this->getCurrentCustomer())
+        {
+            $cart = $this->cartContext->getCart();
+            if(count($cart->getItems()) > 0)
+            {
+                return $this->redirectToRoute('sylius_shop_checkout_start');
+            }
+        }
+        return $this->redirectToRoute('sylius_shop_account_dashboard');
+    }
+
+    /**
      * @Route("/test", name="default_test")
      */
     public function testAction(FactoryInterface $stateMachineFactory, GinkoiaHelper $ginkoiaHelper, Request $request)
