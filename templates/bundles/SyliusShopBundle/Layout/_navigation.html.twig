@@ -26,11 +26,10 @@
                 <button class="closeSubNav"><svg class="svg-icon" role="img"><use xlink:href="{{ asset('build/chullanka/images/sprites.svg', 'chullanka') }}#ico-fleche"/></svg></button>
                 <strong class="name">{{ taxon.name }}</strong>
             </div>
-            <div class="catLink">
+            <div class="catLink wrapper">
                 <a href="{{ path('bitbag_sylius_elasticsearch_plugin_shop_list_products', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
-                    <span>Voir {% if taxon.isUnivers %}cet univers{% else %}tous les produits{% endif %}</span>
-                </a> 
-                <br>{{ taxon.name }}
+                    <span>Voir {% if taxon.isUnivers %}cet univers{% else %}tous les produits{% endif %} &ndash; {{ taxon.name }}</span>
+                </a>
             </div>
             <ul>
                 {% for childTaxon in taxon.enabledChildren %}

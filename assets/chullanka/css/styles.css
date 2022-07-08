@@ -231,7 +231,7 @@ header nav #navBlock > ul { position:relative; left:0; transition:left 0.25s; }
 header nav #navBlock > ul.showSub { left:-100%; }
 header nav #navBlock > ul.showSub2 { left:-200%; }
 header nav #navBlock .wrapper { position:relative; }
-header nav #navBlock .wrapper a, header nav #navBlock .catLink { position:relative; display:block; background:var(--bg1); padding:1em 2em; margin:4px 0; color:inherit; font-weight:700; }
+header nav #navBlock .wrapper a, header nav #navBlock .catLink:not(.wrapper) { position:relative; display:block; background:var(--bg1); padding:1em 2em; margin:4px 0; color:inherit; font-weight:700; }
 
 header nav #navBlock a.withBgImg { background:no-repeat center top / cover; color:#fff; }
 header nav #navBlock .wrapper a::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; }
