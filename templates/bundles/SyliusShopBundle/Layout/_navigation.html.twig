@@ -86,6 +86,8 @@
 
         {{ render(url('pages_menu_list', {'slugs': ['guides-et-conseils-dexperts', 'contact','qui-sommes-nous']})) }}
 
+        {{ macros.itemsimple('Le Blog des Chullis', 'https://blog.chullanka.com/') }}
+
         {% if is_granted('ROLE_USER') %}
             {{ macros.itemsimple('sylius.ui.logout'|trans, path('sylius_shop_logout')) }}
         {% endif %}
