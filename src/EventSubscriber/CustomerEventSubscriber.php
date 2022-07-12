@@ -288,6 +288,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         {
             $billingAddress = $defaultAddress;
             $user['FactureAdresse']['Mail'] = $email;
+            $user['FactureAdresse']['Mobile'] = $customer->getPhoneNumber();
             //$user['FactureAdresse']['Mobile'] = $billingAddress->getMobile();
             $user['FactureAdresse']['Telephone'] = $billingAddress->getPhoneNumber();
             //$user['FactureAdresse']['Fax'] = $billingAddress->getFax();
@@ -307,6 +308,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         {
             $shippingAddress = $defaultAddress;
             $user['Adresse']['Mail'] = $email;
+            $user['Adresse']['Mobile'] = $customer->getPhoneNumber();
             //$user['Adresse']['Mobile'] = $shippingAddress->getMobile();
             $user['Adresse']['Telephone'] = $shippingAddress->getPhoneNumber();
             //$user['Adresse']['Fax'] = $shippingAddress->getFax();
