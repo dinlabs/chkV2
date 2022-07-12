@@ -313,7 +313,19 @@
             url: _url,
             dataType: 'json',
         }).done(function(data) {
-            if(data) {
+            if(data) 
+            {
+                // update addToCart token
+                if(data.html_cart)
+                {
+                    var $htmlCart = $(data.html_cart);
+                    var _token = $htmlCart.find('#sylius_add_to_cart__token');
+                    if(_token.length)
+                    {
+                        $('#sylius_add_to_cart__token').val(_token.val());
+                    }
+                    data.html_cart = null;
+                }
                 dispos = data;
             {% if product.simple %}
                 displayAvailabilities({{ product.variants.first.id }});

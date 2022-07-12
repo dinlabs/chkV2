@@ -186,6 +186,11 @@ class AjaxController extends AbstractController
                 $quantities['web'] = $variant->getOnHand();
                 $data[ $variant->getId() ] = $quantities;
             }
+
+            // cart with fresh token
+            $data['html_cart'] = $this->renderView('@SyliusShop/Product/Show/_inventory.html.twig', [
+                'product' => $product
+            ]);
         }
         return new JsonResponse($data);
     }
