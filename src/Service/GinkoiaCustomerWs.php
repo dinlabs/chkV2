@@ -124,6 +124,8 @@ class GinkoiaCustomerWs
         
         if(!empty($email)) $newData['email'] = $email;
         
+        error_log('setCustomerInfos');
+        error_log(print_r($newData,true));
         if($return = $this->_callWS($newData, 'POST'))
         {
             return (isset($return['Result']) && ($return['Result'] == 'OK')) ? $return['Customer'] : $return;
