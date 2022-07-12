@@ -267,6 +267,7 @@ class CustomerEventSubscriber implements EventSubscriberInterface
         $user['IDWEB'] = $customer->getId();
         $user['Nom'] = $customer->getLastname();
         $user['Prenom'] = $customer->getFirstname();
+        $user['email'] = $email;
         if($birthday = $customer->getBirthday())
         {
             $user['DateAnniversaire'] = $birthday->format('d/m/Y');
