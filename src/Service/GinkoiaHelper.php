@@ -400,7 +400,7 @@ class GinkoiaHelper
             foreach($refundItems as $item)
             {
                 // on ne compte pas les frais de port ici...
-                if(strpos($item->getName(), 'Livraison :') > -1) continue;
+                if(strpos($item->name(), 'Livraison :') > -1) continue;
 
                 if($ligneNode = $this->getRefundItemNode($item))
                 {
