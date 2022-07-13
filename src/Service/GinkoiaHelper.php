@@ -223,7 +223,7 @@ class GinkoiaHelper
             foreach($creditMemo->getLineItems() as $item)
             {
                 // on ne compte pas les frais de port ici...
-                if(strpos($item->getName(), 'Livraison :') > -1)
+                if(strpos($item->name(), 'Livraison :') > -1)
                 {
                     $shipRefund[] = $item;
                     continue;
