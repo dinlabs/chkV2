@@ -38,12 +38,11 @@
     {% set pageTemplate = 'Autres' %}
 {% endif %}
 <script type="text/javascript">
-    dataLayer = [{
-        dataLayer = [{
-            "pageTemplate": "{{ pageTemplate }}",
+    dataLayer.push({
+        "event": "page_view",
+        "pageTemplate": "{{ pageTemplate }}",
 {% for pageCategoryLevel in pageCategoryLevels %}
-            "pageCategoryLevel{{ loop.index }}": "{{ pageCategoryLevel }}",
+        "pageCategoryLevel{{ loop.index }}": "{{ pageCategoryLevel }}",
 {% endfor %}
-        }]
-    }]
+    });
 </script>
