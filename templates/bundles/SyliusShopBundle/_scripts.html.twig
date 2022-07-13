@@ -1,7 +1,7 @@
 {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %#}
 
-{#% include '@SyliusUi/_javascripts.html.twig' with {'path': asset('build/chullanka/chullanka-entry.js', 'chullanka')} %#}
-{{ encore_entry_script_tags('chullanka-entry', null, 'chullanka') }}
+{#{ encore_entry_script_tags('chullanka-entry', null, 'chullanka') }#}
+{% include '@SyliusUi/_javascripts.html.twig' with {'path': asset('build/chullanka/chullanka-entry.js', 'chullanka')} %}
 
 {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliusmailchimpplugin/bitbag-mailchimp-plugin-newsletter.js'} %}
 
