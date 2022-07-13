@@ -88,90 +88,67 @@
 {% endblock %}
 
 {% block javascripts %}
-    {#{ sylius_template_event('sylius.shop.layout.javascripts') }#}
-    {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/shop.app.js'} %}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/glider.js'} %#}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': asset('build/chullanka/chullanka-entry.js', 'chullanka')} %}
-    {#{ encore_entry_script_tags('chullanka-entry', null, 'chullanka') }#}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/syliusgtmenhancedecommerceplugin/gtm.enhancedEcommerce.productClicks.js'} %}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliusmailchimpplugin/bitbag-mailchimp-plugin-newsletter.js'} %}
+    {{ sylius_template_event('sylius.shop.layout.javascripts') }}
 
-    {#
     <script>
-        const dfLayerOptions = {
-            installationId: 'c7e0949f-6227-4a25-83be-f1fe428af6df',
-            zone: 'eu1'
-        };
-
-        (function (l, a, y, e, r, s) {
-            r = l.createElement(a); r.onload = e; r.async = 1; r.src = y;
-            s = l.getElementsByTagName(a)[0]; s.parentNode.insertBefore(r, s);
-        })(document, 'script', 'https://cdn.doofinder.com/livelayer/1/js/loader.min.js', function () {
-            doofinderLoader.load(dfLayerOptions);
-        });
-    </script>
-    #}
-
-    {#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'chullanka/assets/js/app.js'} %#}
-    <script>
-    $(document).ready(function() {
-        $(window).on('popstate', function() {
-            $('.loadable').removeClass('loading');//dans le cas où il y a un retour en arrière du navigateur
-        });
-
-        if(document.querySelector('#cartLink'))
-        {
-            jQuery.ajax({
-                url: '{{ path('chk_ajax_profilinfos') }}',
-                dataType: 'json',
-            }).done(function(data) {
-                if(data)
-                {
-                    var _customerLink = document.querySelector('#customerLink span');
-                    if(_customerLink)
-                    {
-                        _customerLink.innerText = data.notifications;
-                        _customerLink.style.opacity = (data.notifications > 0) ? 1 : 0;
-                    }
-                    var _customerLinkMob = document.querySelector('#navBottom .forNotice span');
-                    if(_customerLinkMob)
-                    {
-                        _customerLinkMob.innerText = data.notifications;
-                        _customerLinkMob.style.opacity = (data.notifications > 0) ? 1 : 0;
-                    }
-
-                    var _cartLink = document.querySelector('#cartLink span');
-                    if(_cartLink)
-                    {
-                        _cartLink.innerText = data.cart_items;
-                        _cartLink.style.opacity = (data.cart_items > 0) ? 1 : 0;
-                    }
-                }
+        $(document).ready(function() {
+            $(window).on('popstate', function() {
+                $('.loadable').removeClass('loading');//dans le cas où il y a un retour en arrière du navigateur
             });
-        }
 
-        $('body').on('submit', '.getAdvice form', function (e) {
-            e.preventDefault();
-            var $form = $(this);
-            $form.addClass('loading');
-            var $block = $(this).parents('.getAdvice');
-            $.ajax({
-                type: 'POST',
-                url: '{{ path('chk_ajax_getadviceform') }}',
-                data: $form.serialize()
-            }).done(function(data){
-                //if($block.hasClass('.beCalled'))
-                $block.replaceWith(data);
+            if(document.querySelector('#cartLink'))
+            {
+                jQuery.ajax({
+                    url: '{{ path('chk_ajax_profilinfos') }}',
+                    dataType: 'json',
+                }).done(function(data) {
+                    if(data)
+                    {
+                        var _customerLink = document.querySelector('#customerLink span');
+                        if(_customerLink)
+                        {
+                            _customerLink.innerText = data.notifications;
+                            _customerLink.style.opacity = (data.notifications > 0) ? 1 : 0;
+                        }
+                        var _customerLinkMob = document.querySelector('#navBottom .forNotice span');
+                        if(_customerLinkMob)
+                        {
+                            _customerLinkMob.innerText = data.notifications;
+                            _customerLinkMob.style.opacity = (data.notifications > 0) ? 1 : 0;
+                        }
+
+                        var _cartLink = document.querySelector('#cartLink span');
+                        if(_cartLink)
+                        {
+                            _cartLink.innerText = data.cart_items;
+                            _cartLink.style.opacity = (data.cart_items > 0) ? 1 : 0;
+                        }
+                    }
+                });
+            }
+
+            $('body').on('submit', '.getAdvice form', function (e) {
+                e.preventDefault();
+                var $form = $(this);
+                $form.addClass('loading');
+                var $block = $(this).parents('.getAdvice');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ path('chk_ajax_getadviceform') }}',
+                    data: $form.serialize()
+                }).done(function(data){
+                    //if($block.hasClass('.beCalled'))
+                    $block.replaceWith(data);
+                });
+                /*.fail(function(data){
+                });*/
             });
-            /*.fail(function(data){
-            });*/
-        });
 
-        if($('#footer-newsletter-form').length)
-        {
-            $('#footer-newsletter-form').joinNewsletter();
-        }
-    });
+            if($('#footer-newsletter-form').length)
+            {
+                $('#footer-newsletter-form').joinNewsletter();
+            }
+        });
     </script>
 {% endblock %}
 

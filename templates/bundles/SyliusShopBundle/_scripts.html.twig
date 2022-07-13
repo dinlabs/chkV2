@@ -1,0 +1,22 @@
+{#% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %#}
+
+{#% include '@SyliusUi/_javascripts.html.twig' with {'path': asset('build/chullanka/chullanka-entry.js', 'chullanka')} %#}
+{{ encore_entry_script_tags('chullanka-entry', null, 'chullanka') }}
+
+{% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/bitbagsyliusmailchimpplugin/bitbag-mailchimp-plugin-newsletter.js'} %}
+
+{#
+<script>
+    const dfLayerOptions = {
+        installationId: 'c7e0949f-6227-4a25-83be-f1fe428af6df',
+        zone: 'eu1'
+    };
+
+    (function (l, a, y, e, r, s) {
+        r = l.createElement(a); r.onload = e; r.async = 1; r.src = y;
+        s = l.getElementsByTagName(a)[0]; s.parentNode.insertBefore(r, s);
+    })(document, 'script', 'https://cdn.doofinder.com/livelayer/1/js/loader.min.js', function () {
+        doofinderLoader.load(dfLayerOptions);
+    });
+</script>
+#}
