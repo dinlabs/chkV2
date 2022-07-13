@@ -38,7 +38,8 @@
     {% set pageTemplate = 'Autres' %}
 {% endif %}
 <script type="text/javascript">
-    dataLayer.push({
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
         "event": "page_view",
         "pageTemplate": "{{ pageTemplate }}",
 {% for pageCategoryLevel in pageCategoryLevels %}
