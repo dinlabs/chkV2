@@ -287,6 +287,8 @@ class UpstreamPayWidget
                     }
 
                     // shipment_lines
+                    $delivery_type_code = 'USER_DELIVERY';
+                    $delivery_quickness_code = 'regular';
                     $delivery_point_name = '';
                     if($order->hasShipments())
                     {
@@ -303,8 +305,13 @@ class UpstreamPayWidget
                             'amount' => round($shipTVA, 2)
                         ];
 
-                        $delivery_point_name = explode('-', $shipmethod->getCode());
-                        $delivery_point_name = $delivery_point_name[0];
+                        $shipMethodCodeArray = explode('-', $shipmethod->getCode());
+                        $delivery_point_name = $shipMethodCodeArray[0];
+
+                        if($delivery_point_name == 'pipckup') $delivery_type_code = 'EXTERNAL_PICKUP';
+                        if($delivery_point_name == 'store') $delivery_type_code = 'STORE_PICKUP';
+
+                        if(isset($shipMethodCodeArray[1]) && ($shipMethodCodeArray[1] == 'express')) $delivery_quickness_code = 'express';
 
                         $item_line = [
                             'type_code' => 'shipping_fees',
@@ -329,6 +336,8 @@ class UpstreamPayWidget
                         'amount' => $total_amount,
                         'net_amount' => round($net_amount, 2),
                         'tax_amount' => $tax_amount,
+                        'delivery_type_code' => $delivery_type_code,
+                        'delivery_quickness_code' => $delivery_quickness_code,
                         'shipping_address' => [
                             'first_name' => $shipAddr->getFirstname(),
                             'last_name' => $shipAddr->getLastname(),
