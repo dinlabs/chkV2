@@ -59,6 +59,7 @@
 {#{ bitbag_cms_render_block('un_code') }#}
     
     {{ form_start(form, {'method': 'GET', 'attr': {'id': 'filterForm'}}) }}
+    <input type="hidden" name="killcache" value="1">{# utile pour AJAX quand on décoche tout ! #}
     <div id="searchWrapper">
 {% endif %}
 
