@@ -9,6 +9,24 @@
     {% set pageTemplate = 'Homepage' %}
 {% elseif routeName == 'sylius_shop_product_show' %}
     {% set pageTemplate = 'Fiche produit' %}
+    {% if product.productTaxons is defined %}
+    {% set taxon = null %}
+    {% for productTaxon in product.productTaxons %}
+      {% if taxon is null %}
+        {% set taxon = productTaxon.taxon %}
+      {% endif %}
+      {% if productTaxon.taxon.level > taxon.level %}
+        {% set taxon = productTaxon.taxon %}
+      {% endif %}
+    {% endfor %}
+    {% set ancestors = taxon.ancestors|reverse %}
+    {% for ancestor in ancestors %}
+        {% if not ancestor.isRoot() %}
+        {% set pageCategoryLevels = pageCategoryLevels|merge([ancestor.name]) %}
+        {% endif %}
+    {% endfor %}
+    {% set pageCategoryLevels = pageCategoryLevels|merge([taxon.name]) %}
+    {% endif %}
 {% elseif routeName == 'sylius_shop_product_index' or routeName == 'bitbag_sylius_elasticsearch_plugin_shop_list_products' %}
     {% set pageTemplate = 'Page catégorie' %}
     {% set ancestors = taxon.ancestors|reverse %}
