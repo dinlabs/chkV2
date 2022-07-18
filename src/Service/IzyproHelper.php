@@ -339,11 +339,11 @@ class IzyproHelper
                         $this->eventBus->dispatch(new SendShipmentConfirmationEmail($shipmentId), [new DispatchAfterCurrentBusStamp()]);
                         break;
                         
-                        case 120:
-                        case 150:
-                        case 200:
-                            break;
-                    }
+                    case 120:
+                    case 150:
+                    case 200:
+                        break;
+                }
                     
                 return true;
             }           

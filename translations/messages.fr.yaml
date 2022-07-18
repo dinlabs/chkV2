@@ -133,9 +133,11 @@ sylius:
     pack_product: Produit packagé
     placed_an_order: "Merci pour votre achat sur Chullanka.com, votre commande est confirmée. Maintenant, relaxez-vous, on s'occupe du reste !"
     preparation: "Préparation en cours"
+    previous_customers_title: "Vous avez déjà commandé sur notre ancien site chullanka.com ou sur approach-outdoor.com ?"
+    previous_customers_text: "Bonne nouvelle, vous n'avez pas besoin de recréer un compte ! Effectuez simplement une <strong>demande de mot de passe oublié</strong> pour accéder à votre nouvel espace client."
     products_count_in_cart: 'Produits dans mon panier (%nbr%) :'
     ready_to_ship: "Prêt pour expédition"
-    registered_customers: Vous avez déjà commandé sur notre site ?
+    registered_customers: Vous avez déjà commandé sur notre nouveau site ?
     store_available: "Disponible en magasin"
     store_trouble: "Problème de stock en magasin"
     store_collected: "Récupérée en magasin"
