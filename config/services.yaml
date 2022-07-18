@@ -497,3 +497,10 @@ services:
             - { name: kernel.event_listener, event: sylius.order.post_create, method: onOrderPostCreate }
             - { name: kernel.event_listener, event: sylius.order.post_update, method: onOrderPostUpdate }
             - { name: kernel.event_listener, event: sylius.order_item.pre_remove, method: onOrderItemPreRemove }
+
+    app.listener.jsonldheadblock.sylius.shop.layout.head:
+        class: App\EventListener\JsonLdHeadBlock
+        arguments:
+            - 'chullanka/json_ld_head.html.twig'
+        tags:
+            - { name: kernel.event_listener, event: sonata.block.event.sylius.shop.layout.head, method: onBlockEvent }

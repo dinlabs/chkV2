@@ -1,0 +1,4 @@
+{% set snippets = settings.resources.snippets %}
+{% for snippet in snippets %}
+<script type="application/ld+json">{{ snippet|raw }}</script>
+{% endfor %}
