@@ -76,6 +76,8 @@
 
         {{ render(url('store_index', {'template': 'chullanka/store/menu_items.html.twig'})) }}
 
+        {{ macros.itemsimple('Carte cadeau', 'https://cartecadeau.chullanka.com/') }}
+
         {#% set others = [] %}
         {% set others = others|merge(['Nos Services']) %}
         {% set others = others|merge(['Guides d\'achat']) %}
