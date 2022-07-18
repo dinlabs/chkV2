@@ -217,7 +217,8 @@ class GinkoiaHelper
         $shipRefund = [];
         if($coef < 0)
         {   
-            $realOrderId = '-' . str_replace('/', '', $creditMemo->getNumber());
+            $commandeId = str_replace('/', '', $creditMemo->getNumber());
+            $realOrderId .= '-' . $commandeId;
 
             $refundArray = [];
             foreach($creditMemo->getLineItems() as $item)
@@ -233,8 +234,7 @@ class GinkoiaHelper
                     $refundArray[] = $item->getId();
             }
             $realOrderId .= '-'. count($refundArray);
-
-            $commandeId = $creditMemo->getId();
+            
             $commandeDate = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
             $dateReglement = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
         }
