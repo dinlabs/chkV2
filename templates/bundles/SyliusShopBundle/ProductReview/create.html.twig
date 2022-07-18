@@ -4,6 +4,10 @@
 
 {% block title %}{{ 'sylius.ui.write_your_own_review'|trans }} | {{ parent() }}{% endblock %}
 
+{% block metatags %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
 {% set product = product_review.reviewSubject %}
 
 {% block content %}
