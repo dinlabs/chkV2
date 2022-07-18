@@ -41,6 +41,100 @@ index c0c28ad..3559f83 100644
          $this->eventBus->dispatch(new CreditMemoGenerated($number, $orderNumber));
      }
  }
+diff --git a/src/Converter/OrderItemUnitLineItemsConverter.php b/src/Converter/OrderItemUnitLineItemsConverter.php
+index b227027..9cab886 100644
+--- a/src/Converter/OrderItemUnitLineItemsConverter.php
++++ b/src/Converter/OrderItemUnitLineItemsConverter.php
+@@ -66,8 +66,11 @@ final class OrderItemUnitLineItemsConverter implements LineItemsConverterInterfa
+         $productName = $orderItem->getProductName();
+         Assert::notNull($productName);
+ 
++        $variantCode = $orderItem->getVariant()->getCode();
++
+         return new LineItem(
+             $productName,
++            $variantCode,
+             1,
+             $netValue,
+             $grossValue,
+diff --git a/src/Converter/ShipmentLineItemsConverter.php b/src/Converter/ShipmentLineItemsConverter.php
+index b850188..17d97ba 100644
+--- a/src/Converter/ShipmentLineItemsConverter.php
++++ b/src/Converter/ShipmentLineItemsConverter.php
+@@ -78,6 +78,7 @@ final class ShipmentLineItemsConverter implements LineItemsConverterInterface
+ 
+         return new LineItem(
+             $label,
++            '',
+             1,
+             $netValue,
+             $grossValue,
+diff --git a/src/Entity/LineItem.php b/src/Entity/LineItem.php
+index f156ccc..6bfa6e5 100644
+--- a/src/Entity/LineItem.php
++++ b/src/Entity/LineItem.php
+@@ -21,6 +21,8 @@ class LineItem implements LineItemInterface
+ 
+     protected string $name;
+ 
++    protected string $code;
++
+     protected int $quantity;
+ 
+     protected int $unitNetPrice;
+@@ -37,6 +39,7 @@ class LineItem implements LineItemInterface
+ 
+     public function __construct(
+         string $name,
++        string $code,
+         int $quantity,
+         int $unitNetPrice,
+         int $unitGrossPrice,
+@@ -46,6 +49,7 @@ class LineItem implements LineItemInterface
+         ?string $taxRate = null
+     ) {
+         $this->name = $name;
++        $this->code = $code;
+         $this->quantity = $quantity;
+         $this->unitNetPrice = $unitNetPrice;
+         $this->unitGrossPrice = $unitGrossPrice;
+@@ -70,6 +74,11 @@ class LineItem implements LineItemInterface
+         return $this->name;
+     }
+ 
++    public function code(): string
++    {
++        return $this->code;
++    }
++
+     public function quantity(): int
+     {
+         return $this->quantity;
+diff --git a/src/Entity/LineItemInterface.php b/src/Entity/LineItemInterface.php
+index d9e2bf5..71951c0 100644
+--- a/src/Entity/LineItemInterface.php
++++ b/src/Entity/LineItemInterface.php
+@@ -21,6 +21,8 @@ interface LineItemInterface extends ResourceInterface
+ 
+     public function name(): string;
+ 
++    public function code(): string;
++
+     public function quantity(): int;
+ 
+     public function unitNetPrice(): int;
+diff --git a/src/Resources/config/doctrine/LineItem.orm.xml b/src/Resources/config/doctrine/LineItem.orm.xml
+index 3b072b5..27353cc 100644
+--- a/src/Resources/config/doctrine/LineItem.orm.xml
++++ b/src/Resources/config/doctrine/LineItem.orm.xml
+@@ -7,6 +7,7 @@
+         </id>
+ 
+         <field name="name" column="name" type="string" />
++        <field name="code" column="code" type="string" />
+         <field name="quantity" column="quantity" type="integer" />
+         <field name="unitNetPrice" column="unit_net_price" type="integer" />
+         <field name="unitGrossPrice" column="unit_gross_price" type="integer" />
 diff --git a/src/Resources/config/services/command_bus.xml b/src/Resources/config/services/command_bus.xml
 index 6a57d1c..0fbf6a8 100644
 --- a/src/Resources/config/services/command_bus.xml

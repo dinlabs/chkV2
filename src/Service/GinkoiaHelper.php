@@ -234,7 +234,7 @@ class GinkoiaHelper
                     $refundArray[] = $item->getId();
             }
             $realOrderId .= '-'. count($refundArray);
-            
+
             $commandeDate = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
             $dateReglement = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
         }
@@ -685,6 +685,8 @@ class GinkoiaHelper
 
     private function getRefundItemNode($lineItem): \DOMElement
     {
+        $code = $lineItem->code();
+        $name = $lineItem->name();
         $valPUTTC = $valPUBrutTTC = $lineItem->unitGrossPrice() / 100;//Sylius enregistre les prix en centimes
         $valPUHT = $valPUBrutHT = $lineItem->unitNetPrice() / 100;
         $valPXTTC = ($lineItem->grossValue() / 100) * -1;
@@ -694,9 +696,9 @@ class GinkoiaHelper
         
         $ligneNode = $this->doc->createElement('Ligne');
             $ligneNode->appendChild($this->addKeyVal('TypeLigne', 'Ligne'));
-            $ligneNode->appendChild($this->addKeyVal('Code', ''));
+            $ligneNode->appendChild($this->addKeyVal('Code', $code));
             $ligneNode->appendChild($this->addKeyVal('CodeEAN', ''));
-            $ligneNode->appendChild($this->addKeyVal('Designation', $lineItem->name()));
+            $ligneNode->appendChild($this->addKeyVal('Designation', $name));
             $ligneNode->appendChild($this->addKeyVal('PUBrutHT', number_format($valPUBrutHT, 2, '.', '')));
             $ligneNode->appendChild($this->addKeyVal('PUBrutTTC', number_format($valPUBrutTTC, 2, '.', '')));
             $ligneNode->appendChild($this->addKeyVal('PUHT', number_format($valPUHT, 2, '.', '')));

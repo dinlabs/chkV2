@@ -145,7 +145,7 @@
                 "Ajout de DataLayer pour page produit": "patches/sylius_gtmee_datalayer.patch"
             },
             "sylius/refund-plugin": {
-                "Add export Ginkoia": "patches/refund_export_ginkoia.patch"
+                "Add export Ginkoia and variant code for product line": "patches/refund_export_ginkoia.patch"
             }
         }
     }
