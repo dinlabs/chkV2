@@ -238,13 +238,13 @@ class UpstreamPayWidget
                                     $tax = $ppVariant->getTaxCategory()->getRates()->first();
                                     $taxRate = $tax->getAmount();
                                     $valPUHT = $valPUTTC / (1 + $taxRate);
-                                    $net_amount += $valPUHT;
+                                    $net_amount += ($valPUHT * $quantity);
 
                                     $tax_lines = [
                                         'type_code' => 'vat',
                                         'subtype_code' => $tax->getCode(),
                                         'rate' => ($taxRate * 100),
-                                        'amount' => round($quantity * ($valPUTTC - $valPUHT), 2)
+                                        'amount' => round(($valPUTTC - $valPUHT) * $quantity, 2)
                                     ];
                                     $item_line = [
                                         'type_code' => 'product',
@@ -267,21 +267,21 @@ class UpstreamPayWidget
                         $tax = $variant->getTaxCategory()->getRates()->first();
                         $taxRate = $tax->getAmount();
                         $valPUHT = $valPUTTC / (1 + $taxRate);
-                        $net_amount += $valPUHT;
+                        $net_amount += ($valPUHT * $quantity);
 
                         $tax_lines = [
                             'type_code' => 'vat',
                             'subtype_code' => $tax->getCode(),
                             'rate' => ($taxRate * 100),
-                            'amount' => round($quantity * ($valPUTTC - $valPUHT), 2)
+                            'amount' => round(($valPUTTC - $valPUHT) * $quantity, 2)
                         ];
                         $item_line = [
                             'type_code' => 'product',
                             'sku_reference' => $variant->getCode(),
                             'name' => $variant->getName(),
                             'price' => $valPUTTC,
-                            'quantity' => $item->getQuantity(),
-                            'amount' => ($item->getQuantity() * $valPUTTC),
+                            'quantity' => $quantity,
+                            'amount' => ($quantity * $valPUTTC),
                             'tax_lines' => [ $tax_lines ]
                         ];
                         $item_lines[] = $item_line;
@@ -299,6 +299,7 @@ class UpstreamPayWidget
                         $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
                         $taxRate = .2;
                         $shipping = $shipInclTax / (1 + $taxRate);
+                        $net_amount += $shipping;
                         $shipTVA = $shipInclTax - $shipping;
                         $tax_lines = [
                             'type_code' => 'vat',
