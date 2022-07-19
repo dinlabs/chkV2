@@ -121,6 +121,7 @@ sylius:
   email:
     user_registration:
       subject: 'Bienvenue chez Chullanka'
+      welcome_to_our_store: 'UNE BANDE DE PASSIONNÉS, À VOTRE SERVICE !'
     password_reset:
       subject: 'Votre nouveau mot de passe se trouve ici'
     order_confirmation:
