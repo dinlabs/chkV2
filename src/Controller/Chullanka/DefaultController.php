@@ -34,6 +34,7 @@ use BitBag\SyliusCmsPlugin\Entity\Section;
 use Knp\Snappy\Pdf as GeneratorInterface;
 use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface;
+use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
@@ -134,19 +135,9 @@ final class DefaultController extends AbstractController
         echo '<a href="https://www.nowaunet.fr/_pro/goback.php">Tester d\'aller-retour sur un autre site</a>';
         */
 
-        /*$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
-        $dataLayer = [
-            'actionField' => [
-                'id' => $order->getId(),
-                'revenue' => $order->getTotal() / 100, //Total transaction value(incl. tax and shipping)
-                'shipping' => ''
-            ]
-        ];
+        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
 
-        return $this->render('@SyliusShop/Order/thankYou.html.twig', [
-            'order' => $order,
-            'datalayer' => json_encode($dataLayer)
-        ]);*/
+        
         //dd($order);
 
         /*$creditMemos = $this->container->get('doctrine')->getRepository(CreditMemo::class)->findAll();
@@ -917,17 +908,62 @@ final class DefaultController extends AbstractController
                         $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
 
                         // DataLayer
-                        /*$dataLayer = [
+                        $shipInclTax = 0;
+                        if($order->hasShipments())
+                        {
+                            $shipment = $order->getShipments()->first();
+                            $shipInclTax = (float)$order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT) / 100;
+                        }
+
+                        $products = [];
+                        foreach($order->getItems() as $item)
+                        {
+                            $variant = $item->getVariant();
+                            $product = $variant->getProduct();
+                            $quantity = $item->getQuantity();
+                            $valPUTTC = $item->getUnitPrice() / 100;
+                            $valTTC = $valPUTTC * $quantity;
+
+                            $univers = '';
+                            $productTaxons = $product->getProductTaxons();
+                            foreach($productTaxons as $productTaxon)
+                            {
+                                $_taxon = $productTaxon->getTaxon();
+                                if($_taxon->getLevel() == 1)
+                                {
+                                    $univers = $_taxon->getName();
+                                }
+                                if($_taxon->getLevel() == 2)
+                                {
+                                    $category = $_taxon->getName();
+                                }
+                            }
+                            $category = $product->getHighestTaxon()->getName();
+
+                            $product = [
+                                'name' => $product->getName(),
+                                'id' =>  $product->getId(),
+                                'price' => $valTTC,
+                                'brand' => $product->getBrand()->getName(),
+                                'univers' => $univers,
+                                'category' => $category,
+                                'variant' => $variant->getCode()
+                            ];
+                            $products[] = $product;
+                        }
+
+                        $dataLayer = [
                             'actionField' => [
                                 'id' => $order->getId(),
                                 'revenue' => $order->getTotal() / 100, //Total transaction value(incl. tax and shipping)
-                                'shipping' => ''
-                            ]
-                        ];*/
+                                'shipping' => $shipInclTax
+                            ],
+                            'products' => $products
+                        ];
     
                         return $this->render('@SyliusShop/Order/thankYou.html.twig', [
                             'order' => $order,
-                            //'datalayer' => $dataLayer
+                            'datalayer' => $dataLayer
                         ]);
                     }
                 }
