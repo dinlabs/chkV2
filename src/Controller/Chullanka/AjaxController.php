@@ -319,6 +319,7 @@ class AjaxController extends AbstractController
         $codeName = 'chk_chullpoints';
         $order = $this->cartContext->getCart();
 
+        $this->session->remove('usedchullpoints');
         $fidelityUsed = false;
         foreach($order->getAdjustments() as $adjustement)
         {
