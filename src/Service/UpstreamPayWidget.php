@@ -8,6 +8,7 @@ use App\Entity\Payment\GatewayConfig;
 use App\Entity\Product\ProductVariant;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Sylius\Component\Core\Model\AdjustmentInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -213,7 +214,8 @@ class UpstreamPayWidget
                     $urlSuccess = $this->router->generate('chk_upstream_payment_return', [/*'orderid' => $order->getId(), */'success' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
                     $urlFailure = $this->router->generate('chk_upstream_payment_return', [/*'orderid' => $order->getId(), */'failure' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
 
-                    $total_amount = $payment->getAmount() / 100;
+                    //$total_amount = $payment->getAmount() / 100;
+                    $total_amount = $order->getTotal() / 100;
                     $net_amount = 0;
 
                     $item_lines = [];
@@ -288,6 +290,34 @@ class UpstreamPayWidget
                         $total_tax_lines[ ($taxRate * 100) ][] = $tax_lines;
                     }
 
+                    // fidélité ?
+                    /*if($fidInclTax = (float)$order->getAdjustmentsTotal(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT))
+                    {
+                        $fidInclTax /= 100;
+                        $taxRate = .2;
+                        $fidelite = $fidInclTax / (1 + $taxRate);
+                        $net_amount += $fidelite;
+                        $fidTVA = $fidInclTax - $fidelite;
+
+                        $tax_lines = [
+                            'type_code' => 'vat',
+                            'subtype_code' => 'tva20',
+                            'rate' => ($taxRate * 100),
+                            'amount' => round($fidTVA, 2)
+                        ];
+                        $item_line = [
+                            'type_code' => 'product',
+                            'sku_reference' => 'chk_chullpoints',
+                            'name' => 'CHULLPOINTS',
+                            'price' => $fidInclTax,
+                            'quantity' => 1,
+                            'amount' => $fidInclTax,
+                            'tax_lines' => [ $tax_lines ]
+                        ];
+                        $item_lines[] = $item_line;
+                        $total_tax_lines[ ($taxRate * 100) ][] = $tax_lines;
+                    }*/
+
                     // shipment_lines
                     $delivery_type_code = 'USER_DELIVERY';
                     $delivery_quickness_code = 'regular';
@@ -296,7 +326,7 @@ class UpstreamPayWidget
                     {
                         $shipment = $order->getShipments()->first();
                         $shipmethod = $shipment->getMethod();
-                        $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
+                        $shipInclTax = (float)$order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT) / 100;
                         $taxRate = .2;
                         $shipping = $shipInclTax / (1 + $taxRate);
                         $net_amount += $shipping;

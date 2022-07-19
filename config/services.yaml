@@ -303,15 +303,15 @@ services:
         arguments:
             - '@app.repository.brand'
 
-    # app.context.merge_session_with_customer_and_channel_based:
-    #     class: App\Context\MergeSessionWithCustomerAndChannelCartContext
-    #     arguments:
-    #         - "@sylius.context.customer"
-    #         - "@sylius.storage.cart_session"
-    #         - "@sylius.context.channel.cached"
-    #         - "@sylius.repository.order"
-    #     tags:
-    #         - { name: sylius.context.cart, priority: -222 }
+    app.context.merge_session_with_customer_and_channel_based:
+        class: App\Context\MergeSessionWithCustomerAndChannelCartContext
+        arguments:
+            - "@sylius.context.customer"
+            - "@sylius.storage.cart_session"
+            - "@sylius.context.channel.cached"
+            - "@sylius.repository.order"
+        tags:
+            - { name: sylius.context.cart, priority: -222 }
 
     
     #ndY: Overrides

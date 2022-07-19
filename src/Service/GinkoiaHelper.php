@@ -589,7 +589,7 @@ class GinkoiaHelper
         }
         else
         {
-            $shipInclTax = (float)$order->getAdjustmentsTotal() / 100;
+            $shipInclTax = (float)$order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT) / 100;
         }
         
         $taxAmount = .2;

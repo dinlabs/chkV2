@@ -30,7 +30,7 @@ class CheckoutStateMachineCallback
 
             // en principe, la réduction n'existe déjà plus!
             $found = false;
-            foreach($order->getAdjustments() as $adjustement)
+            foreach($order->getAdjustments(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT) as $adjustement)
             {
                 if($adjustement->getOriginCode() == $codeName)
                 {
@@ -60,6 +60,9 @@ class CheckoutStateMachineCallback
                 $adjustment->setOriginCode($codeName);
                 $order->addAdjustment($adjustment);
             }
+
+            //$payment = $order->getPayments()->first();
+            //$payment->setAmount( $order->getTotal() );
         }
     }
 }

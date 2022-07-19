@@ -10,11 +10,13 @@ use App\Service\IzyproHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use SM\Factory\FactoryInterface as SMFactoryInterface;
+use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Mailer\Sender\SenderInterface;
+use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
 use Sylius\Component\Order\Modifier\OrderItemQuantityModifierInterface;
+use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
-use Sylius\RefundPlugin\Event\CreditMemoGenerated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -35,8 +37,9 @@ class EventSubscriber implements EventSubscriberInterface
     private $orderItemFactory;
     private $orderItemQuantityModifier;
     private $adjustmentFactory;
+    private $orderProcessor;
 
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, SessionInterface $session, SluggerInterface $slugger, SenderInterface $emailSender, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, FactoryInterface $adjustmentFactory)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, SessionInterface $session, SluggerInterface $slugger, SenderInterface $emailSender, GinkoiaHelper $ginkoiaHelper, IzyproHelper $izyproHelper, SMFactoryInterface $stateMachineFactory, FactoryInterface $orderItemFactory, OrderItemQuantityModifierInterface $orderItemQuantityModifier, AdjustmentFactoryInterface $adjustmentFactory, OrderProcessorInterface $orderProcessor)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
@@ -49,6 +52,7 @@ class EventSubscriber implements EventSubscriberInterface
         $this->orderItemFactory = $orderItemFactory;
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
         $this->adjustmentFactory = $adjustmentFactory;
+        $this->orderProcessor = $orderProcessor;
     }
 
     public static function getSubscribedEvents()
@@ -483,16 +487,60 @@ class EventSubscriber implements EventSubscriberInterface
                 }
             }*/
 
+            // recalcul des frais de port
+            $this->orderProcessor->process($order);
+
+            // fidelity
+            $usedchullpoints = $this->session->get('usedchullpoints');
+            if($usedchullpoints && (abs($usedchullpoints) > 0))
+            {
+                error_log("la reduct : ".$usedchullpoints);
+                $order = $event->getSubject();
+                $codeName = 'chk_chullpoints';
+
+                // en principe, la réduction n'existe déjà plus!
+                $found = false;
+                foreach($order->getAdjustments() as $adjustement)
+                {
+                    if($adjustement->getOriginCode() == $codeName)
+                    {
+                        //$order->removeAdjustment($adjustement);
+                        $found = true;
+                    }
+                }
+
+                // si on en a définie une, mais qu'elle n'est plus trouvée...
+                if(!$found)
+                {
+                    // ...on va la recréer
+                    $chullz = 0; //nbr de points
+                    if($customer = $order->getCustomer())
+                    {
+                        $chullz = $customer->getChullpoints(); //nbr de points sur le site
+                    }
+                    error_log("chullz : $chullz");
+                    $nbrReduc = (int)floor($chullz / 500); // 500 points = 1 bon
+                    $discountAmount = $nbrReduc * 10; // 1 bon = 10€
+                    $amount = -100 * (int) $discountAmount;
+                    $adjustment = $this->adjustmentFactory->createWithData(
+                        AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
+                        $codeName,
+                        $amount
+                    );
+                    $adjustment->setOriginCode($codeName);
+                    $order->addAdjustment($adjustment);
+                }
+            }
+
             // changer le state
             if($nextOrderState)
             {
                 $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
                 $stateMachine->apply($nextOrderState);
             }
-
+            
             $this->entityManager->flush();
         }
-
     }
 
     /**

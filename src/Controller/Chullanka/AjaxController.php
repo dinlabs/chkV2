@@ -321,7 +321,7 @@ class AjaxController extends AbstractController
 
         $this->session->remove('usedchullpoints');
         $fidelityUsed = false;
-        foreach($order->getAdjustments() as $adjustement)
+        foreach($order->getAdjustments(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT) as $adjustement)
         {
             if($adjustement->getOriginCode() == $codeName)
             {
@@ -358,6 +358,8 @@ class AjaxController extends AbstractController
             $order->addAdjustment($adjustment);
             $this->session->set('usedchullpoints', $amount);
         }
+        $payment = $order->getPayments()->first();
+        $payment->setAmount( $order->getTotal() );
         
         $this->entityManager->persist($order);
         $this->entityManager->flush();
