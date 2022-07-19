@@ -134,7 +134,19 @@ final class DefaultController extends AbstractController
         echo '<a href="https://www.nowaunet.fr/_pro/goback.php">Tester d\'aller-retour sur un autre site</a>';
         */
 
-        //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
+        /*$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
+        $dataLayer = [
+            'actionField' => [
+                'id' => $order->getId(),
+                'revenue' => $order->getTotal() / 100, //Total transaction value(incl. tax and shipping)
+                'shipping' => ''
+            ]
+        ];
+
+        return $this->render('@SyliusShop/Order/thankYou.html.twig', [
+            'order' => $order,
+            'datalayer' => json_encode($dataLayer)
+        ]);*/
         //dd($order);
 
         /*$creditMemos = $this->container->get('doctrine')->getRepository(CreditMemo::class)->findAll();
@@ -798,7 +810,7 @@ final class DefaultController extends AbstractController
                         }
                         $notes[] = $msg;
     
-                        if($return->status && ($return->status->state == 'SUCCESS'))
+                        if($return->status && ($return->status->state == 'SUCCESS') && in_array($return->status->action, ['AUTHORIZE', 'CAPTURE']))
                         {
                             $successPay++;
                         }
@@ -903,9 +915,19 @@ final class DefaultController extends AbstractController
                         
                         // dispatch event
                         $this->eventDispatcher->dispatch(new GenericEvent($order), 'sylius.order.post_complete');
+
+                        // DataLayer
+                        /*$dataLayer = [
+                            'actionField' => [
+                                'id' => $order->getId(),
+                                'revenue' => $order->getTotal() / 100, //Total transaction value(incl. tax and shipping)
+                                'shipping' => ''
+                            ]
+                        ];*/
     
                         return $this->render('@SyliusShop/Order/thankYou.html.twig', [
-                            'order' => $order
+                            'order' => $order,
+                            //'datalayer' => $dataLayer
                         ]);
                     }
                 }
