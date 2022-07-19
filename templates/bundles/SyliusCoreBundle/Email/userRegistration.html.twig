@@ -4,10 +4,7 @@
     {{ 'sylius.email.user_registration.subject'|trans({}, null, localeCode) }}
 {% endblock %}
 
-{% block heademail %}
-    Bienvenue parmis nous !
-    <br>On fait les présentations ?
-{% endblock %}
+{% block heademail %}Bienvenue parmis nous !<br>On fait les présentations ?{% endblock %}
 
 {% block content %}
     {% if sylius_bundle_loaded_checker('SyliusShopBundle') %}

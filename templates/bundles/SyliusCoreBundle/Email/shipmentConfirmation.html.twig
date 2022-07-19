@@ -4,10 +4,7 @@
     {{ 'sylius.email.shipment_confirmation.subject'|trans({}, null, localeCode) }}
 {% endblock %}
 
-{% block heademail %}
-    C'est parti !
-    <br>Votre commande est en route.
-{% endblock %}
+{% block heademail %}C'est parti !<br>Votre commande est en route.{% endblock %}
 
 {% block content %}
 <p><strong>Bonjour {{ order.customer.firstname }},</strong></p>
