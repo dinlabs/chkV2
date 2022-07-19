@@ -118,6 +118,14 @@ app:
     brands: 'Nos Marques'
 
 sylius:
+  email:
+    user_registration:
+      subject: 'Bienvenue chez Chullanka'
+    password_reset:
+      subject: 'Votre nouveau mot de passe se trouve ici'
+    shipment_confirmation:
+      subject: 'Votre commande Chullanka est en route.'
+
   ui:
     access_your_store_account_or_create_a_new_one: Identifiez-vous ou créez un compte
     address_book: Votre carnet d'adresses

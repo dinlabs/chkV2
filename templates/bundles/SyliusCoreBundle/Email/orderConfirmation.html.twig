@@ -1,0 +1,13 @@
+{% extends '@SyliusCore/Email/layout.html.twig' %}
+
+{% block subject %}
+    Votre commande n°{{ order.number }} est validée.
+{% endblock %}
+
+{% block heademail %}
+    C'est dans la poche !
+{% endblock %}
+
+{% block content %}
+    {% include '@SyliusCore/Email/Blocks/OrderConfirmation/_content.html.twig' %}
+{% endblock %}

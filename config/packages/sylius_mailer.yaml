@@ -7,7 +7,7 @@ sylius_mailer:
             subject: "Demande de rappel"
             template: "emails/ask_recall.html.twig"
         ask_return_product:
-            subject: "Demande de retour produit"
+            subject: "Nouvelle demande de retour produit"
             template: "emails/ask_return_product.html.twig"
         rma_change_state:
             subject: "Votre demande de retour produit"
