@@ -123,6 +123,8 @@ sylius:
       subject: 'Bienvenue chez Chullanka'
     password_reset:
       subject: 'Votre nouveau mot de passe se trouve ici'
+    order_confirmation:
+      view_order_or_change_payment_method: 'Voir ma facture'
     shipment_confirmation:
       subject: 'Votre commande Chullanka est en route.'
 

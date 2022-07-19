@@ -2,10 +2,10 @@
     {% autoescape false %}
         <div style="font-family: sans-serif; background: #fbfbfb; font-size: 16px; color: #333; line-height: 1.5">
             <div style="width: 622px; margin: 0 auto; background: #fff;">
-                <table cellpadding="0" cellspacing="0">
+                <table cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td>
-                            <table cellpadding="0" cellspacing="0">
+                            <table cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td><img src="{{ absolute_url(asset('build/chullanka/images/emails/header_blank.png', 'chullanka')) }}" alt=""></td>
                                     <td><a href="https://www.chullanka.com" target="_blank"><img src="{{ absolute_url(asset('build/chullanka/images/emails/header_logo.png', 'chullanka')) }}" alt="Chullanka"></a></td>
@@ -18,7 +18,7 @@
                         <td><img src="{{ absolute_url(asset('build/chullanka/images/emails/header_top.png', 'chullanka')) }}" alt=""></td>
                     </tr>
                     <tr>
-                        <td bgcolor="f47a61" style="padding:10px; text-align:center; font-size:32px;"><font size="4" color="#fff">{% block heademail %}{% endblock %}</font></td>
+                        <td bgcolor="f47a61" style="padding:10px; text-align:center; font-size:32px;"><font size="5" color="#fff">{% block heademail %}{% endblock %}</font></td>
                     </tr>
                     <tr>
                         <td><img src="{{ absolute_url(asset('build/chullanka/images/emails/header_bottom.png', 'chullanka')) }}" alt=""></td>

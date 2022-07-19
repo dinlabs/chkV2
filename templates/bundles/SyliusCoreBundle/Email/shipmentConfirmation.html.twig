@@ -10,23 +10,32 @@
 {% endblock %}
 
 {% block content %}
-    <div style="text-align: center;">
-        <div>
-            {{ 'sylius.email.shipment_confirmation.your_order_with_number'|trans({}, null, localeCode) }}
-            <span style="color: #1abb9c;">{{ order.number }}</span>
-            {{ 'sylius.email.shipment_confirmation.has_been_sent_using'|trans({}, null, localeCode) }}
-            <span style="color: #1abb9c;">{{ shipment.method }}</span>.
-        </div>
-        {% if shipment.tracking is not null %}
-            <div style="margin-bottom: 20px;">
-                {% set tracking_code %}<span style="color: #1abb9c;">{{ shipment.tracking }}</span>{% endset %}
-                {{ 'sylius.email.shipment_confirmation.you_can_check_its_location_with_the_tracking_code'|trans({
-                    '%tracking_code%': tracking_code
-                }, null, localeCode)|raw }}
-            </div>
-        {% endif %}
-        <div>
-            {{ 'sylius.email.shipment_confirmation.thank_you_for_transaction'|trans({}, null, localeCode) }}
-        </div>
-    </div>
+<p><strong>Bonjour {{ order.customer.firstname }},</strong></p>
+<br>
+<p>Bonne nouvelle, <strong>votre commande n°{{ order.number }} a été expédiée</strong> et sera prochainement entre vos mains. Pour suivre son acheminement, consultez le lien de suivi envoyé par email par le transporteur.</p>
+<br>
+<table cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td>
+            <p><strong>Consultez le statut de votre commande</strong></p>
+            <br>
+            <p><a href="https://www.chullanka.com/fr_FR/account/" style="display: inline-block; text-align: center; background: #D82130; padding: 18px 28px; color: #fff; text-decoration: none; border-radius: 3px;">Consulter votre commande</a></p>
+        </td>
+        <td>
+            <p><strong>Des questions sur votre commande ?</strong></p>
+            <br>
+            <p><a href="https://www.chullanka.com/fr_FR/page/faq-ca-peut-aider" style="display: inline-block; text-align: center; background: #D82130; padding: 18px 28px; color: #fff; text-decoration: none; border-radius: 3px;">Rendez-vous sur notre FAQ</a></p>
+        </td>
+    </tr>
+</table>
+<br>
+<table style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnTextContentContainer" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
+    <tbody><tr>
+        
+        <td class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #656565;font-family: Helvetica;font-size: 12px;line-height: 150%;text-align: center;" valign="top">
+        
+            <p style="text-align: justify;margin: 10px 0;padding: 0;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #656565;font-family: Helvetica;font-size: 12px;line-height: 150%;"><span style="font-size:15px">N'hésitez pas à nous contacter sur&nbsp;<a href="mailto:contact.sav@chullanka.com" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #656565;font-weight: normal;text-decoration: underline;">contact.sav@chullanka.com</a>&nbsp;ou bien par téléphone au&nbsp;<strong>+33(0)4 89 03 22 75</strong>&nbsp;du lundi au vendredi, de 9h30 à 13h et de 14h à 18h.</span></p>
+        </td>
+    </tr>
+</tbody></table>
 {% endblock %}
