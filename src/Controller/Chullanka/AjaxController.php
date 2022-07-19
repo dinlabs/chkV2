@@ -23,6 +23,7 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AjaxController extends AbstractController
@@ -42,6 +43,9 @@ class AjaxController extends AbstractController
     /** @var CartContextInterface */
     private $cartContext;
 
+    /** @var SessionInterface */
+    private $session;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -60,6 +64,7 @@ class AjaxController extends AbstractController
         FactoryInterface $orderItemFactory, 
         OrderItemQuantityModifierInterface $orderItemQuantityModifier,
         CartContextInterface $cartContext,
+        SessionInterface $session,
         EntityManagerInterface $entityManager,
         GinkoiaCustomerWs $ginkoiaCustomerWs,
         ChannelContextInterface $channelContext,
@@ -71,6 +76,7 @@ class AjaxController extends AbstractController
         $this->orderItemFactory = $orderItemFactory;
         $this->orderItemQuantityModifier = $orderItemQuantityModifier;
         $this->cartContext = $cartContext;
+        $this->session = $session;
         $this->entityManager = $entityManager;
         $this->ginkoiaCustomerWs = $ginkoiaCustomerWs;
         $this->channelContext = $channelContext;
@@ -349,6 +355,7 @@ class AjaxController extends AbstractController
             );
             $adjustment->setOriginCode($codeName);
             $order->addAdjustment($adjustment);
+            $this->session->set('usedchullpoints', $amount);
         }
         
         $this->entityManager->persist($order);

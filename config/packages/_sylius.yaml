@@ -685,6 +685,13 @@ sylius_ui:
 
 
 winzou_state_machine:
+    sylius_order_checkout:
+        callbacks:
+            after:
+                sylius_process_cart:
+                    on: ["address"]
+                    do: ["@app.promotion.checkoutstatemachinecallback", "onStateChange"]
+                    args: ["object"]
     # sylius_order:
     #     callbacks:
     #         after:

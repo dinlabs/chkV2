@@ -108,6 +108,10 @@ services:
     #     autowire: true
     #     tags: ['controller.service_arguments']
 
+    app.promotion.checkoutstatemachinecallback:
+        class: App\Promotion\CheckoutStateMachineCallback
+        public: true
+
     app.block_event_listener.admin.layout.stylesheets:
         class: Sylius\Bundle\UiBundle\Block\BlockEventListener
         arguments:
