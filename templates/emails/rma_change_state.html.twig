@@ -1,8 +1,6 @@
 {% extends '@SyliusShop/Email/layout.html.twig' %}
 
-{% block subject %}
-    Votre demande de retour produit
-{% endblock %}
+{% block subject %}Votre demande de retour produit{% endblock %}
 
 {% block heademail %}
     {% include 'chullanka/rma/grid_state.html.twig' with {'data': rma.state} %}

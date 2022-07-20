@@ -1,8 +1,6 @@
 {% extends '@SyliusCore/Email/layout.html.twig' %}
 
-{% block subject %}
-    {{ 'sylius.email.shipment_confirmation.subject'|trans({}, null, localeCode) }}
-{% endblock %}
+{% block subject %}{{ 'sylius.email.shipment_confirmation.subject'|trans({}, null, localeCode) }}{% endblock %}
 
 {% block heademail %}C'est parti !<br>Votre commande est en route.{% endblock %}
 

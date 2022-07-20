@@ -130,7 +130,7 @@ class GinkoiaHelper
         
         $this->channel = $order->getChannel();
         $realOrderId = $order->getNumber();
-        $commandeId = 's' . $order->getId();
+        $commandeId = $order->getId();
         $commandeDate = $order->getCheckoutCompletedAt()->format('Y-m-d H:i:s');
 
         // get further order infos
