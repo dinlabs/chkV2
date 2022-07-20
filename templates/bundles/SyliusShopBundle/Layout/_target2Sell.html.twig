@@ -70,6 +70,10 @@
 {% endif %}
 {#{ dump(t2spID) }#}
 
+{% if app.user and app.user.customer and app.user.customer.email %}
+    {% set t2suEM = t2sHash(app.user.customer.email) %}
+{% endif %}
+
 {% if t2spID %}
     <script>
     //<![CDATA[
