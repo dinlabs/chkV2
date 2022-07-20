@@ -223,4 +223,59 @@ class Order extends BaseOrder implements OrderTrustpilotAwareInterface
 
         return false;
     }
+
+    public function getPaymode()
+    {
+        $paymode = 'getPaymode';
+        if($this->further && isset($this->further['upstreampay_return']) && !empty($this->further['upstreampay_return']))
+        {
+            error_log("on test");
+            $payModeDetails = [];
+            foreach($this->further['upstreampay_return'] as $return)
+            {
+                $codeName = '';
+                if(is_array($return))
+                {
+                    error_log("Tableau");
+                    switch($return['method'])
+                    {
+                        case 'creditcard': $codeName = 'Carte Bancaire'; break;
+                        case 'paypal': $codeName = 'PayPal'; break;
+                        case 'wallet': if($return['partner'] == 'paypal') $codeName = 'PayPal'; break;
+                        case 'cb3x': $codeName = 'en 3 fois'; break;
+                        case 'giftcard': $codeName = ($return['partner'] == 'illicado') ? 'en 3 fois' : 'Carte Cadeau'; break;
+                    }
+                    if(!empty($codeName)) 
+                    {
+                        $payModeDetails[] = $codeName;
+                    }
+                    error_log("codename : $codeName");
+                }
+                else
+                {
+                    error_log("Obejct");
+                    switch($return->method)
+                    {
+                        case 'creditcard': $codeName = 'Carte Bancaire'; break;
+                        case 'paypal': $codeName = 'PayPal'; break;
+                        case 'wallet': if($return->partner == 'paypal') $codeName = 'PayPal'; break;
+                        case 'cb3x': $codeName = 'en 3 fois'; break;
+                        case 'giftcard':
+                            $codeName = ($return->partner == 'illicado') ? 'en 3 fois' : 'Carte Cadeau';
+                            break;
+                    }
+                    if(!empty($codeName)) 
+                    {
+                        $payModeDetails[] = $codeName;
+                    }
+                }
+            }
+            if(count($payModeDetails) > 1)
+            {
+                $codeName = 'Web règlement Mixte';
+            }
+            if(!empty($codeName)) $paymode = $codeName;
+        }
+        return $paymode;
+    }
 }

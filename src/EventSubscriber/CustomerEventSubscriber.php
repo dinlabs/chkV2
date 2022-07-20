@@ -349,13 +349,26 @@ class CustomerEventSubscriber implements EventSubscriberInterface
     {
         $rma = $event->getSubject();
 
-        //'Retour produit accepté'
         if($rma->getState() == 'product_return_accepted')
         {
+            //'Retour produit accepté'
             $rma->setReturnSlip(true);
-        }
 
-        // send email
-        $this->emailSender->send('rma_change_state', [$rma->getCustomer()->getEmail()], ['rma' => $rma]);
+            // send email
+            $this->emailSender->send('rma_return_accepted', [$rma->getCustomer()->getEmail()], ['rma' => $rma]);
+        }
+        elseif($rma->getState() == 'product_return_refused')
+        {
+            //'Retour produit refusé'
+            $rma->setReturnSlip(false);
+
+            // send email
+            $this->emailSender->send('rma_return_refused', [$rma->getCustomer()->getEmail()], ['rma' => $rma]);
+        }
+        else
+        {
+            // send email
+            //$this->emailSender->send('rma_change_state', [$rma->getCustomer()->getEmail()], ['rma' => $rma]);
+        }
     }
 }

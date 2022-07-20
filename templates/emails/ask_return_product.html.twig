@@ -1,20 +1,24 @@
 {% extends '@SyliusShop/Email/layout.html.twig' %}
 
-{% block subject %}Demande de retour produit{% endblock %}
+{% block subject %}Nouvelle demande de retour produit{% endblock %}
 
 {% block heademail %}
-    Demande de retour produit
+    Une nouvelle demande de retour<br>Alors, on accepte ou pas ?
 {% endblock %}
 
 {% block content %}
-    <p>Une nouvelle demande de retour produit a été faite sur le site.</p>
+<p><strong>Bonjour Service Client,</strong></p>
+    <p>Une nouvelle demande de retour vient d'arriver. Voici les informations :</p>
+    <ul>
+        {% if rma.order %}
+        <li>Commande n°{{ rma.order.number }}</li>
+        {% endif %}
+        {% if rma.customer %}
+        <li>{{ rma.customer }}</li>
+        {% endif %}
+    </ul>
+    <br>
     <p><strong>Numéro de la demande :</strong> {{ rma.number }}</p>
-    {% if rma.customer %}
-    <p><strong>Client : </strong> {{ rma.customer }}</p>
-    {% endif %}
-    {% if rma.order %}
-    <p><strong>Commande : </strong> {{ rma.order.number }}</p>
-    {% endif %}
     {% if rma.rmaProducts %}
     <p>
         <strong>Produit(s) : </strong>

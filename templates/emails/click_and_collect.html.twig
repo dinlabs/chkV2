@@ -1,6 +1,6 @@
 {% extends '@SyliusShop/Email/layout.html.twig' %}
 
-{% block subject %}Une nouvelle commande en C&amp;C vient de tomber.{% endblock %}
+{% block subject %}Une nouvelle commande en C&C vient de tomber.{% endblock %}
 
 {% block heademail %}
     À vous de jouer !<br>Nouvelle commande Click&amp;Collect
@@ -49,6 +49,17 @@
             <tr>
                 <td colspan="3" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px"><strong>Total</strong></span></td>
                 <td style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" align="right"><span style="font-size:14px"><strong>{{ money.convertAndFormat(order.total) }}</strong></span></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table style="max-width: 100%;min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" class="mcnTextContentContainer" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
+        <tbody>
+            <tr>
+            
+                <td class="mcnTextContent" style="padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;" valign="top">
+                    Mode de paiement : <strong>{{ order.Paymode }}</strong>
+                </td>
             </tr>
         </tbody>
     </table>

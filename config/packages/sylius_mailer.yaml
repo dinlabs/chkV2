@@ -9,6 +9,12 @@ sylius_mailer:
         ask_return_product:
             subject: "Nouvelle demande de retour produit"
             template: "emails/ask_return_product.html.twig"
+        rma_return_accepted:
+            subject: "Retour produit accepté, à vous de jouer !"
+            template: "emails/rma_return_accepted.html.twig"
+        rma_return_refused:
+            subject: "Votre demande de retour a été réfusée"
+            template: "emails/rma_return_refused.html.twig"
         rma_change_state:
             subject: "Votre demande de retour produit"
             template: "emails/rma_change_state.html.twig"
