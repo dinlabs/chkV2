@@ -31,6 +31,9 @@
         {% set t2sqTE = t2sqTE|join('|') %}
         {% set t2sbS = cart.total / 100 %}
     {% endif %}
+    {% if app.user and app.user.customer and app.user.customer.email %}
+        {% set t2suEM = t2sHash(app.user.customer.email) %}
+    {% endif %}
 {% elseif routeName == 'bitbag_sylius_cms_plugin_shop_page_show' %}
     {% set t2spID = 2200 %}
 {% elseif routeName == 'chk_upstream_payment_return' or routeName == 'sylius_shop_order_thank_you' %}
@@ -62,6 +65,9 @@
     {% endif %}
 {% elseif routeName == 'sylius_shop_checkout_select_shipping' or routeName == 'sylius_shop_checkout_select_payment' %}
     {% set t2spID = 3200 %}
+    {% if app.user and app.user.customer and app.user.customer.email %}
+        {% set t2suEM = t2sHash(app.user.customer.email) %}
+    {% endif %}
 {% elseif page404 is defined %}
     {% set t2spID = 3600 %}
 {% elseif routeName == 'chk_ajax_popaddtocart' %}
@@ -69,10 +75,6 @@
     {% set t2siID = variant.product.code %}
 {% endif %}
 {#{ dump(t2spID) }#}
-
-{% if app.user and app.user.customer and app.user.customer.email %}
-    {% set t2suEM = t2sHash(app.user.customer.email) %}
-{% endif %}
 
 {% if t2spID %}
     <script>
