@@ -160,6 +160,9 @@ class GinkoiaHelper
                             case 'paypal':
                                 $codeName = 'PayPal';
                                 break;
+                            case 'wallet':
+                                if($return['partner'] == 'paypal') $codeName = 'PayPal';
+                                break;
                             
                             case 'cb3x':
                                 $codeName = 'CB3X';
@@ -185,6 +188,9 @@ class GinkoiaHelper
                             
                             case 'paypal':
                                 $codeName = 'PayPal';
+                                break;
+                            case 'wallet':
+                                if($return->partner == 'paypal') $codeName = 'PayPal';
                                 break;
                             
                             case 'cb3x':
@@ -238,6 +244,9 @@ class GinkoiaHelper
             $commandeDate = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
             $dateReglement = $creditMemo->getIssuedAt()->format('Y-m-d H:m:s');
         }
+
+        // au cas où...
+        if(empty($dateReglement)) $dateReglement = $commandeDate;
         
         // Order
         $orderNode = $this->doc->createElement('Commande');
