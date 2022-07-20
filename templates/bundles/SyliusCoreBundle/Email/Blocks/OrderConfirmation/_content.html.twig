@@ -9,7 +9,7 @@
     {% set url = channel.hostname is not null ? 'http://' ~ channel.hostname ~ path('sylius_shop_order_show', {'tokenValue': order.tokenValue, '_locale': localeCode}) : url('sylius_shop_order_show', {'tokenValue': order.tokenValue, '_locale': localeCode}) %}
 
     <div style="text-align: center; margin-bottom: 30px;">
-        <a href="https://www.chullanka.com/fr_FR/account/" style="display: inline-block; text-align: center; background: #D82130; padding: 18px 28px; color: #fff; text-decoration: none; border-radius: 3px;">
+        <a href="{{ absolute_url(path('sylius_shop_account_order_show', {'number': order.number})) }}" style="display: inline-block; text-align: center; background: #D82130; padding: 18px 28px; color: #fff; text-decoration: none; border-radius: 3px;">
             {{ 'sylius.email.order_confirmation.view_order_or_change_payment_method'|trans({}, null, localeCode) }}
         </a>
     </div>
