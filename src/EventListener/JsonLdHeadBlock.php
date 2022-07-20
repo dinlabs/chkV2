@@ -23,6 +23,8 @@ final class JsonLdHeadBlock
 
     public function onBlockEvent(BlockEvent $event): void
     {
+        $localCode = 'fr_FR';
+
         //https://developers.google.com/search/docs/advanced/structured-data/product?hl=fr#json-ld
         $snippets = [];
         if($product = $event->getSetting('product'))
@@ -66,6 +68,57 @@ final class JsonLdHeadBlock
                     'url' => $brandUrl
                 ];
             	//$snippet['brand']['url'] = $brand->getBrandUrl();
+            }
+
+            $url = $this->router->generate(
+                'sylius_shop_product_show',
+                ['slug' => $product->getSlug(), '_locale' => $localCode],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $totalQty = $product->getTotalQuantities();
+            
+            // offers
+            $snippet['offers'] = [
+                '@type' => 'Offer',
+                'url'=> $url,
+                //'itemCondition' => 'https://schema.org/NewCondition',
+                'availability' => ((bool)$totalQty) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                'priceCurrency' => 'EUR'
+            ];
+
+            $variants = $product->getVariants();
+            if($variant = $variants->first())
+            {
+                if($channelPricing = $variant->getChannelPricings()->first())
+                {
+                    $snippet['offers']['price'] = $channelPricing->getPrice() / 100;
+                }
+            }
+
+            $productReviews = $product->getReviews();
+            if(count($productReviews))
+            {
+                $reviewCount = 0;
+                $bestRating = 0;
+                $totalRating = 0;
+                foreach($productReviews as $review)
+                {
+                    if($review->getStatus() != 'accepted') continue;
+
+                    $rating = $review->getRating();
+                    $bestRating = max($bestRating, $rating);
+                    $totalRating += $rating;
+                    $reviewCount++;
+                }
+                $averageRating = $totalRating / $reviewCount;
+                
+                // aggregateRating
+                $snippet['aggregateRating'] = [
+                    '@type' => 'Review',
+                    'ratingValue' => $averageRating,
+                    'reviewCount' => $reviewCount,
+                ];
             }
 
             $snippets[] = json_encode($snippet);
