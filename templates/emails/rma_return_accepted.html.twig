@@ -8,9 +8,14 @@
 
 {% block content %}
 <p><strong>Bonjour {% if rma.customer %}{{ rma.customer.firstname }}{% endif %},</strong></p>
-<p>Bonne nouvelle, <strong>votre demande de retour produit {% if rma.order %}pour la commande n°{{ rma.order.number }} {% endif %}a été refusée.</strong></p>
+<p>Bonne nouvelle, <strong>votre demande de retour produit {% if rma.order %}pour la commande n°{{ rma.order.number }} {% endif %}est acceptée.</strong></p>
 <p>Vous pouvez préparer votre colis en y plaçant <strong>l’article neuf avec l’étiquette et dans son emballage d’origine</strong>. Merci d'insérer le bon de retour ci-joint à l'intérieur du colis.</p>
-<p>Merci de retourner votre produit neuf {#avant le <strong>29/04/2022</strong>#} à l'adresse indiquée sur votre bon de retour.</p>
+
+<div style="text-align: center;">
+    <a href="{{ absolute_url(path('rma_bonretour', {'id': rma.id})) }}" style="display: inline-block; text-align: center; background: #D82130; padding: 18px 28px; color: #fff; text-decoration: none; border-radius: 3px;">Télécharger mon bon de retour</a>
+</div>
+
+<p>Merci de retourner votre produit neuf sous 14 jours à l'adresse indiquée sur votre bon de retour.</p>
 
 <table class="mcnDividerBlock" style="min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;table-layout: fixed !important;" width="100%" cellspacing="0" cellpadding="0" border="0">
     <tbody class="mcnDividerBlockOuter">
