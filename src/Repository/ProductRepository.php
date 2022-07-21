@@ -27,7 +27,7 @@ class ProductRepository extends BaseProductRepository
         return $this->createQueryBuilder('o')
             ->where('o.enabled = :enabled')
             ->setParameter('enabled', true)
-            ->orderBy('p.id', 'ASC')
+            ->orderBy('o.id', 'ASC')
             ->getQuery()
             ->getResult()
         ;
