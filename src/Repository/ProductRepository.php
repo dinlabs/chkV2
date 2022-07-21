@@ -22,6 +22,17 @@ class ProductRepository extends BaseProductRepository
             ->getResult();
     }
 
+    public function findAllEnabled()
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.enabled = :enabled')
+            ->setParameter('enabled', true)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /*public function findAllByBrand(Int $brand_id): array
     {
         $brand = $this->getEntityManager()

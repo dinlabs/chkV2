@@ -129,7 +129,7 @@ class Target2SellHelper
         }
 
         // Products
-        $products = $this->entityManager->getRepository(Product::class)->findAll();
+        $products = $this->entityManager->getRepository(Product::class)->findAllEnabled();
         $countProducts = count($products);
         if($countProducts)
         {
