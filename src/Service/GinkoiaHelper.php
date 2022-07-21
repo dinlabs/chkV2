@@ -63,7 +63,7 @@ class GinkoiaHelper
                 chmod($exportFile, 0664);
                 //chgrp($exportFile, 'ginkoia');// pas l'air de fonctionner !
                 
-                $this->logger->info('Ginkoia :: Le fichier XML des ventes a été exporté : '.$exportPath);
+                $this->logger->info('Ginkoia :: Le fichier ' . $filename . ' des ventes a été exporté : '.$exportPath);
                 
                 // We move the tmp file in a logfiles dir
                 if(!rename($file, $this->ginkoiaDir . DIRECTORY_SEPARATOR . basename($file)))
@@ -71,7 +71,7 @@ class GinkoiaHelper
             }
             else
             {
-                $this->logger->error('Ginkoia :: Le fichier XML n\a pas pu être copié dans : '.$exportPath);
+                $this->logger->error('Ginkoia :: Le fichier ' . $filename . ' n\a pas pu être copié dans : '.$exportPath);
             }
         }
         else $this->logger->error('Ginkoia :: Issue to generate file: ' . $filename);
@@ -131,6 +131,7 @@ class GinkoiaHelper
         $this->channel = $order->getChannel();
         $realOrderId = $order->getNumber();
         $commandeId = $order->getId();
+        //$commandeId = 's' . $order->getId();
         $commandeDate = $order->getCheckoutCompletedAt()->format('Y-m-d H:i:s');
 
         // get further order infos

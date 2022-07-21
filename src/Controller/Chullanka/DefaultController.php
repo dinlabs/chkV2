@@ -911,7 +911,6 @@ final class DefaultController extends AbstractController
                         $shipInclTax = 0;
                         if($order->hasShipments())
                         {
-                            $shipment = $order->getShipments()->first();
                             $shipInclTax = (float)$order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT) / 100;
                         }
 
@@ -963,7 +962,7 @@ final class DefaultController extends AbstractController
     
                         return $this->render('@SyliusShop/Order/thankYou.html.twig', [
                             'order' => $order,
-                            'datalayer' => $dataLayer
+                            'datalayer' => json_encode($dataLayer)
                         ]);
                     }
                 }
