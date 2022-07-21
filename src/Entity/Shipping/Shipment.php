@@ -18,6 +18,9 @@ class Shipment extends BaseShipment
     {
         if(!empty($this->tracking))
         {
+            //tmp
+            return 'https://parcelsapp.com/fr/tracking/' . $this->tracking;
+
             $shipping_method = $this->getMethod()->getCode();
             $split_ship = explode('_', $shipping_method);
             if(isset($split_ship[1]))
