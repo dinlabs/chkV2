@@ -20,43 +20,45 @@ class Shipment extends BaseShipment
         {
             $shipping_method = $this->getMethod()->getCode();
             $split_ship = explode('_', $shipping_method);
-            $shipping_method_type = $split_ship[0];
-            $shipping_method_speed = $split_ship[1];
-            
-            if($shipping_method_type == 'home')
+            if(isset($split_ship[1]))
             {
-                if($shipping_method_speed == 'standart')
+                $shipping_method_type = $split_ship[0];
+                $shipping_method_speed = $split_ship[1];
+                if($shipping_method_type == 'home')
                 {
-                    if(strlen($this->tracking) > 15)
+                    if($shipping_method_speed == 'standart')
                     {
-                        return 'https://trace.dpd.fr/fr/trace/' . $this->tracking;
+                        if(strlen($this->tracking) > 15)
+                        {
+                            return 'https://trace.dpd.fr/fr/trace/' . $this->tracking;
+                        }
+                        else
+                        {
+                            return 'https://www.laposte.fr/outils/suivre-vos-envois?code=' . $this->tracking;
+                        }
                     }
-                    else
+                    elseif($shipping_method_speed == 'express')
                     {
-                        return 'https://www.laposte.fr/outils/suivre-vos-envois?code=' . $this->tracking;
-                    }
-                }
-                elseif($shipping_method_speed == 'express')
-                {
-                    return 'https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=' . $this->tracking;
-                }
-            }
-            elseif($shipping_method_type == 'pickup')
-            {
-                if($shipping_method_speed == 'standart')
-                {
-                    if(strlen($this->tracking) > 15)
-                    {
-                        return 'https://trace.dpd.fr/fr/trace/' . $this->tracking;
-                    }
-                    else
-                    {
-                        return 'https://www.laposte.fr/outils/suivre-vos-envois?code=' . $this->tracking;
+                        return 'https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=' . $this->tracking;
                     }
                 }
-                elseif($shipping_method_speed == 'express')
+                elseif($shipping_method_type == 'pickup')
                 {
-                    return 'https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=' . $this->tracking;
+                    if($shipping_method_speed == 'standart')
+                    {
+                        if(strlen($this->tracking) > 15)
+                        {
+                            return 'https://trace.dpd.fr/fr/trace/' . $this->tracking;
+                        }
+                        else
+                        {
+                            return 'https://www.laposte.fr/outils/suivre-vos-envois?code=' . $this->tracking;
+                        }
+                    }
+                    elseif($shipping_method_speed == 'express')
+                    {
+                        return 'https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=' . $this->tracking;
+                    }
                 }
             }
         }
