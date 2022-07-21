@@ -97,6 +97,13 @@
                 <p><a href="{{ path('sylius_invoicing_plugin_shop_invoice_download', { 'id': invoice.id }) }}">Télécharger ma facture (PDF)</a></p>
             {% endfor %}
         {% endif %}
+
+        {# TRACKING #}
+        {% for shipment in order.shipments %}
+            {% if shipment.tracking is not empty and shipment.trackingUrl is not empty %}
+            <p><i class="plane icon"></i> <a href="{{ shipment.trackingUrl }}" target="_blank">Suivre mon colis</a></p>
+            {% endif %}
+        {% endfor %}
         
         {% if state is defined and state == 'shipped' %}
         <p><a href="{{ path('rma_ask_return', {'order_id': order.id}) }}">Retourner un article</a></p>

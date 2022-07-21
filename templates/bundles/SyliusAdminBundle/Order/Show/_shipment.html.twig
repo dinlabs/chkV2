@@ -25,11 +25,13 @@
     {% if shipment.tracking is not empty %}
         <div class="ui segment">
             <span class="ui top attached icon label"><i class="plane icon"></i> {{ 'sylius.ui.tracking_code'|trans|upper }}</span>
+            <p>
             {% if shipment.trackingUrl is not empty %}
-            <p>Test URL::<a href="{{ shipment.trackingUrl }}" target="_blank">{{ shipment.tracking }}</a></p>
+                <a href="{{ shipment.trackingUrl }}" target="_blank">{{ shipment.tracking }}</a>
             {% else %}
-            <p>{{ shipment.tracking }}</p>
+                {{ shipment.tracking }}
             {% endif %}
+            </p>
         </div>
     {% endif %}
     {% if shipment.state != cart %}

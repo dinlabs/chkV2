@@ -21,4 +21,10 @@
     {% if order.paymentState in ['awaiting_payment'] %}
         {{ buttons.default(path('sylius_shop_order_show', {'tokenValue': order.tokenValue}), 'sylius.ui.pay', null, 'credit card alternative', 'fluid blue') }}
     {% endif %}
+
+    {% for shipment in order.shipments %}
+        {% if shipment.tracking is not empty and shipment.trackingUrl is not empty %}
+        <p><i class="plane icon"></i> <a href="{{ shipment.trackingUrl }}" target="_blank">Suivre mon colis</a></p>
+        {% endif %}
+    {% endfor %}
 </div>
