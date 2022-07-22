@@ -921,7 +921,7 @@ final class DefaultController extends AbstractController
                             $product = $variant->getProduct();
                             $quantity = $item->getQuantity();
                             $valPUTTC = $item->getUnitPrice() / 100;
-                            $valTTC = $valPUTTC * $quantity;
+                            //$valTTC = $valPUTTC * $quantity;
 
                             $univers = '';
                             $productTaxons = $product->getProductTaxons();
@@ -942,7 +942,8 @@ final class DefaultController extends AbstractController
                             $product = [
                                 'name' => $product->getName(),
                                 'id' =>  $product->getId(),
-                                'price' => $valTTC,
+                                'price' => $valPUTTC,
+                                'quantity' => $quantity,
                                 'brand' => $product->getBrand()->getName(),
                                 'univers' => $univers,
                                 'category' => $category,
