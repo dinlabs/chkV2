@@ -62,6 +62,7 @@ final class StoreController extends AbstractController
         foreach($order->getItems() as $item)
         {
             $variant = $item->getVariant();
+            $quantity = $item->getQuantity();
             if($further = $item->getFurther())
             {
                 if(isset($further['pack']) && !empty($further['pack']))
@@ -70,12 +71,20 @@ final class StoreController extends AbstractController
                     foreach($further['pack'] as $ppvid => $price)
                     {
                         $ppVariant = $this->managerRegistry->getRepository(ProductVariant::class)->find($ppvid);
-                        $product_stocks[] = $ppVariant;
+                        $product_stocks[] = 
+                        [
+                            'variant' => $ppVariant,
+                            'quantity' => $quantity
+                        ];
                     }
                     continue;//on ne prend pas en compte les infos du pack lui-même
                 }
             }
-            $product_stocks[] = $variant;
+            $product_stocks[] = 
+            [
+                'variant' => $variant,
+                'quantity' => $quantity
+            ];
         }
 
         $stores = $this->managerRegistry->getRepository(Store::class)->findAll();
@@ -86,8 +95,10 @@ final class StoreController extends AbstractController
 
             // test si les produits sont dispo dans ce magasin
             $store->dispo = true;
-            foreach($product_stocks as $variant)
+            foreach($product_stocks as $product_stock)
             {
+                $variant = $product_stock['variant'];
+                $quantity = $product_stock['quantity'];
                 if($store->isWarehouse())
                 {
                     $onHand = $variant->getOnHand();
@@ -99,7 +110,7 @@ final class StoreController extends AbstractController
                     else $onHand = $stock->getOnHand();
                 }
 
-                if(!$onHand || ($onHand <= 0))
+                if(!$onHand || ($onHand < $quantity))
                 {
                     $store->dispo = false;
                 }
