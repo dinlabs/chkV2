@@ -1,5 +1,5 @@
 {% set routeName = app.request.get('_route') %}
-{% set t2spID = '' %}
+{% set t2spID = '2200' %}{# default:pages de type contenu #}
 {#{ dump(app.request.get('_route')) }#}
 {# SWITCH ROUTE NAME #}
 {% if routeName == 'sylius_shop_homepage' %}{% set t2spID = 1000 %}
@@ -73,6 +73,8 @@
 {% elseif routeName == 'chk_ajax_popaddtocart' %}
     {% set t2spID = 4000 %}
     {% set t2siID = variant.product.code %}
+{% elseif routeName == 'brand_index' or routeName == 'brand_view' %}
+    {% set t2spID = 1401 %}
 {% endif %}
 {#{ dump(t2spID) }#}
 
@@ -81,9 +83,7 @@
         var _t2sparams = _t2sparams || {};
         _t2sparams.eN = 'view';
         _t2sparams.cID = '{{ t2scID }}';
-    {% if t2spID %}
         _t2sparams.pID = '{{ t2spID }}';
-    {% endif %}
     {% if t2saID is defined %}
         _t2sparams.aID = '{{ t2saID }}';
     {% endif %}
