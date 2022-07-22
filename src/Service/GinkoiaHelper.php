@@ -224,8 +224,10 @@ class GinkoiaHelper
         $shipRefund = [];
         if($coef < 0)
         {   
-            $commandeId = str_replace('/', '', $creditMemo->getNumber());
+            //$commandeId = str_replace('/', '', $creditMemo->getNumber());
+            $commandeId = substr($creditMemo->getNumber(), 8);
             $realOrderId .= '-' . $commandeId;
+            $commandeId = (int)$commandeId;
 
             $refundArray = [];
             foreach($creditMemo->getLineItems() as $item)
