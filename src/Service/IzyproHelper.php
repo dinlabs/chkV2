@@ -504,33 +504,41 @@ class IzyproHelper
             $shipping_method = $shipment->getMethod()->getCode();
             $split_ship = explode('_', $shipping_method);
             $shipping_method_type = $split_ship[0];
-            
+            $shipping_method_speed = isset($split_ship[1]) ? $split_ship[1] : '';
+
             if($shipping_method_type == 'home')
             {
-                $code_carrier = ($split_ship[1] == 'express') ? '020' : '001';
-
-                // test si AMS et > 249€
-                if($order->getItemsTotal() > 24900)
+                if($shipping_method_speed == 'express')
                 {
-                    // AMS = electro 
-                    $checkTaxonIds = [
-                        72,//Montres trail running
-                        73,//Montres GPS et altimetre
-                        //74,//Cameras, télépones et accessoires 
-                        75,//GPS de randonnée
-                        //76,//Orientation
-                        77,//Electrostimulation
-                        243,//Compteurs et GPS cycle
-                    ];
-                    $arrayIntersect = array_intersect($taxonIds, $checkTaxonIds);
-                    if(count($arrayIntersect)) $code_carrier = '002';//colissimo signature
+                    $code_carrier = '020';
+                }
+                else
+                {
+                    $code_carrier = '001';
 
-                    if($shipCountry != 'FR') $code_carrier = '004';//colissimo étranger
+                    // test si AMS et > 249€
+                    if($order->getItemsTotal() > 24900)
+                    {
+                        // AMS = electro 
+                        $checkTaxonIds = [
+                            72,//Montres trail running
+                            73,//Montres GPS et altimetre
+                            //74,//Cameras, télépones et accessoires 
+                            75,//GPS de randonnée
+                            //76,//Orientation
+                            77,//Electrostimulation
+                            243,//Compteurs et GPS cycle
+                        ];
+                        $arrayIntersect = array_intersect($taxonIds, $checkTaxonIds);
+                        if(count($arrayIntersect)) $code_carrier = '002';//colissimo signature
+    
+                        if($shipCountry != 'FR') $code_carrier = '004';//colissimo étranger
+                    }
                 }
             }
             elseif($shipping_method_type == 'pickup')
             {
-                $code_carrier = ($split_ship[1] == 'express') ? '021' : '082';
+                $code_carrier = ($shipping_method_speed == 'express') ? '021' : '082';
 
                 $further = $order->getFurther();
                 if($further && isset($further['pickup_id']) && !empty($further['pickup_id']))
