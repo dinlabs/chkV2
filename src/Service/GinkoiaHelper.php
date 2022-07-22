@@ -654,7 +654,7 @@ class GinkoiaHelper
         $taxAmount = $variant->getTaxCategory()->getRates()->first()->getAmount();
         $valPUTTC = $unitPrice / 100;//Sylius enregistre les prix en centimes
         $valPUHT = $valPUTTC / (1 + $taxAmount);
-        $valPUBrutTTC = $variant->getChannelPricingForChannel($this->channel)->getPrice() / 100;
+        $valPUBrutTTC = $variant->getChannelPricingForChannel($this->channel)->getOriginalPrice() / 100;
         $valPUBrutHT = $valPUBrutTTC / (1 + $taxAmount);
         $valTxTva = $taxAmount * 100;
         
