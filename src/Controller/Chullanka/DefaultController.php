@@ -135,7 +135,7 @@ final class DefaultController extends AbstractController
         echo '<a href="https://www.nowaunet.fr/_pro/goback.php">Tester d\'aller-retour sur un autre site</a>';
         */
 
-        $order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
+        //$order = $this->container->get('doctrine')->getRepository(Order::class)->find(37);
 
         
         //dd($order);
@@ -1045,7 +1045,7 @@ final class DefaultController extends AbstractController
                 'rmas' => $customer->getRmas()
             ]);
         }
-        return $this->redirectToRoute('sylius_shop_account_dashboard');
+        return $this->redirectToRoute('sylius_shop_account_order_index');
     }
 
     /**
