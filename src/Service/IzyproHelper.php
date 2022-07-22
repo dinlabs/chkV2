@@ -91,7 +91,7 @@ class IzyproHelper
     /**
      * Change le shipment_state && order_shipping_state
      */
-    public function changeOrderInStoreState($id, $transition)
+    public function changeOrderState($id, $transition)
     {
         if(!empty($id) && !empty($transition))
         {
@@ -310,7 +310,7 @@ class IzyproHelper
                 switch($statusCol)
                 {
                     case 1:
-                        $this->changeOrderInStoreState($shipmentId, 'stock_trouble');
+                        $this->changeOrderState($shipmentId, 'stock_trouble');
                         break;
                         
                     case 2:
@@ -318,15 +318,15 @@ class IzyproHelper
                         break;
 
                     case 7:
-                        $this->changeOrderInStoreState($shipmentId, 'in_preparation');
+                        $this->changeOrderState($shipmentId, 'in_preparation');
                         break;
                     
                     case 8:
-                        $this->changeOrderInStoreState($shipmentId, 'before_ship');
+                        $this->changeOrderState($shipmentId, 'before_ship');
                         break;
                         
                     case 9:
-                        $this->changeOrderInStoreState($shipmentId, 'ship');
+                        $this->changeOrderState($shipmentId, 'ship');
                         
                         //$shipment->addComment($comment, true, true);
                         if(!empty($trackNum = $data[3]))
