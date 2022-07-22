@@ -47,6 +47,7 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
         foreach($order->getItems() as $item)
         {
             $variant = $item->getVariant();
+            $quantity = $item->getQuantity();
 
             if($method == 'store')
             {
@@ -70,7 +71,7 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
                         $storeUnavailable[ $store->getId() ] = false;
                     }
 
-                    if($onHand <= 0)
+                    if($onHand < $quantity)
                     {
                         $storeUnavailable[ $store->getId() ] = true;
                         $oneIsUnavailable = true;
@@ -80,7 +81,7 @@ final class ChullankaRulesChecker implements RuleCheckerInterface
             else 
             {
                 //test $variant->getOnHand() pour désactiver les méthodes de livraison si pas tous les produits dispo ?
-                if($variant->getOnHand() <= 0) $oneIsUnavailable = true;
+                if($variant->getOnHand() < $quantity) $oneIsUnavailable = true;
             }
 
             
