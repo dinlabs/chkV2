@@ -1,13 +1,15 @@
-{% extends '@SyliusCore/Email/layout.html.twig' %}
+{% extends '@SyliusShop/Email/layout.html.twig' %}
 
-{% block subject %}{{ 'sylius.email.shipment_confirmation.subject'|trans({}, null, localeCode) }}{% endblock %}
+{% block subject %}Votre commande n°{{ order.number }} est disponible en magasin.{% endblock %}
 
-{% block heademail %}C'est parti !<br>Votre commande est en route.{% endblock %}
+{% block heademail %}
+    Merveilleux ! <br>Votre commande est disponible en magasin.
+{% endblock %}
 
 {% block content %}
 <p><strong>Bonjour {{ order.customer.firstname }},</strong></p>
-<br>
-<p>Bonne nouvelle, <strong>votre commande n°{{ order.number }} a été expédiée</strong> et sera prochainement entre vos mains. Pour suivre son acheminement, consultez le lien de suivi envoyé par email par le transporteur.</p>
+<p>Bonne nouvelle, <strong>commande n°{{ order.number }}</strong> est désormais <strong>disponible en retrait magasin</strong>.</p>
+<p>Pour retirer votre commande, rien de plus simple : rendez-vous à l’accueil de votre magasin et <strong>munissez-vous de votre carte d'identité ainsi que de votre numéro de commande</strong>. Pour consulter les horaires de votre magasin, <a href="{{ absolute_url(path('store_view', {'code': store.code})) }}">cliquez ici</a>.</p>
 <br>
 <table cellpadding="0" cellspacing="0" width="100%">
     <tr>

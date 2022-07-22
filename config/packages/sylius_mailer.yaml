@@ -21,3 +21,7 @@ sylius_mailer:
         click_and_collect:
             subject: "Nouvelle commande Click&Collect"
             template: "emails/click_and_collect.html.twig"
+        store_ready:
+            template: "emails/store_ready.html.twig"
+        store_sent:
+            template: "emails/store_sent.html.twig"

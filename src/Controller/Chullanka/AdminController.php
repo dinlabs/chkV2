@@ -4,6 +4,7 @@ namespace App\Controller\Chullanka;
 
 use App\Entity\Chullanka\Brand;
 use App\Entity\Chullanka\Parameter;
+use App\Entity\Chullanka\Store;
 use App\Entity\Product\Product;
 use App\Entity\Shipping\Shipment;
 use App\Service\GinkoiaCustomerWs;
@@ -16,6 +17,7 @@ use Cloudflare\API\Endpoints\Zones as CFZones;
 use Doctrine\ORM\EntityManagerInterface;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\OrderShippingTransitions;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Shipping\ShipmentTransitions;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +31,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-
     public function searchProduct(Request $request)
     {
         $repo = $this->container->get('doctrine')->getRepository(Product::class);
@@ -91,7 +92,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/ordershipstate/{id}", name="chk_admin_change_order_ship_state")
      */
-    public function changeOrderInStoreState(Request $request, FactoryInterface $stateMachineFactory)
+    public function changeOrderInStoreState(Request $request, FactoryInterface $stateMachineFactory, SenderInterface $emailSender)
     {
         if(($id = $request->get('id')) && ($transition = $request->get('transition')) && !empty($transition))
         {
@@ -112,6 +113,30 @@ class AdminController extends AbstractController
 
                 $em = $this->container->get('doctrine')->getManager();
                 $em->flush();
+
+
+                //envoi d'emails
+                $destEmail = $order->getCustomer()->getEmail();
+                $shipping_method = $shipment->getMethod()->getCode();
+                if($shipping_method == 'store')
+                {
+                    $inStore = true;
+                    $further = $order->getFurther();
+                    if($further && isset($further['store']) && !empty($further['store']))
+                    {
+                        $store = $this->container->get('doctrine')->getRepository(Store::class)->find($further['store']);
+                        $inStore = $store->isWarehouse() ? false : $store;
+                    }
+                }
+
+                if($transition == 'store_ready')
+                {
+                    $emailSender->send('store_ready', [$destEmail], ['order' => $order, 'store' => $inStore]);
+                }
+                if($transition == 'store_click_and_collect')
+                {
+                    $emailSender->send('store_sent', [$destEmail], ['order' => $order]);
+                }
             }
         }
 
