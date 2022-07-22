@@ -30,7 +30,7 @@
             <div class="infos">
                 <div class="sylius-product-name" {{ sylius_test_html_attribute('product-name', item.productName) }}>
                     {% if product.brand %}<a href="{{ path('brand_view', {'code': product.brand.code}) }}">{{ product.brand.name }}</a> &ndash; {% endif %}
-                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}" class="gtm-eh-track-product-click">{{ item.productName }}</a>
+                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug}) }}" data-id="{{ sylius_gtm_enhanced_ecommerce_product_identifier(product) }}" data-name="{{ product.name }}"{% if product.brand %} data-brand="{{ product.brand.name }}"{% endif %} class="gtm-eh-track-product-click">{{ item.productName }}</a>
 
                     {% if product.isPack and item.further|length and item.further.pack is defined and item.further.pack|length %}
                         <br><small>Contenu du pack</small>

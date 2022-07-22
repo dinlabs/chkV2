@@ -115,3 +115,24 @@ index 5f6cc86..403dafa 100644
          'category': '{{ product.category }}',
          'variant': '{{ product.variant }}'
      });
+diff --git a/src/TagManager/CreateProductTrait.php b/src/TagManager/CreateProductTrait.php
+index 5e893d3..31b203a 100644
+--- a/src/TagManager/CreateProductTrait.php
++++ b/src/TagManager/CreateProductTrait.php
+@@ -19,6 +19,8 @@ trait CreateProductTrait
+         /** @var ProductInterface $product */
+         $product = $variant->getProduct();
+ 
++        $brand = $product->getBrand();
++
+         /** @var TaxonInterface|null $mainTaxon */
+         $mainTaxon = $product->getMainTaxon();
+ 
+@@ -26,6 +28,7 @@ trait CreateProductTrait
+             'name' => $product->getName(),
+             'quantity' => $item->getQuantity(),
+             'variant' => $variant->getName() ?? $variant->getCode(),
++            'brand' => null !== $brand ? $brand->getName() : '',
+             'category' => null !== $mainTaxon ? $mainTaxon->getName() : '',
+             'price' => $item->getUnitPrice() / 100,
+         ];
