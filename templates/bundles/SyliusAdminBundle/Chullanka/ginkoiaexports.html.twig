@@ -11,4 +11,11 @@
     {% else %}
         {{ msg }}
     {% endif %}
+
+    <h2>XML dans : {{ ginkoiaXmlPath }}</h2>
+    {% if ginkoiaXmlFiles|length %}
+        {{ pr(ginkoiaXmlFiles) }}
+    {% else %}
+        {{ ginkoiaMsg }}
+    {% endif %}
 {% endblock %}

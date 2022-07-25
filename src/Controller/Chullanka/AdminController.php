@@ -172,11 +172,30 @@ class AdminController extends AbstractController
             $files = scandir($exportPath); // liste des fichiers dans le rep. d'import
         }
         else $msg  = "Ce répertoire n'existe pas";
-        
+
+        $ginkoiaMsg = '';
+        $ginkoiaXmlFiles = [];
+        $ginkoiaXmlPath = $this->chkParameter('ginkoia-xml-path');
+        if(is_dir($ginkoiaXmlPath))
+        {
+            $ginkoiaXmlScanDir = scandir($ginkoiaXmlPath);
+
+            foreach ($ginkoiaXmlScanDir as $ginkoiaXmlFile) {
+                if (strpos($ginkoiaXmlFile, 'GINK') !== false) {
+                    $ginkoiaXmlFiles[] = $ginkoiaXmlFile;
+                }
+            }
+        } else {
+            $ginkoiaMsg = "Ce répertoire n'existe pas";
+        }
+
         return $this->render('@SyliusAdmin/Chullanka/ginkoiaexports.html.twig', [
             'exportpath' => $exportPath,
             'files' => $files,
             'msg' => $msg,
+            'ginkoiaXmlPath' => $ginkoiaXmlPath,
+            'ginkoiaXmlFiles' => $ginkoiaXmlFiles,
+            'ginkoiaMsg' => $ginkoiaMsg
         ]);
     }
 
