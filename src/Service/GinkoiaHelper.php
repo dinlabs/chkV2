@@ -563,6 +563,11 @@ class GinkoiaHelper
         $totTVA = 0;
         foreach($this->totaux as $tva => $mnt)
         {
+            // force string to be cast in float, needede for tva 5.5
+            if (is_string($tva)) {
+                $tva = (float)$tva;
+            }
+
             $mntTVA = $mnt['ttc'] - $mnt['ht'];
             $totTVA += $mntTVA;
             
